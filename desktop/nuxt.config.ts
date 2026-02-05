@@ -185,6 +185,9 @@ export default defineNuxtConfig({
         ])
       ],
     },
+    define: {
+      "process.platform": JSON.stringify(process.platform)
+    }
   },
   i18n: {
     strategy: 'no_prefix',
