@@ -1,4 +1,4 @@
-import type { UpdateNewVersion } from '#logic/managers/DesktopUpdateManager';
+import type { UpdateNewVersion } from '#logic/types/AutoUpdateTypes';
 import type { IImsHostExposed } from './bridge/types/IImsHost';
 
 declare global {

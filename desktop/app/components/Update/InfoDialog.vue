@@ -1,17 +1,17 @@
 <template>
   <dialog-content
-    class="PromptDialog"
+    class="InfoDialog"
     @escape-press="choose(false)"
     @enter-press="choose(true)"
   >
-    <div class="InfoDialog">
+    <div class="InfoDialog-inner">
       <div class="Form">
         <div class="InfoDialog-header">
           {{header}}
         </div>
         <div class="InfoDialog-message">
           {{message}}
-          <a href="https://ims.cr5.space" v-if="link">https://ims.cr5.space</a>
+          <a :href="link" v-if="link">{{ link }}</a>
         </div>
         <div class="Form-row-message" v-if="errorMessage">
           <div class="Form-message-error">
@@ -20,7 +20,9 @@
         </div>
         <div class="Form-row-buttons">
           <div class="Form-row-buttons-center">
-            <input type="button" :value="$t('common.confirmDialog.ok')" class="is-button is-button-green"  @click="close()">
+            <button type="button" class="is-button is-button-green"  @click="close()">
+              {{ $t('common.dialogs.ok') }}
+            </button>
           </div>
         </div>
       </div>
@@ -28,7 +30,7 @@
   </dialog-content>
 </template>
 
-<script lang="ts" type="text/ecmascript-6">
+<script lang="ts">
 import { defineComponent, type PropType } from 'vue';
 import DialogContent from '~ims-app-base/components/Dialog/DialogContent.vue';
 import type { DialogInterface } from '~ims-app-base/logic/managers/DialogManager';
@@ -80,40 +82,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.FormSelectFolder-main{
-  display: flex;
-}
-
-.FormSelectFolder-text{
-  display: flex;
-  margin-right: 5px;
-}
-
-.FormSelectFolder-autodetect{
-  display: block;
-  margin-right: 5px;
-  padding: 5px 7px;
-  &:before{
-    content: "";
-    display: block;
-    width:20px;
-    height:20px;
-    background: url('../../assets/images/remixicon/file-search-line-blue.svg') no-repeat center;
-    background-size: contain;
-  }
-  &:hover:before{
-    filter: brightness(0) invert(1);
-  }
-}
-
-.FormSelectFolder-error{
-  background: #ffe6e6;
-  border-radius: 4px;
-  padding: 10px 20px;
-  color:#d20009;
-  margin-top:10px;
-}
-
 .InfoDialog-message{
   margin-bottom: 20px;
   text-align: left;
@@ -123,11 +91,7 @@ export default defineComponent({
   font-weight: bold;
   text-align: center;
 }
-.InfoDialog{
+.InfoDialog-inner{
   width: 500px;
-}
-
-.FormSelectFolder{
-  margin-top: 15px;
 }
 </style>

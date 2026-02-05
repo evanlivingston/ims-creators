@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<script lang="ts" type="text/ecmascript-6">
+<script lang="ts">
 import { defineComponent, type PropType } from 'vue';
 import type { FormSchema } from "~ims-app-base/components/Form/FormBuilderTypes"
 import ImsSelect from '~ims-app-base/components/Common/ImsSelect.vue';

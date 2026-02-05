@@ -40,14 +40,9 @@
   </dialog-content>
 </template>
 
-<script lang="ts" type="text/ecmascript-6">
+<script lang="ts">
 import { defineComponent, type PropType } from 'vue';
-import type { FormSchema } from "~ims-app-base/components/Form/FormBuilderTypes"
-import ImsSelect from '~ims-app-base/components/Common/ImsSelect.vue';
 import FormBuilder from '~ims-app-base/components/Form/FormBuilder.vue';
-import FormBuilderModelBindObject from "~ims-app-base/components/Form/FormBuilderModelBindObject"
-import UiManager from "~ims-app-base/logic/managers/UiManager"
-import type { LangStr } from '~ims-app-base/logic/types/ProjectTypes';
 import DialogContent from '~ims-app-base/components/Dialog/DialogContent.vue';
 import DesktopSettingsDialog_common from './DesktopSettingsDialog_common.vue';
 import DesktopSettingsDialog_other from './DesktopSettingsDialog_other.vue';

@@ -1,5 +1,5 @@
 <template>
-    <dialog-content
+  <dialog-content
     class="PromptDialog"
     @escape-press="closeDialog"
     @enter-press="getNewVersion"
@@ -11,16 +11,15 @@
         </div>
         <div class="Form-row-buttons">
           <div class="Form-row-buttons-center" v-if="updateStatusIsAvailable">
-            <input 
+            <button 
               type="button" 
-              :value="updateOrDownload" 
               class="is-button is-button-green" 
               @click="getNewVersion()"
-            >
+            >{{ updateOrDownload }}</button>
           </div>
           <div class="Form-row-buttons-center" v-if="updateStatusIsDownloading">
-            <input type="button" :value="cancel" class="is-button is-button-red" @click="cancelDownload()">
-            <input type="button" :value="close" class="is-button is-button-blue" @click="closeDialog()">
+            <button type="button" class="is-button is-button-red" @click="cancelDownload()">{{ cancel }}</button>
+            <button type="button" class="is-button is-button-blue" @click="closeDialog()">{{ close }}</button>
           </div>
         </div>
       </div>
@@ -28,11 +27,13 @@
   </dialog-content>
 </template>
 
-<script lang="ts" type="text/ecmascript-6">
+<script lang="ts">
 import { defineComponent, type PropType } from 'vue';
-import { type DialogInterface } from '~ims-app-base/logic/managers/DialogManager';
-import DesktopUpdateManager, { UpdateStatus } from '#logic/managers/DesktopUpdateManager';
+import DialogManager, { type DialogInterface } from '~ims-app-base/logic/managers/DialogManager';
+import DesktopUpdateManager from '#logic/managers/DesktopUpdateManager';
 import DialogContent from '~ims-app-base/components/Dialog/DialogContent.vue';
+import ConfirmDialog from '~ims-app-base/components/Common/ConfirmDialog.vue';
+import { UpdateStatus } from '#logic/types/AutoUpdateTypes';
 
 type DialogProps = {
 };
@@ -52,18 +53,18 @@ export default defineComponent({
   },
   computed:{
     header(){
-      return this.$t('studio.about.newVersion', {
+      return this.$t('desktop.about.newVersion', {
         version: ''
       });
     },
     updateOrDownload(){
-      return this.$t('studio.about.download');
+      return this.$t('desktop.about.download');
     },
     cancel(){
-      return this.$t('studio.about.cancelDownload');
+      return this.$t('desktop.about.cancelDownload');
     },
     close(){
-      return this.$t('common.confirmDialog.close');
+      return this.$t('common.dialogs.close');
     },
     updateStatusIsAvailable(){
       return this.updateManager.getStatus() === UpdateStatus.AVAILABLE;
@@ -77,11 +78,11 @@ export default defineComponent({
   },
   methods:{
     async cancelDownload() {
-      /*const ask = await this.$getAppManager().get(DialogManager).showDialog(ConfirmDialog, {
-          header: this.$t('studio.about.loadingError'),
-          message: this.$t('studio.about.areYouSureCancelDownload')
+      const ask = await this.$getAppManager().get(DialogManager).showDialog(ConfirmDialog, {
+          header: this.$t('desktop.about.loadingError'),
+          message: this.$t('desktop.about.areYouSureCancelDownload')
       })
-      if (!ask) return false;*/
+      if (!ask) return false;
       await this.updateManager.cancelDownload();
       this.closeDialog();
       return true;

@@ -5,25 +5,24 @@
     @enter-press="closeAndInstall"
   >
     <div class="PostDownloadDialog">
-    <div class="Form">
-      <div class="PostDownloadDialog-header">
-        {{header}}
-      </div>
-      <div class="PostDownloadDialog-message">
-        {{message}}
-      </div>
-      <div class="Form-row-buttons">
-        <div class="Form-row-buttons-center">
-          <input type="button" :disabled="opening" :value="$t('closeAndInstall')" class="is-button is-button-green" @click="closeAndInstall()">
-          <input type="button" :disabled="opening" :value="$t('common.dialogs.cancel')" class="is-button is-button-red" @click="cancelUpdate()">
+      <div class="Form">
+        <div class="PostDownloadDialog-header">
+          {{header}}
+        </div><div class="PostDownloadDialog-message">
+          {{message}}
+        </div>
+        <div class="Form-row-buttons">
+          <div class="Form-row-buttons-center">
+            <input type="button" :disabled="opening" :value="$t('desktop.about.closeAndInstall')" class="is-button is-button-green" @click="closeAndInstall()">
+            <input type="button" :disabled="opening" :value="$t('common.dialogs.cancel')" class="is-button is-button-red" @click="cancelUpdate()">
+          </div>
         </div>
       </div>
     </div>
-  </div>
   </dialog-content>
 </template>
 
-<script lang="ts" type="text/ecmascript-6">
+<script lang="ts">
 import { defineComponent, type PropType } from 'vue';
 import DialogContent from '~ims-app-base/components/Dialog/DialogContent.vue';
 import type { DialogInterface } from '~ims-app-base/logic/managers/DialogManager';
@@ -78,7 +77,7 @@ export default defineComponent({
     },
     cancelUpdate() {
       this.dialog.close();
-      this.$getAppManager().get(UiManager).showError(this.$t('runUpdate') + this.path);
+      this.$getAppManager().get(UiManager).showError(this.$t('desktop.about,runUpdate') + this.path);
     }
   }
 });

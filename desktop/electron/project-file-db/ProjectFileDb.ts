@@ -8,10 +8,12 @@ import SystemBundle from "./system-assets-bundle.json"
 import { assert } from "~ims-app-base/logic/utils/typeUtils";
 import fs from 'node:fs';
 import path from 'node:path';
-import { PROJECT_META_FOLDER, PROJECT_META_INDEX } from '../project-db/project-constants';
 import { AssetRights } from "~ims-app-base/logic/types/Rights";
 import type { AssetPropsPlainObject } from "~ims-app-base/logic/types/Props";
 import type { AssetCommentDTO } from "~ims-app-base/logic/types/CommentTypes";
+
+export const PROJECT_META_FOLDER = '.imsc'
+export const PROJECT_META_INDEX = '.imsc/index.json'
 
 export type ProjectFileDbAssetBlock = {
     id: string;

@@ -13,14 +13,9 @@
   </div>
 </template>
 
-<script lang="ts" type="text/ecmascript-6">
-import { defineComponent, type PropType } from 'vue';
-import type { FormSchema } from "~ims-app-base/components/Form/FormBuilderTypes"
-import ImsSelect from '~ims-app-base/components/Common/ImsSelect.vue';
+<script lang="ts">
+import { defineComponent } from 'vue';
 import FormBuilder from '~ims-app-base/components/Form/FormBuilder.vue';
-import FormBuilderModelBindObject from "~ims-app-base/components/Form/FormBuilderModelBindObject"
-import UiManager from "~ims-app-base/logic/managers/UiManager"
-import type { LangStr } from '~ims-app-base/logic/types/ProjectTypes';
 
 export default defineComponent({
   name: 'DesktopSettingsDialog_common',
@@ -46,7 +41,7 @@ export default defineComponent({
         {
             const research = new RegExp(".*"+this.search+".*",'i');
             for(const setting of this.maintenance){
-                if(!research.test(this.$t('studio.settings.' + setting).valueOf())){
+                if(!research.test(this.$t('desktop.settings.' + setting).valueOf())){
                     filterMaintenance.push(setting);
                 }
             }
@@ -59,7 +54,7 @@ export default defineComponent({
   methods: {
     openLogsFolder(){
         const file = window.imshost.log.transports.file.getFile();
-        if (file) window.imshost.shellApi.showFileInFolder(file.path)
+        if (file) window.imshost.shell.showItemInFolder(file.path)
     },
     showButton(title){
         return !this.formSchemaFiltered.filterMaintenance.includes(title);

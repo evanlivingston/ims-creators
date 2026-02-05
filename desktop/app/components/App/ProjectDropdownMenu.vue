@@ -38,9 +38,9 @@
   </menu-button>
 </template>
 
-<script type="text/ecmascript-6" lang="ts">
+<script lang="ts">
 import { defineComponent, type PropType } from 'vue';
-import type { AppLoadResult, ProjectShortInfo, ProjectIdWithTitle, LangStr } from '~ims-app-base/logic/types/ProjectTypes';
+import type { LangStr } from '~ims-app-base/logic/types/ProjectTypes';
 import CaptionString from '~ims-app-base/components/Common/CaptionString.vue';
 import ProjectLink from '~ims-app-base/components/Common/ProjectLink.vue';
 import type { LocalProjectInitInfo } from '#bridge/api/ImsHostProject';

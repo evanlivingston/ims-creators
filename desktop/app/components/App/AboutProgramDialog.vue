@@ -46,7 +46,7 @@
   </dialog-content>
 </template>
 
-<script lang="ts" type="text/ecmascript-6">
+<script lang="ts">
 import { defineComponent, type PropType } from 'vue';
 import DialogContent from '~ims-app-base/components/Dialog/DialogContent.vue';
 import type { DialogInterface } from '~ims-app-base/logic/managers/DialogManager';

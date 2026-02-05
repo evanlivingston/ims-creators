@@ -1,4 +1,4 @@
-import { type UpdateNewVersion } from '#logic/managers/DesktopUpdateManager';
+import type { UpdateNewVersion } from '#logic/types/AutoUpdateTypes';
 import type { IpcRendererEvent } from 'electron';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
