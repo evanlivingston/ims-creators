@@ -8,5 +8,7 @@ export default defineNuxtPlugin({
   async setup(app) {
     app.vueApp.directive('logical-focus-out', logicalFocusOut);
     app.vueApp.directive('logical-focus-in', logicalFocusIn);
+    app.vueApp.directive('pro-function', { });
+    
   },
 });
