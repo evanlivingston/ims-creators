@@ -8,6 +8,7 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import vueDevTools from 'vite-plugin-vue-devtools'
 
 import { viteImsResolvePlugin } from "../ims-app-base/config/vite-ims-resolve-plugin"
+import type { ViteConfig } from 'nuxt/schema';
 
 if (process.env.NODE_ENV === 'production'){
   fs.rmSync(path.join(__dirname, 'dist-electron'), {
@@ -20,12 +21,15 @@ if (process.env.NODE_ENV === 'production'){
   });
 }
 
-const viteElectronBuildConfig = {
+const viteElectronBuildConfig: ViteConfig = {
   build: {
     minify: process.env.NODE_ENV === 'production',
     rollupOptions: {
       external: Object.keys('dependencies' in pkg ? pkg.dependencies : {}),
     },
+  },
+  define: {
+    'process.env.CREATORS_API_HOST': JSON.stringify(process.env.CREATORS_API_HOST)
   },
   resolve: {
     alias: {
