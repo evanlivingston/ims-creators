@@ -3,6 +3,7 @@ import type { WindowArgs } from '#bridge/types/WindowArgs';
 import { createWindow } from './window';
 import { initImsHostApi } from './imshost-api';
 import { installExtension } from 'electron-devtools-installer';
+import { pathToFileURL } from "node:url"
 import autoUpdateManager from './auto-update-manager';
 
 const VUEDEVTOOLS_ID = 'nhdogjmejiglipccpnnnanhbledajbpd';
@@ -62,9 +63,10 @@ async function initApp(){
           let file_path_match = request.url.match(/^localfile:\/\/(.*)$/);
           if(!file_path_match) return new Response(`Error`, { status: 404 });
           const file_path = decodeURIComponent(file_path_match[1]);
-          
-          return net.fetch(file_path);
+          const file_url = pathToFileURL(file_path).toString()
+          return net.fetch(file_url);
         } catch (err) {
+          log.error(err)
           return new Response(`Error: ${err}`, { status: 404 });
         }
       });
