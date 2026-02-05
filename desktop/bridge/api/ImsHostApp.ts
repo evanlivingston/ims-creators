@@ -1,6 +1,7 @@
 import { ImsHostBase } from './ImsHostBase';
 import { app } from 'electron'
 import { storageGetKey, storageSetKey } from "../../electron/storage";
+import log from 'electron-log/main';
 
 export class ImsHostApp extends ImsHostBase{
   private _currentLanguage: string | undefined;
@@ -28,5 +29,9 @@ export class ImsHostApp extends ImsHostBase{
     }
     await storageSetKey('lang', lang);
     this._currentLanguage = lang;
+  }
+
+  async getLogFileLocation(): Promise<string | null> {
+    return log.transports.file.getFile()?.path ?? null;
   }
 }
