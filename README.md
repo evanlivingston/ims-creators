@@ -39,7 +39,7 @@ Describe mechanics, characters, items, and other game elements using a user-frie
 
 The created objects can be uploaded directly to the game engine in custom JSON or CSV formats and their changes can be tracked via Git.
 
-## Run localy
+## Run from source
 
 Download repo and it's submodule:
 
