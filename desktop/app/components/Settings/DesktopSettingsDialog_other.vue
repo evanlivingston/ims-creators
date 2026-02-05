@@ -52,11 +52,11 @@ export default defineComponent({
     }
   },
   methods: {
-    openLogsFolder(){
-        const file = window.imshost.log.transports.file.getFile();
-        if (file) window.imshost.shell.showItemInFolder(file.path)
+    async openLogsFolder(){
+        const file = await window.imshost.app.getLogFileLocation();
+        if (file) window.imshost.shell.showItemInFolder(file)
     },
-    showButton(title){
+    showButton(title: string){
         return !this.formSchemaFiltered.filterMaintenance.includes(title);
     },
   },
