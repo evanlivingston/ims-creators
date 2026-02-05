@@ -39,6 +39,6 @@ export default class DesktopUiManager extends UiManager {
       catch (err){
           console.log('UiManager::forceCloseApplication', err)
       }
-      await window.imshost.autoUpdate.exitApplication();
+      await window.imshost.app.exit();
   }
 }

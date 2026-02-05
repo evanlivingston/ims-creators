@@ -1,28 +1,26 @@
 import { ImsHostBase } from "./ImsHostBase";
-import AutoUpdateManager from "../../electron/project-file-db/logic/AutoUpdateManager";
+import AutoUpdateManager from "../../electron/auto-update-manager";
+import type { UpdateNewVersion } from "#logic/types/AutoUpdateTypes";
 
 export class ImsHostAutoUpdate extends ImsHostBase{
-    autoUpdateGetStatus(){
+    async autoUpdateGetStatus(){
         return AutoUpdateManager.getStatus();
     }
 
-    getNewVersionAvailable(){
+    async getNewVersionAvailable(): Promise<UpdateNewVersion | null> {
         return AutoUpdateManager.getNewVersionAvailable();
     }
         
-    downloadUpdate(){
+    async downloadUpdate(){
         return AutoUpdateManager.downloadUpdate()
     }
 
-    cancelUpdate(){
+    async cancelUpdate(){
         return AutoUpdateManager.cancelUpdate()
     }
 
-    quitAndInstallUpdate(){
+    async quitAndInstallUpdate(){
         return AutoUpdateManager.quitAndInstallUpdate()
     }
 
-    exitApplication(){
-        return AutoUpdateManager.exitApplication()
-    }
 }

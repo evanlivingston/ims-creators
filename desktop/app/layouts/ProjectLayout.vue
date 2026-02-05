@@ -30,7 +30,9 @@
           @remove="removeTab($event)"
           @create="openNewTab()"
         ></tab-list>
-        <div class="DesktopApp-page-header-menuSpace"></div>
+        <div class="DesktopApp-page-header-menuSpace">
+          <new-version-box class="DesktopApp-page-header-menuSpace-item"></new-version-box>
+        </div>
       </div>
       <div class="DesktopApp-page-content">
         <slot />
@@ -56,13 +58,15 @@ import DesktopUiManager from '#logic/managers/DesktopUiManager';
 import type { DesktopTab } from '#logic/types/DesktopTabController';
 import { ScreenSize } from '~ims-app-base/logic/managers/UiManager';
 import AuthManager from '~ims-app-base/logic/managers/AuthManager';
+import NewVersionBox from '#components/Update/NewVersionBox.vue';
 
 export default defineComponent({
   name: 'ProjectLayout',
   components: {
     AppMenu,
     AppMenuToggle,
-    TabList
+    TabList,
+    NewVersionBox
   },
   provide() {
     return {
@@ -288,5 +292,14 @@ $header-height: 60px;
 }
 .switcherButton:disabled{
   cursor: default;
+}
+
+.DesktopApp-page-header-menuSpace{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.DesktopApp-page-header-menuSpace-item{
+  margin-right: 10px;
 }
 </style>

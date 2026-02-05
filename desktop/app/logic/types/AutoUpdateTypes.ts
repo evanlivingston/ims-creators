@@ -8,7 +8,7 @@ export enum UpdateStatus {
 }
 
 export type UpdateNewVersionFile = {
-  size: number;
+  size?: number;
   url: string;
   sha512: string;
 };

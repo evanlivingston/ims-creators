@@ -113,14 +113,12 @@ export class ImsHostFs extends ImsHostBase {
       });
   }
 
-  async downloadFile(fileUrl: string, outputLocationPath: string, {
-      progressCallback = null,
-      abortSignal = undefined
-  } = {} as {
-    progressCallback?: any,
-    abortSignal?: any
-  }) {
-      if (abortSignal && abortSignal.aborted){
+  async downloadFile(fileUrl: string, outputLocationPath: string, options?: {
+    progressCallback?: (bytes: number) => void,
+    abortSignal?: AbortSignal
+  }): Promise<boolean> {
+      const abortSignal = options?.abortSignal;
+      if (abortSignal && abortSignal?.aborted){
           return false;
       }
       const response = await axios({
@@ -128,23 +126,23 @@ export class ImsHostFs extends ImsHostBase {
           url: fileUrl,
           responseType: 'stream'
       })
-      if (abortSignal && abortSignal.aborted){
+      if (abortSignal && abortSignal?.aborted){
           return false;
       }
       let read_bytes = 0;
       const writer = fs.createWriteStream(outputLocationPath);
-      return await new Promise((resolve, reject) => {
+      return await new Promise<boolean>((resolve, reject) => {
           response.data.on('data', (chunk: any) => {
               read_bytes += chunk.length;
               writer.write(chunk);
-              if (progressCallback) {
-                  progressCallback(read_bytes);
+              if (options?.progressCallback) {
+                  options?.progressCallback(read_bytes);
               }
           })
           response.data.on('close', () => {
               writer.close();
           })
-          response.data.on('error', (err: any) => {
+          response.data.on('error', (err: Error) => {
               if (!error && (!abortSignal || !abortSignal.aborted)) {
                   error = err;
                   writer.close();
@@ -156,11 +154,13 @@ export class ImsHostFs extends ImsHostBase {
               resolve(false);
               return;
           }
-          abortSignal.onabort = () => {
-              response.data.destroy();
-              resolve(false);
+          if (abortSignal){
+            abortSignal.onabort = () => {
+                response.data.destroy();
+                resolve(false);
+            }
           }
-          let error: any = null;
+          let error: Error | null = null;
 
           writer.on('error', err => {
               if (!error && (!abortSignal || !abortSignal.aborted)) {

@@ -73,7 +73,7 @@ export default {
         language: 'Language',
         maintenance: 'Maintenance',
         openLogsFolder: 'Open folder with logs',
-        autoUpdate: 'Auto update',
+        autoUpdate: 'Check for updates when the app starts',
       },
       close: 'Close',
     },
@@ -109,6 +109,9 @@ export default {
       cancelingDownloadMessage: 'You have canceled the download of update file',
       areYouSureCancelDownload:
           'Are you sure want to cancel download of update file?',
+      updateBoxAvail: 'Update',
+      updateBoxReady: 'Ready',
+      updateBoxError: 'Error'
     },
   },
 };

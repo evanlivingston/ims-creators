@@ -5,6 +5,7 @@ import * as node_path from 'path';
 import DesktopUiManager from './DesktopUiManager';
 import UiPreferenceManager from '~ims-app-base/logic/managers/UiPreferenceManager';
 import { UpdateStatus, type UpdateNewVersion } from '#logic/types/AutoUpdateTypes';
+import { assert } from '~ims-app-base/logic/utils/typeUtils';
 
 export default class DesktopUpdateManager extends AppSubManagerBase {
   statusOfUpdate: UpdateStatus = UpdateStatus.NONE;
@@ -15,11 +16,13 @@ export default class DesktopUpdateManager extends AppSubManagerBase {
   private _macCheckUpdateInterval: NodeJS.Timeout | null = null;
   private _lastErrorMessage: string | null = null;
 
-  async checkAndShowNewVersion() {
-    const need_check_updates = this.appManager
+  get isAutoCheckingUpdateEnabled(){
+    return this.appManager
       .get(UiPreferenceManager)
-      .getPreference('needAutoUpdate', true);
-    if (!need_check_updates) return;
+      .getPreference('settings.autoUpdateCheck', true);
+  }
+
+  async checkAndShowNewVersion() {
     this.newVersion = await window.imshost.autoUpdate.getNewVersionAvailable();
     if (this.newVersion) {
       this.statusOfUpdate = UpdateStatus.AVAILABLE;
@@ -88,22 +91,22 @@ export default class DesktopUpdateManager extends AppSubManagerBase {
       const new_version_file = new_version.files[0];
       const save_to_temp = this.pathToUpdateDownload + '.tmp';
       this.abortDownloadController = new AbortController();
-      await window.imshost.fs.downloadFile(
+      const downloaded = await window.imshost.fs.downloadFile(
         `https://ims.cr5.space/desktop/releases/${new_version_file.url}`,
         save_to_temp,
         {
           progressCallback: (progress: number) => {
-            this.statusOfDownload = Math.round(
+            this.statusOfDownload = new_version_file.size ? Math.round(
               (progress * 100) / new_version_file.size,
-            );
+            ) : 0
           },
           abortSignal: this.abortDownloadController.signal,
         },
       );
-      //if (download_res.aborted) {
-      //     this.statusOfUpdate = UpdateStatus.AVAILABLE;
-      //     return;
-      // }
+      if (!downloaded) {
+           this.statusOfUpdate = UpdateStatus.AVAILABLE;
+           return;
+      }
       const downloaded_file_hash = await window.imshost.fs.hashFile(
         save_to_temp,
         'sha512',
@@ -113,7 +116,7 @@ export default class DesktopUpdateManager extends AppSubManagerBase {
         assert(this.pathToUpdateDownload);
         await window.imshost.fs.renameFile(
           save_to_temp,
-          node_path.basename(this.pathToUpdateDownload),
+          node_path.basename(this.pathToUpdateDownload.replaceAll("\\", "/")),
           true,
         );
         this._downloadingDone();
@@ -125,16 +128,17 @@ export default class DesktopUpdateManager extends AppSubManagerBase {
     }
   }
 
-  async _downloadingError(err_message: string) {
+  private async _downloadingError(err_message: string) {
     if (this._macCheckUpdateInterval) {
       clearInterval(this._macCheckUpdateInterval);
+      this._macCheckUpdateInterval = null;
     }
     this.statusOfUpdate = UpdateStatus.DOWNLOAD_ERROR;
     this._lastErrorMessage = err_message;
     await this.showErrorInfoDialog();
   }
 
-  _downloadingDone() {
+  private _downloadingDone() {
     this.statusOfDownload = 100;
     if (this._macCheckUpdateInterval) {
       clearInterval(this._macCheckUpdateInterval);
@@ -149,6 +153,7 @@ export default class DesktopUpdateManager extends AppSubManagerBase {
     }
     if (this._macCheckUpdateInterval) {
       clearInterval(this._macCheckUpdateInterval);
+      this._macCheckUpdateInterval = null;
     }
     if (process.platform === 'darwin') {
       await window.imshost.autoUpdate.cancelUpdate();
@@ -205,7 +210,6 @@ export default class DesktopUpdateManager extends AppSubManagerBase {
   }
 
   async showPostDownloadDialog() {
-    this.statusOfUpdate = UpdateStatus.DOWNLOADED;
     const PostDownloadDialog = await import('#components/Update/PostDownloadDialog.vue')
         await this.appManager.get(DialogManager).show(PostDownloadDialog.default, {
             header: this.appManager.$t('desktop.about.downloadCompleted'),
@@ -229,17 +233,13 @@ export default class DesktopUpdateManager extends AppSubManagerBase {
           'base64',
         );
         if (downloaded_file_hash === new_version_file.sha512) {
-          await window.imshost.shell.showFolder(this.pathToUpdateDownload);
+          await window.imshost.shell.launch(this.pathToUpdateDownload);
           await this.appManager.get(DesktopUiManager).forceCloseApplication();
         } else {
           throw new Error('Downloaded file is corrupted');
         }
       }
     }
-  }
-
-  updateStatus(val: UpdateStatus) {
-    this.statusOfUpdate = val;
   }
 
   getStatus() {

@@ -13,8 +13,8 @@
         </div>
         <div class="Form-row-buttons">
           <div class="Form-row-buttons-center">
-            <input type="button" :disabled="opening" :value="$t('desktop.about.closeAndInstall')" class="is-button is-button-green" @click="closeAndInstall()">
-            <input type="button" :disabled="opening" :value="$t('common.dialogs.cancel')" class="is-button is-button-red" @click="cancelUpdate()">
+            <input type="button" :disabled="opening" :value="$t('desktop.about.closeAndInstall')" class="is-button accent" @click="closeAndInstall()">
+            <input type="button" :disabled="opening" :value="$t('common.dialogs.cancel')" class="is-button" @click="cancelUpdate()">
           </div>
         </div>
       </div>
@@ -77,7 +77,7 @@ export default defineComponent({
     },
     cancelUpdate() {
       this.dialog.close();
-      this.$getAppManager().get(UiManager).showError(this.$t('desktop.about,runUpdate') + this.path);
+      this.$getAppManager().get(UiManager).showError(this.$t('desktop.about.runUpdate') + this.path);
     }
   }
 });

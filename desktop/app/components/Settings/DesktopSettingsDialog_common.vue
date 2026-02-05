@@ -81,18 +81,13 @@ export default defineComponent({
     formSchemaFiltered(){
         if(this.search)
         {
-            const research = new RegExp(".*"+this.search+".*",'i');
-            let myArray=[];
-            let i=0;
-            while(i < this.formSchema.length)
-            {
-                const caption = this.formSchema[i] ? (this.formSchema[i].caption ? this.formSchema[i].caption : "") : "";
-                if(research.test(caption)) myArray.push(this.formSchema[i]);
-                i++;
-            }
-            return myArray;
+            const search = new RegExp(".*"+this.search+".*",'i');
+            return [...this.formSchema].filter(field => {
+                const caption = field ? (field.caption ? field.caption : "") : "";
+                return search.test(caption);
+            })
         }
-        else return this.formSchema;
+        else return [...this.formSchema];
     },
     formModel(){
         return new FormBuilderModelBindObject(this);
@@ -115,10 +110,10 @@ export default defineComponent({
     },
     needAutoUpdate: {
       get() {
-        return this.$getAppManager().get(UiPreferenceManager).getPreference('needAutoUpdate', true);
+        return this.$getAppManager().get(UiPreferenceManager).getPreference('settings.autoUpdateCheck', true);
       },
       set(val: boolean) {
-        this.$getAppManager().get(UiPreferenceManager).setPreference('needAutoUpdate', val);
+        this.$getAppManager().get(UiPreferenceManager).setPreference('settings.autoUpdateCheck', val);
       }, 
     }
   },

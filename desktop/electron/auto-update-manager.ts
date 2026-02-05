@@ -1,12 +1,25 @@
-import updater from "electron-updater";
-const { autoUpdater, CancellationToken } = updater;
+import electronUpdater, { CancellationToken, type UpdateInfo } from "electron-updater";
+import { version as appVersion } from "../package.json"
+import { BrowserWindow } from "electron"
+import log from 'electron-log/main';
+
+const autoUpdater = electronUpdater.autoUpdater;
 autoUpdater.allowDowngrade = true;
 autoUpdater.autoDownload = false;
+autoUpdater.logger = log;
+
+export type AutoUpdateManagerStatus =  {
+    error: null; 
+    cancelled: boolean; 
+    downloadingDone: boolean;
+    downloadingPercent: number;
+    newVersion: boolean;
+};
 
 class AutoUpdateManager {
-    _status: { error: null; cancelled: boolean; downloadingDone: boolean; downloadingPercent: number; newVersion: boolean; };
-    _newVersionAvailable: any = null;
-    _cancellationToken: any = null;
+    private _status: AutoUpdateManagerStatus;
+    private _newVersionAvailable: UpdateInfo | null = null;
+    private _cancellationToken: CancellationToken | null = null;
 
     constructor(){
         this._status = {
@@ -35,16 +48,12 @@ class AutoUpdateManager {
 
     async checkNewVersion(){
         try{
-            // log.info('Start check update');
-            let res = await autoUpdater.checkForUpdates();
+            const  res = await autoUpdater.checkForUpdates();
 
-            //res = {"versionInfo":{"version":"1.5.0","files":[{"url":"ImsStudio Setup 1.5.0.exe","sha512":"oM0gs6Qe3+1/aAs4t9qhtOalgXWLb9Ia35WefhJQJqn9MY0PyK//qewzlWOLTK93sDwCYGD2eOk93v0HAez2dg==","size":107848464}],"path":"ImsStudio Setup 1.5.0.exe","sha512":"oM0gs6Qe3+1/aAs4t9qhtOalgXWLb9Ia35WefhJQJqn9MY0PyK//qewzlWOLTK93sDwCYGD2eOk93v0HAez2dg==","releaseDate":"2022-03-17T19:55:28.051Z"},
-            //    "updateInfo":{"version":"1.5.0","files":[{"url":"ImsStudio Setup 1.5.0.exe","sha512":"oM0gs6Qe3+1/aAs4t9qhtOalgXWLb9Ia35WefhJQJqn9MY0PyK//qewzlWOLTK93sDwCYGD2eOk93v0HAez2dg==","size":107848464}],"path":"ImsStudio Setup 1.5.0.exe","sha512":"oM0gs6Qe3+1/aAs4t9qhtOalgXWLb9Ia35WefhJQJqn9MY0PyK//qewzlWOLTK93sDwCYGD2eOk93v0HAez2dg==","releaseDate":"2022-03-17T19:55:28.051Z"},"cancellationToken":{"_events":{},"_eventsCount":0,"_maxListeners":100,"parentCancelHandler":null,"_parent":null,"_cancelled":false},"downloadPromise":{}}
-            if (res && res.updateInfo && res.updateInfo.version !== process.env.IMS_STUDIO_VERSION){
+           if (res && res.updateInfo && res.updateInfo.version !== appVersion){
                 this._status.newVersion = true;
                 this.setNewVersionAvailable(res.updateInfo);
             }
-            // log.info('Stop check update');
         }
         catch(err){
             console.error('Auto-update', err);
@@ -57,10 +66,11 @@ class AutoUpdateManager {
 
     setNewVersionAvailable(version: any){
         this._newVersionAvailable = version;
-        /*if (global.currentWindow) {
-            // TODO check this
-            global.currentWindow.webContents.send("new-version-available", version);
-        }*/
+        
+        const allWindows = BrowserWindow.getAllWindows();
+        for (const window of allWindows){
+            window.webContents.send("new-version-available", version);
+        }
     }
 
     getNewVersionAvailable(){
@@ -68,7 +78,7 @@ class AutoUpdateManager {
     }
 
     getStatus(){
-        return {...this._status};
+        return this._status;
     }
 
     async downloadUpdate(){
@@ -81,16 +91,12 @@ class AutoUpdateManager {
 
     cancelUpdate(){
         if (this._cancellationToken){
-            this._cancellationToken.cancel
+            this._cancellationToken.cancel();
         }
     }
 
     async quitAndInstallUpdate(){
         await autoUpdater.quitAndInstall();
-    }
-
-    exitApplication(){
-        //TODO
     }
 }
 

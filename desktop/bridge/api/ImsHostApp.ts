@@ -34,4 +34,8 @@ export class ImsHostApp extends ImsHostBase{
   async getLogFileLocation(): Promise<string | null> {
     return log.transports.file.getFile()?.path ?? null;
   }
+
+  async exit(){
+    app.exit();
+  }
 }

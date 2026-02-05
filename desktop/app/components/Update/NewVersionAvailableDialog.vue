@@ -7,19 +7,27 @@
     <div class="NewVersionAvailableDialog">
       <div class="Form">
         <div class="NewVersionAvailableDialog-header">
-          {{header}}
+          {{
+            $t('desktop.about.newVersion', {
+              version: version
+            })
+          }}
+        </div>
+        <div class="NewVersionAvailableDialog-message">
+          {{$t('desktop.about.newVersionAvailablePopup')}}
         </div>
         <div class="Form-row-buttons">
           <div class="Form-row-buttons-center" v-if="updateStatusIsAvailable">
+            <button type="button" class="is-button" @click="closeDialog()">{{ close }}</button>
             <button 
               type="button" 
-              class="is-button is-button-green" 
+              class="is-button accent" 
               @click="getNewVersion()"
             >{{ updateOrDownload }}</button>
           </div>
           <div class="Form-row-buttons-center" v-if="updateStatusIsDownloading">
-            <button type="button" class="is-button is-button-red" @click="cancelDownload()">{{ cancel }}</button>
-            <button type="button" class="is-button is-button-blue" @click="closeDialog()">{{ close }}</button>
+            <button type="button" class="is-button danger" @click="cancelDownload()">{{ cancel }}</button>
+            <button type="button" class="is-button" @click="closeDialog()">{{ close }}</button>
           </div>
         </div>
       </div>
@@ -52,13 +60,11 @@ export default defineComponent({
     },
   },
   computed:{
-    header(){
-      return this.$t('desktop.about.newVersion', {
-        version: ''
-      });
-    },
     updateOrDownload(){
       return this.$t('desktop.about.download');
+    },
+    version(){
+      return this.updateManager.newVersion?.version ?? '';
     },
     cancel(){
       return this.$t('desktop.about.cancelDownload');
@@ -78,7 +84,7 @@ export default defineComponent({
   },
   methods:{
     async cancelDownload() {
-      const ask = await this.$getAppManager().get(DialogManager).showDialog(ConfirmDialog, {
+      const ask = await this.$getAppManager().get(DialogManager).show(ConfirmDialog, {
           header: this.$t('desktop.about.loadingError'),
           message: this.$t('desktop.about.areYouSureCancelDownload')
       })
@@ -103,7 +109,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .NewVersionAvailableDialog-message{
   margin-bottom: 20px;
-  text-align: left;
+  text-align: center;
   max-height: 240px;
   overflow: auto;
 }

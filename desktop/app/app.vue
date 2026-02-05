@@ -69,11 +69,14 @@ useHead(() => ({
 function handleResize() {
   appManager.get(UiManager).handleResize(window.innerWidth);
 }
-onMounted(() => {
-  appManager.get(UiPreferenceManager).initClient();
-  appManager.get(UiManager).initClient();
-  appManager.get(LocalFsSyncManager).initClient();
-  appManager.get(DesktopUpdateManager).checkAndShowNewVersion();
+onMounted(async () => {
+  await appManager.get(UiPreferenceManager).initClient();
+  await appManager.get(UiManager).initClient();
+  await appManager.get(LocalFsSyncManager).initClient();
+  const updateManager = appManager.get(DesktopUpdateManager);
+  if (updateManager.isAutoCheckingUpdateEnabled){
+    updateManager.checkAndShowNewVersion();
+  }
   window.addEventListener('resize', handleResize, {
     passive: true,
   });

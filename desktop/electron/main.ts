@@ -3,6 +3,7 @@ import type { WindowArgs } from '#bridge/types/WindowArgs';
 import { createWindow } from './window';
 import { initImsHostApi } from './imshost-api';
 import { installExtension } from 'electron-devtools-installer';
+import autoUpdateManager from './auto-update-manager';
 
 const VUEDEVTOOLS_ID = 'nhdogjmejiglipccpnnnanhbledajbpd';
 
@@ -84,7 +85,9 @@ async function initApp(){
 
       await createWindow(getDefaultWindowArgs());
 
-
+      if (!process.env.VITE_DEV_SERVER_URL) {
+        autoUpdateManager.checkNewVersion(); // Do not await 
+      }
     });
 
     log.log("App init done")

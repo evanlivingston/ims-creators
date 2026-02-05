@@ -73,7 +73,7 @@ export default {
         language: 'Язык',
         maintenance: 'Сервис',
         openLogsFolder: 'Открыть папку с логами',
-        autoUpdate: 'Автоматически обновлять',
+        autoUpdate: 'Проверять обновления при запуске приложения',
       },
       close: 'Закрыть',
     },    
@@ -109,6 +109,9 @@ export default {
         cancelingDownloadMessage: 'Вы отменили загрузку файла обновления',
         areYouSureCancelDownload:
             'Вы уверены, что хотите отменить загрузку файла обновления',
+        updateBoxAvail: 'Обновление',
+        updateBoxReady: 'Готово',
+        updateBoxError: 'Ошибка'
     },
   },
 };

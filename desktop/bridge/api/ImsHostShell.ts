@@ -8,6 +8,9 @@ export class ImsHostShell extends ImsHostBase{
   async showFolder(path: string): Promise<void> {
     await launch(path);
   }
+  async launch(path: string): Promise<void> {
+    await launch(path);
+  }
   async showItemInFolder(path: string): Promise<void> {
       shell.showItemInFolder(path);
   }
