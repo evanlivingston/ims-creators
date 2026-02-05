@@ -1,5 +1,8 @@
 # IMS Creators Desktop
 
+![GitHub License](https://img.shields.io/github/license/ImStocker/ims-creators)
+![GitHub Release](https://img.shields.io/github/v/release/ImStocker/ims-creators)
+
 Develop and store your ideas directly on your computer: **edit documents, add cross-references, create dialogues, prototype levels, easily export data to game engines** to speed up the path from concept to release.
 
 🌍[Web version](https://ims.cr5.space/) | Download builds: 🔗[site](https://ims.cr5.space/desktop) 🔗[itch.io](https://nordth.itch.io/imsc-desktop)
