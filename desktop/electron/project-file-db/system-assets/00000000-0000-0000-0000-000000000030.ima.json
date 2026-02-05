@@ -1,0 +1,33 @@
+{
+ "id": "00000000-0000-0000-0000-000000000030",
+ "blocks": [
+  {
+   "id": "dff6052e-d8ee-49ea-9cd4-c4eaffc4b709",
+   "name": "content",
+   "title": "[[t:Content]]",
+   "own": true,
+   "type": "text",
+   "props": {},
+   "computed": {},
+   "inherited": null,
+   "index": 0,
+   "createdAt": "2024-01-23T18:45:48.740Z",
+   "updatedAt": "2024-01-23T19:12:03.793Z"
+  }
+ ],
+ "isAbstract": true,
+ "projectId": "111112",
+ "references": [],
+ "icon": "file-word-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": "file-word-fill",
+ "ownTitle": "[[t:TextElement]]",
+ "parentIds": [],
+ "title": "[[t:TextElement]]",
+ "typeIds": [],
+ "workspaceId": "00000000-0000-0000-0000-000000000004",
+ "values": {
+  "content": {}
+ }
+}

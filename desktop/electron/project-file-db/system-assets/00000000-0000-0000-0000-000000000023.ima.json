@@ -1,0 +1,65 @@
+{
+ "id": "00000000-0000-0000-0000-000000000023",
+ "blocks": [
+  {
+   "id": "6524aa77-424d-4810-b004-6e55c89a22a9",
+   "name": "info",
+   "title": "[[t:Info]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "items": null,
+    "__props": {
+     "items": {
+      "type": "struct",
+      "index": 1,
+      "title": "[[t:Items]]",
+      "multiple": true,
+      "params": {
+       "type": {
+        "AssetId": "00000000-0000-0000-0000-000000000022"
+       }
+      }
+     }
+    }
+   },
+   "computed": {
+    "items": null,
+    "__props": {
+     "items": {
+      "type": "struct",
+      "index": 1,
+      "title": "[[t:Items]]",
+      "multiple": true,
+      "params": {
+       "type": {
+        "AssetId": "00000000-0000-0000-0000-000000000022"
+       }
+      }
+     }
+    }
+   },
+   "inherited": null,
+   "index": 1,
+   "createdAt": "2023-12-03T22:44:50.452Z",
+   "updatedAt": "2023-12-03T22:48:37.892Z"
+  }
+ ],
+ "isAbstract": true,
+ "projectId": "111112",
+ "references": [],
+ "icon": "stack-fill",
+ "index": null,
+ "name": "enum",
+ "ownIcon": "stack-fill",
+ "ownTitle": "[[t:Enum]]",
+ "parentIds": [],
+ "title": "[[t:Enum]]",
+ "typeIds": [],
+ "workspaceId": "00000000-0000-0000-0000-000000000004",
+ "values": {
+  "info": {
+   "items": null
+  }
+ }
+}

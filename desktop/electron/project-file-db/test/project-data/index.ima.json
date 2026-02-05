@@ -1,0 +1,1221 @@
+{
+ "id": "5ad7411b-be83-43c4-88f3-1dca82a1d852",
+ "blocks": [
+  {
+   "id": "478747ec-9729-4872-95d2-b4090680b0e9",
+   "name": null,
+   "title": null,
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Your game development journey begins here.",
+       "attributes": {
+        "color": "#888888"
+       }
+      },
+      {
+       "insert": "\n🚀 Where to begin?"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "header": 1
+       }
+      },
+      {
+       "insert": "1. 📝Study and complete the game design document for your game"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "header": 2
+       }
+      },
+      {
+       "insert": "This template provides the basic structure of a typical Role-Playing Game (RPG). "
+      },
+      {
+       "insert": "Please note, that is not the documentation for a specific, released game. A real game documentation would be far more detailed, with specific rules, lore, art, and controls.",
+       "attributes": {
+        "color": "#888888"
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Most important section is "
+      },
+      {
+       "insert": "Game Overview",
+       "attributes": {
+        "asset": {
+         "icon": "information-fill",
+         "value": {
+          "Name": null,
+          "Title": "Game Overview",
+          "AssetId": "fb010b0c-6dac-4090-9055-4406f0123ba7"
+         }
+        }
+       }
+      },
+      {
+       "insert": ". It provides a clear, one-stop reference that defines the game's vision, scope, and identity for everyone on the team"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "All materials are clearly structured in folders for convenient work on the game (but you can freely rearrange them at your discretion):",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Story",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " contains lore, "
+      },
+      {
+       "insert": "Main plot",
+       "attributes": {
+        "asset": {
+         "icon": "flag-2-fill",
+         "value": {
+          "Name": null,
+          "Title": "Main plot",
+          "AssetId": "2eb31581-df43-46fe-a8a3-f6cd900fe0e1"
+         }
+        }
+       }
+      },
+      {
+       "insert": ", description of characters ("
+      },
+      {
+       "insert": "Main Hero",
+       "attributes": {
+        "asset": {
+         "icon": "star-fill",
+         "value": {
+          "Name": null,
+          "Title": "Main Hero",
+          "AssetId": "14b89d76-0cc1-4dc8-8176-be106d84d45c"
+         }
+        }
+       }
+      },
+      {
+       "insert": ") and etc."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Gameplay",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " contains concrete, actionable game mechanics of the game"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Dialogues",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " contains all script files for character interactions and story cutscenes."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Characters:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " enemies and allies can be found here."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Items:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " a folder where all the items are described: weapons, potions, runes and etc."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Quests:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " here your can create your own quests with a given "
+      },
+      {
+       "insert": "Quest",
+       "attributes": {
+        "asset": {
+         "icon": "bar-chart-2-fill",
+         "value": {
+          "Name": null,
+          "Title": "Quest",
+          "AssetId": "a0ef46ce-8292-42ae-b520-7f7da9d70545"
+         }
+        }
+       }
+      },
+      {
+       "insert": " structure"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Abilities:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " the characters have their own abilities, so someone knows how to perform a "
+      },
+      {
+       "insert": "Skyrend Strike",
+       "attributes": {
+        "asset": {
+         "icon": "sparkling-2-fill",
+         "value": {
+          "Name": null,
+          "Title": "Skyrend Strike",
+          "AssetId": "695c48c8-cedc-48bb-ae76-921f6ff16538"
+         }
+        }
+       }
+      },
+      {
+       "insert": " , and someone has "
+      },
+      {
+       "insert": "Hellfire Breath",
+       "attributes": {
+        "asset": {
+         "icon": "sparkling-2-fill",
+         "value": {
+          "Name": null,
+          "Title": "Hellfire Breath",
+          "AssetId": "c9955b67-790a-4fd9-bd82-d599625d5f38"
+         }
+        }
+       }
+      },
+      {
+       "insert": ". "
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Effects:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " buffs, effects caused by activating abilities"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Locations:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " prototype levels, place objects on the map, and highlight zones using \"Level\" type elements."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Buildings:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " a repository of buildings that you can access in order to complete an "
+      },
+      {
+       "insert": "Activity",
+       "attributes": {
+        "asset": {
+         "icon": "lifebuoy-fill",
+         "value": {
+          "Name": null,
+          "Title": "Activity",
+          "AssetId": "cda8f145-c0fb-4b68-b85e-be8c1931eb9a"
+         }
+        }
+       }
+      },
+      {
+       "insert": "."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Types:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " a folder where basic objects are stored (for example, "
+      },
+      {
+       "insert": "Quest",
+       "attributes": {
+        "asset": {
+         "icon": "bar-chart-2-fill",
+         "value": {
+          "Name": null,
+          "Title": "Quest",
+          "AssetId": "a0ef46ce-8292-42ae-b520-7f7da9d70545"
+         }
+        }
+       }
+      },
+      {
+       "insert": " , "
+      },
+      {
+       "insert": "Character",
+       "attributes": {
+        "asset": {
+         "icon": "walk-fill",
+         "value": {
+          "Name": null,
+          "Title": "Character",
+          "AssetId": "dcb5d0aa-b55a-4a63-9d85-7cdb6b53e984"
+         }
+        }
+       }
+      },
+      {
+       "insert": ", "
+      },
+      {
+       "insert": "Ability",
+       "attributes": {
+        "asset": {
+         "icon": "sparkling-2-fill",
+         "value": {
+          "Name": null,
+          "Title": "Ability",
+          "AssetId": "7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445"
+         }
+        }
+       }
+      },
+      {
+       "insert": " , etc.). You can define your own types here"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "👉 "
+      },
+      {
+       "insert": "Go to Contents",
+       "attributes": {
+        "bold": true,
+        "link": "project://w/n/gdd"
+       }
+      },
+      {
+       "insert": "\n\n2. "
+      },
+      {
+       "insert": "🤝",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "Invite",
+       "attributes": {
+        "link": "project://settings/team"
+       }
+      },
+      {
+       "insert": " your team"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "header": 2
+       }
+      },
+      {
+       "insert": "Use "
+      },
+      {
+       "insert": "kanban boards and task lists",
+       "attributes": {
+        "link": "project://tasks"
+       }
+      },
+      {
+       "insert": " to manage development."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Link tasks to game design elements to track overall progress."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "\n3. ⚙️Configure uploading of game parameters to the engine"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "header": 2
+       }
+      },
+      {
+       "insert": "Any element of game design can be used as a base element to define the structure of your game's entities, for example: "
+      },
+      {
+       "insert": "Character",
+       "attributes": {
+        "asset": {
+         "icon": "walk-fill",
+         "value": {
+          "Name": null,
+          "Title": "Character",
+          "AssetId": "dcb5d0aa-b55a-4a63-9d85-7cdb6b53e984"
+         }
+        }
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "The set parameters of game entities can be uploaded to your local game project using the "
+      },
+      {
+       "insert": "Sync section",
+       "attributes": {
+        "link": "project://sync"
+       }
+      },
+      {
+       "insert": "."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "\n4. "
+      },
+      {
+       "insert": "✍️ ",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "Share your progress"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "header": 2
+       }
+      },
+      {
+       "insert": "Create a "
+      },
+      {
+       "insert": "public game card",
+       "attributes": {
+        "link": "project://about"
+       }
+      },
+      {
+       "insert": " and publish development diaries - a sure way to find like-minded people and attract an audience."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "\n"
+      }
+     ],
+     "Str": "Your game development journey begins here.\n🚀 Where to begin?\n1. 📝Study and complete the game design document for your game\nThis template provides the basic structure of a typical Role-Playing Game (RPG). Please note, that is not the documentation for a specific, released game. A real game documentation would be far more detailed, with specific rules, lore, art, and controls.\nMost important section is [Game Overview](#asset:fb010b0c-6dac-4090-9055-4406f0123ba7). It provides a clear, one-stop reference that defines the game's vision, scope, and identity for everyone on the team\nAll materials are clearly structured in folders for convenient work on the game (but you can freely rearrange them at your discretion):\n📁Story contains lore, [Main plot](#asset:2eb31581-df43-46fe-a8a3-f6cd900fe0e1), description of characters ([Main Hero](#asset:14b89d76-0cc1-4dc8-8176-be106d84d45c)) and etc.\n📁Gameplay contains concrete, actionable game mechanics of the game\n📁Dialogues contains all script files for character interactions and story cutscenes.\n📁Characters: enemies and allies can be found here.\n📁Items: a folder where all the items are described: weapons, potions, runes and etc.\n📁Quests: here your can create your own quests with a given [Quest](#asset:a0ef46ce-8292-42ae-b520-7f7da9d70545) structure\n📁Abilities: the characters have their own abilities, so someone knows how to perform a [Skyrend Strike](#asset:695c48c8-cedc-48bb-ae76-921f6ff16538) , and someone has [Hellfire Breath](#asset:c9955b67-790a-4fd9-bd82-d599625d5f38). \n📁Effects: buffs, effects caused by activating abilities\n📁Locations: prototype levels, place objects on the map, and highlight zones using \"Level\" type elements.\n📁Buildings: a repository of buildings that you can access in order to complete an [Activity](#asset:cda8f145-c0fb-4b68-b85e-be8c1931eb9a).\n📁Types: a folder where basic objects are stored (for example, [Quest](#asset:a0ef46ce-8292-42ae-b520-7f7da9d70545) , [Character](#asset:dcb5d0aa-b55a-4a63-9d85-7cdb6b53e984), [Ability](#asset:7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445) , etc.). You can define your own types here\n👉 Go to Contents\n\n2. 🤝Invite your team\nUse kanban boards and task lists to manage development.\nLink tasks to game design elements to track overall progress.\n\n3. ⚙️Configure uploading of game parameters to the engine\nAny element of game design can be used as a base element to define the structure of your game's entities, for example: [Character](#asset:dcb5d0aa-b55a-4a63-9d85-7cdb6b53e984) \nThe set parameters of game entities can be uploaded to your local game project using the Sync section.\n\n4. ✍️ Share your progress\nCreate a public game card and publish development diaries - a sure way to find like-minded people and attract an audience.\n\n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Your game development journey begins here.",
+       "attributes": {
+        "color": "#888888"
+       }
+      },
+      {
+       "insert": "\n🚀 Where to begin?"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "header": 1
+       }
+      },
+      {
+       "insert": "1. 📝Study and complete the game design document for your game"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "header": 2
+       }
+      },
+      {
+       "insert": "This template provides the basic structure of a typical Role-Playing Game (RPG). "
+      },
+      {
+       "insert": "Please note, that is not the documentation for a specific, released game. A real game documentation would be far more detailed, with specific rules, lore, art, and controls.",
+       "attributes": {
+        "color": "#888888"
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Most important section is "
+      },
+      {
+       "insert": "Game Overview",
+       "attributes": {
+        "asset": {
+         "icon": "information-fill",
+         "value": {
+          "Name": null,
+          "Title": "Game Overview",
+          "AssetId": "fb010b0c-6dac-4090-9055-4406f0123ba7"
+         }
+        }
+       }
+      },
+      {
+       "insert": ". It provides a clear, one-stop reference that defines the game's vision, scope, and identity for everyone on the team"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "All materials are clearly structured in folders for convenient work on the game (but you can freely rearrange them at your discretion):",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Story",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " contains lore, "
+      },
+      {
+       "insert": "Main plot",
+       "attributes": {
+        "asset": {
+         "icon": "flag-2-fill",
+         "value": {
+          "Name": null,
+          "Title": "Main plot",
+          "AssetId": "2eb31581-df43-46fe-a8a3-f6cd900fe0e1"
+         }
+        }
+       }
+      },
+      {
+       "insert": ", description of characters ("
+      },
+      {
+       "insert": "Main Hero",
+       "attributes": {
+        "asset": {
+         "icon": "star-fill",
+         "value": {
+          "Name": null,
+          "Title": "Main Hero",
+          "AssetId": "14b89d76-0cc1-4dc8-8176-be106d84d45c"
+         }
+        }
+       }
+      },
+      {
+       "insert": ") and etc."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Gameplay",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " contains concrete, actionable game mechanics of the game"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Dialogues",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " contains all script files for character interactions and story cutscenes."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Characters:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " enemies and allies can be found here."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Items:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " a folder where all the items are described: weapons, potions, runes and etc."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Quests:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " here your can create your own quests with a given "
+      },
+      {
+       "insert": "Quest",
+       "attributes": {
+        "asset": {
+         "icon": "bar-chart-2-fill",
+         "value": {
+          "Name": null,
+          "Title": "Quest",
+          "AssetId": "a0ef46ce-8292-42ae-b520-7f7da9d70545"
+         }
+        }
+       }
+      },
+      {
+       "insert": " structure"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Abilities:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " the characters have their own abilities, so someone knows how to perform a "
+      },
+      {
+       "insert": "Skyrend Strike",
+       "attributes": {
+        "asset": {
+         "icon": "sparkling-2-fill",
+         "value": {
+          "Name": null,
+          "Title": "Skyrend Strike",
+          "AssetId": "695c48c8-cedc-48bb-ae76-921f6ff16538"
+         }
+        }
+       }
+      },
+      {
+       "insert": " , and someone has "
+      },
+      {
+       "insert": "Hellfire Breath",
+       "attributes": {
+        "asset": {
+         "icon": "sparkling-2-fill",
+         "value": {
+          "Name": null,
+          "Title": "Hellfire Breath",
+          "AssetId": "c9955b67-790a-4fd9-bd82-d599625d5f38"
+         }
+        }
+       }
+      },
+      {
+       "insert": ". "
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Effects:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " buffs, effects caused by activating abilities"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Locations:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " prototype levels, place objects on the map, and highlight zones using \"Level\" type elements."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Buildings:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " a repository of buildings that you can access in order to complete an "
+      },
+      {
+       "insert": "Activity",
+       "attributes": {
+        "asset": {
+         "icon": "lifebuoy-fill",
+         "value": {
+          "Name": null,
+          "Title": "Activity",
+          "AssetId": "cda8f145-c0fb-4b68-b85e-be8c1931eb9a"
+         }
+        }
+       }
+      },
+      {
+       "insert": "."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "📁"
+      },
+      {
+       "insert": "Types:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " a folder where basic objects are stored (for example, "
+      },
+      {
+       "insert": "Quest",
+       "attributes": {
+        "asset": {
+         "icon": "bar-chart-2-fill",
+         "value": {
+          "Name": null,
+          "Title": "Quest",
+          "AssetId": "a0ef46ce-8292-42ae-b520-7f7da9d70545"
+         }
+        }
+       }
+      },
+      {
+       "insert": " , "
+      },
+      {
+       "insert": "Character",
+       "attributes": {
+        "asset": {
+         "icon": "walk-fill",
+         "value": {
+          "Name": null,
+          "Title": "Character",
+          "AssetId": "dcb5d0aa-b55a-4a63-9d85-7cdb6b53e984"
+         }
+        }
+       }
+      },
+      {
+       "insert": ", "
+      },
+      {
+       "insert": "Ability",
+       "attributes": {
+        "asset": {
+         "icon": "sparkling-2-fill",
+         "value": {
+          "Name": null,
+          "Title": "Ability",
+          "AssetId": "7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445"
+         }
+        }
+       }
+      },
+      {
+       "insert": " , etc.). You can define your own types here"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 2
+       }
+      },
+      {
+       "insert": "👉 "
+      },
+      {
+       "insert": "Go to Contents",
+       "attributes": {
+        "bold": true,
+        "link": "project://w/n/gdd"
+       }
+      },
+      {
+       "insert": "\n\n2. "
+      },
+      {
+       "insert": "🤝",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "Invite",
+       "attributes": {
+        "link": "project://settings/team"
+       }
+      },
+      {
+       "insert": " your team"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "header": 2
+       }
+      },
+      {
+       "insert": "Use "
+      },
+      {
+       "insert": "kanban boards and task lists",
+       "attributes": {
+        "link": "project://tasks"
+       }
+      },
+      {
+       "insert": " to manage development."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Link tasks to game design elements to track overall progress."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "\n3. ⚙️Configure uploading of game parameters to the engine"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "header": 2
+       }
+      },
+      {
+       "insert": "Any element of game design can be used as a base element to define the structure of your game's entities, for example: "
+      },
+      {
+       "insert": "Character",
+       "attributes": {
+        "asset": {
+         "icon": "walk-fill",
+         "value": {
+          "Name": null,
+          "Title": "Character",
+          "AssetId": "dcb5d0aa-b55a-4a63-9d85-7cdb6b53e984"
+         }
+        }
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "The set parameters of game entities can be uploaded to your local game project using the "
+      },
+      {
+       "insert": "Sync section",
+       "attributes": {
+        "link": "project://sync"
+       }
+      },
+      {
+       "insert": "."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "\n4. "
+      },
+      {
+       "insert": "✍️ ",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "Share your progress"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "header": 2
+       }
+      },
+      {
+       "insert": "Create a "
+      },
+      {
+       "insert": "public game card",
+       "attributes": {
+        "link": "project://about"
+       }
+      },
+      {
+       "insert": " and publish development diaries - a sure way to find like-minded people and attract an audience."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "\n"
+      }
+     ],
+     "Str": "Your game development journey begins here.\n🚀 Where to begin?\n1. 📝Study and complete the game design document for your game\nThis template provides the basic structure of a typical Role-Playing Game (RPG). Please note, that is not the documentation for a specific, released game. A real game documentation would be far more detailed, with specific rules, lore, art, and controls.\nMost important section is [Game Overview](#asset:fb010b0c-6dac-4090-9055-4406f0123ba7). It provides a clear, one-stop reference that defines the game's vision, scope, and identity for everyone on the team\nAll materials are clearly structured in folders for convenient work on the game (but you can freely rearrange them at your discretion):\n📁Story contains lore, [Main plot](#asset:2eb31581-df43-46fe-a8a3-f6cd900fe0e1), description of characters ([Main Hero](#asset:14b89d76-0cc1-4dc8-8176-be106d84d45c)) and etc.\n📁Gameplay contains concrete, actionable game mechanics of the game\n📁Dialogues contains all script files for character interactions and story cutscenes.\n📁Characters: enemies and allies can be found here.\n📁Items: a folder where all the items are described: weapons, potions, runes and etc.\n📁Quests: here your can create your own quests with a given [Quest](#asset:a0ef46ce-8292-42ae-b520-7f7da9d70545) structure\n📁Abilities: the characters have their own abilities, so someone knows how to perform a [Skyrend Strike](#asset:695c48c8-cedc-48bb-ae76-921f6ff16538) , and someone has [Hellfire Breath](#asset:c9955b67-790a-4fd9-bd82-d599625d5f38). \n📁Effects: buffs, effects caused by activating abilities\n📁Locations: prototype levels, place objects on the map, and highlight zones using \"Level\" type elements.\n📁Buildings: a repository of buildings that you can access in order to complete an [Activity](#asset:cda8f145-c0fb-4b68-b85e-be8c1931eb9a).\n📁Types: a folder where basic objects are stored (for example, [Quest](#asset:a0ef46ce-8292-42ae-b520-7f7da9d70545) , [Character](#asset:dcb5d0aa-b55a-4a63-9d85-7cdb6b53e984), [Ability](#asset:7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445) , etc.). You can define your own types here\n👉 Go to Contents\n\n2. 🤝Invite your team\nUse kanban boards and task lists to manage development.\nLink tasks to game design elements to track overall progress.\n\n3. ⚙️Configure uploading of game parameters to the engine\nAny element of game design can be used as a base element to define the structure of your game's entities, for example: [Character](#asset:dcb5d0aa-b55a-4a63-9d85-7cdb6b53e984) \nThe set parameters of game entities can be uploaded to your local game project using the Sync section.\n\n4. ✍️ Share your progress\nCreate a public game card and publish development diaries - a sure way to find like-minded people and attract an audience.\n\n"
+    }
+   },
+   "inherited": null,
+   "index": 1.175526,
+   "createdAt": "2025-08-15T12:11:57.953Z",
+   "updatedAt": "2025-08-20T13:56:48.303Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "flag-2-fill",
+ "index": 1,
+ "name": "index",
+ "ownIcon": "flag-2-fill",
+ "ownTitle": "Welcome! 🎉",
+ "parentIds": [],
+ "title": "Welcome! 🎉",
+ "typeIds": [],
+ "workspaceId": null,
+ "values": {}
+}

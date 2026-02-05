@@ -1,0 +1,247 @@
+import DialogManager from "~ims-app-base/logic/managers/DialogManager";
+import { AppSubManagerBase } from "~ims-app-base/logic/managers/IAppManager";
+import UiManager from "~ims-app-base/logic/managers/UiManager";
+import * as node_path from 'path';
+import DesktopUiManager from "./DesktopUiManager";
+import PostDownloadDialog from "#components/Update/PostDownloadDialog.vue";
+import InfoDialog from "#components/Update/InfoDialog.vue";
+import NewVersionAvailableDialog from "#components/Update/NewVersionAvailableDialog.vue";
+import UiPreferenceManager from "~ims-app-base/logic/managers/UiPreferenceManager";
+
+export enum UpdateStatus {
+    NONE = "",
+    AVAILABLE = "newVersionAvailable",
+    DOWNLOADING = "downloadingUpdateFile",
+    DOWNLOAD_ERROR = "autoUpdateError",
+    DOWNLOADED = "updateDownloaded"
+}
+
+type UpdateNewVersionFile = {
+    size: number,
+    url: string,
+    sha512: string
+}
+
+export type UpdateNewVersion = {
+    version: string,
+    path: string,
+    files: UpdateNewVersionFile[]
+}
+
+
+export default class DesktopUpdateManager extends AppSubManagerBase {
+    statusOfUpdate: UpdateStatus = UpdateStatus.NONE;
+    statusOfDownload: number = 0;
+    newVersion: UpdateNewVersion | null = null;
+    pathToUpdateDownload: string | null = null;
+    abortDownloadController: AbortController | null = null;
+    private _macCheckUpdateInterval: NodeJS.Timeout | null = null;
+    private _lastErrorMessage: string | null = null;
+
+    async checkAndShowNewVersion(){
+        const need_check_updates = this.appManager.get(UiPreferenceManager).getPreference('needAutoUpdate', true);
+        if(!need_check_updates) return;
+        this.newVersion = await window.imshost.autoUpdate.getNewVersionAvailable();
+        if (this.newVersion){
+            this.statusOfUpdate = UpdateStatus.AVAILABLE;
+            this.showDialogNewVersionAvailable(); // No await
+        }
+        else {
+            window.requestNewVersionAvailable(
+                (new_version: UpdateNewVersion | null) => {
+                    if (new_version) {
+                        this.newVersion = new_version;
+                        this.statusOfUpdate = UpdateStatus.AVAILABLE;
+                        this.showDialogNewVersionAvailable(); // No await
+                    }
+                }
+            )
+        }
+    }
+
+    async startDownloadUpdateFile(){
+        if (!this.newVersion) return;
+        this._lastErrorMessage = null;
+        this.statusOfDownload  = 0;
+        if(process.platform === 'darwin'){
+            window.imshost.autoUpdate.downloadUpdate(); // no wait
+            if (this._macCheckUpdateInterval ){
+                clearInterval(this._macCheckUpdateInterval);
+            }
+            this._macCheckUpdateInterval = setInterval( async () => {
+                const update_status = await window.imshost.autoUpdate.autoUpdateGetStatus();
+                this.statusOfDownload = Math.round(update_status.downloadingPercent);
+                if (update_status.downloadingDone){
+                    this._downloadingDone();
+                }
+                else if (update_status.error){
+                    this._downloadingError(update_status.error)
+                }
+            }, 1000);
+        }
+        else {
+            const download_path = await window.imshost.shell.getDownloadFolder();
+            const application_path = node_path.join(download_path, this.newVersion["path"]);
+            const select_res = await window.imshost.fs.showSaveFileDialog({
+                defaultPath: application_path,
+                filters: [ { name: 'EXE', extensions: ['exe'] }]
+            });
+            if (select_res.canceled) return false;
+            if (!select_res.filePath) return false;
+            this.pathToUpdateDownload = select_res.filePath
+
+            this._downloadUpdateFileImplForWin() // no wait
+        }
+        
+        this.appManager.get(UiManager).showSuccess(this.appManager.$t('studio.about.newVersionDownload'));
+        this.statusOfUpdate = UpdateStatus.DOWNLOADING
+        return true;
+    }
+
+    async _downloadUpdateFileImplForWin() {
+        try{
+            const new_version = this.newVersion;
+            if (!new_version) return;
+
+            const new_version_file = new_version.files[0];
+            const save_to_temp = this.pathToUpdateDownload + ".tmp"
+            this.abortDownloadController = new AbortController();
+            await window.imshost.fs.downloadFile(
+                `https://ims.cr5.space/desktop/releases/${new_version_file.url}`,
+                save_to_temp,
+                {
+                    progressCallback: (progress: number) => {
+                        this.statusOfDownload = Math.round(progress * 100 / new_version_file.size);
+                    }, 
+                    abortSignal: this.abortDownloadController.signal
+                });
+            //if (download_res.aborted) {
+            //     this.statusOfUpdate = UpdateStatus.AVAILABLE;
+            //     return;
+            // }
+            const downloaded_file_hash = await window.imshost.fs.hashFile(save_to_temp, 'sha512', 'base64');
+            if (downloaded_file_hash === new_version_file.sha512) {
+                assert(this.pathToUpdateDownload)
+                await window.imshost.fs.renameFile(save_to_temp, node_path.basename(this.pathToUpdateDownload), true);
+                this._downloadingDone();
+            } 
+            else {
+                throw new Error('Downloaded file is corrupted')
+            }
+        }
+        catch(err: any){
+            await this._downloadingError(err.message);
+        }
+    }
+
+    async _downloadingError(err_message: string){
+        if (this._macCheckUpdateInterval){
+            clearInterval(this._macCheckUpdateInterval);
+        }
+        this.statusOfUpdate = UpdateStatus.DOWNLOAD_ERROR;
+        this._lastErrorMessage = err_message;
+        await this.showErrorInfoDialog();
+    }
+
+    _downloadingDone(){
+        this.statusOfDownload = 100;
+        if (this._macCheckUpdateInterval){
+            clearInterval(this._macCheckUpdateInterval);
+        }
+        this.statusOfUpdate = UpdateStatus.DOWNLOADED;
+        this.showPostDownloadDialog(); // no await        
+    }
+
+    async cancelDownload() {
+        if (this.abortDownloadController){
+            this.abortDownloadController.abort();
+        }
+        if (this._macCheckUpdateInterval){
+            clearInterval(this._macCheckUpdateInterval);
+        }
+        if(process.platform === 'darwin'){
+            await window.imshost.autoUpdate.cancelUpdate();
+        }
+        this.statusOfUpdate = UpdateStatus.AVAILABLE;
+    }
+
+    async showDialogOfUpdateStatus() {
+        if (this.statusOfUpdate === UpdateStatus.DOWNLOADED) {
+            await this.showPostDownloadDialog();
+        } else {
+            if (this.statusOfUpdate === UpdateStatus.DOWNLOAD_ERROR) {
+                await this.showErrorInfoDialog();
+            } else {
+                await this.showDialogNewVersionAvailable();
+            }
+        }
+    }
+
+    async showDialogNewVersionAvailable() {
+        if (!this.newVersion) return;
+
+        try{
+            await this.appManager.get(DialogManager).show(NewVersionAvailableDialog, {})
+        }
+        catch (err){
+            this.appManager.get(UiManager).showError(this.appManager.$t('studio.about.newVersionAvailablePopup'))
+        }
+    }
+
+    async showErrorInfoDialog() {
+        const link_for_download = "https://studio.imstocker.com";
+        this.appManager.get(UiManager).showError(this.appManager.$t('studio.about.errorUpload') + link_for_download);
+        await this.appManager.get(DialogManager).show(InfoDialog, {
+            header: this.appManager.$t('studio.about.autoUpdateError'),
+            message: this.appManager.$t('studio.about.errorUpload'),
+            errorMessage: this._lastErrorMessage,
+            link: link_for_download
+        })
+        this.statusOfUpdate = UpdateStatus.AVAILABLE;
+    }
+
+    async showPostDownloadDialog() {
+        this.statusOfUpdate = UpdateStatus.DOWNLOADED;
+        await this.appManager.get(DialogManager).show(PostDownloadDialog, {
+            header: this.appManager.$t('studio.about.downloadCompleted'),
+            message: this.appManager.$t('studio.about.newVersionDownloaded'),
+            path: this.pathToUpdateDownload
+        })
+    }
+
+    async doUpdateAfterDownloading(){
+        if (process.platform === 'darwin'){
+            await window.imshost.autoUpdate.quitAndInstallUpdate(); 
+        }
+        else {
+            const new_version = this.newVersion;
+            if (!new_version) return;
+
+            const new_version_file = new_version.files[0];
+            if(this.pathToUpdateDownload) {
+                const downloaded_file_hash = await window.imshost.fs.hashFile(this.pathToUpdateDownload, 'sha512', 'base64');
+                if (downloaded_file_hash === new_version_file.sha512) {
+                    await window.imshost.shell.showFolder(this.pathToUpdateDownload);
+                    await this.appManager.get(DesktopUiManager).forceCloseApplication();
+                } 
+                else {
+                    throw new Error('Downloaded file is corrupted')
+                }
+            }
+        }
+    }
+
+    updateStatus(val: UpdateStatus) {
+        this.statusOfUpdate = val;
+    }
+
+    getStatus() {
+        return this.statusOfUpdate;
+    }
+
+    getDownloadPercent(){
+        return this.statusOfDownload;
+    }
+}
+
+

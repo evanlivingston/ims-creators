@@ -1,0 +1,107 @@
+{
+ "id": "00000000-0000-0000-0000-000000000034",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-330000000003",
+   "name": "sync-settings",
+   "title": "[[t:MenuSettings]]",
+   "own": true,
+   "type": "props",
+   "props": {},
+   "computed": {},
+   "inherited": null,
+   "index": 1,
+   "createdAt": "2024-02-21T19:42:06.175Z",
+   "updatedAt": "2024-02-21T22:44:32.491Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-330000000004",
+   "name": "export-format",
+   "title": "[[t:ExportFormat]]",
+   "own": true,
+   "type": "export-format",
+   "props": {},
+   "computed": {},
+   "inherited": null,
+   "index": 1,
+   "createdAt": "2024-02-21T19:42:06.175Z",
+   "updatedAt": "2024-02-21T22:44:32.491Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-330000000002",
+   "name": "menu-settings",
+   "title": "[[t:MenuSettings]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "__props": {
+     "menu-team": {
+      "type": "checkbox",
+      "index": 2.1741585360502,
+      "title": "menuTeam"
+     },
+     "menu-about": {
+      "type": "checkbox",
+      "index": 3.3483170724241003,
+      "title": "menuAbout"
+     },
+     "menu-gamedesign": {
+      "type": "checkbox",
+      "index": 1,
+      "title": "menuGamedesign"
+     }
+    },
+    "menu-team": null,
+    "menu-about": null,
+    "menu-gamedesign": null
+   },
+   "computed": {
+    "__props": {
+     "menu-team": {
+      "type": "checkbox",
+      "index": 2.1741585360502,
+      "title": "menuTeam"
+     },
+     "menu-about": {
+      "type": "checkbox",
+      "index": 3.3483170724241003,
+      "title": "menuAbout"
+     },
+     "menu-gamedesign": {
+      "type": "checkbox",
+      "index": 1,
+      "title": "menuGamedesign"
+     }
+    },
+    "menu-team": null,
+    "menu-about": null,
+    "menu-gamedesign": null
+   },
+   "inherited": null,
+   "index": 1,
+   "createdAt": "2024-02-21T19:42:06.175Z",
+   "updatedAt": "2024-02-21T22:44:32.491Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "111112",
+ "references": [],
+ "icon": "settings-3-fill",
+ "index": null,
+ "name": "project-settings",
+ "ownIcon": "settings-3-fill",
+ "ownTitle": "[[t:ProjectSettings]]",
+ "parentIds": [],
+ "title": "[[t:ProjectSettings]]",
+ "typeIds": [],
+ "workspaceId": "00000000-0000-0000-0000-000000000004",
+ "values": {
+  "sync-settings": {},
+  "export-format": {},
+  "menu-settings": {
+   "menu-team": null,
+   "menu-about": null,
+   "menu-gamedesign": null
+  }
+ }
+}

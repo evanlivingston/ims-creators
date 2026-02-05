@@ -1,0 +1,246 @@
+{
+ "id": "bbb048b7-2460-43a8-b6b3-fe50544b9a64",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-000000000100",
+   "name": "__meta",
+   "title": null,
+   "own": true,
+   "type": "props",
+   "props": {
+    "plan_milestone": {
+     "Enum": "00000000-0000-0000-0000-000000000015",
+     "Name": "beta",
+     "Title": "[[t:MilestoneBeta]]"
+    }
+   },
+   "computed": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": {
+     "Enum": "00000000-0000-0000-0000-000000000015",
+     "Name": "beta",
+     "Title": "[[t:MilestoneBeta]]"
+    },
+    "complete_progress": null
+   },
+   "inherited": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "index": 0,
+   "createdAt": "2025-08-08T14:43:33.525Z",
+   "updatedAt": "2025-10-07T05:48:55.846Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000001",
+   "name": "gallery",
+   "title": "[[t:Gallery]]",
+   "own": true,
+   "type": "gallery",
+   "props": {
+    "main": {
+     "type": "file",
+     "index": 1.1755712095354,
+     "value": {
+      "Dir": null,
+      "Size": 2442472,
+      "Store": "p-EWvDFxqn",
+      "Title": "image-fb4f687a-c488-4c68-84b9-5723c06070da.png",
+      "FileId": "87ddf5f2-04b5-458b-9100-b1e7980849c8"
+     }
+    }
+   },
+   "computed": {
+    "main": {
+     "type": "file",
+     "index": 1.1755712095354,
+     "value": {
+      "Dir": null,
+      "Size": 2442472,
+      "Store": "p-EWvDFxqn",
+      "Title": "image-fb4f687a-c488-4c68-84b9-5723c06070da.png",
+      "FileId": "87ddf5f2-04b5-458b-9100-b1e7980849c8"
+     }
+    }
+   },
+   "inherited": {},
+   "index": 1,
+   "createdAt": "2025-08-08T14:43:33.525Z",
+   "updatedAt": "2025-08-20T17:48:29.856Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000002",
+   "name": "description",
+   "title": "[[t:Description]]",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": "Hunter of the Order of Conquerors. In combat, they strive to maintain distance."
+   },
+   "computed": {
+    "value": "Hunter of the Order of Conquerors. In combat, they strive to maintain distance."
+   },
+   "inherited": {},
+   "index": 2,
+   "createdAt": "2025-08-08T14:43:33.525Z",
+   "updatedAt": "2025-08-20T17:51:34.960Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000004",
+   "name": "locale",
+   "title": null,
+   "own": true,
+   "type": "locale",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-08-08T14:43:33.525Z",
+   "updatedAt": "2025-08-08T14:43:33.525Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000003",
+   "name": "props",
+   "title": "[[t:Properties]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "damage": 10,
+    "health": 40,
+    "abilities": [
+     {
+      "Title": "Fire Volley",
+      "AssetId": "1e5d4433-6159-4c89-9dce-b1040cfb63a4"
+     }
+    ],
+    "health_points": 20
+   },
+   "computed": {
+    "damage": 10,
+    "health": 40,
+    "abilities": [
+     {
+      "Title": "Fire Volley",
+      "AssetId": "1e5d4433-6159-4c89-9dce-b1040cfb63a4"
+     }
+    ],
+    "health_points": 20,
+    "__props": {
+     "damage": {
+      "type": "integer",
+      "index": 2.175447569924,
+      "title": "Damage"
+     },
+     "health": {
+      "type": "integer",
+      "index": 1,
+      "title": "Health"
+     },
+     "abilities": {
+      "type": "gddElementSelector",
+      "index": 3.3508951419164,
+      "title": "Abilities",
+      "multiple": true,
+      "params": {
+       "type": {
+        "Title": "Ability",
+        "AssetId": "7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445"
+       }
+      }
+     }
+    }
+   },
+   "inherited": {
+    "damage": null,
+    "health": null,
+    "abilities": null,
+    "__props": {
+     "damage": {
+      "type": "integer",
+      "index": 2.175447569924,
+      "title": "Damage"
+     },
+     "health": {
+      "type": "integer",
+      "index": 1,
+      "title": "Health"
+     },
+     "abilities": {
+      "type": "gddElementSelector",
+      "index": 3.3508951419164,
+      "title": "Abilities",
+      "multiple": true,
+      "params": {
+       "type": {
+        "Title": "Ability",
+        "AssetId": "7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445"
+       }
+      }
+     }
+    }
+   },
+   "index": 3,
+   "createdAt": "2025-08-08T14:43:33.525Z",
+   "updatedAt": "2025-08-20T17:53:35.533Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "walk-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Hunter",
+ "parentIds": [
+  "dcb5d0aa-b55a-4a63-9d85-7cdb6b53e984"
+ ],
+ "title": "Hunter",
+ "typeIds": [
+  "dcb5d0aa-b55a-4a63-9d85-7cdb6b53e984",
+  "00000000-0000-0000-0000-000000000035"
+ ],
+ "workspaceId": "887cda5d-47ff-475d-9bf5-88d42f24fd7a",
+ "values": {
+  "__meta": {
+   "plan_milestone": {
+    "Enum": "00000000-0000-0000-0000-000000000015",
+    "Name": "beta",
+    "Title": "[[t:MilestoneBeta]]"
+   }
+  },
+  "gallery": {
+   "main": {
+    "type": "file",
+    "index": 1.1755712095354,
+    "value": {
+     "Dir": null,
+     "Size": 2442472,
+     "Store": "p-EWvDFxqn",
+     "Title": "image-fb4f687a-c488-4c68-84b9-5723c06070da.png",
+     "FileId": "87ddf5f2-04b5-458b-9100-b1e7980849c8"
+    }
+   }
+  },
+  "description": {
+   "value": "Hunter of the Order of Conquerors. In combat, they strive to maintain distance."
+  },
+  "locale": {},
+  "props": {
+   "damage": 10,
+   "health": 40,
+   "abilities": [
+    {
+     "Title": "Fire Volley",
+     "AssetId": "1e5d4433-6159-4c89-9dce-b1040cfb63a4"
+    }
+   ],
+   "health_points": 20
+  }
+ }
+}

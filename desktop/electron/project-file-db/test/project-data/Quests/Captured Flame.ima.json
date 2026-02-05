@@ -1,0 +1,613 @@
+{
+ "id": "b55917a3-92ad-4ae8-ae61-5a43a95618b0",
+ "blocks": [
+  {
+   "id": "10c1c030-bfd7-4a5b-8c5e-678937608f19",
+   "name": null,
+   "title": "Goal",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": "Free the wounded fire dragon from the hunters' camp."
+   },
+   "computed": {
+    "value": "Free the wounded fire dragon from the hunters' camp."
+   },
+   "inherited": {},
+   "index": 1.175526,
+   "createdAt": "2025-08-18T13:11:10.990Z",
+   "updatedAt": "2025-08-18T13:11:10.990Z"
+  },
+  {
+   "id": "e8dddcb3-9d3d-4706-b85d-6b48a3d4fc44",
+   "name": "__meta",
+   "title": null,
+   "own": true,
+   "type": "props",
+   "props": {
+    "complete_set": true,
+    "complete_comp": 1,
+    "plan_milestone": {
+     "Enum": "00000000-0000-0000-0000-000000000015",
+     "Name": "beta",
+     "Title": "[[t:MilestoneBeta]]"
+    },
+    "complete_progress": null
+   },
+   "computed": {
+    "complete_track": true,
+    "complete_set": true,
+    "complete_comp": 1,
+    "plan_milestone": {
+     "Enum": "00000000-0000-0000-0000-000000000015",
+     "Name": "beta",
+     "Title": "[[t:MilestoneBeta]]"
+    },
+    "complete_progress": null
+   },
+   "inherited": {
+    "complete_track": true
+   },
+   "index": 1.1755695,
+   "createdAt": "2025-08-20T18:00:15.915Z",
+   "updatedAt": "2025-10-07T05:49:11.289Z"
+  },
+  {
+   "id": "515e5631-4cd7-4751-8cec-4862495e9e6c",
+   "name": null,
+   "title": "Tasks",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Sneak into the camp undetected."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      },
+      {
+       "insert": "Destroy the cage."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      },
+      {
+       "insert": "Distract the hunters."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      }
+     ],
+     "Str": "Sneak into the camp undetected.\nDestroy the cage.\nDistract the hunters.\n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Sneak into the camp undetected."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      },
+      {
+       "insert": "Destroy the cage."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      },
+      {
+       "insert": "Distract the hunters."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      }
+     ],
+     "Str": "Sneak into the camp undetected.\nDestroy the cage.\nDistract the hunters.\n"
+    }
+   },
+   "inherited": {},
+   "index": 3.1755261,
+   "createdAt": "2025-08-18T13:11:13.687Z",
+   "updatedAt": "2025-08-18T13:11:13.687Z"
+  },
+  {
+   "id": "7c2893ce-c36c-4815-a5d3-4bf8a6722d1b",
+   "name": null,
+   "title": "Reward",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "New ally ",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "Ignis",
+       "attributes": {
+        "asset": {
+         "icon": "walk-fill",
+         "value": {
+          "Name": null,
+          "Title": "Ignis",
+          "AssetId": "478512ef-514e-4ec1-a6a6-7c7c764081d1"
+         }
+        }
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "Upgrade:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "  "
+      },
+      {
+       "insert": "Phantom Roar",
+       "attributes": {
+        "asset": {
+         "icon": "sparkling-2-fill",
+         "value": {
+          "Name": null,
+          "Title": "Phantom Roar",
+          "AssetId": "3e2a9044-bb25-4342-bd3c-6a016699bb92"
+         }
+        }
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      }
+     ],
+     "Str": "New ally [Ignis](#asset:478512ef-514e-4ec1-a6a6-7c7c764081d1) \nUpgrade:  [Phantom Roar](#asset:3e2a9044-bb25-4342-bd3c-6a016699bb92) \n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "New ally ",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "Ignis",
+       "attributes": {
+        "asset": {
+         "icon": "walk-fill",
+         "value": {
+          "Name": null,
+          "Title": "Ignis",
+          "AssetId": "478512ef-514e-4ec1-a6a6-7c7c764081d1"
+         }
+        }
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "Upgrade:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "  "
+      },
+      {
+       "insert": "Phantom Roar",
+       "attributes": {
+        "asset": {
+         "icon": "sparkling-2-fill",
+         "value": {
+          "Name": null,
+          "Title": "Phantom Roar",
+          "AssetId": "3e2a9044-bb25-4342-bd3c-6a016699bb92"
+         }
+        }
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      }
+     ],
+     "Str": "New ally [Ignis](#asset:478512ef-514e-4ec1-a6a6-7c7c764081d1) \nUpgrade:  [Phantom Roar](#asset:3e2a9044-bb25-4342-bd3c-6a016699bb92) \n"
+    }
+   },
+   "inherited": {},
+   "index": 5.175526,
+   "createdAt": "2025-08-18T13:11:25.216Z",
+   "updatedAt": "2025-08-20T09:29:51.479Z"
+  },
+  {
+   "id": "1d6b313a-daea-4b3b-910b-4e0c792a77b2",
+   "name": null,
+   "title": "Scene",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": "A torch-lit hunter camp under the cover of night. Inside a cage - a trembling dragon, its fiery breath dimmed."
+   },
+   "computed": {
+    "value": "A torch-lit hunter camp under the cover of night. Inside a cage - a trembling dragon, its fiery breath dimmed."
+   },
+   "inherited": {},
+   "index": 7.175526,
+   "createdAt": "2025-08-18T13:11:25.821Z",
+   "updatedAt": "2025-08-20T07:55:31.832Z"
+  },
+  {
+   "id": "58e705ba-5468-4d9f-959e-a0ae81f83c4c",
+   "name": null,
+   "title": null,
+   "own": true,
+   "type": "script",
+   "props": {
+    "~": null,
+    "start": "63f6f965-138f-4bff-97b5-468d5c9c0af1",
+    "__settings": {
+     "speech": {
+      "main": {
+       "text": {
+        "name": "text",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Text]]",
+        "default": {
+         "Type": "text"
+        },
+        "description": null
+       },
+       "character": {
+        "name": "character",
+        "type": {
+         "Kind": "dcb5d0aa-b55a-4a63-9d85-7cdb6b53e984",
+         "Type": "asset"
+        },
+        "title": "[[t:Character]]",
+        "default": {
+         "Type": "text"
+        },
+        "autoFill": true,
+        "description": null
+       }
+      },
+      "option": {
+       "text": {
+        "name": "text",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Text]]",
+        "default": {
+         "Type": "text"
+        },
+        "description": null
+       }
+      }
+     }
+    },
+    "nodes": {
+     "211e8144-8968-47b2-83a1-4feda455db00": {
+      "next": null,
+      "type": "speech",
+      "options": [
+       {
+        "next": "418b46e4-1cda-42e1-abc1-9d7d8d99c449",
+        "values": {
+         "text": "You burned babies in their cradles. Die"
+        }
+       },
+       {
+        "next": "320b6fb8-5bec-4c55-8743-99331c09d043",
+        "values": {
+         "text": "Why do you hate us?"
+        }
+       }
+      ],
+      "pos": {
+       "x": 190,
+       "y": 130
+      },
+      "values": {
+       "text": "Bring the nets! This one’s still alive!",
+       "character": {
+        "Title": "Hunter",
+        "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+       }
+      }
+     },
+     "320b6fb8-5bec-4c55-8743-99331c09d043": {
+      "next": "418b46e4-1cda-42e1-abc1-9d7d8d99c449",
+      "type": "speech",
+      "pos": {
+       "x": 560,
+       "y": 410
+      },
+      "values": {
+       "text": "Your pack ate my father... when I was a child. Now I repay the debt.",
+       "character": {
+        "Title": "Hunter",
+        "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+       }
+      }
+     },
+     "418b46e4-1cda-42e1-abc1-9d7d8d99c449": {
+      "next": "702c33b6-dab0-4806-a52c-fc82f068634e",
+      "type": "trigger",
+      "subject": "StartBattle",
+      "pos": {
+       "x": 1060,
+       "y": 210
+      }
+     },
+     "63f6f965-138f-4bff-97b5-468d5c9c0af1": {
+      "next": "211e8144-8968-47b2-83a1-4feda455db00",
+      "type": "start",
+      "pos": {
+       "x": 20,
+       "y": 160
+      }
+     },
+     "702c33b6-dab0-4806-a52c-fc82f068634e": {
+      "next": null,
+      "type": "end",
+      "pos": {
+       "x": 1270,
+       "y": 360
+      }
+     }
+    }
+   },
+   "computed": {
+    "start": "63f6f965-138f-4bff-97b5-468d5c9c0af1",
+    "__settings": {
+     "speech": {
+      "main": {
+       "text": {
+        "name": "text",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Text]]",
+        "default": {
+         "Type": "text"
+        },
+        "description": null
+       },
+       "character": {
+        "name": "character",
+        "type": {
+         "Kind": "dcb5d0aa-b55a-4a63-9d85-7cdb6b53e984",
+         "Type": "asset"
+        },
+        "title": "[[t:Character]]",
+        "default": {
+         "Type": "text"
+        },
+        "autoFill": true,
+        "description": null
+       }
+      },
+      "option": {
+       "text": {
+        "name": "text",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Text]]",
+        "default": {
+         "Type": "text"
+        },
+        "description": null
+       }
+      }
+     }
+    },
+    "nodes": {
+     "211e8144-8968-47b2-83a1-4feda455db00": {
+      "next": null,
+      "type": "speech",
+      "options": [
+       {
+        "next": "418b46e4-1cda-42e1-abc1-9d7d8d99c449",
+        "values": {
+         "text": "You burned babies in their cradles. Die"
+        }
+       },
+       {
+        "next": "320b6fb8-5bec-4c55-8743-99331c09d043",
+        "values": {
+         "text": "Why do you hate us?"
+        }
+       }
+      ],
+      "pos": {
+       "x": 190,
+       "y": 130
+      },
+      "values": {
+       "text": "Bring the nets! This one’s still alive!",
+       "character": {
+        "Title": "Hunter",
+        "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+       }
+      }
+     },
+     "320b6fb8-5bec-4c55-8743-99331c09d043": {
+      "next": "418b46e4-1cda-42e1-abc1-9d7d8d99c449",
+      "type": "speech",
+      "pos": {
+       "x": 560,
+       "y": 410
+      },
+      "values": {
+       "text": "Your pack ate my father... when I was a child. Now I repay the debt.",
+       "character": {
+        "Title": "Hunter",
+        "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+       }
+      }
+     },
+     "418b46e4-1cda-42e1-abc1-9d7d8d99c449": {
+      "next": "702c33b6-dab0-4806-a52c-fc82f068634e",
+      "type": "trigger",
+      "subject": "StartBattle",
+      "pos": {
+       "x": 1060,
+       "y": 210
+      }
+     },
+     "63f6f965-138f-4bff-97b5-468d5c9c0af1": {
+      "next": "211e8144-8968-47b2-83a1-4feda455db00",
+      "type": "start",
+      "pos": {
+       "x": 20,
+       "y": 160
+      }
+     },
+     "702c33b6-dab0-4806-a52c-fc82f068634e": {
+      "next": null,
+      "type": "end",
+      "pos": {
+       "x": 1270,
+       "y": 360
+      }
+     }
+    }
+   },
+   "inherited": {
+    "start": null,
+    "__settings": {
+     "speech": {
+      "main": {
+       "text": {
+        "name": "text",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Text]]",
+        "default": {
+         "Type": "text"
+        },
+        "description": null
+       },
+       "character": {
+        "name": "character",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Character]]",
+        "default": {
+         "Type": "text"
+        },
+        "autoFill": true,
+        "description": null
+       }
+      },
+      "option": {
+       "text": {
+        "name": "text",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Text]]",
+        "default": {
+         "Type": "text"
+        },
+        "description": null
+       }
+      }
+     }
+    }
+   },
+   "index": 9.175526,
+   "createdAt": "2025-08-20T18:00:15.698Z",
+   "updatedAt": "2025-08-20T18:28:19.550Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "bar-chart-2-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Captured Flame",
+ "parentIds": [
+  "a0ef46ce-8292-42ae-b520-7f7da9d70545"
+ ],
+ "title": "Captured Flame",
+ "typeIds": [
+  "a0ef46ce-8292-42ae-b520-7f7da9d70545"
+ ],
+ "workspaceId": "5b2f62aa-0d5a-444b-bf9d-3fb87bcb9327",
+ "values": {
+  "__meta": {
+   "complete_set": true,
+   "complete_comp": 1,
+   "plan_milestone": {
+    "Enum": "00000000-0000-0000-0000-000000000015",
+    "Name": "beta",
+    "Title": "[[t:MilestoneBeta]]"
+   },
+   "complete_progress": null
+  }
+ }
+}

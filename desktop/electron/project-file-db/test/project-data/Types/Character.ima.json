@@ -1,0 +1,165 @@
+{
+ "id": "dcb5d0aa-b55a-4a63-9d85-7cdb6b53e984",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-000000000100",
+   "name": "__meta",
+   "title": null,
+   "own": true,
+   "type": "props",
+   "props": {},
+   "computed": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "inherited": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "index": 0,
+   "createdAt": "2025-08-08T14:43:28.908Z",
+   "updatedAt": "2025-08-08T14:43:28.908Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000001",
+   "name": "gallery",
+   "title": "[[t:Gallery]]",
+   "own": true,
+   "type": "gallery",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 1,
+   "createdAt": "2025-08-08T14:43:28.908Z",
+   "updatedAt": "2025-08-08T14:43:28.908Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000002",
+   "name": "description",
+   "title": "[[t:Description]]",
+   "own": true,
+   "type": "text",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 2,
+   "createdAt": "2025-08-08T14:43:28.908Z",
+   "updatedAt": "2025-08-08T14:43:28.908Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000004",
+   "name": "locale",
+   "title": null,
+   "own": true,
+   "type": "locale",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-08-08T14:43:28.908Z",
+   "updatedAt": "2025-08-08T14:43:28.908Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000003",
+   "name": "props",
+   "title": "[[t:Properties]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "damage": null,
+    "health": null,
+    "abilities": null,
+    "__props": {
+     "damage": {
+      "type": "integer",
+      "index": 2.175447569924,
+      "title": "Damage"
+     },
+     "health": {
+      "type": "integer",
+      "index": 1,
+      "title": "Health"
+     },
+     "abilities": {
+      "type": "gddElementSelector",
+      "index": 3.3508951419164,
+      "title": "Abilities",
+      "multiple": true,
+      "params": {
+       "type": {
+        "Title": "Ability",
+        "AssetId": "7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445"
+       }
+      }
+     }
+    }
+   },
+   "computed": {
+    "damage": null,
+    "health": null,
+    "abilities": null,
+    "__props": {
+     "damage": {
+      "type": "integer",
+      "index": 2.175447569924,
+      "title": "Damage"
+     },
+     "health": {
+      "type": "integer",
+      "index": 1,
+      "title": "Health"
+     },
+     "abilities": {
+      "type": "gddElementSelector",
+      "index": 3.3508951419164,
+      "title": "Abilities",
+      "multiple": true,
+      "params": {
+       "type": {
+        "Title": "Ability",
+        "AssetId": "7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445"
+       }
+      }
+     }
+    }
+   },
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-08-08T14:43:28.908Z",
+   "updatedAt": "2025-08-20T07:46:58.236Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "walk-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": "walk-fill",
+ "ownTitle": "Character",
+ "parentIds": [
+  "00000000-0000-0000-0000-000000000035"
+ ],
+ "title": "Character",
+ "typeIds": [
+  "00000000-0000-0000-0000-000000000035"
+ ],
+ "workspaceId": "ae2b3260-4448-4f89-9d6d-aac56479a7b5",
+ "values": {
+  "__meta": {},
+  "gallery": {},
+  "description": {},
+  "locale": {},
+  "props": {
+   "damage": null,
+   "health": null,
+   "abilities": null
+  }
+ }
+}

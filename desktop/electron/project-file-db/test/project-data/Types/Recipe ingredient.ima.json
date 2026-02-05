@@ -1,0 +1,122 @@
+{
+ "id": "b4efc753-cc36-4bda-acf0-0a9491a9034a",
+ "blocks": [
+  {
+   "id": "0ee54172-c00e-48a5-8750-448be887997b",
+   "name": "info",
+   "title": "[[t:Info]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "fields": [
+     {
+      "name": "item",
+      "type": "gddElementSelector",
+      "title": "Item",
+      "params": {
+       "type": {
+        "Title": "Item",
+        "AssetId": "2615e9a4-7799-4343-9e64-9516b75c8b9a"
+       }
+      }
+     },
+     {
+      "name": "quantity",
+      "type": "integer",
+      "title": "Quantity"
+     }
+    ]
+   },
+   "computed": {
+    "fields": [
+     {
+      "name": "item",
+      "type": "gddElementSelector",
+      "title": "Item",
+      "params": {
+       "type": {
+        "Title": "Item",
+        "AssetId": "2615e9a4-7799-4343-9e64-9516b75c8b9a"
+       }
+      }
+     },
+     {
+      "name": "quantity",
+      "type": "integer",
+      "title": "Quantity"
+     }
+    ],
+    "__props": {
+     "fields": {
+      "type": "struct",
+      "index": 1,
+      "title": "[[t:Fields]]",
+      "multiple": true,
+      "params": {
+       "type": {
+        "AssetId": "00000000-0000-0000-0000-000000000021"
+       }
+      }
+     }
+    }
+   },
+   "inherited": {
+    "fields": null,
+    "__props": {
+     "fields": {
+      "type": "struct",
+      "index": 1,
+      "title": "[[t:Fields]]",
+      "multiple": true,
+      "params": {
+       "type": {
+        "AssetId": "00000000-0000-0000-0000-000000000021"
+       }
+      }
+     }
+    }
+   },
+   "index": 1,
+   "createdAt": "2025-08-20T13:34:52.104Z",
+   "updatedAt": "2025-08-20T13:34:52.104Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "box-1-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Recipe ingredient",
+ "parentIds": [
+  "00000000-0000-0000-0000-000000000020"
+ ],
+ "title": "Recipe ingredient",
+ "typeIds": [
+  "00000000-0000-0000-0000-000000000020"
+ ],
+ "workspaceId": "ae2b3260-4448-4f89-9d6d-aac56479a7b5",
+ "values": {
+  "info": {
+   "fields": [
+    {
+     "name": "item",
+     "type": "gddElementSelector",
+     "title": "Item",
+     "params": {
+      "type": {
+       "Title": "Item",
+       "AssetId": "2615e9a4-7799-4343-9e64-9516b75c8b9a"
+      }
+     }
+    },
+    {
+     "name": "quantity",
+     "type": "integer",
+     "title": "Quantity"
+    }
+   ]
+  }
+ }
+}

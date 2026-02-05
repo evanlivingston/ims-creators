@@ -1,0 +1,46 @@
+{
+ "id": "00000000-0000-0000-0000-000000000031",
+ "blocks": [
+  {
+   "id": "c137f5fa-19b6-4623-843d-cb7e86c59570",
+   "name": null,
+   "title": null,
+   "own": true,
+   "type": "checklist-controls",
+   "props": {},
+   "computed": {},
+   "inherited": null,
+   "index": 0,
+   "createdAt": "2024-09-08T19:30:54.625Z",
+   "updatedAt": "2024-09-08T19:30:54.625Z"
+  },
+  {
+   "id": "9cbf394f-34e1-4194-b62d-2367d8ab197d",
+   "name": "content",
+   "title": "[[t:Content]]",
+   "own": true,
+   "type": "checklist",
+   "props": {},
+   "computed": {},
+   "inherited": null,
+   "index": 1,
+   "createdAt": "2024-01-23T19:32:52.452Z",
+   "updatedAt": "2024-01-23T19:32:52.452Z"
+  }
+ ],
+ "isAbstract": true,
+ "projectId": "111112",
+ "references": [],
+ "icon": "list-check-3",
+ "index": null,
+ "name": null,
+ "ownIcon": "list-check-3",
+ "ownTitle": "[[t:TaskListElement]]",
+ "parentIds": [],
+ "title": "[[t:TaskListElement]]",
+ "typeIds": [],
+ "workspaceId": "00000000-0000-0000-0000-000000000004",
+ "values": {
+  "content": {}
+ }
+}

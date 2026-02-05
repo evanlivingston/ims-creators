@@ -1,0 +1,322 @@
+{
+ "id": "15d2415c-8235-4670-8913-75ec8ce2fd8c",
+ "blocks": [
+  {
+   "id": "c0f7800a-38aa-4095-88b4-265ef9de4789",
+   "name": null,
+   "title": null,
+   "own": true,
+   "type": "gallery",
+   "props": {
+    "40ca54e2-8482-4767-beab-edb5345ffe75": {
+     "type": "file",
+     "index": 2.3510884979422,
+     "value": {
+      "Dir": null,
+      "Size": 817718,
+      "Store": "p-EWvDFxqn",
+      "Title": "Flux_Dev_A_majestic_yet_wounded_dragon_with_scales_glistening__1.jpg",
+      "FileId": "40ca54e2-8482-4767-beab-edb5345ffe75"
+     }
+    },
+    "fecbbf20-44f4-469f-8c29-fc6109d175ef": {
+     "type": "file",
+     "index": 1.1755442480766,
+     "value": {
+      "Dir": null,
+      "Size": 415128,
+      "Store": "p-EWvDFxqn",
+      "Title": "hunters_camp.jpg",
+      "FileId": "fecbbf20-44f4-469f-8c29-fc6109d175ef"
+     }
+    }
+   },
+   "computed": {
+    "40ca54e2-8482-4767-beab-edb5345ffe75": {
+     "type": "file",
+     "index": 2.3510884979422,
+     "value": {
+      "Dir": null,
+      "Size": 817718,
+      "Store": "p-EWvDFxqn",
+      "Title": "Flux_Dev_A_majestic_yet_wounded_dragon_with_scales_glistening__1.jpg",
+      "FileId": "40ca54e2-8482-4767-beab-edb5345ffe75"
+     }
+    },
+    "fecbbf20-44f4-469f-8c29-fc6109d175ef": {
+     "type": "file",
+     "index": 1.1755442480766,
+     "value": {
+      "Dir": null,
+      "Size": 415128,
+      "Store": "p-EWvDFxqn",
+      "Title": "hunters_camp.jpg",
+      "FileId": "fecbbf20-44f4-469f-8c29-fc6109d175ef"
+     }
+    }
+   },
+   "inherited": null,
+   "index": 1.1755443,
+   "createdAt": "2025-08-17T14:54:13.418Z",
+   "updatedAt": "2025-08-17T14:54:58.786Z"
+  },
+  {
+   "id": "6dedf8af-0857-416c-8dde-1ec6139fc53d",
+   "name": null,
+   "title": null,
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Darkness.",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\nThe quiet roar of the wind, the rustle of wings. Somewhere in the distance, the crackling of fire.\n"
+      },
+      {
+       "insert": "Voice (off-screen, whispering):",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "\"Run... while you still can...\"",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\nThe camera slowly reveals the world: a night sky dotted with stars and the silhouettes of mountains shrouded in mist. Below—the lights of a hunting camp.\n"
+      },
+      {
+       "insert": "You - ",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "Main Hero",
+       "attributes": {
+        "asset": {
+         "icon": "star-fill",
+         "value": {
+          "Name": null,
+          "Title": "Main Hero",
+          "AssetId": "14b89d76-0cc1-4dc8-8176-be106d84d45c"
+         }
+        }
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": " -",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " are hiding among the rocks. Your wing is injured (a mark from a hunting crossbow), and you can barely stay aloft.\nSuddenly, a scream echoes. A dragon has been captured nearby.\n"
+      },
+      {
+       "insert": "Hunter",
+       "attributes": {
+        "asset": {
+         "icon": "walk-fill",
+         "value": {
+          "Name": null,
+          "Title": "Hunter",
+          "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+         }
+        }
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": "’s Voice:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "\"Drag it to the cage! This one’s going into Lord Valkar’s private collection!\"",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\nWithout warning, an alarm horn blares. You’ve been spotted!\nThe chase begins - you dodge nets and arrows, weaving through narrow ravines until you find yourself above a chasm.\nThe hunters close in.\nA final moment - a shadow of a massive wing eclipses the moon.\n"
+      },
+      {
+       "insert": "Stranger (a muffled roar):",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "\"Fall!\"",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\nSomething knocks you off your feet - and you plunge into the dark abyss...\n"
+      }
+     ],
+     "Str": "Darkness.\nThe quiet roar of the wind, the rustle of wings. Somewhere in the distance, the crackling of fire.\nVoice (off-screen, whispering):\n\"Run... while you still can...\"\nThe camera slowly reveals the world: a night sky dotted with stars and the silhouettes of mountains shrouded in mist. Below—the lights of a hunting camp.\nYou - [Main Hero](#asset:14b89d76-0cc1-4dc8-8176-be106d84d45c)  - are hiding among the rocks. Your wing is injured (a mark from a hunting crossbow), and you can barely stay aloft.\nSuddenly, a scream echoes. A dragon has been captured nearby.\n[Hunter](#asset:bbb048b7-2460-43a8-b6b3-fe50544b9a64) ’s Voice:\n\"Drag it to the cage! This one’s going into Lord Valkar’s private collection!\"\nWithout warning, an alarm horn blares. You’ve been spotted!\nThe chase begins - you dodge nets and arrows, weaving through narrow ravines until you find yourself above a chasm.\nThe hunters close in.\nA final moment - a shadow of a massive wing eclipses the moon.\nStranger (a muffled roar):\n\"Fall!\"\nSomething knocks you off your feet - and you plunge into the dark abyss...\n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Darkness.",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\nThe quiet roar of the wind, the rustle of wings. Somewhere in the distance, the crackling of fire.\n"
+      },
+      {
+       "insert": "Voice (off-screen, whispering):",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "\"Run... while you still can...\"",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\nThe camera slowly reveals the world: a night sky dotted with stars and the silhouettes of mountains shrouded in mist. Below—the lights of a hunting camp.\n"
+      },
+      {
+       "insert": "You - ",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "Main Hero",
+       "attributes": {
+        "asset": {
+         "icon": "star-fill",
+         "value": {
+          "Name": null,
+          "Title": "Main Hero",
+          "AssetId": "14b89d76-0cc1-4dc8-8176-be106d84d45c"
+         }
+        }
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": " -",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " are hiding among the rocks. Your wing is injured (a mark from a hunting crossbow), and you can barely stay aloft.\nSuddenly, a scream echoes. A dragon has been captured nearby.\n"
+      },
+      {
+       "insert": "Hunter",
+       "attributes": {
+        "asset": {
+         "icon": "walk-fill",
+         "value": {
+          "Name": null,
+          "Title": "Hunter",
+          "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+         }
+        }
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": "’s Voice:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "\"Drag it to the cage! This one’s going into Lord Valkar’s private collection!\"",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\nWithout warning, an alarm horn blares. You’ve been spotted!\nThe chase begins - you dodge nets and arrows, weaving through narrow ravines until you find yourself above a chasm.\nThe hunters close in.\nA final moment - a shadow of a massive wing eclipses the moon.\n"
+      },
+      {
+       "insert": "Stranger (a muffled roar):",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "\"Fall!\"",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\nSomething knocks you off your feet - and you plunge into the dark abyss...\n"
+      }
+     ],
+     "Str": "Darkness.\nThe quiet roar of the wind, the rustle of wings. Somewhere in the distance, the crackling of fire.\nVoice (off-screen, whispering):\n\"Run... while you still can...\"\nThe camera slowly reveals the world: a night sky dotted with stars and the silhouettes of mountains shrouded in mist. Below—the lights of a hunting camp.\nYou - [Main Hero](#asset:14b89d76-0cc1-4dc8-8176-be106d84d45c)  - are hiding among the rocks. Your wing is injured (a mark from a hunting crossbow), and you can barely stay aloft.\nSuddenly, a scream echoes. A dragon has been captured nearby.\n[Hunter](#asset:bbb048b7-2460-43a8-b6b3-fe50544b9a64) ’s Voice:\n\"Drag it to the cage! This one’s going into Lord Valkar’s private collection!\"\nWithout warning, an alarm horn blares. You’ve been spotted!\nThe chase begins - you dodge nets and arrows, weaving through narrow ravines until you find yourself above a chasm.\nThe hunters close in.\nA final moment - a shadow of a massive wing eclipses the moon.\nStranger (a muffled roar):\n\"Fall!\"\nSomething knocks you off your feet - and you plunge into the dark abyss...\n"
+    }
+   },
+   "inherited": null,
+   "index": 3.1755443,
+   "createdAt": "2025-08-17T14:55:05.180Z",
+   "updatedAt": "2025-08-20T09:43:14.594Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": null,
+ "index": 3.4604013,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Introduction to game",
+ "parentIds": [],
+ "title": "Introduction to game",
+ "typeIds": [],
+ "workspaceId": "84dc9906-f13a-40cd-a3b0-d015bdcce41a",
+ "values": {}
+}

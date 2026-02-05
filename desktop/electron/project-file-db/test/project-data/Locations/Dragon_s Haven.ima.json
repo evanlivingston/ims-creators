@@ -1,0 +1,412 @@
+{
+ "id": "a8898e7b-8903-4477-93db-d087cc3784d4",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-000000000100",
+   "name": "__meta",
+   "title": null,
+   "own": true,
+   "type": "props",
+   "props": {
+    "complete_set": true,
+    "complete_comp": 1,
+    "plan_milestone": {
+     "Enum": "00000000-0000-0000-0000-000000000015",
+     "Name": "beta",
+     "Title": "[[t:MilestoneBeta]]"
+    },
+    "complete_progress": null
+   },
+   "computed": {
+    "complete_set": true,
+    "complete_comp": 1,
+    "complete_track": true,
+    "plan_milestone": {
+     "Enum": "00000000-0000-0000-0000-000000000015",
+     "Name": "beta",
+     "Title": "[[t:MilestoneBeta]]"
+    },
+    "complete_progress": null
+   },
+   "inherited": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "index": 0,
+   "createdAt": "2025-08-08T14:43:33.765Z",
+   "updatedAt": "2025-10-07T05:49:12.073Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-360000000001",
+   "name": "content",
+   "title": "[[t:Content]]",
+   "own": true,
+   "type": "leveleditor",
+   "props": {
+    "objects": {
+     "2079b43b-64e5-478b-bb7e-c5455e8c5c46": {
+      "x": 1484.687636643208,
+      "y": 537.8867712951951,
+      "id": "2079b43b-64e5-478b-bb7e-c5455e8c5c46",
+      "type": "polygon",
+      "index": 3.5263188936119003,
+      "params": {
+       "fill": "#11eee34d",
+       "points": [
+        {
+         "x": 0,
+         "y": 0
+        },
+        {
+         "x": -22.03757185591212,
+         "y": 64.6912737806814
+        },
+        {
+         "x": 6.886741204972395,
+         "y": 86.7138350677219
+        },
+        {
+         "x": 89.52763566464319,
+         "y": 86.7138350677219
+        },
+        {
+         "x": 90.90498390563789,
+         "y": 4.129230241320101
+        }
+       ],
+       "stroke": "#11eee3ff"
+      }
+     },
+     "2aa915e1-7fe2-4fd1-855f-5247e991f31e": {
+      "x": 606.8820861109352,
+      "y": 286.5185905513655,
+      "id": "2aa915e1-7fe2-4fd1-855f-5247e991f31e",
+      "type": "image",
+      "index": 0.35100304571960006,
+      "locked": true,
+      "params": {
+       "file": {
+        "Dir": null,
+        "Size": 624821,
+        "Store": "p-EWvDFxqn",
+        "Title": "location_200825 (1).png",
+        "FileId": "41ede28d-17be-4ab6-bd7b-0d51ba6b1452"
+       },
+       "width": 1152,
+       "height": 825
+      }
+     },
+     "325b23c2-985d-4601-ac29-4b557821f451": {
+      "x": 1525,
+      "y": 584,
+      "id": "325b23c2-985d-4601-ac29-4b557821f451",
+      "type": "pointer",
+      "index": 4.7017585273755005,
+      "value": {
+       "Name": null,
+       "Title": "Flight Training Tower",
+       "AssetId": "7da27c8f-3b34-46eb-8bf2-b953c994bf14"
+      },
+      "scaleX": 1,
+      "scaleY": 1,
+      "params": {
+       "width": 100,
+       "height": 100
+      }
+     },
+     "84289438-5b67-4d7d-816c-189bdd009d98": {
+      "x": 1186,
+      "y": 719,
+      "id": "84289438-5b67-4d7d-816c-189bdd009d98",
+      "type": "pointer",
+      "index": 5.8771981618601,
+      "value": {
+       "Name": null,
+       "Title": "Main Lair",
+       "AssetId": "1048ad2c-6789-4ddf-8a9a-a2e4527a3ed6"
+      },
+      "scaleX": 1,
+      "scaleY": 1,
+      "params": {
+       "width": 100,
+       "height": 100
+      }
+     },
+     "b20f50a6-85d1-4e6c-a229-99022fc09ad2": {
+      "x": 1186.4980523642166,
+      "y": 729.2076823356143,
+      "id": "b20f50a6-85d1-4e6c-a229-99022fc09ad2",
+      "type": "ellipse",
+      "index": 2.3508792611383003,
+      "scaleX": 1,
+      "scaleY": 1,
+      "params": {
+       "rx": 60.78559330956923,
+       "ry": 35.28675591501775
+      }
+     }
+    }
+   },
+   "computed": {
+    "objects": {
+     "2079b43b-64e5-478b-bb7e-c5455e8c5c46": {
+      "x": 1484.687636643208,
+      "y": 537.8867712951951,
+      "id": "2079b43b-64e5-478b-bb7e-c5455e8c5c46",
+      "type": "polygon",
+      "index": 3.5263188936119003,
+      "params": {
+       "fill": "#11eee34d",
+       "points": [
+        {
+         "x": 0,
+         "y": 0
+        },
+        {
+         "x": -22.03757185591212,
+         "y": 64.6912737806814
+        },
+        {
+         "x": 6.886741204972395,
+         "y": 86.7138350677219
+        },
+        {
+         "x": 89.52763566464319,
+         "y": 86.7138350677219
+        },
+        {
+         "x": 90.90498390563789,
+         "y": 4.129230241320101
+        }
+       ],
+       "stroke": "#11eee3ff"
+      }
+     },
+     "2aa915e1-7fe2-4fd1-855f-5247e991f31e": {
+      "x": 606.8820861109352,
+      "y": 286.5185905513655,
+      "id": "2aa915e1-7fe2-4fd1-855f-5247e991f31e",
+      "type": "image",
+      "index": 0.35100304571960006,
+      "locked": true,
+      "params": {
+       "file": {
+        "Dir": null,
+        "Size": 624821,
+        "Store": "p-EWvDFxqn",
+        "Title": "location_200825 (1).png",
+        "FileId": "41ede28d-17be-4ab6-bd7b-0d51ba6b1452"
+       },
+       "width": 1152,
+       "height": 825
+      }
+     },
+     "325b23c2-985d-4601-ac29-4b557821f451": {
+      "x": 1525,
+      "y": 584,
+      "id": "325b23c2-985d-4601-ac29-4b557821f451",
+      "type": "pointer",
+      "index": 4.7017585273755005,
+      "value": {
+       "Name": null,
+       "Title": "Flight Training Tower",
+       "AssetId": "7da27c8f-3b34-46eb-8bf2-b953c994bf14"
+      },
+      "scaleX": 1,
+      "scaleY": 1,
+      "params": {
+       "width": 100,
+       "height": 100
+      }
+     },
+     "84289438-5b67-4d7d-816c-189bdd009d98": {
+      "x": 1186,
+      "y": 719,
+      "id": "84289438-5b67-4d7d-816c-189bdd009d98",
+      "type": "pointer",
+      "index": 5.8771981618601,
+      "value": {
+       "Name": null,
+       "Title": "Main Lair",
+       "AssetId": "1048ad2c-6789-4ddf-8a9a-a2e4527a3ed6"
+      },
+      "scaleX": 1,
+      "scaleY": 1,
+      "params": {
+       "width": 100,
+       "height": 100
+      }
+     },
+     "b20f50a6-85d1-4e6c-a229-99022fc09ad2": {
+      "x": 1186.4980523642166,
+      "y": 729.2076823356143,
+      "id": "b20f50a6-85d1-4e6c-a229-99022fc09ad2",
+      "type": "ellipse",
+      "index": 2.3508792611383003,
+      "scaleX": 1,
+      "scaleY": 1,
+      "params": {
+       "rx": 60.78559330956923,
+       "ry": 35.28675591501775
+      }
+     }
+    }
+   },
+   "inherited": {},
+   "index": 1,
+   "createdAt": "2025-08-08T14:43:33.765Z",
+   "updatedAt": "2025-10-07T05:48:39.991Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-360000000100",
+   "name": "props",
+   "title": "[[t:Properties]]",
+   "own": false,
+   "type": "props",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-07-31T12:55:34.293Z",
+   "updatedAt": "2025-07-31T12:55:34.293Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "map-2-line",
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Dragon's Haven",
+ "parentIds": [
+  "26752f1d-20c1-4d53-9c56-9d867bd0f875"
+ ],
+ "title": "Dragon's Haven",
+ "typeIds": [
+  "26752f1d-20c1-4d53-9c56-9d867bd0f875",
+  "00000000-0000-0000-0000-000000000036"
+ ],
+ "workspaceId": "ad6ab2ed-1548-4907-907a-2925a6cd3350",
+ "values": {
+  "__meta": {
+   "complete_set": true,
+   "complete_comp": 1,
+   "plan_milestone": {
+    "Enum": "00000000-0000-0000-0000-000000000015",
+    "Name": "beta",
+    "Title": "[[t:MilestoneBeta]]"
+   },
+   "complete_progress": null
+  },
+  "content": {
+   "objects": {
+    "2079b43b-64e5-478b-bb7e-c5455e8c5c46": {
+     "x": 1484.687636643208,
+     "y": 537.8867712951951,
+     "id": "2079b43b-64e5-478b-bb7e-c5455e8c5c46",
+     "type": "polygon",
+     "index": 3.5263188936119003,
+     "params": {
+      "fill": "#11eee34d",
+      "points": [
+       {
+        "x": 0,
+        "y": 0
+       },
+       {
+        "x": -22.03757185591212,
+        "y": 64.6912737806814
+       },
+       {
+        "x": 6.886741204972395,
+        "y": 86.7138350677219
+       },
+       {
+        "x": 89.52763566464319,
+        "y": 86.7138350677219
+       },
+       {
+        "x": 90.90498390563789,
+        "y": 4.129230241320101
+       }
+      ],
+      "stroke": "#11eee3ff"
+     }
+    },
+    "2aa915e1-7fe2-4fd1-855f-5247e991f31e": {
+     "x": 606.8820861109352,
+     "y": 286.5185905513655,
+     "id": "2aa915e1-7fe2-4fd1-855f-5247e991f31e",
+     "type": "image",
+     "index": 0.35100304571960006,
+     "locked": true,
+     "params": {
+      "file": {
+       "Dir": null,
+       "Size": 624821,
+       "Store": "p-EWvDFxqn",
+       "Title": "location_200825 (1).png",
+       "FileId": "41ede28d-17be-4ab6-bd7b-0d51ba6b1452"
+      },
+      "width": 1152,
+      "height": 825
+     }
+    },
+    "325b23c2-985d-4601-ac29-4b557821f451": {
+     "x": 1525,
+     "y": 584,
+     "id": "325b23c2-985d-4601-ac29-4b557821f451",
+     "type": "pointer",
+     "index": 4.7017585273755005,
+     "value": {
+      "Name": null,
+      "Title": "Flight Training Tower",
+      "AssetId": "7da27c8f-3b34-46eb-8bf2-b953c994bf14"
+     },
+     "scaleX": 1,
+     "scaleY": 1,
+     "params": {
+      "width": 100,
+      "height": 100
+     }
+    },
+    "84289438-5b67-4d7d-816c-189bdd009d98": {
+     "x": 1186,
+     "y": 719,
+     "id": "84289438-5b67-4d7d-816c-189bdd009d98",
+     "type": "pointer",
+     "index": 5.8771981618601,
+     "value": {
+      "Name": null,
+      "Title": "Main Lair",
+      "AssetId": "1048ad2c-6789-4ddf-8a9a-a2e4527a3ed6"
+     },
+     "scaleX": 1,
+     "scaleY": 1,
+     "params": {
+      "width": 100,
+      "height": 100
+     }
+    },
+    "b20f50a6-85d1-4e6c-a229-99022fc09ad2": {
+     "x": 1186.4980523642166,
+     "y": 729.2076823356143,
+     "id": "b20f50a6-85d1-4e6c-a229-99022fc09ad2",
+     "type": "ellipse",
+     "index": 2.3508792611383003,
+     "scaleX": 1,
+     "scaleY": 1,
+     "params": {
+      "rx": 60.78559330956923,
+      "ry": 35.28675591501775
+     }
+    }
+   }
+  },
+  "props": {}
+ }
+}

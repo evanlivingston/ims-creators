@@ -1,0 +1,381 @@
+{
+ "id": "2eb31581-df43-46fe-a8a3-f6cd900fe0e1",
+ "blocks": [
+  {
+   "id": "006998ff-f2cd-4132-99d0-033e4b04b4c4",
+   "name": null,
+   "title": null,
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": "The world where dragons once ruled the skies is now under threat. Humans, united in an Order of Conquerors, hunt them using ancient magic and mechanical traps. You are the last free dragon in your flock, and only you can save your kind from slavery and destruction.\n\nBut freedom will require sacrifice..."
+   },
+   "computed": {
+    "value": "The world where dragons once ruled the skies is now under threat. Humans, united in an Order of Conquerors, hunt them using ancient magic and mechanical traps. You are the last free dragon in your flock, and only you can save your kind from slavery and destruction.\n\nBut freedom will require sacrifice..."
+   },
+   "inherited": null,
+   "index": 1.9999999,
+   "createdAt": "2025-08-20T09:40:08.256Z",
+   "updatedAt": "2025-08-20T10:28:28.741Z"
+  },
+  {
+   "id": "fa4c95d2-4669-477b-bc46-2f5734133975",
+   "name": null,
+   "title": null,
+   "own": true,
+   "type": "gallery",
+   "props": {
+    "616fc604-94fc-4087-ae03-afe7e495583e": {
+     "type": "file",
+     "index": 2,
+     "value": {
+      "Dir": null,
+      "Size": 817718,
+      "Store": "p-EWvDFxqn",
+      "Title": "Flux_Dev_A_majestic_yet_wounded_dragon_with_scales_glistening__1.jpg",
+      "FileId": "616fc604-94fc-4087-ae03-afe7e495583e"
+     }
+    }
+   },
+   "computed": {
+    "616fc604-94fc-4087-ae03-afe7e495583e": {
+     "type": "file",
+     "index": 2,
+     "value": {
+      "Dir": null,
+      "Size": 817718,
+      "Store": "p-EWvDFxqn",
+      "Title": "Flux_Dev_A_majestic_yet_wounded_dragon_with_scales_glistening__1.jpg",
+      "FileId": "616fc604-94fc-4087-ae03-afe7e495583e"
+     }
+    }
+   },
+   "inherited": null,
+   "index": 3,
+   "createdAt": "2025-08-20T09:40:27.498Z",
+   "updatedAt": "2025-08-20T10:28:28.741Z"
+  },
+  {
+   "id": "0508164f-bcfd-43bd-8ebc-778e2eb10c1c",
+   "name": null,
+   "title": "Act 1",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Opening scene: ",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "Introduction to game",
+       "attributes": {
+        "asset": {
+         "value": {
+          "Name": null,
+          "Title": "Introduction to game",
+          "AssetId": "15d2415c-8235-4670-8913-75ec8ce2fd8c"
+         }
+        }
+       }
+      },
+      {
+       "insert": " \n\n"
+      },
+      {
+       "insert": "Main quests:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Dragon Mastery",
+       "attributes": {
+        "asset": {
+         "icon": "bar-chart-2-fill",
+         "value": {
+          "Name": null,
+          "Title": "Dragon Mastery",
+          "AssetId": "b62ccaa2-07ac-4d38-8ba0-67588aeb47f9"
+         }
+        }
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "Ancient Power",
+       "attributes": {
+        "asset": {
+         "icon": "bar-chart-2-fill",
+         "value": {
+          "Name": null,
+          "Title": "Ancient Power",
+          "AssetId": "44f73082-6ee9-4f57-bdb5-57e3996092ac"
+         }
+        }
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Side quests:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Captured Flame",
+       "attributes": {
+        "asset": {
+         "icon": "bar-chart-2-fill",
+         "value": {
+          "Name": null,
+          "Title": "Captured Flame",
+          "AssetId": "b55917a3-92ad-4ae8-ae61-5a43a95618b0"
+         }
+        }
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Locations:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Dragon's Haven",
+       "attributes": {
+        "asset": {
+         "icon": "map-2-line",
+         "value": {
+          "Name": null,
+          "Title": "Dragon's Haven",
+          "AssetId": "a8898e7b-8903-4477-93db-d087cc3784d4"
+         }
+        }
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      }
+     ],
+     "Str": "Opening scene: [Introduction to game](#asset:15d2415c-8235-4670-8913-75ec8ce2fd8c) \n\nMain quests:\n[Dragon Mastery](#asset:b62ccaa2-07ac-4d38-8ba0-67588aeb47f9) \n[Ancient Power](#asset:44f73082-6ee9-4f57-bdb5-57e3996092ac) \n\nSide quests:\n[Captured Flame](#asset:b55917a3-92ad-4ae8-ae61-5a43a95618b0) \n\nLocations:\n[Dragon's Haven](#asset:a8898e7b-8903-4477-93db-d087cc3784d4) \n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Opening scene: ",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "Introduction to game",
+       "attributes": {
+        "asset": {
+         "value": {
+          "Name": null,
+          "Title": "Introduction to game",
+          "AssetId": "15d2415c-8235-4670-8913-75ec8ce2fd8c"
+         }
+        }
+       }
+      },
+      {
+       "insert": " \n\n"
+      },
+      {
+       "insert": "Main quests:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Dragon Mastery",
+       "attributes": {
+        "asset": {
+         "icon": "bar-chart-2-fill",
+         "value": {
+          "Name": null,
+          "Title": "Dragon Mastery",
+          "AssetId": "b62ccaa2-07ac-4d38-8ba0-67588aeb47f9"
+         }
+        }
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "Ancient Power",
+       "attributes": {
+        "asset": {
+         "icon": "bar-chart-2-fill",
+         "value": {
+          "Name": null,
+          "Title": "Ancient Power",
+          "AssetId": "44f73082-6ee9-4f57-bdb5-57e3996092ac"
+         }
+        }
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Side quests:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Captured Flame",
+       "attributes": {
+        "asset": {
+         "icon": "bar-chart-2-fill",
+         "value": {
+          "Name": null,
+          "Title": "Captured Flame",
+          "AssetId": "b55917a3-92ad-4ae8-ae61-5a43a95618b0"
+         }
+        }
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Locations:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Dragon's Haven",
+       "attributes": {
+        "asset": {
+         "icon": "map-2-line",
+         "value": {
+          "Name": null,
+          "Title": "Dragon's Haven",
+          "AssetId": "a8898e7b-8903-4477-93db-d087cc3784d4"
+         }
+        }
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      }
+     ],
+     "Str": "Opening scene: [Introduction to game](#asset:15d2415c-8235-4670-8913-75ec8ce2fd8c) \n\nMain quests:\n[Dragon Mastery](#asset:b62ccaa2-07ac-4d38-8ba0-67588aeb47f9) \n[Ancient Power](#asset:44f73082-6ee9-4f57-bdb5-57e3996092ac) \n\nSide quests:\n[Captured Flame](#asset:b55917a3-92ad-4ae8-ae61-5a43a95618b0) \n\nLocations:\n[Dragon's Haven](#asset:a8898e7b-8903-4477-93db-d087cc3784d4) \n"
+    }
+   },
+   "inherited": null,
+   "index": 4,
+   "createdAt": "2025-08-20T09:23:09.846Z",
+   "updatedAt": "2025-08-20T10:59:35.855Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "flag-2-fill",
+ "index": 3.1755683,
+ "name": null,
+ "ownIcon": "flag-2-fill",
+ "ownTitle": "Main plot",
+ "parentIds": [],
+ "title": "Main plot",
+ "typeIds": [],
+ "workspaceId": "84dc9906-f13a-40cd-a3b0-d015bdcce41a",
+ "values": {}
+}

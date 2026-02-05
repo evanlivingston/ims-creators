@@ -1,0 +1,107 @@
+{
+ "id": "fc054243-5903-4830-ad07-95e72094656a",
+ "index": 4,
+ "title": "Abilities",
+ "name": null,
+ "parentId": null,
+ "projectId": "EWvDFxqn",
+ "props": {
+  "type": "collection",
+  "asset": {
+   "Title": "Ability",
+   "AssetId": "7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445"
+  },
+  "views": {
+   "list": {
+    "key": "list",
+    "sort": [],
+    "type": "list",
+    "index": 2.175707839511,
+    "props": [
+     {
+      "prop": "title",
+      "width": 200
+     }
+    ],
+    "title": "List",
+    "filter": []
+   },
+   "cards": {
+    "key": "cards",
+    "sort": [],
+    "type": "cards",
+    "index": 3.3514156837096998,
+    "props": [
+     {
+      "prop": "title",
+      "width": 200
+     }
+    ],
+    "title": "Cards",
+    "filter": []
+   },
+   "table": {
+    "key": "table",
+    "sort": [],
+    "type": "table",
+    "index": 1,
+    "props": [
+     {
+      "prop": "title",
+      "width": 200
+     },
+     {
+      "prop": "description|value",
+      "width": null
+     },
+     {
+      "prop": "props|type",
+      "width": null
+     },
+     {
+      "prop": "props|cooldown",
+      "width": null
+     },
+     {
+      "prop": "props|mana_cost",
+      "width": null
+     },
+     {
+      "prop": "props|damage",
+      "width": null
+     },
+     {
+      "prop": "props|damage_type",
+      "width": null
+     },
+     {
+      "prop": "props|range",
+      "width": null
+     },
+     {
+      "prop": "props|target_type",
+      "width": null
+     },
+     {
+      "prop": "props|animation",
+      "width": null
+     },
+     {
+      "prop": "props|effect",
+      "width": null
+     },
+     {
+      "prop": "props|effect_duration",
+      "width": null
+     },
+     {
+      "prop": "props|effect_value",
+      "width": null
+     }
+    ],
+    "title": "Table",
+    "filter": []
+   }
+  }
+ }
+}

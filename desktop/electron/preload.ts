@@ -1,0 +1,65 @@
+import { type UpdateNewVersion } from '#logic/managers/DesktopUpdateManager';
+import type { IpcRendererEvent } from 'electron';
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { ipcRenderer, contextBridge, webUtils } = require('electron');
+
+let inited = false;
+let initPromiseResolve!: () => void;
+let initPromiseReject!: (err: Error) => void
+const initPromise = new Promise<void>((res, rej) =>{ 
+  initPromiseResolve = res;
+  initPromiseReject = rej;
+})
+
+ipcRenderer.on('init', async (_ev: IpcRendererEvent) => {
+  if (!inited) {
+    try {
+      inited = true;
+      const imshost = {} as any;
+
+      const imshostIndex = (await ipcRenderer.invoke('imshost-index')) as {
+        [api: string]: string[];
+      };
+
+      for (const [api, methods] of Object.entries(imshostIndex)) {
+        imshost[api] = Object.fromEntries(
+          methods.map((method) => {
+            return [
+              method,
+              async (...args: unknown[]) => {
+                const answer = await ipcRenderer.invoke('imshost-call', api, method, args);
+                if (answer.error) throw new Error(answer.error);
+                return answer.result;
+              },
+            ];
+          }),
+        );
+      }
+
+      contextBridge.exposeInMainWorld('imshostRaw', imshost);
+      initPromiseResolve();
+    }
+    catch (err: any){
+      initPromiseReject(err);
+    }
+  }
+
+  ipcRenderer.send('init-done');
+});
+
+contextBridge.exposeInMainWorld('loadImshost', () => initPromise);
+contextBridge.exposeInMainWorld('imsGetPathForFile',
+  async (file: File) => {
+    return webUtils.getPathForFile(file);
+  }
+);
+
+contextBridge.exposeInMainWorld('requestNewVersionAvailable',
+  (func: (version: UpdateNewVersion | null) => void) => {
+    ipcRenderer.on('new-version-available', 
+      async (event: IpcRendererEvent, new_version: UpdateNewVersion | null) =>
+        await func(new_version)
+    );
+  }
+);

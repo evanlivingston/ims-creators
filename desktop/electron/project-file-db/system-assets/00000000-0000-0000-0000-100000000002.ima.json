@@ -1,0 +1,51 @@
+{
+ "id": "00000000-0000-0000-0000-100000000002",
+ "blocks": [
+  {
+   "id": "9ee679f7-6ce4-4ea5-a5c2-2e122de8ec2a",
+   "name": "game-pulse",
+   "title": "[[t:GamePulseProps]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "autogenerate": true,
+    "__props": {
+     "autogenerate": {
+      "index": 1,
+      "title": "[[t:AutogeneratePulseEvents]]"
+     }
+    }
+   },
+   "computed": {
+    "autogenerate": true,
+    "__props": {
+     "autogenerate": {
+      "index": 1,
+      "title": "[[t:AutogeneratePulseEvents]]"
+     }
+    }
+   },
+   "inherited": null,
+   "index": 1,
+   "createdAt": "2023-10-15T22:21:37.818Z",
+   "updatedAt": "2023-10-15T22:22:24.629Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "111112",
+ "references": [],
+ "icon": "tools-fill",
+ "index": null,
+ "name": "project_props",
+ "ownIcon": "tools-fill",
+ "ownTitle": "[[t:ProjectProps]]",
+ "parentIds": [],
+ "title": "[[t:ProjectProps]]",
+ "typeIds": [],
+ "workspaceId": "00000000-0000-0000-0000-000000000004",
+ "values": {
+  "game-pulse": {
+   "autogenerate": true
+  }
+ }
+}

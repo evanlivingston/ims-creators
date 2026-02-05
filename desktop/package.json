@@ -1,0 +1,156 @@
+{
+  "name": "ims-creators-desktop",
+  "productName": "ImscDesktop",
+  "version": "0.6.0",
+  "private": true,
+  "type": "module",
+  "author": "ImStocker <support@cr5.space>",
+  "description": "Game design editor: write docs, manage game enities, create dialogues, prototype levels",
+  "scripts": {
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "build": "nuxt generate && npm run postbuild",
+    "postbuild": "node scripts/postbuild.js",
+    "package": "npm run build && electron-builder --publish never",
+    "preview": "nuxt preview",
+    "rebuild": "electron-rebuild -f -w better-sqlite3",
+    "postinstall": "nuxt prepare && electron-builder install-app-deps",
+    "typeorm": "ts-node ./node_modules/typeorm/cli.js",
+    "migration:create": "cross-env npm run typeorm -- migration:create ./electron/project-db/migrations/%npm_config_name%",
+    "test": "vitest"
+  },
+  "main": "dist-electron/main.js",
+  "build": {
+    "afterSign": "scripts/notarize.js",
+    "afterPack": "scripts/after_pack.js",
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "https://ims.cr5.space/desktop/releases/"
+      }
+    ],
+    "productName": "ImscDesktop",
+    "appId": "space.imsc.desktop",
+    "files": [
+      "dist-client",
+      "dist-electron"
+    ],
+    "asarUnpack": [],
+    "asar": {
+      "smartUnpack": false
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "sign": false
+    },
+    "mac": {
+      "asarUnpack": [],
+      "gatekeeperAssess": false,
+      "entitlements": "resources/entitlements.mac.plist",
+      "entitlementsInherit": "resources/entitlements.mac.plist",
+      "hardenedRuntime": true,
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "asarUnpack": []
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "rpm",
+        "snap",
+        "AppImage"
+      ],
+      "category": "Development",
+      "asarUnpack": []
+    },
+    "directories": {
+      "buildResources": "resources",
+      "output": "release"
+    }
+  },
+  "overrides": {
+    "@codemirror/state": "$@codemirror/state",
+    "@codemirror/view": "$@codemirror/view",
+    "@codemirror/language": "$@codemirror/language"
+  },
+  "dependencies": {
+    "@codemirror/autocomplete": "^6.18.6",
+    "@codemirror/commands": "^6.8.1",
+    "@codemirror/language": "^6.11.3",
+    "@codemirror/language-data": "^6.5.2",
+    "@codemirror/legacy-modes": "^6.5.2",
+    "@codemirror/lint": "^6.8.5",
+    "@codemirror/search": "^6.5.11",
+    "@codemirror/state": "^6.5.2",
+    "@codemirror/theme-one-dark": "^6.1.3",
+    "@codemirror/view": "^6.38.1",
+    "@electron/notarize": "^3.1.1",
+    "@nuxt/eslint": "^1.4.1",
+    "@nuxtjs/i18n": "^9.5.4",
+    "axios": "^1.13.4",
+    "better-sqlite3": "^11.10.0",
+    "dotenv": "^17.2.3",
+    "electron-json-storage": "^4.6.0",
+    "electron-log": "^5.4.0",
+    "electron-updater": "^6.7.3",
+    "eslint": "^9.27.0",
+    "fs-extra": "^11.3.3",
+    "hash-wasm": "^4.12.0",
+    "nuxt": "^3.17.3",
+    "remixicon": "^4.9.1",
+    "tmp": "^0.2.5",
+    "typeorm": "^0.3.24",
+    "validator": "^13.15.26",
+    "vitest": "^4.0.15",
+    "vue": "^3.5.14",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@types/electron-json-storage": "^4.5.4",
+    "@types/electron-squirrel-startup": "^1.0.2",
+    "@types/tmp": "^0.2.6",
+    "cross-env": "^7.0.3",
+    "electron": "^36.2.1",
+    "electron-builder": "^26.0.12",
+    "electron-devtools-installer": "^4.0.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "nuxt-electron": "^0.7.0",
+    "sass-embedded": "^1.97.3",
+    "ts-node": "^10.9.2",
+    "vite-plugin-electron": "^0.29.0",
+    "vite-plugin-electron-renderer": "^0.14.6",
+    "vite-plugin-node-polyfills": "^0.23.0",
+    "vite-plugin-vue-devtools": "^7.7.6",
+    "@types/validator": "^13.15.10"
+  }
+}

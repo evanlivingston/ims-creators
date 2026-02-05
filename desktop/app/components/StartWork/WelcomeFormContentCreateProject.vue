@@ -1,0 +1,287 @@
+<template>
+  <div class="WelcomeFormContentCreateProject">
+    <div
+      class="WelcomeFormContentCreateProject-back use-buttons-without-border"
+    >
+      <button class="is-button" @click="$emit('back')">
+        <i class="ri-arrow-left-line"></i>
+        {{ $t('desktop.welcome.back') }}
+      </button>
+    </div>
+    <div class="WelcomeFormContentCreateProject-Other">
+      <div class="WelcomeFormContentCreateProject-Action">
+        <div class="WelcomeFormContentStart-Action-left">
+          <div class="WelcomeFormContentStart-Action-title">{{$t('desktop.welcome.type')}}</div>
+          <!-- <div class="WelcomeFormContentStart-Action-subtext">{{$t('desktop.welcome.typeTooltip')}}</div> -->
+        </div>
+        <ValueSwitcher
+          v-model="params.projectType"
+          :options="projectTypes"
+          label-prop="title"
+          value-prop="id"
+        >
+          <template #option="{ option }">
+            <div class="WelcomeFormContentStart-TypeOption">
+              <i :class="option.icon"></i>
+              {{ option.title }}
+            </div>
+          </template>
+        </ValueSwitcher>
+      </div>
+      <div class="WelcomeFormContentCreateProject-Action">
+        <div class="WelcomeFormContentStart-Action-left">
+          <div class="WelcomeFormContentStart-Action-title">{{$t('desktop.welcome.name')}}</div>
+          <!-- <div class="WelcomeFormContentStart-Action-subtext">{{$t('desktop.welcome.nameTooltip')}}</div> -->
+        </div>
+        <ims-input
+          ref="inputName"
+          v-model="params.projectName"
+          class="WelcomeFormContentStart-Action-right"
+          placeholder="Name"
+          type="text"
+        ></ims-input>
+      </div>
+      <div class="WelcomeFormContentCreateProject-Action">
+        <div class="WelcomeFormContentStart-Action-left">
+          <div class="WelcomeFormContentStart-Action-title">{{$t('desktop.welcome.location')}}</div>
+          <!-- <div class="WelcomeFormContentStart-Action-subtext">{{$t('desktop.welcome.locationTooltip')}}</div> -->
+        </div>
+        <SelectFolderForm 
+          :value="params.projectLocation"
+          :placeholder="$t('desktop.welcome.location')"
+          @update="params.projectLocation = $event">
+        </SelectFolderForm>
+      </div>
+      <div class="WelcomeFormContentCreateProject-Action">
+        <div class="WelcomeFormContentStart-Action-left">
+          <div class="WelcomeFormContentStart-Action-title">{{$t('desktop.welcome.template')}}</div>
+        </div>
+        <select-template
+          :value="currentProjectTemplateId"
+          @update="currentProjectTemplateId = $event"
+          class="WelcomeFormContentStart-Action-right">
+        </select-template>
+      </div>
+    </div>
+    <div v-if="params.projectName && hasWarning" class="WelcomeFormContentCreateProject-warning">
+      <i class="ri-error-warning-fill"></i>
+      {{ $t('desktop.welcome.sameProjectTitle') }}
+    </div>
+    <AdvancedForm :project-folder-name="params.projectFolderName" @update:folder-name="params.projectFolderName = $event"></AdvancedForm>
+    <div class="WelcomeFormContentCreateProject-create">
+      <button class="is-button accent" :class="{ loading }" @click="createProject" :disabled="!canCreate || hasWarning">{{$t('desktop.welcome.create')}}</button>
+    </div>
+  </div>
+</template>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import ValueSwitcher from '~ims-app-base/components/Common/ValueSwitcher.vue';
+import ImsInput from '~ims-app-base/components/Common/ImsInput.vue';
+import SelectFolderForm from '../Common/SelectFolderForm.vue';
+import AdvancedForm from './AdvancedForm.vue';
+import UiManager from '~ims-app-base/logic/managers/UiManager';
+import type { PropType } from 'vue';
+import * as node_path from 'path';
+import ImsSelect from '~ims-app-base/components/Common/ImsSelect.vue';
+import SelectTemplate from '~ims-creators/components/Project/SelectTemplate.vue';
+import DesktopProjectManager from '#logic/managers/DesktopProjectManager';
+import DesktopCreatorManager from '#logic/managers/DesktopCreatorManager';
+
+const forbiddenFilenameCharsRegexp = new RegExp("[^- А-Яа-яa-zA-Z0-9,@.;'`!)(]+", 'g');
+
+export type CreateProjectParams = {
+  projectLocation?: string,
+  projectName?: string,
+  projectType?: 'local' | 'cloud',
+  projectFolderName?: string,
+}
+
+export default defineComponent({
+  name: 'WelcomeFormContentCreateProject',
+  components: {
+    ValueSwitcher,
+    ImsInput,
+    SelectFolderForm,
+    AdvancedForm,
+    ImsSelect,
+    SelectTemplate,
+  },
+  emits: ['back'],
+  props: {
+    createProjectParams: {
+      type: Object as PropType<CreateProjectParams>,
+      default: () => {},
+    }
+  },
+  data() {
+    return {
+      params: {
+        projectLocation: '',
+        projectName: '',
+        projectType: 'local',
+        projectFolderName: '',
+      },
+      currentProjectTemplateId: '',
+      loading: false,
+      hasWarning: false,
+    };
+  },
+  watch: {
+    async projectPath(new_val: string){
+      await this.checkExistsProject(new_val);
+    },
+    projectName(new_val: string){
+      this.params.projectFolderName = new_val.trim().replace(forbiddenFilenameCharsRegexp, '_');
+    }
+  },
+  async mounted(){
+    this.params.projectLocation = await window.imshost.shell.getDocumentsFolder();
+    this.params = {
+      ...this.params,
+      ...this.createProjectParams
+    }
+    if (this.$refs['inputName']) {
+      (this.$refs['inputName'] as HTMLButtonElement).focus();
+    }
+  },
+  computed: {
+    projectName(){
+      return this.params.projectName;
+    },
+    projectPath(){
+      return node_path.join(this.params.projectLocation, this.params.projectFolderName);
+    },
+    projectTypes(){
+      return [
+        {
+          id: 'local',
+          name: 'local',
+          title: this.$t('desktop.welcome.local'),
+          icon: 'ri-computer-fill',
+        },
+        // {
+        //   id: 'cloud',
+        //   name: 'cloud',
+        //   title: this.$t('desktop.welcome.cloud'),
+        //   icon: 'ri-cloud-fill',
+        // },
+      ]
+    },
+    canCreate(){
+      return this.params.projectName && this.params.projectFolderName && this.params.projectLocation;
+    }
+  },
+  methods: {
+    async checkExistsProject(val: string){
+      this.hasWarning = await window.imshost.fs.exists(val);
+    },
+    async createProject() {
+      this.loading = true;
+      await this.$getAppManager()
+        .get(UiManager)
+        .doTask(async () => {
+          if(!this.canCreate){
+            throw new Error(this.$t('fields.allFieldsMustBeFulled'));
+          }
+          
+          // const new_project_info = await this.$getAppManager()
+          // .get(ProjectManager)
+          // .createProject({
+          //   title: this.params.projectName,
+          //   template_ids: [],
+          //   menu_settings: {
+          //     'menu-about': false,
+          //     'menu-gamedesign': true,
+          //     'menu-team': true,
+          //   },
+          //   init_script: 'starter',
+          //   useStarterTemplate: true,
+          // });
+
+          // if(new_project_info){
+            await this.$getAppManager().get(DesktopProjectManager).initializeLocalProject(this.projectPath, {
+              id: null,
+              title: this.params.projectName,
+            });
+            if(this.currentProjectTemplateId){
+              await this.$getAppManager().get(DesktopProjectManager).importTemplateProject(this.currentProjectTemplateId);
+            }
+            await this.$getAppManager().get(DesktopCreatorManager).openProjectWindow(this.projectPath);          
+          // }
+        })
+        this.loading = false;
+      
+    },
+  },
+});
+</script>
+
+<style lang="scss">
+.WelcomeFormContentCreateProject-Action-subtext {
+  font-size: 12px;
+  color: var(--local-sub-text-color);
+}
+.WelcomeFormContentCreateProject-back {
+  display: flex;
+  color: var(--local-sub-text-color);
+  padding-left: 10px;
+  padding-top: 5px;
+}
+.WelcomeFormContentCreateProject {
+  display: flex;
+  flex-direction: column;
+}
+.WelcomeFormContentCreateProject-Action {
+  display: flex;
+  gap: 10px;
+  padding: 10px 0;
+  align-items: center;
+  justify-content: space-between;
+  &:first-child {
+    padding-top: 0;
+  }
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--local-border-color);
+  }
+  .ValueSwitcher{
+    width: auto;
+  }
+}
+.WelcomeFormContentCreateProject-Action-left,
+.WelcomeFormContentCreateProject-Action-title,
+.WelcomeFormContentCreateProject-Action-select {
+  flex: 1;
+}
+.WelcomeFormContentCreateProject-Main {
+  padding: 10px 15px;
+  background-color: var(--app-menu-bg-color);
+  border: 1px solid var(--app-menu-bg-color);
+  border-radius: 10px;
+}
+.WelcomeFormContentCreateProject-Other {
+  padding: 10px 15px;
+}
+.WelcomeFormContentStart-Action-right {
+  &.ImsInput{
+    --ImsInput-autoWidth: 60%;
+  }
+  &.ImsSelect{
+    width: 60%;
+  }
+}
+.WelcomeFormContentCreateProject-create {
+  text-align: center;
+}
+.WelcomeFormContentCreateProject-warning{
+  border: 1px solid var(--color-main-error);
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+}
+
+.WelcomeFormContentStart-TypeOption {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+</style>

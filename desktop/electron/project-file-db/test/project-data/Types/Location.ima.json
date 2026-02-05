@@ -1,0 +1,77 @@
+{
+ "id": "26752f1d-20c1-4d53-9c56-9d867bd0f875",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-000000000100",
+   "name": "__meta",
+   "title": null,
+   "own": true,
+   "type": "props",
+   "props": {},
+   "computed": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "inherited": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "index": 0,
+   "createdAt": "2025-08-08T14:43:29.138Z",
+   "updatedAt": "2025-08-08T14:43:29.138Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-360000000001",
+   "name": "content",
+   "title": "[[t:Content]]",
+   "own": true,
+   "type": "leveleditor",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 1,
+   "createdAt": "2025-08-08T14:43:29.138Z",
+   "updatedAt": "2025-08-08T14:43:29.138Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-360000000100",
+   "name": "props",
+   "title": "[[t:Properties]]",
+   "own": false,
+   "type": "props",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-07-31T12:55:34.293Z",
+   "updatedAt": "2025-07-31T12:55:34.293Z"
+  }
+ ],
+ "isAbstract": true,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "map-2-line",
+ "index": null,
+ "name": null,
+ "ownIcon": "map-2-line",
+ "ownTitle": "Location",
+ "parentIds": [
+  "00000000-0000-0000-0000-000000000036"
+ ],
+ "title": "Location",
+ "typeIds": [
+  "00000000-0000-0000-0000-000000000036"
+ ],
+ "workspaceId": "ae2b3260-4448-4f89-9d6d-aac56479a7b5",
+ "values": {
+  "__meta": {},
+  "content": {},
+  "props": {}
+ }
+}

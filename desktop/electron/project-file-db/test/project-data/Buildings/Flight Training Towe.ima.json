@@ -1,0 +1,225 @@
+{
+ "id": "7da27c8f-3b34-46eb-8bf2-b953c994bf14",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-000000000100",
+   "name": "__meta",
+   "title": null,
+   "own": true,
+   "type": "props",
+   "props": {},
+   "computed": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "inherited": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "index": 0,
+   "createdAt": "2025-08-08T14:43:32.954Z",
+   "updatedAt": "2025-08-08T14:43:32.954Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000001",
+   "name": "gallery",
+   "title": "[[t:Gallery]]",
+   "own": true,
+   "type": "gallery",
+   "props": {
+    "main": {
+     "type": "file",
+     "index": 1.175439621444,
+     "value": {
+      "Dir": null,
+      "Size": 2062103,
+      "Store": "p-wQhLQkLr",
+      "Title": "image-12d7264e-fa48-4941-85c0-c856330586d4.png",
+      "FileId": "06b71260-aa63-48b0-ac9a-ba2dea231b31"
+     }
+    }
+   },
+   "computed": {
+    "main": {
+     "type": "file",
+     "index": 1.175439621444,
+     "value": {
+      "Dir": null,
+      "Size": 2062103,
+      "Store": "p-wQhLQkLr",
+      "Title": "image-12d7264e-fa48-4941-85c0-c856330586d4.png",
+      "FileId": "06b71260-aa63-48b0-ac9a-ba2dea231b31"
+     }
+    }
+   },
+   "inherited": {},
+   "index": 1,
+   "createdAt": "2025-08-08T14:43:32.954Z",
+   "updatedAt": "2025-08-08T14:43:32.954Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000002",
+   "name": "description",
+   "title": "[[t:Description]]",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": "Master aerial combat and agility"
+   },
+   "computed": {
+    "value": "Master aerial combat and agility"
+   },
+   "inherited": {},
+   "index": 2,
+   "createdAt": "2025-08-08T14:43:32.954Z",
+   "updatedAt": "2025-08-08T14:43:32.954Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000004",
+   "name": "locale",
+   "title": null,
+   "own": true,
+   "type": "locale",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-08-08T14:43:32.954Z",
+   "updatedAt": "2025-08-08T14:43:32.954Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000003",
+   "name": "props",
+   "title": "[[t:Properties]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "activities": [
+     {
+      "Title": "Time trials",
+      "AssetId": "6cbd1c5a-c528-4df8-9faf-390ec90fb920"
+     },
+     {
+      "Title": "Combat drills",
+      "AssetId": "667c3f86-0d05-4b6b-a8cf-d7d33c7626dc"
+     },
+     {
+      "Title": "Unlock maneuvers",
+      "AssetId": "6a00aa97-827b-486b-a145-3a7ef7b82d75"
+     }
+    ]
+   },
+   "computed": {
+    "activities": [
+     {
+      "Title": "Time trials",
+      "AssetId": "6cbd1c5a-c528-4df8-9faf-390ec90fb920"
+     },
+     {
+      "Title": "Combat drills",
+      "AssetId": "667c3f86-0d05-4b6b-a8cf-d7d33c7626dc"
+     },
+     {
+      "Title": "Unlock maneuvers",
+      "AssetId": "6a00aa97-827b-486b-a145-3a7ef7b82d75"
+     }
+    ],
+    "__props": {
+     "activities": {
+      "hint": "What are the activities here?",
+      "type": "gddElementSelector",
+      "index": 1,
+      "title": "Activities",
+      "multiple": true,
+      "params": {
+       "type": {
+        "Title": "Activity",
+        "AssetId": "cda8f145-c0fb-4b68-b85e-be8c1931eb9a"
+       }
+      }
+     }
+    }
+   },
+   "inherited": {
+    "activities": null,
+    "__props": {
+     "activities": {
+      "hint": "What are the activities here?",
+      "type": "gddElementSelector",
+      "index": 1,
+      "title": "Activities",
+      "multiple": true,
+      "params": {
+       "type": {
+        "Title": "Activity",
+        "AssetId": "cda8f145-c0fb-4b68-b85e-be8c1931eb9a"
+       }
+      }
+     }
+    }
+   },
+   "index": 3,
+   "createdAt": "2025-08-08T14:43:32.954Z",
+   "updatedAt": "2025-08-08T14:43:32.954Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "ancient-gate-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Flight Training Tower",
+ "parentIds": [
+  "2f378d8f-0e7d-4c28-924e-9320f02d8068"
+ ],
+ "title": "Flight Training Tower",
+ "typeIds": [
+  "2f378d8f-0e7d-4c28-924e-9320f02d8068",
+  "00000000-0000-0000-0000-000000000035"
+ ],
+ "workspaceId": "99ab406e-b215-45ed-aea0-7d11a77dae9b",
+ "values": {
+  "__meta": {},
+  "gallery": {
+   "main": {
+    "type": "file",
+    "index": 1.175439621444,
+    "value": {
+     "Dir": null,
+     "Size": 2062103,
+     "Store": "p-wQhLQkLr",
+     "Title": "image-12d7264e-fa48-4941-85c0-c856330586d4.png",
+     "FileId": "06b71260-aa63-48b0-ac9a-ba2dea231b31"
+    }
+   }
+  },
+  "description": {
+   "value": "Master aerial combat and agility"
+  },
+  "locale": {},
+  "props": {
+   "activities": [
+    {
+     "Title": "Time trials",
+     "AssetId": "6cbd1c5a-c528-4df8-9faf-390ec90fb920"
+    },
+    {
+     "Title": "Combat drills",
+     "AssetId": "667c3f86-0d05-4b6b-a8cf-d7d33c7626dc"
+    },
+    {
+     "Title": "Unlock maneuvers",
+     "AssetId": "6a00aa97-827b-486b-a145-3a7ef7b82d75"
+    }
+   ]
+  }
+ }
+}

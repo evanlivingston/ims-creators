@@ -1,0 +1,738 @@
+{
+ "id": "00000000-0000-0000-0000-100000000004",
+ "blocks": [
+  {
+   "id": "b8cb4214-10e4-4ee8-a4e5-a6fd27e8d218",
+   "name": "info",
+   "title": "[[t:Info]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "items": [
+     {
+      "name": "action",
+      "title": "[[t:GenreAction]]"
+     },
+     {
+      "name": "action_rpg",
+      "title": "[[t:GenreActionRPG]]"
+     },
+     {
+      "name": "adventure",
+      "title": "[[t:GenreAdventure]]"
+     },
+     {
+      "name": "adventure_rpg",
+      "title": "[[t:GenreAdventureRPG]]"
+     },
+     {
+      "name": "all_sports",
+      "title": "[[t:GenreAllSports]]"
+     },
+     {
+      "name": "arcade_rhythm",
+      "title": "[[t:GenreArcadeRhythm]]"
+     },
+     {
+      "name": "building_automation",
+      "title": "[[t:GenreBuildingAutomation]]"
+     },
+     {
+      "name": "card_board",
+      "title": "[[t:GenreCardBoard]]"
+     },
+     {
+      "name": "casino",
+      "title": "[[t:GenreCasino]]"
+     },
+     {
+      "name": "casual",
+      "title": "[[t:GenreCasual]]"
+     },
+     {
+      "name": "chess",
+      "title": "[[t:GenreChess]]"
+     },
+     {
+      "name": "children_games",
+      "title": "[[t:GenreChildrenGames]]"
+     },
+     {
+      "name": "city_settlement",
+      "title": "[[t:GenreCitySettlement]]"
+     },
+     {
+      "name": "dating",
+      "title": "[[t:GenreDating]]"
+     },
+     {
+      "name": "farming_crafting",
+      "title": "[[t:GenreFarmingCrafting]]"
+     },
+     {
+      "name": "fighting_martial_arts",
+      "title": "[[t:GenreFightingMartialArts]]"
+     },
+     {
+      "name": "first_person_shooter",
+      "title": "[[t:GenreFirstPersonShooter]]"
+     },
+     {
+      "name": "fishing_hunting",
+      "title": "[[t:GenreFishingHunting]]"
+     },
+     {
+      "name": "grand",
+      "title": "[[t:GenreGrand]]"
+     },
+     {
+      "name": "hack_slash",
+      "title": "[[t:GenreHackSlash]]"
+     },
+     {
+      "name": "hidden_object",
+      "title": "[[t:GenreHiddenObject]]"
+     },
+     {
+      "name": "hobby_job",
+      "title": "[[t:GenreHobbyJob]]"
+     },
+     {
+      "name": "horror",
+      "title": "[[t:GenreHorror]]"
+     },
+     {
+      "name": "individual_sports",
+      "title": "[[t:GenreIndividualSports]]"
+     },
+     {
+      "name": "jrpg",
+      "title": "[[t:GenreJRPG]]"
+     },
+     {
+      "name": "life_immersive",
+      "title": "[[t:GenreLifeImmersive]]"
+     },
+     {
+      "name": "logic",
+      "title": "[[t:GenreLogic]]"
+     },
+     {
+      "name": "metroidvania",
+      "title": "[[t:GenreMetroidvania]]"
+     },
+     {
+      "name": "military",
+      "title": "[[t:GenreMilitary]]"
+     },
+     {
+      "name": "mmog",
+      "title": "[[t:GenreMMOG]]"
+     },
+     {
+      "name": "moba",
+      "title": "[[t:GenreMOBA]]"
+     },
+     {
+      "name": "party_based",
+      "title": "[[t:GenrePartyBased]]"
+     },
+     {
+      "name": "platformer_runner",
+      "title": "[[t:GenrePlatformerRunner]]"
+     },
+     {
+      "name": "puzzle",
+      "title": "[[t:GenrePuzzle]]"
+     },
+     {
+      "name": "quests",
+      "title": "[[t:GenreQuests]]"
+     },
+     {
+      "name": "racing",
+      "title": "[[t:GenreRacing]]"
+     },
+     {
+      "name": "racing_sim",
+      "title": "[[t:GenreRacingSim]]"
+     },
+     {
+      "name": "real_time_strategy",
+      "title": "[[t:GenreRealTimeStrategy]]"
+     },
+     {
+      "name": "rogue_like",
+      "title": "[[t:GenreRogueLike]]"
+     },
+     {
+      "name": "role_playing",
+      "title": "[[t:GenreRolePlaying]]"
+     },
+     {
+      "name": "sandbox_physics",
+      "title": "[[t:GenreSandboxPhysics]]"
+     },
+     {
+      "name": "shmup",
+      "title": "[[t:GenreShmup]]"
+     },
+     {
+      "name": "simulation",
+      "title": "[[t:GenreSimulation]]"
+     },
+     {
+      "name": "simulators",
+      "title": "[[t:GenreSimulators]]"
+     },
+     {
+      "name": "space_flight",
+      "title": "[[t:GenreSpaceFlight]]"
+     },
+     {
+      "name": "sports_racing",
+      "title": "[[t:GenreSportsRacing]]"
+     },
+     {
+      "name": "sports_sim",
+      "title": "[[t:GenreSportsSim]]"
+     },
+     {
+      "name": "story_rich",
+      "title": "[[t:GenreStoryRich]]"
+     },
+     {
+      "name": "strategy",
+      "title": "[[t:GenreStrategy]]"
+     },
+     {
+      "name": "strategy_rpg",
+      "title": "[[t:GenreStrategyRPG]]"
+     },
+     {
+      "name": "survival",
+      "title": "[[t:GenreSurvival]]"
+     },
+     {
+      "name": "tabletop",
+      "title": "[[t:GenreTabletop]]"
+     },
+     {
+      "name": "team_sports",
+      "title": "[[t:GenreTeamSports]]"
+     },
+     {
+      "name": "third_person_shooter",
+      "title": "[[t:GenreThirdPersonShooter]]"
+     },
+     {
+      "name": "tower_defense",
+      "title": "[[t:GenreTowerDefense]]"
+     },
+     {
+      "name": "turn_based",
+      "title": "[[t:GenreTurnBased]]"
+     },
+     {
+      "name": "turn_based_strategy",
+      "title": "[[t:GenreTurnBasedStrategy]]"
+     },
+     {
+      "name": "visual_novel",
+      "title": "[[t:GenreVisualNovel]]"
+     }
+    ]
+   },
+   "computed": {
+    "items": [
+     {
+      "name": "action",
+      "title": "[[t:GenreAction]]"
+     },
+     {
+      "name": "action_rpg",
+      "title": "[[t:GenreActionRPG]]"
+     },
+     {
+      "name": "adventure",
+      "title": "[[t:GenreAdventure]]"
+     },
+     {
+      "name": "adventure_rpg",
+      "title": "[[t:GenreAdventureRPG]]"
+     },
+     {
+      "name": "all_sports",
+      "title": "[[t:GenreAllSports]]"
+     },
+     {
+      "name": "arcade_rhythm",
+      "title": "[[t:GenreArcadeRhythm]]"
+     },
+     {
+      "name": "building_automation",
+      "title": "[[t:GenreBuildingAutomation]]"
+     },
+     {
+      "name": "card_board",
+      "title": "[[t:GenreCardBoard]]"
+     },
+     {
+      "name": "casino",
+      "title": "[[t:GenreCasino]]"
+     },
+     {
+      "name": "casual",
+      "title": "[[t:GenreCasual]]"
+     },
+     {
+      "name": "chess",
+      "title": "[[t:GenreChess]]"
+     },
+     {
+      "name": "children_games",
+      "title": "[[t:GenreChildrenGames]]"
+     },
+     {
+      "name": "city_settlement",
+      "title": "[[t:GenreCitySettlement]]"
+     },
+     {
+      "name": "dating",
+      "title": "[[t:GenreDating]]"
+     },
+     {
+      "name": "farming_crafting",
+      "title": "[[t:GenreFarmingCrafting]]"
+     },
+     {
+      "name": "fighting_martial_arts",
+      "title": "[[t:GenreFightingMartialArts]]"
+     },
+     {
+      "name": "first_person_shooter",
+      "title": "[[t:GenreFirstPersonShooter]]"
+     },
+     {
+      "name": "fishing_hunting",
+      "title": "[[t:GenreFishingHunting]]"
+     },
+     {
+      "name": "grand",
+      "title": "[[t:GenreGrand]]"
+     },
+     {
+      "name": "hack_slash",
+      "title": "[[t:GenreHackSlash]]"
+     },
+     {
+      "name": "hidden_object",
+      "title": "[[t:GenreHiddenObject]]"
+     },
+     {
+      "name": "hobby_job",
+      "title": "[[t:GenreHobbyJob]]"
+     },
+     {
+      "name": "horror",
+      "title": "[[t:GenreHorror]]"
+     },
+     {
+      "name": "individual_sports",
+      "title": "[[t:GenreIndividualSports]]"
+     },
+     {
+      "name": "jrpg",
+      "title": "[[t:GenreJRPG]]"
+     },
+     {
+      "name": "life_immersive",
+      "title": "[[t:GenreLifeImmersive]]"
+     },
+     {
+      "name": "logic",
+      "title": "[[t:GenreLogic]]"
+     },
+     {
+      "name": "metroidvania",
+      "title": "[[t:GenreMetroidvania]]"
+     },
+     {
+      "name": "military",
+      "title": "[[t:GenreMilitary]]"
+     },
+     {
+      "name": "mmog",
+      "title": "[[t:GenreMMOG]]"
+     },
+     {
+      "name": "moba",
+      "title": "[[t:GenreMOBA]]"
+     },
+     {
+      "name": "party_based",
+      "title": "[[t:GenrePartyBased]]"
+     },
+     {
+      "name": "platformer_runner",
+      "title": "[[t:GenrePlatformerRunner]]"
+     },
+     {
+      "name": "puzzle",
+      "title": "[[t:GenrePuzzle]]"
+     },
+     {
+      "name": "quests",
+      "title": "[[t:GenreQuests]]"
+     },
+     {
+      "name": "racing",
+      "title": "[[t:GenreRacing]]"
+     },
+     {
+      "name": "racing_sim",
+      "title": "[[t:GenreRacingSim]]"
+     },
+     {
+      "name": "real_time_strategy",
+      "title": "[[t:GenreRealTimeStrategy]]"
+     },
+     {
+      "name": "rogue_like",
+      "title": "[[t:GenreRogueLike]]"
+     },
+     {
+      "name": "role_playing",
+      "title": "[[t:GenreRolePlaying]]"
+     },
+     {
+      "name": "sandbox_physics",
+      "title": "[[t:GenreSandboxPhysics]]"
+     },
+     {
+      "name": "shmup",
+      "title": "[[t:GenreShmup]]"
+     },
+     {
+      "name": "simulation",
+      "title": "[[t:GenreSimulation]]"
+     },
+     {
+      "name": "simulators",
+      "title": "[[t:GenreSimulators]]"
+     },
+     {
+      "name": "space_flight",
+      "title": "[[t:GenreSpaceFlight]]"
+     },
+     {
+      "name": "sports_racing",
+      "title": "[[t:GenreSportsRacing]]"
+     },
+     {
+      "name": "sports_sim",
+      "title": "[[t:GenreSportsSim]]"
+     },
+     {
+      "name": "story_rich",
+      "title": "[[t:GenreStoryRich]]"
+     },
+     {
+      "name": "strategy",
+      "title": "[[t:GenreStrategy]]"
+     },
+     {
+      "name": "strategy_rpg",
+      "title": "[[t:GenreStrategyRPG]]"
+     },
+     {
+      "name": "survival",
+      "title": "[[t:GenreSurvival]]"
+     },
+     {
+      "name": "tabletop",
+      "title": "[[t:GenreTabletop]]"
+     },
+     {
+      "name": "team_sports",
+      "title": "[[t:GenreTeamSports]]"
+     },
+     {
+      "name": "third_person_shooter",
+      "title": "[[t:GenreThirdPersonShooter]]"
+     },
+     {
+      "name": "tower_defense",
+      "title": "[[t:GenreTowerDefense]]"
+     },
+     {
+      "name": "turn_based",
+      "title": "[[t:GenreTurnBased]]"
+     },
+     {
+      "name": "turn_based_strategy",
+      "title": "[[t:GenreTurnBasedStrategy]]"
+     },
+     {
+      "name": "visual_novel",
+      "title": "[[t:GenreVisualNovel]]"
+     }
+    ]
+   },
+   "inherited": null,
+   "index": 1,
+   "createdAt": "2023-12-03T22:44:50.452Z",
+   "updatedAt": "2023-12-03T22:48:37.892Z"
+  }
+ ],
+ "isAbstract": true,
+ "projectId": "111112",
+ "references": [],
+ "icon": null,
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "[[t:Genres]]",
+ "parentIds": [],
+ "title": "[[t:Genres]]",
+ "typeIds": [],
+ "workspaceId": "00000000-0000-0000-0000-000000000004",
+ "values": {
+  "info": {
+   "items": [
+    {
+     "name": "action",
+     "title": "[[t:GenreAction]]"
+    },
+    {
+     "name": "action_rpg",
+     "title": "[[t:GenreActionRPG]]"
+    },
+    {
+     "name": "adventure",
+     "title": "[[t:GenreAdventure]]"
+    },
+    {
+     "name": "adventure_rpg",
+     "title": "[[t:GenreAdventureRPG]]"
+    },
+    {
+     "name": "all_sports",
+     "title": "[[t:GenreAllSports]]"
+    },
+    {
+     "name": "arcade_rhythm",
+     "title": "[[t:GenreArcadeRhythm]]"
+    },
+    {
+     "name": "building_automation",
+     "title": "[[t:GenreBuildingAutomation]]"
+    },
+    {
+     "name": "card_board",
+     "title": "[[t:GenreCardBoard]]"
+    },
+    {
+     "name": "casino",
+     "title": "[[t:GenreCasino]]"
+    },
+    {
+     "name": "casual",
+     "title": "[[t:GenreCasual]]"
+    },
+    {
+     "name": "chess",
+     "title": "[[t:GenreChess]]"
+    },
+    {
+     "name": "children_games",
+     "title": "[[t:GenreChildrenGames]]"
+    },
+    {
+     "name": "city_settlement",
+     "title": "[[t:GenreCitySettlement]]"
+    },
+    {
+     "name": "dating",
+     "title": "[[t:GenreDating]]"
+    },
+    {
+     "name": "farming_crafting",
+     "title": "[[t:GenreFarmingCrafting]]"
+    },
+    {
+     "name": "fighting_martial_arts",
+     "title": "[[t:GenreFightingMartialArts]]"
+    },
+    {
+     "name": "first_person_shooter",
+     "title": "[[t:GenreFirstPersonShooter]]"
+    },
+    {
+     "name": "fishing_hunting",
+     "title": "[[t:GenreFishingHunting]]"
+    },
+    {
+     "name": "grand",
+     "title": "[[t:GenreGrand]]"
+    },
+    {
+     "name": "hack_slash",
+     "title": "[[t:GenreHackSlash]]"
+    },
+    {
+     "name": "hidden_object",
+     "title": "[[t:GenreHiddenObject]]"
+    },
+    {
+     "name": "hobby_job",
+     "title": "[[t:GenreHobbyJob]]"
+    },
+    {
+     "name": "horror",
+     "title": "[[t:GenreHorror]]"
+    },
+    {
+     "name": "individual_sports",
+     "title": "[[t:GenreIndividualSports]]"
+    },
+    {
+     "name": "jrpg",
+     "title": "[[t:GenreJRPG]]"
+    },
+    {
+     "name": "life_immersive",
+     "title": "[[t:GenreLifeImmersive]]"
+    },
+    {
+     "name": "logic",
+     "title": "[[t:GenreLogic]]"
+    },
+    {
+     "name": "metroidvania",
+     "title": "[[t:GenreMetroidvania]]"
+    },
+    {
+     "name": "military",
+     "title": "[[t:GenreMilitary]]"
+    },
+    {
+     "name": "mmog",
+     "title": "[[t:GenreMMOG]]"
+    },
+    {
+     "name": "moba",
+     "title": "[[t:GenreMOBA]]"
+    },
+    {
+     "name": "party_based",
+     "title": "[[t:GenrePartyBased]]"
+    },
+    {
+     "name": "platformer_runner",
+     "title": "[[t:GenrePlatformerRunner]]"
+    },
+    {
+     "name": "puzzle",
+     "title": "[[t:GenrePuzzle]]"
+    },
+    {
+     "name": "quests",
+     "title": "[[t:GenreQuests]]"
+    },
+    {
+     "name": "racing",
+     "title": "[[t:GenreRacing]]"
+    },
+    {
+     "name": "racing_sim",
+     "title": "[[t:GenreRacingSim]]"
+    },
+    {
+     "name": "real_time_strategy",
+     "title": "[[t:GenreRealTimeStrategy]]"
+    },
+    {
+     "name": "rogue_like",
+     "title": "[[t:GenreRogueLike]]"
+    },
+    {
+     "name": "role_playing",
+     "title": "[[t:GenreRolePlaying]]"
+    },
+    {
+     "name": "sandbox_physics",
+     "title": "[[t:GenreSandboxPhysics]]"
+    },
+    {
+     "name": "shmup",
+     "title": "[[t:GenreShmup]]"
+    },
+    {
+     "name": "simulation",
+     "title": "[[t:GenreSimulation]]"
+    },
+    {
+     "name": "simulators",
+     "title": "[[t:GenreSimulators]]"
+    },
+    {
+     "name": "space_flight",
+     "title": "[[t:GenreSpaceFlight]]"
+    },
+    {
+     "name": "sports_racing",
+     "title": "[[t:GenreSportsRacing]]"
+    },
+    {
+     "name": "sports_sim",
+     "title": "[[t:GenreSportsSim]]"
+    },
+    {
+     "name": "story_rich",
+     "title": "[[t:GenreStoryRich]]"
+    },
+    {
+     "name": "strategy",
+     "title": "[[t:GenreStrategy]]"
+    },
+    {
+     "name": "strategy_rpg",
+     "title": "[[t:GenreStrategyRPG]]"
+    },
+    {
+     "name": "survival",
+     "title": "[[t:GenreSurvival]]"
+    },
+    {
+     "name": "tabletop",
+     "title": "[[t:GenreTabletop]]"
+    },
+    {
+     "name": "team_sports",
+     "title": "[[t:GenreTeamSports]]"
+    },
+    {
+     "name": "third_person_shooter",
+     "title": "[[t:GenreThirdPersonShooter]]"
+    },
+    {
+     "name": "tower_defense",
+     "title": "[[t:GenreTowerDefense]]"
+    },
+    {
+     "name": "turn_based",
+     "title": "[[t:GenreTurnBased]]"
+    },
+    {
+     "name": "turn_based_strategy",
+     "title": "[[t:GenreTurnBasedStrategy]]"
+    },
+    {
+     "name": "visual_novel",
+     "title": "[[t:GenreVisualNovel]]"
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,3 @@
+[submodule "ims-app-base"]
+	path = ims-app-base
+	url = git@github.com:ImStocker/ims-app-base.git

@@ -1,0 +1,39 @@
+{
+ "id": "99ab406e-b215-45ed-aea0-7d11a77dae9b",
+ "index": 8.976196,
+ "title": "Buildings",
+ "name": null,
+ "parentId": null,
+ "projectId": "EWvDFxqn",
+ "props": {
+  "type": "collection",
+  "asset": {
+   "Title": "Building",
+   "AssetId": "2f378d8f-0e7d-4c28-924e-9320f02d8068"
+  },
+  "views": {
+   "table": {
+    "key": "table",
+    "sort": [],
+    "type": "table",
+    "index": 1,
+    "props": [
+     {
+      "prop": "title",
+      "width": 200
+     },
+     {
+      "prop": "description|value",
+      "width": null
+     },
+     {
+      "prop": "props|activities",
+      "width": null
+     }
+    ],
+    "title": "Table",
+    "filter": []
+   }
+  }
+ }
+}

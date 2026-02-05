@@ -1,0 +1,430 @@
+{
+ "id": "83a3f7b0-b02a-44e7-a8d4-982d6180be21",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-000000000100",
+   "name": "__meta",
+   "title": null,
+   "own": true,
+   "type": "props",
+   "props": {
+    "complete_comp": 0.6666666666666666,
+    "plan_milestone": {
+     "Enum": "00000000-0000-0000-0000-000000000015",
+     "Name": "release",
+     "Title": "[[t:MilestoneRelease]]"
+    },
+    "complete_progress": 0.6666666666666666
+   },
+   "computed": {
+    "complete_set": null,
+    "complete_comp": 0.6666666666666666,
+    "complete_track": true,
+    "plan_milestone": {
+     "Enum": "00000000-0000-0000-0000-000000000015",
+     "Name": "release",
+     "Title": "[[t:MilestoneRelease]]"
+    },
+    "complete_progress": 0.6666666666666666
+   },
+   "inherited": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": 0
+   },
+   "index": 0,
+   "createdAt": "2025-10-07T05:49:16.123Z",
+   "updatedAt": "2025-10-07T05:51:31.915Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000001",
+   "name": "gallery",
+   "title": "[[t:Gallery]]",
+   "own": true,
+   "type": "gallery",
+   "props": {
+    "main": {
+     "type": "file",
+     "index": 1.1755634414846,
+     "value": {
+      "Dir": null,
+      "Size": 78945,
+      "Store": "p-EWvDFxqn",
+      "Title": "output (3).jpg",
+      "FileId": "cf8e46b2-10fe-4132-8fdd-5c594b97a7d2"
+     }
+    }
+   },
+   "computed": {
+    "main": {
+     "type": "file",
+     "index": 1.1755634414846,
+     "value": {
+      "Dir": null,
+      "Size": 78945,
+      "Store": "p-EWvDFxqn",
+      "Title": "output (3).jpg",
+      "FileId": "cf8e46b2-10fe-4132-8fdd-5c594b97a7d2"
+     }
+    }
+   },
+   "inherited": {},
+   "index": 1,
+   "createdAt": "2025-08-18T02:16:15.947Z",
+   "updatedAt": "2025-08-19T21:20:15.561Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000002",
+   "name": "description",
+   "title": "[[t:Description]]",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "A legendary artifact, the "
+      },
+      {
+       "insert": "Heart of Mountain",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " is the source of earth magic itself. But now, it has been corrupted - forged into a weapon of ruin by hunters, its power unleashed to reduce cities to rubble.\n"
+      }
+     ],
+     "Str": "A legendary artifact, the Heart of Mountain is the source of earth magic itself. But now, it has been corrupted - forged into a weapon of ruin by hunters, its power unleashed to reduce cities to rubble.\n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "A legendary artifact, the "
+      },
+      {
+       "insert": "Heart of Mountain",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " is the source of earth magic itself. But now, it has been corrupted - forged into a weapon of ruin by hunters, its power unleashed to reduce cities to rubble.\n"
+      }
+     ],
+     "Str": "A legendary artifact, the Heart of Mountain is the source of earth magic itself. But now, it has been corrupted - forged into a weapon of ruin by hunters, its power unleashed to reduce cities to rubble.\n"
+    }
+   },
+   "inherited": {},
+   "index": 2,
+   "createdAt": "2025-08-18T02:16:15.947Z",
+   "updatedAt": "2025-08-18T17:10:09.790Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000003",
+   "name": "props",
+   "title": "[[t:Properties]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "type": {
+     "Enum": "b1885d69-e01f-40db-a6ef-a4a4b75ef300",
+     "Name": "quest",
+     "Title": "Quest"
+    }
+   },
+   "computed": {
+    "type": {
+     "Enum": "b1885d69-e01f-40db-a6ef-a4a4b75ef300",
+     "Name": "quest",
+     "Title": "Quest"
+    },
+    "price": null,
+    "effect": null,
+    "effect_value": null,
+    "effect_duration": null,
+    "__props": {
+     "type": {
+      "type": "enum",
+      "title": "Type",
+      "params": {
+       "type": {
+        "Title": "Item type",
+        "AssetId": "b1885d69-e01f-40db-a6ef-a4a4b75ef300"
+       }
+      }
+     },
+     "price": {
+      "type": "integer",
+      "index": 2.1755537679504,
+      "title": "Price",
+      "params": {
+       "type": {
+        "Title": "Item type",
+        "AssetId": "b1885d69-e01f-40db-a6ef-a4a4b75ef300"
+       }
+      }
+     },
+     "effect": {
+      "type": "gddElementSelector",
+      "index": 2.866535290393064,
+      "title": "Effect",
+      "params": {
+       "type": {
+        "Title": "Effect",
+        "AssetId": "4ce7b352-31ee-4e48-ab25-ef619d223862"
+       }
+      }
+     },
+     "effect_value": {
+      "type": "number",
+      "index": 5.217674673161364,
+      "title": "Effect Value"
+     },
+     "effect_duration": {
+      "type": "number",
+      "index": 4.042104980979964,
+      "title": "Effect Duration"
+     }
+    }
+   },
+   "inherited": {
+    "type": null,
+    "price": null,
+    "effect": null,
+    "effect_value": null,
+    "effect_duration": null,
+    "__props": {
+     "type": {
+      "type": "enum",
+      "title": "Type",
+      "params": {
+       "type": {
+        "Title": "Item type",
+        "AssetId": "b1885d69-e01f-40db-a6ef-a4a4b75ef300"
+       }
+      }
+     },
+     "price": {
+      "type": "integer",
+      "index": 2.1755537679504,
+      "title": "Price",
+      "params": {
+       "type": {
+        "Title": "Item type",
+        "AssetId": "b1885d69-e01f-40db-a6ef-a4a4b75ef300"
+       }
+      }
+     },
+     "effect": {
+      "type": "gddElementSelector",
+      "index": 2.866535290393064,
+      "title": "Effect",
+      "params": {
+       "type": {
+        "Title": "Effect",
+        "AssetId": "4ce7b352-31ee-4e48-ab25-ef619d223862"
+       }
+      }
+     },
+     "effect_value": {
+      "type": "number",
+      "index": 5.217674673161364,
+      "title": "Effect Value"
+     },
+     "effect_duration": {
+      "type": "number",
+      "index": 4.042104980979964,
+      "title": "Effect Duration"
+     }
+    }
+   },
+   "index": 3,
+   "createdAt": "2025-08-18T17:22:07.861Z",
+   "updatedAt": "2025-08-20T07:54:58.673Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000004",
+   "name": "locale",
+   "title": null,
+   "own": false,
+   "type": "locale",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-06-24T12:55:34.293Z",
+   "updatedAt": "2025-06-24T12:55:34.293Z"
+  },
+  {
+   "id": "4fc95af3-6033-4f3b-8ba6-cd78a5bbd28a",
+   "name": "craft",
+   "title": "Craft",
+   "own": true,
+   "type": "props",
+   "props": {},
+   "computed": {
+    "recipe": null,
+    "__props": {
+     "recipe": {
+      "type": "struct",
+      "index": 1,
+      "title": "Recipe",
+      "multiple": true,
+      "params": {
+       "type": {
+        "Title": "Recipe ingredient",
+        "AssetId": "b4efc753-cc36-4bda-acf0-0a9491a9034a"
+       }
+      }
+     }
+    }
+   },
+   "inherited": {
+    "recipe": null,
+    "__props": {
+     "recipe": {
+      "type": "struct",
+      "index": 1,
+      "title": "Recipe",
+      "multiple": true,
+      "params": {
+       "type": {
+        "Title": "Recipe ingredient",
+        "AssetId": "b4efc753-cc36-4bda-acf0-0a9491a9034a"
+       }
+      }
+     }
+    }
+   },
+   "index": 4.1755695,
+   "createdAt": "2025-08-20T13:32:31.081Z",
+   "updatedAt": "2025-08-20T13:32:31.081Z"
+  },
+  {
+   "id": "d708bca2-7c42-47a0-89f3-aeeb8f2bbebf",
+   "name": null,
+   "title": "TODO-list",
+   "own": true,
+   "type": "checklist",
+   "props": {
+    "8903653f937b42faeaf5f5b5728d29e0": {
+     "task": null,
+     "checked": true
+    },
+    "b391e48f661eb78e5d37f0abf90a7805": {
+     "task": null,
+     "checked": true
+    }
+   },
+   "computed": {
+    "8903653f937b42faeaf5f5b5728d29e0": {
+     "index": 2.3519632407466,
+     "title": "Make item model",
+     "task": null,
+     "checked": true
+    },
+    "b391e48f661eb78e5d37f0abf90a7805": {
+     "index": 1.1759816203059,
+     "title": "Draw an item icon",
+     "task": null,
+     "checked": true
+    },
+    "c2abade6720e56f1b4a9b5ce1613f9a8": {
+     "index": 3.5279448624705,
+     "title": "Program item behavior"
+    }
+   },
+   "inherited": {
+    "8903653f937b42faeaf5f5b5728d29e0": {
+     "index": 2.3519632407466,
+     "title": "Make item model"
+    },
+    "b391e48f661eb78e5d37f0abf90a7805": {
+     "index": 1.1759816203059,
+     "title": "Draw an item icon"
+    },
+    "c2abade6720e56f1b4a9b5ce1613f9a8": {
+     "index": 3.5279448624705,
+     "title": "Program item behavior"
+    }
+   },
+   "index": 6.1759815,
+   "createdAt": "2025-10-07T05:51:31.115Z",
+   "updatedAt": "2025-10-07T05:51:31.541Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "box-1-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Heart of Mountain",
+ "parentIds": [
+  "2615e9a4-7799-4343-9e64-9516b75c8b9a"
+ ],
+ "title": "Heart of Mountain",
+ "typeIds": [
+  "2615e9a4-7799-4343-9e64-9516b75c8b9a",
+  "00000000-0000-0000-0000-000000000035"
+ ],
+ "workspaceId": "5e92daa6-4653-46fe-b5c2-e315759c2db0",
+ "values": {
+  "__meta": {
+   "complete_comp": 0.6666666666666666,
+   "plan_milestone": {
+    "Enum": "00000000-0000-0000-0000-000000000015",
+    "Name": "release",
+    "Title": "[[t:MilestoneRelease]]"
+   },
+   "complete_progress": 0.6666666666666666
+  },
+  "gallery": {
+   "main": {
+    "type": "file",
+    "index": 1.1755634414846,
+    "value": {
+     "Dir": null,
+     "Size": 78945,
+     "Store": "p-EWvDFxqn",
+     "Title": "output (3).jpg",
+     "FileId": "cf8e46b2-10fe-4132-8fdd-5c594b97a7d2"
+    }
+   }
+  },
+  "description": {
+   "value": {
+    "Ops": [
+     {
+      "insert": "A legendary artifact, the "
+     },
+     {
+      "insert": "Heart of Mountain",
+      "attributes": {
+       "bold": true
+      }
+     },
+     {
+      "insert": " is the source of earth magic itself. But now, it has been corrupted - forged into a weapon of ruin by hunters, its power unleashed to reduce cities to rubble.\n"
+     }
+    ],
+    "Str": "A legendary artifact, the Heart of Mountain is the source of earth magic itself. But now, it has been corrupted - forged into a weapon of ruin by hunters, its power unleashed to reduce cities to rubble.\n"
+   }
+  },
+  "props": {
+   "type": {
+    "Enum": "b1885d69-e01f-40db-a6ef-a4a4b75ef300",
+    "Name": "quest",
+    "Title": "Quest"
+   }
+  },
+  "locale": {},
+  "craft": {}
+ }
+}

@@ -1,0 +1,239 @@
+{
+ "id": "478512ef-514e-4ec1-a6a6-7c7c764081d1",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-000000000100",
+   "name": "__meta",
+   "title": null,
+   "own": false,
+   "type": "props",
+   "props": {},
+   "computed": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "inherited": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "index": 0,
+   "createdAt": "2025-08-08T14:43:28.908Z",
+   "updatedAt": "2025-08-08T14:43:28.908Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000001",
+   "name": "gallery",
+   "title": "[[t:Gallery]]",
+   "own": true,
+   "type": "gallery",
+   "props": {
+    "main": {
+     "type": "file",
+     "index": 1.1755682144866,
+     "value": {
+      "Dir": null,
+      "Size": 600832,
+      "Store": "p-EWvDFxqn",
+      "Title": "image-9c621714-a562-4b1a-bbc7-8f45a0717ca7.png",
+      "FileId": "80e85af6-b6c9-4027-880f-e5c195422642"
+     }
+    }
+   },
+   "computed": {
+    "main": {
+     "type": "file",
+     "index": 1.1755682144866,
+     "value": {
+      "Dir": null,
+      "Size": 600832,
+      "Store": "p-EWvDFxqn",
+      "Title": "image-9c621714-a562-4b1a-bbc7-8f45a0717ca7.png",
+      "FileId": "80e85af6-b6c9-4027-880f-e5c195422642"
+     }
+    }
+   },
+   "inherited": {},
+   "index": 1,
+   "createdAt": "2025-08-20T09:29:25.841Z",
+   "updatedAt": "2025-08-20T09:29:25.841Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000002",
+   "name": "description",
+   "title": "[[t:Description]]",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": "Dragon that was captured by hunters"
+   },
+   "computed": {
+    "value": "Dragon that was captured by hunters"
+   },
+   "inherited": {},
+   "index": 2,
+   "createdAt": "2025-08-20T09:29:25.841Z",
+   "updatedAt": "2025-08-20T09:29:25.841Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000003",
+   "name": "props",
+   "title": "[[t:Properties]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "damage": 20,
+    "health": 200,
+    "abilities": [
+     {
+      "Title": "Hellfire Breath",
+      "AssetId": "c9955b67-790a-4fd9-bd82-d599625d5f38"
+     },
+     {
+      "Title": "Shadow Fang",
+      "AssetId": "72fd7987-7719-46cb-ac07-663cf4a844ef"
+     }
+    ]
+   },
+   "computed": {
+    "damage": 20,
+    "health": 200,
+    "abilities": [
+     {
+      "Title": "Hellfire Breath",
+      "AssetId": "c9955b67-790a-4fd9-bd82-d599625d5f38"
+     },
+     {
+      "Title": "Shadow Fang",
+      "AssetId": "72fd7987-7719-46cb-ac07-663cf4a844ef"
+     }
+    ],
+    "__props": {
+     "damage": {
+      "type": "integer",
+      "index": 2.175447569924,
+      "title": "Damage"
+     },
+     "health": {
+      "type": "integer",
+      "index": 1,
+      "title": "Health"
+     },
+     "abilities": {
+      "type": "gddElementSelector",
+      "index": 3.3508951419164,
+      "title": "Abilities",
+      "multiple": true,
+      "params": {
+       "type": {
+        "Title": "Ability",
+        "AssetId": "7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445"
+       }
+      }
+     }
+    }
+   },
+   "inherited": {
+    "damage": null,
+    "health": null,
+    "abilities": null,
+    "__props": {
+     "damage": {
+      "type": "integer",
+      "index": 2.175447569924,
+      "title": "Damage"
+     },
+     "health": {
+      "type": "integer",
+      "index": 1,
+      "title": "Health"
+     },
+     "abilities": {
+      "type": "gddElementSelector",
+      "index": 3.3508951419164,
+      "title": "Abilities",
+      "multiple": true,
+      "params": {
+       "type": {
+        "Title": "Ability",
+        "AssetId": "7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445"
+       }
+      }
+     }
+    }
+   },
+   "index": 3,
+   "createdAt": "2025-08-20T09:28:43.975Z",
+   "updatedAt": "2025-08-20T09:28:43.975Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000004",
+   "name": "locale",
+   "title": null,
+   "own": false,
+   "type": "locale",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-08-08T14:43:28.908Z",
+   "updatedAt": "2025-08-08T14:43:28.908Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "walk-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Ignis",
+ "parentIds": [
+  "dcb5d0aa-b55a-4a63-9d85-7cdb6b53e984"
+ ],
+ "title": "Ignis",
+ "typeIds": [
+  "dcb5d0aa-b55a-4a63-9d85-7cdb6b53e984",
+  "00000000-0000-0000-0000-000000000035"
+ ],
+ "workspaceId": "604bd733-4080-4ed9-b8cf-54e4c7678c48",
+ "values": {
+  "__meta": {},
+  "gallery": {
+   "main": {
+    "type": "file",
+    "index": 1.1755682144866,
+    "value": {
+     "Dir": null,
+     "Size": 600832,
+     "Store": "p-EWvDFxqn",
+     "Title": "image-9c621714-a562-4b1a-bbc7-8f45a0717ca7.png",
+     "FileId": "80e85af6-b6c9-4027-880f-e5c195422642"
+    }
+   }
+  },
+  "description": {
+   "value": "Dragon that was captured by hunters"
+  },
+  "props": {
+   "damage": 20,
+   "health": 200,
+   "abilities": [
+    {
+     "Title": "Hellfire Breath",
+     "AssetId": "c9955b67-790a-4fd9-bd82-d599625d5f38"
+    },
+    {
+     "Title": "Shadow Fang",
+     "AssetId": "72fd7987-7719-46cb-ac07-663cf4a844ef"
+    }
+   ]
+  },
+  "locale": {}
+ }
+}

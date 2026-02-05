@@ -1,0 +1,225 @@
+{
+ "id": "1048ad2c-6789-4ddf-8a9a-a2e4527a3ed6",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-000000000100",
+   "name": "__meta",
+   "title": null,
+   "own": true,
+   "type": "props",
+   "props": {},
+   "computed": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "inherited": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "index": 0,
+   "createdAt": "2025-08-08T14:43:33.262Z",
+   "updatedAt": "2025-08-08T14:43:33.262Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000001",
+   "name": "gallery",
+   "title": "[[t:Gallery]]",
+   "own": true,
+   "type": "gallery",
+   "props": {
+    "main": {
+     "type": "file",
+     "index": 1.1759814150018,
+     "value": {
+      "Dir": null,
+      "Size": 294653,
+      "Store": "p-EWvDFxqn",
+      "Title": "wings_251007.jpg",
+      "FileId": "fa66e887-c909-4c5f-9736-0db8ab36bfcd"
+     }
+    }
+   },
+   "computed": {
+    "main": {
+     "type": "file",
+     "index": 1.1759814150018,
+     "value": {
+      "Dir": null,
+      "Size": 294653,
+      "Store": "p-EWvDFxqn",
+      "Title": "wings_251007.jpg",
+      "FileId": "fa66e887-c909-4c5f-9736-0db8ab36bfcd"
+     }
+    }
+   },
+   "inherited": {},
+   "index": 1,
+   "createdAt": "2025-08-08T14:43:33.262Z",
+   "updatedAt": "2025-10-07T05:15:50.889Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000002",
+   "name": "description",
+   "title": "[[t:Description]]",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": "Central hub for resting and socializing"
+   },
+   "computed": {
+    "value": "Central hub for resting and socializing"
+   },
+   "inherited": {},
+   "index": 2,
+   "createdAt": "2025-08-08T14:43:33.262Z",
+   "updatedAt": "2025-08-08T14:43:33.262Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000004",
+   "name": "locale",
+   "title": null,
+   "own": true,
+   "type": "locale",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-08-08T14:43:33.262Z",
+   "updatedAt": "2025-08-08T14:43:33.262Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000003",
+   "name": "props",
+   "title": "[[t:Properties]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "activities": [
+     {
+      "Title": "Sleep/Heal",
+      "AssetId": "cd45bc7a-e93d-4ec6-8d5d-4cc6861c36de"
+     },
+     {
+      "Title": "Bond with dragons",
+      "AssetId": "19ef1712-029f-4c8c-9522-de17e96274ff"
+     },
+     {
+      "Title": "Decorate",
+      "AssetId": "c063bf45-c5dc-4bda-aade-67f11cc51875"
+     }
+    ]
+   },
+   "computed": {
+    "activities": [
+     {
+      "Title": "Sleep/Heal",
+      "AssetId": "cd45bc7a-e93d-4ec6-8d5d-4cc6861c36de"
+     },
+     {
+      "Title": "Bond with dragons",
+      "AssetId": "19ef1712-029f-4c8c-9522-de17e96274ff"
+     },
+     {
+      "Title": "Decorate",
+      "AssetId": "c063bf45-c5dc-4bda-aade-67f11cc51875"
+     }
+    ],
+    "__props": {
+     "activities": {
+      "hint": "What are the activities here?",
+      "type": "gddElementSelector",
+      "index": 1,
+      "title": "Activities",
+      "multiple": true,
+      "params": {
+       "type": {
+        "Title": "Activity",
+        "AssetId": "cda8f145-c0fb-4b68-b85e-be8c1931eb9a"
+       }
+      }
+     }
+    }
+   },
+   "inherited": {
+    "activities": null,
+    "__props": {
+     "activities": {
+      "hint": "What are the activities here?",
+      "type": "gddElementSelector",
+      "index": 1,
+      "title": "Activities",
+      "multiple": true,
+      "params": {
+       "type": {
+        "Title": "Activity",
+        "AssetId": "cda8f145-c0fb-4b68-b85e-be8c1931eb9a"
+       }
+      }
+     }
+    }
+   },
+   "index": 3,
+   "createdAt": "2025-08-08T14:43:33.262Z",
+   "updatedAt": "2025-08-08T14:43:33.262Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "ancient-gate-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Main Lair",
+ "parentIds": [
+  "2f378d8f-0e7d-4c28-924e-9320f02d8068"
+ ],
+ "title": "Main Lair",
+ "typeIds": [
+  "2f378d8f-0e7d-4c28-924e-9320f02d8068",
+  "00000000-0000-0000-0000-000000000035"
+ ],
+ "workspaceId": "99ab406e-b215-45ed-aea0-7d11a77dae9b",
+ "values": {
+  "__meta": {},
+  "gallery": {
+   "main": {
+    "type": "file",
+    "index": 1.1759814150018,
+    "value": {
+     "Dir": null,
+     "Size": 294653,
+     "Store": "p-EWvDFxqn",
+     "Title": "wings_251007.jpg",
+     "FileId": "fa66e887-c909-4c5f-9736-0db8ab36bfcd"
+    }
+   }
+  },
+  "description": {
+   "value": "Central hub for resting and socializing"
+  },
+  "locale": {},
+  "props": {
+   "activities": [
+    {
+     "Title": "Sleep/Heal",
+     "AssetId": "cd45bc7a-e93d-4ec6-8d5d-4cc6861c36de"
+    },
+    {
+     "Title": "Bond with dragons",
+     "AssetId": "19ef1712-029f-4c8c-9522-de17e96274ff"
+    },
+    {
+     "Title": "Decorate",
+     "AssetId": "c063bf45-c5dc-4bda-aade-67f11cc51875"
+    }
+   ]
+  }
+ }
+}

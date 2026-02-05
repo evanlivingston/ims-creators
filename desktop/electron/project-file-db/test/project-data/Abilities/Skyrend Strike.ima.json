@@ -1,0 +1,419 @@
+{
+ "id": "695c48c8-cedc-48bb-ae76-921f6ff16538",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-000000000100",
+   "name": "__meta",
+   "title": null,
+   "own": true,
+   "type": "props",
+   "props": {},
+   "computed": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "inherited": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "index": 0,
+   "createdAt": "2025-08-08T14:43:31.513Z",
+   "updatedAt": "2025-08-08T14:43:31.513Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000001",
+   "name": "gallery",
+   "title": "[[t:Gallery]]",
+   "own": true,
+   "type": "gallery",
+   "props": {
+    "main": {
+     "type": "file",
+     "index": 1.1755523639782,
+     "value": {
+      "Dir": null,
+      "Size": 626022,
+      "Store": "p-EWvDFxqn",
+      "Title": "Бескрылый небесный удар.jpg",
+      "FileId": "2e5ad698-157b-48eb-a17c-747c18a35539"
+     }
+    }
+   },
+   "computed": {
+    "main": {
+     "type": "file",
+     "index": 1.1755523639782,
+     "value": {
+      "Dir": null,
+      "Size": 626022,
+      "Store": "p-EWvDFxqn",
+      "Title": "Бескрылый небесный удар.jpg",
+      "FileId": "2e5ad698-157b-48eb-a17c-747c18a35539"
+     }
+    }
+   },
+   "inherited": {},
+   "index": 1,
+   "createdAt": "2025-08-08T14:43:31.513Z",
+   "updatedAt": "2025-08-18T13:27:21.735Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000002",
+   "name": "description",
+   "title": "[[t:Description]]",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": "A powerful claw strike with a chance to stun the target for 2 seconds."
+   },
+   "computed": {
+    "value": "A powerful claw strike with a chance to stun the target for 2 seconds."
+   },
+   "inherited": {},
+   "index": 2,
+   "createdAt": "2025-08-08T14:43:31.513Z",
+   "updatedAt": "2025-08-08T14:43:31.513Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000004",
+   "name": "locale",
+   "title": null,
+   "own": true,
+   "type": "locale",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-08-08T14:43:31.513Z",
+   "updatedAt": "2025-08-08T14:43:31.513Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000003",
+   "name": "props",
+   "title": "[[t:Properties]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "~id": null,
+    "type": {
+     "Enum": "912acbe0-262f-4c3d-8d3f-197048f9c868",
+     "Name": "active",
+     "Title": "Active"
+    },
+    "range": 0,
+    "~icon": null,
+    "~name": null,
+    "~type": null,
+    "damage": 15,
+    "effect": {
+     "Title": "Stun",
+     "AssetId": "362e6481-5adc-453a-af3b-00267849a8f0"
+    },
+    "~range": null,
+    "~damage": null,
+    "cooldown": 300,
+    "animation": "range_attack",
+    "mana_cost": 6,
+    "~cooldown": null,
+    "~manacost": null,
+    "~animation": null,
+    "~mana_cost": null,
+    "damage_type": {
+     "Enum": "b5747ca1-5683-4b24-a51e-4814a2cc7b8a",
+     "Name": "physical",
+     "Title": "Physical 👊"
+    },
+    "target_type": {
+     "Enum": "572014b9-a589-4619-bd79-a979700ac6bc",
+     "Name": "enemy",
+     "Title": "Enemy"
+    },
+    "~damagetype": null,
+    "~targettype": null,
+    "~damage_type": null,
+    "~description": null,
+    "~effectvalue": null,
+    "~target_type": null,
+    "~effect_value": null,
+    "effect_duration": 2,
+    "~effectduration": null,
+    "~effect_duration": null
+   },
+   "computed": {
+    "effect": {
+     "Title": "Stun",
+     "AssetId": "362e6481-5adc-453a-af3b-00267849a8f0"
+    },
+    "type": {
+     "Enum": "912acbe0-262f-4c3d-8d3f-197048f9c868",
+     "Name": "active",
+     "Title": "Active"
+    },
+    "range": 0,
+    "damage": 15,
+    "cooldown": 300,
+    "animation": "range_attack",
+    "mana_cost": 6,
+    "damage_type": {
+     "Enum": "b5747ca1-5683-4b24-a51e-4814a2cc7b8a",
+     "Name": "physical",
+     "Title": "Physical 👊"
+    },
+    "target_type": {
+     "Enum": "572014b9-a589-4619-bd79-a979700ac6bc",
+     "Name": "enemy",
+     "Title": "Enemy"
+    },
+    "effect_duration": 2,
+    "__props": {
+     "type": {
+      "type": "enumRadio",
+      "index": 5.701724412505399,
+      "title": "Type",
+      "params": {
+       "type": {
+        "Title": "Ability type",
+        "AssetId": "912acbe0-262f-4c3d-8d3f-197048f9c868"
+       }
+      }
+     },
+     "range": {
+      "type": "integer",
+      "index": 13.929742143530497,
+      "title": "Range"
+     },
+     "damage": {
+      "type": "integer",
+      "index": 10.403448828970397,
+      "title": "Damage"
+     },
+     "effect": {
+      "type": "gddElementSelector",
+      "index": 17.456450949171497,
+      "title": "Effect",
+      "params": {
+       "type": {
+        "Title": "Effect",
+        "AssetId": "4ce7b352-31ee-4e48-ab25-ef619d223862"
+       }
+      }
+     },
+     "cooldown": {
+      "type": "integer",
+      "index": 6.8771555162653994,
+      "title": "Cooldown"
+     },
+     "mana_cost": {
+      "type": "integer",
+      "index": 9.228017724522298,
+      "title": "Mana Cost"
+     },
+     "animation": {
+      "index": 16.280881195496196,
+      "title": "Animation"
+     },
+     "damage_type": {
+      "type": "enum",
+      "index": 12.754311038465296,
+      "title": "Damage Type",
+      "params": {
+       "type": {
+        "Title": "Damage type",
+        "AssetId": "b5747ca1-5683-4b24-a51e-4814a2cc7b8a"
+       }
+      }
+     },
+     "target_type": {
+      "type": "enumRadio",
+      "index": 15.796293524959843,
+      "title": "Target Type",
+      "params": {
+       "type": {
+        "Title": "Target type",
+        "AssetId": "572014b9-a589-4619-bd79-a979700ac6bc"
+       }
+      }
+     },
+     "effect_value": {
+      "type": "number",
+      "index": 22.158729973974502,
+      "title": "Effect Value"
+     },
+     "effect_duration": {
+      "type": "number",
+      "index": 19.807590459855,
+      "title": "Effect Duration",
+      "multiple": false
+     }
+    }
+   },
+   "inherited": {
+    "type": null,
+    "range": null,
+    "damage": null,
+    "effect": null,
+    "cooldown": null,
+    "animation": null,
+    "mana_cost": null,
+    "damage_type": null,
+    "target_type": null,
+    "effect_value": null,
+    "effect_duration": null,
+    "__props": {
+     "type": {
+      "type": "enumRadio",
+      "index": 5.701724412505399,
+      "title": "Type",
+      "params": {
+       "type": {
+        "Title": "Ability type",
+        "AssetId": "912acbe0-262f-4c3d-8d3f-197048f9c868"
+       }
+      }
+     },
+     "range": {
+      "type": "integer",
+      "index": 13.929742143530497,
+      "title": "Range"
+     },
+     "damage": {
+      "type": "integer",
+      "index": 10.403448828970397,
+      "title": "Damage"
+     },
+     "effect": {
+      "type": "gddElementSelector",
+      "index": 17.456450949171497,
+      "title": "Effect",
+      "params": {
+       "type": {
+        "Title": "Effect",
+        "AssetId": "4ce7b352-31ee-4e48-ab25-ef619d223862"
+       }
+      }
+     },
+     "cooldown": {
+      "type": "integer",
+      "index": 6.8771555162653994,
+      "title": "Cooldown"
+     },
+     "mana_cost": {
+      "type": "integer",
+      "index": 9.228017724522298,
+      "title": "Mana Cost"
+     },
+     "animation": {
+      "index": 16.280881195496196,
+      "title": "Animation"
+     },
+     "damage_type": {
+      "type": "enum",
+      "index": 12.754311038465296,
+      "title": "Damage Type",
+      "params": {
+       "type": {
+        "Title": "Damage type",
+        "AssetId": "b5747ca1-5683-4b24-a51e-4814a2cc7b8a"
+       }
+      }
+     },
+     "target_type": {
+      "type": "enumRadio",
+      "index": 15.796293524959843,
+      "title": "Target Type",
+      "params": {
+       "type": {
+        "Title": "Target type",
+        "AssetId": "572014b9-a589-4619-bd79-a979700ac6bc"
+       }
+      }
+     },
+     "effect_value": {
+      "type": "number",
+      "index": 22.158729973974502,
+      "title": "Effect Value"
+     },
+     "effect_duration": {
+      "type": "number",
+      "index": 19.807590459855,
+      "title": "Effect Duration",
+      "multiple": false
+     }
+    }
+   },
+   "index": 3,
+   "createdAt": "2025-08-08T14:43:31.513Z",
+   "updatedAt": "2025-08-20T17:41:41.270Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "magic-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Skyrend Strike",
+ "parentIds": [
+  "7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445"
+ ],
+ "title": "Skyrend Strike",
+ "typeIds": [
+  "7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445",
+  "00000000-0000-0000-0000-000000000035"
+ ],
+ "workspaceId": "fc054243-5903-4830-ad07-95e72094656a",
+ "values": {
+  "__meta": {},
+  "gallery": {
+   "main": {
+    "type": "file",
+    "index": 1.1755523639782,
+    "value": {
+     "Dir": null,
+     "Size": 626022,
+     "Store": "p-EWvDFxqn",
+     "Title": "Бескрылый небесный удар.jpg",
+     "FileId": "2e5ad698-157b-48eb-a17c-747c18a35539"
+    }
+   }
+  },
+  "description": {
+   "value": "A powerful claw strike with a chance to stun the target for 2 seconds."
+  },
+  "locale": {},
+  "props": {
+   "type": {
+    "Enum": "912acbe0-262f-4c3d-8d3f-197048f9c868",
+    "Name": "active",
+    "Title": "Active"
+   },
+   "range": 0,
+   "damage": 15,
+   "effect": {
+    "Title": "Stun",
+    "AssetId": "362e6481-5adc-453a-af3b-00267849a8f0"
+   },
+   "cooldown": 300,
+   "animation": "range_attack",
+   "mana_cost": 6,
+   "damage_type": {
+    "Enum": "b5747ca1-5683-4b24-a51e-4814a2cc7b8a",
+    "Name": "physical",
+    "Title": "Physical 👊"
+   },
+   "target_type": {
+    "Enum": "572014b9-a589-4619-bd79-a979700ac6bc",
+    "Name": "enemy",
+    "Title": "Enemy"
+   },
+   "effect_duration": 2
+  }
+ }
+}

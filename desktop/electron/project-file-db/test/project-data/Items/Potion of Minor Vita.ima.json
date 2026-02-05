@@ -1,0 +1,492 @@
+{
+ "id": "07d234bc-1643-404a-8250-66b695cb277c",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-000000000100",
+   "name": "__meta",
+   "title": null,
+   "own": true,
+   "type": "props",
+   "props": {
+    "plan_milestone": {
+     "Enum": "00000000-0000-0000-0000-000000000015",
+     "Name": "release",
+     "Title": "[[t:MilestoneRelease]]"
+    }
+   },
+   "computed": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": {
+     "Enum": "00000000-0000-0000-0000-000000000015",
+     "Name": "release",
+     "Title": "[[t:MilestoneRelease]]"
+    },
+    "complete_progress": 0
+   },
+   "inherited": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": 0
+   },
+   "index": 0,
+   "createdAt": "2025-10-07T05:49:16.123Z",
+   "updatedAt": "2025-10-07T05:49:16.123Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000001",
+   "name": "gallery",
+   "title": "[[t:Gallery]]",
+   "own": true,
+   "type": "gallery",
+   "props": {
+    "main": {
+     "type": "file",
+     "index": 1.1755688032139,
+     "value": {
+      "Dir": null,
+      "Size": 404974,
+      "Store": "p-EWvDFxqn",
+      "Title": "image-cb531d6f-d758-4ba7-902a-4009946fc23e.png",
+      "FileId": "2f737b70-f67d-49cc-b5ef-ca9c73e815a5"
+     }
+    }
+   },
+   "computed": {
+    "main": {
+     "type": "file",
+     "index": 1.1755688032139,
+     "value": {
+      "Dir": null,
+      "Size": 404974,
+      "Store": "p-EWvDFxqn",
+      "Title": "image-cb531d6f-d758-4ba7-902a-4009946fc23e.png",
+      "FileId": "2f737b70-f67d-49cc-b5ef-ca9c73e815a5"
+     }
+    }
+   },
+   "inherited": {},
+   "index": 1,
+   "createdAt": "2025-08-20T11:07:30.967Z",
+   "updatedAt": "2025-08-20T11:07:30.967Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000002",
+   "name": "description",
+   "title": "[[t:Description]]",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": "A simple, reliable concoction known to every aspiring adventurer. Its effervescent red glow is a welcome sight in the darkest of dungeons.\nRestores 25 HP"
+   },
+   "computed": {
+    "value": "A simple, reliable concoction known to every aspiring adventurer. Its effervescent red glow is a welcome sight in the darkest of dungeons.\nRestores 25 HP"
+   },
+   "inherited": {},
+   "index": 2,
+   "createdAt": "2025-08-20T11:04:03.790Z",
+   "updatedAt": "2025-08-20T11:17:55.220Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000003",
+   "name": "props",
+   "title": "[[t:Properties]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "type": {
+     "Enum": "b1885d69-e01f-40db-a6ef-a4a4b75ef300",
+     "Name": "potion",
+     "Title": "Potion"
+    },
+    "price": 100,
+    "effect": {
+     "Title": "Heal",
+     "AssetId": "9809f24a-a9d7-4249-890d-525f18ebf6c8"
+    },
+    "receipt": [
+     {
+      "Title": "Sun-Kissed Crimson Root",
+      "AssetId": "66dfefd2-e253-4196-9ee5-a0649f6af17c"
+     },
+     {
+      "Title": "Vial of Pure Spring Water",
+      "AssetId": "bd77d788-ebd7-44bf-b41f-6625e42346b6"
+     },
+     {
+      "Title": "Glistening Dewdrops",
+      "AssetId": "fa7ab3a9-61f3-491b-867c-8091611559c3"
+     }
+    ],
+    "effect_value": 25
+   },
+   "computed": {
+    "type": {
+     "Enum": "b1885d69-e01f-40db-a6ef-a4a4b75ef300",
+     "Name": "potion",
+     "Title": "Potion"
+    },
+    "price": 100,
+    "effect": {
+     "Title": "Heal",
+     "AssetId": "9809f24a-a9d7-4249-890d-525f18ebf6c8"
+    },
+    "effect_value": 25,
+    "effect_duration": null,
+    "receipt": [
+     {
+      "Title": "Sun-Kissed Crimson Root",
+      "AssetId": "66dfefd2-e253-4196-9ee5-a0649f6af17c"
+     },
+     {
+      "Title": "Vial of Pure Spring Water",
+      "AssetId": "bd77d788-ebd7-44bf-b41f-6625e42346b6"
+     },
+     {
+      "Title": "Glistening Dewdrops",
+      "AssetId": "fa7ab3a9-61f3-491b-867c-8091611559c3"
+     }
+    ],
+    "__props": {
+     "type": {
+      "type": "enum",
+      "title": "Type",
+      "params": {
+       "type": {
+        "Title": "Item type",
+        "AssetId": "b1885d69-e01f-40db-a6ef-a4a4b75ef300"
+       }
+      }
+     },
+     "price": {
+      "type": "integer",
+      "index": 2.1755537679504,
+      "title": "Price",
+      "params": {
+       "type": {
+        "Title": "Item type",
+        "AssetId": "b1885d69-e01f-40db-a6ef-a4a4b75ef300"
+       }
+      }
+     },
+     "effect": {
+      "type": "gddElementSelector",
+      "index": 2.866535290393064,
+      "title": "Effect",
+      "params": {
+       "type": {
+        "Title": "Effect",
+        "AssetId": "4ce7b352-31ee-4e48-ab25-ef619d223862"
+       }
+      }
+     },
+     "effect_value": {
+      "type": "number",
+      "index": 5.217674673161364,
+      "title": "Effect Value"
+     },
+     "effect_duration": {
+      "type": "number",
+      "index": 4.042104980979964,
+      "title": "Effect Duration"
+     }
+    }
+   },
+   "inherited": {
+    "type": null,
+    "price": null,
+    "effect": null,
+    "effect_value": null,
+    "effect_duration": null,
+    "__props": {
+     "type": {
+      "type": "enum",
+      "title": "Type",
+      "params": {
+       "type": {
+        "Title": "Item type",
+        "AssetId": "b1885d69-e01f-40db-a6ef-a4a4b75ef300"
+       }
+      }
+     },
+     "price": {
+      "type": "integer",
+      "index": 2.1755537679504,
+      "title": "Price",
+      "params": {
+       "type": {
+        "Title": "Item type",
+        "AssetId": "b1885d69-e01f-40db-a6ef-a4a4b75ef300"
+       }
+      }
+     },
+     "effect": {
+      "type": "gddElementSelector",
+      "index": 2.866535290393064,
+      "title": "Effect",
+      "params": {
+       "type": {
+        "Title": "Effect",
+        "AssetId": "4ce7b352-31ee-4e48-ab25-ef619d223862"
+       }
+      }
+     },
+     "effect_value": {
+      "type": "number",
+      "index": 5.217674673161364,
+      "title": "Effect Value"
+     },
+     "effect_duration": {
+      "type": "number",
+      "index": 4.042104980979964,
+      "title": "Effect Duration"
+     }
+    }
+   },
+   "index": 3,
+   "createdAt": "2025-08-20T11:07:30.967Z",
+   "updatedAt": "2025-08-20T13:37:18.120Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000004",
+   "name": "locale",
+   "title": null,
+   "own": false,
+   "type": "locale",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-06-24T12:55:34.293Z",
+   "updatedAt": "2025-06-24T12:55:34.293Z"
+  },
+  {
+   "id": "4fc95af3-6033-4f3b-8ba6-cd78a5bbd28a",
+   "name": "craft",
+   "title": "Craft",
+   "own": true,
+   "type": "props",
+   "props": {
+    "recipe": [
+     {
+      "item": {
+       "Title": "Sun-Kissed Crimson Root",
+       "AssetId": "66dfefd2-e253-4196-9ee5-a0649f6af17c"
+      },
+      "quantity": 1
+     },
+     {
+      "item": {
+       "Title": "Vial of Pure Spring Water",
+       "AssetId": "bd77d788-ebd7-44bf-b41f-6625e42346b6"
+      },
+      "quantity": 1
+     },
+     {
+      "item": {
+       "Title": "Glistening Dewdrops",
+       "AssetId": "fa7ab3a9-61f3-491b-867c-8091611559c3"
+      },
+      "quantity": 3
+     }
+    ]
+   },
+   "computed": {
+    "recipe": [
+     {
+      "item": {
+       "Title": "Sun-Kissed Crimson Root",
+       "AssetId": "66dfefd2-e253-4196-9ee5-a0649f6af17c"
+      },
+      "quantity": 1
+     },
+     {
+      "item": {
+       "Title": "Vial of Pure Spring Water",
+       "AssetId": "bd77d788-ebd7-44bf-b41f-6625e42346b6"
+      },
+      "quantity": 1
+     },
+     {
+      "item": {
+       "Title": "Glistening Dewdrops",
+       "AssetId": "fa7ab3a9-61f3-491b-867c-8091611559c3"
+      },
+      "quantity": 3
+     }
+    ],
+    "__props": {
+     "recipe": {
+      "type": "struct",
+      "index": 1,
+      "title": "Recipe",
+      "multiple": true,
+      "params": {
+       "type": {
+        "Title": "Recipe ingredient",
+        "AssetId": "b4efc753-cc36-4bda-acf0-0a9491a9034a"
+       }
+      }
+     }
+    }
+   },
+   "inherited": {
+    "recipe": null,
+    "__props": {
+     "recipe": {
+      "type": "struct",
+      "index": 1,
+      "title": "Recipe",
+      "multiple": true,
+      "params": {
+       "type": {
+        "Title": "Recipe ingredient",
+        "AssetId": "b4efc753-cc36-4bda-acf0-0a9491a9034a"
+       }
+      }
+     }
+    }
+   },
+   "index": 4.1755695,
+   "createdAt": "2025-08-20T13:32:31.081Z",
+   "updatedAt": "2025-08-20T13:38:04.439Z"
+  },
+  {
+   "id": "d708bca2-7c42-47a0-89f3-aeeb8f2bbebf",
+   "name": null,
+   "title": "TODO-list",
+   "own": false,
+   "type": "checklist",
+   "props": {},
+   "computed": {
+    "8903653f937b42faeaf5f5b5728d29e0": {
+     "index": 2.3519632407466,
+     "title": "Make item model"
+    },
+    "b391e48f661eb78e5d37f0abf90a7805": {
+     "index": 1.1759816203059,
+     "title": "Draw an item icon"
+    },
+    "c2abade6720e56f1b4a9b5ce1613f9a8": {
+     "index": 3.5279448624705,
+     "title": "Program item behavior"
+    }
+   },
+   "inherited": {
+    "8903653f937b42faeaf5f5b5728d29e0": {
+     "index": 2.3519632407466,
+     "title": "Make item model"
+    },
+    "b391e48f661eb78e5d37f0abf90a7805": {
+     "index": 1.1759816203059,
+     "title": "Draw an item icon"
+    },
+    "c2abade6720e56f1b4a9b5ce1613f9a8": {
+     "index": 3.5279448624705,
+     "title": "Program item behavior"
+    }
+   },
+   "index": 6.1759815,
+   "createdAt": "2025-10-07T05:49:57.418Z",
+   "updatedAt": "2025-10-07T05:51:03.931Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "box-1-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Potion of Minor Vitality",
+ "parentIds": [
+  "2615e9a4-7799-4343-9e64-9516b75c8b9a"
+ ],
+ "title": "Potion of Minor Vitality",
+ "typeIds": [
+  "2615e9a4-7799-4343-9e64-9516b75c8b9a",
+  "00000000-0000-0000-0000-000000000035"
+ ],
+ "workspaceId": "5e92daa6-4653-46fe-b5c2-e315759c2db0",
+ "values": {
+  "__meta": {
+   "plan_milestone": {
+    "Enum": "00000000-0000-0000-0000-000000000015",
+    "Name": "release",
+    "Title": "[[t:MilestoneRelease]]"
+   }
+  },
+  "gallery": {
+   "main": {
+    "type": "file",
+    "index": 1.1755688032139,
+    "value": {
+     "Dir": null,
+     "Size": 404974,
+     "Store": "p-EWvDFxqn",
+     "Title": "image-cb531d6f-d758-4ba7-902a-4009946fc23e.png",
+     "FileId": "2f737b70-f67d-49cc-b5ef-ca9c73e815a5"
+    }
+   }
+  },
+  "description": {
+   "value": "A simple, reliable concoction known to every aspiring adventurer. Its effervescent red glow is a welcome sight in the darkest of dungeons.\nRestores 25 HP"
+  },
+  "props": {
+   "type": {
+    "Enum": "b1885d69-e01f-40db-a6ef-a4a4b75ef300",
+    "Name": "potion",
+    "Title": "Potion"
+   },
+   "price": 100,
+   "effect": {
+    "Title": "Heal",
+    "AssetId": "9809f24a-a9d7-4249-890d-525f18ebf6c8"
+   },
+   "receipt": [
+    {
+     "Title": "Sun-Kissed Crimson Root",
+     "AssetId": "66dfefd2-e253-4196-9ee5-a0649f6af17c"
+    },
+    {
+     "Title": "Vial of Pure Spring Water",
+     "AssetId": "bd77d788-ebd7-44bf-b41f-6625e42346b6"
+    },
+    {
+     "Title": "Glistening Dewdrops",
+     "AssetId": "fa7ab3a9-61f3-491b-867c-8091611559c3"
+    }
+   ],
+   "effect_value": 25
+  },
+  "locale": {},
+  "craft": {
+   "recipe": [
+    {
+     "item": {
+      "Title": "Sun-Kissed Crimson Root",
+      "AssetId": "66dfefd2-e253-4196-9ee5-a0649f6af17c"
+     },
+     "quantity": 1
+    },
+    {
+     "item": {
+      "Title": "Vial of Pure Spring Water",
+      "AssetId": "bd77d788-ebd7-44bf-b41f-6625e42346b6"
+     },
+     "quantity": 1
+    },
+    {
+     "item": {
+      "Title": "Glistening Dewdrops",
+      "AssetId": "fa7ab3a9-61f3-491b-867c-8091611559c3"
+     },
+     "quantity": 3
+    }
+   ]
+  }
+ }
+}

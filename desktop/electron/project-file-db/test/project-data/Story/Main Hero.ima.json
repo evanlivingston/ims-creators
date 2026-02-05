@@ -1,0 +1,929 @@
+{
+ "id": "14b89d76-0cc1-4dc8-8176-be106d84d45c",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-000000000100",
+   "name": "__meta",
+   "title": null,
+   "own": true,
+   "type": "props",
+   "props": {
+    "complete_comp": 0,
+    "complete_progress": 0
+   },
+   "computed": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": 0
+   },
+   "inherited": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "index": 0,
+   "createdAt": "2025-08-08T14:43:28.288Z",
+   "updatedAt": "2025-08-08T14:43:28.288Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000001",
+   "name": "gallery",
+   "title": "[[t:Gallery]]",
+   "own": true,
+   "type": "gallery",
+   "props": {
+    "main": {
+     "type": "file",
+     "index": 1.1755483213773,
+     "value": {
+      "Dir": null,
+      "Size": 416692,
+      "Store": "p-EWvDFxqn",
+      "Title": "Главный герой.jpg",
+      "FileId": "1b4b78a3-f2ff-4154-8080-616c97b18077"
+     }
+    }
+   },
+   "computed": {
+    "main": {
+     "type": "file",
+     "index": 1.1755483213773,
+     "value": {
+      "Dir": null,
+      "Size": 416692,
+      "Store": "p-EWvDFxqn",
+      "Title": "Главный герой.jpg",
+      "FileId": "1b4b78a3-f2ff-4154-8080-616c97b18077"
+     }
+    }
+   },
+   "inherited": {},
+   "index": 1,
+   "createdAt": "2025-08-08T14:43:28.288Z",
+   "updatedAt": "2025-08-18T02:13:41.184Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000002",
+   "name": "description",
+   "title": "[[t:Description]]",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": "The main character is the last free dragon of his pack, who must save his family from slavery and destruction by the Order of Conquerors."
+   },
+   "computed": {
+    "value": "The main character is the last free dragon of his pack, who must save his family from slavery and destruction by the Order of Conquerors."
+   },
+   "inherited": {},
+   "index": 2,
+   "createdAt": "2025-08-08T14:43:28.288Z",
+   "updatedAt": "2025-08-08T14:43:28.288Z"
+  },
+  {
+   "id": "9152ae97-999d-4d74-88cc-4e4549526133",
+   "name": null,
+   "title": null,
+   "own": true,
+   "type": "gallery",
+   "props": {},
+   "computed": {},
+   "inherited": null,
+   "index": 2.824569,
+   "createdAt": "2025-08-08T14:43:28.288Z",
+   "updatedAt": "2025-08-08T14:43:28.288Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000004",
+   "name": "locale",
+   "title": null,
+   "own": true,
+   "type": "locale",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-08-08T14:43:28.288Z",
+   "updatedAt": "2025-08-08T14:43:28.288Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000003",
+   "name": "props",
+   "title": "[[t:Properties]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "age": "50 years old",
+    "name": "Amber",
+    "race": "The Mutant Fire Dragon",
+    "abilities": "Battle cry",
+    "personality": {
+     "Ops": [
+      {
+       "insert": "Stubborn",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": ", but not violent. He hates hunters, but he doesn't want to kill for no reason."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "Curious",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " — interested in ancient artifacts and forgotten magic."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "Sarcastic ",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "(comments on the actions of enemies in the style of \"Well, do you still want to play with fire?\")."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      }
+     ],
+     "Str": "Stubborn, but not violent. He hates hunters, but he doesn't want to kill for no reason.\nCurious — interested in ancient artifacts and forgotten magic.\nSarcastic (comments on the actions of enemies in the style of \"Well, do you still want to play with fire?\").\n"
+    },
+    "__props": {
+     "age": {
+      "index": 3.3508621702845,
+      "title": "Age"
+     },
+     "name": {
+      "index": 1,
+      "title": "Name"
+     },
+     "race": {
+      "index": 2.175431084875,
+      "title": "Race"
+     },
+     "abilities": {
+      "index": 4.5262932564005,
+      "title": "Abilities"
+     },
+     "personality": {
+      "index": 5.701724342915099,
+      "title": "Personality"
+     }
+    }
+   },
+   "computed": {
+    "age": "50 years old",
+    "name": "Amber",
+    "race": "The Mutant Fire Dragon",
+    "abilities": "Battle cry",
+    "personality": {
+     "Ops": [
+      {
+       "insert": "Stubborn",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": ", but not violent. He hates hunters, but he doesn't want to kill for no reason."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "Curious",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " — interested in ancient artifacts and forgotten magic."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "Sarcastic ",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "(comments on the actions of enemies in the style of \"Well, do you still want to play with fire?\")."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      }
+     ],
+     "Str": "Stubborn, but not violent. He hates hunters, but he doesn't want to kill for no reason.\nCurious — interested in ancient artifacts and forgotten magic.\nSarcastic (comments on the actions of enemies in the style of \"Well, do you still want to play with fire?\").\n"
+    },
+    "__props": {
+     "age": {
+      "index": 3.3508621702845,
+      "title": "Age"
+     },
+     "name": {
+      "index": 1,
+      "title": "Name"
+     },
+     "race": {
+      "index": 2.175431084875,
+      "title": "Race"
+     },
+     "abilities": {
+      "index": 4.5262932564005,
+      "title": "Abilities"
+     },
+     "personality": {
+      "index": 5.701724342915099,
+      "title": "Personality"
+     }
+    }
+   },
+   "inherited": {},
+   "index": 4,
+   "createdAt": "2025-08-08T14:43:28.288Z",
+   "updatedAt": "2025-08-08T14:43:28.288Z"
+  },
+  {
+   "id": "8b0fd2d9-dfc5-466d-97e7-32897313c59f",
+   "name": null,
+   "title": "Character development",
+   "own": true,
+   "type": "table",
+   "props": {
+    "__primary": "path",
+    "__columns": {
+     "path": {
+      "index": 1,
+      "title": "Path"
+     },
+     "bonuses": {
+      "index": 3.1754310919098,
+      "title": "Bonuses",
+      "values": {
+       "path": ""
+      }
+     },
+     "abilities": {
+      "type": "gddElementSelector",
+      "index": 2,
+      "title": "Abilities",
+      "params": {
+       "type": {
+        "Title": "Ability",
+        "AssetId": "7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445"
+       }
+      }
+     }
+    },
+    "ancient_spirit_magic": {
+     "index": 3.3508621857508,
+     "values": {
+      "path": {
+       "Ops": [
+        {
+         "insert": "Ancient Spirit",
+         "attributes": {
+          "bold": true
+         }
+        },
+        {
+         "insert": " (Magic)\n"
+        }
+       ],
+       "Str": "Ancient Spirit (Magic)\n"
+      },
+      "bonuses": "+ Mana regeneration\n- Long cooldowns",
+      "abilities": {
+       "Title": "Ice Armor",
+       "AssetId": "cce844b8-71b6-4005-a698-aed88568950d"
+      }
+     }
+    },
+    "shadow_flight_stealth": {
+     "index": 2.1754310925914,
+     "values": {
+      "path": {
+       "Ops": [
+        {
+         "insert": "Shadow Flight",
+         "attributes": {
+          "bold": true
+         }
+        },
+        {
+         "insert": " (Stealth)\n"
+        }
+       ],
+       "Str": "Shadow Flight (Stealth)\n"
+      },
+      "bonuses": "+ Stealth crit damage\n- Low armor",
+      "abilities": {
+       "Title": "Skyrend Strike",
+       "AssetId": "695c48c8-cedc-48bb-ae76-921f6ff16538"
+      }
+     }
+    },
+    "flame_wrath_aggression": {
+     "asset": null,
+     "index": 1,
+     "values": {
+      "path": {
+       "Ops": [
+        {
+         "insert": "Flame Wrath",
+         "attributes": {
+          "bold": true
+         }
+        },
+        {
+         "insert": " (Aggression)\n"
+        }
+       ],
+       "Str": "Flame Wrath (Aggression)\n"
+      },
+      "bonuses": "+ Fire damage\n- Higher enemy detection",
+      "abilities": {
+       "Title": "Fire Volley",
+       "AssetId": "1e5d4433-6159-4c89-9dce-b1040cfb63a4"
+      }
+     }
+    },
+    "shocking_blow_aggression": {
+     "index": 4.5263281503845,
+     "values": {
+      "path": {
+       "Ops": [
+        {
+         "insert": "Shocking Blow",
+         "attributes": {
+          "bold": true
+         }
+        },
+        {
+         "insert": "\n(Aggression)\n"
+        }
+       ],
+       "Str": "Shocking Blow\n(Aggression)\n"
+      },
+      "bonuses": "+ Shocks the surrounding enemies\n- Long cooldowns",
+      "abilities": {
+       "Title": "Quake",
+       "AssetId": "ef19c942-7b51-4b79-bae6-2f7897739cf6"
+      }
+     }
+    }
+   },
+   "computed": {
+    "__primary": "path",
+    "__columns": {
+     "path": {
+      "index": 1,
+      "title": "Path"
+     },
+     "bonuses": {
+      "index": 3.1754310919098,
+      "title": "Bonuses",
+      "values": {
+       "path": ""
+      }
+     },
+     "abilities": {
+      "type": "gddElementSelector",
+      "index": 2,
+      "title": "Abilities",
+      "params": {
+       "type": {
+        "Title": "Ability",
+        "AssetId": "7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445"
+       }
+      }
+     }
+    },
+    "ancient_spirit_magic": {
+     "index": 3.3508621857508,
+     "values": {
+      "path": {
+       "Ops": [
+        {
+         "insert": "Ancient Spirit",
+         "attributes": {
+          "bold": true
+         }
+        },
+        {
+         "insert": " (Magic)\n"
+        }
+       ],
+       "Str": "Ancient Spirit (Magic)\n"
+      },
+      "bonuses": "+ Mana regeneration\n- Long cooldowns",
+      "abilities": {
+       "Title": "Ice Armor",
+       "AssetId": "cce844b8-71b6-4005-a698-aed88568950d"
+      }
+     }
+    },
+    "shadow_flight_stealth": {
+     "index": 2.1754310925914,
+     "values": {
+      "path": {
+       "Ops": [
+        {
+         "insert": "Shadow Flight",
+         "attributes": {
+          "bold": true
+         }
+        },
+        {
+         "insert": " (Stealth)\n"
+        }
+       ],
+       "Str": "Shadow Flight (Stealth)\n"
+      },
+      "bonuses": "+ Stealth crit damage\n- Low armor",
+      "abilities": {
+       "Title": "Skyrend Strike",
+       "AssetId": "695c48c8-cedc-48bb-ae76-921f6ff16538"
+      }
+     }
+    },
+    "flame_wrath_aggression": {
+     "asset": null,
+     "index": 1,
+     "values": {
+      "path": {
+       "Ops": [
+        {
+         "insert": "Flame Wrath",
+         "attributes": {
+          "bold": true
+         }
+        },
+        {
+         "insert": " (Aggression)\n"
+        }
+       ],
+       "Str": "Flame Wrath (Aggression)\n"
+      },
+      "bonuses": "+ Fire damage\n- Higher enemy detection",
+      "abilities": {
+       "Title": "Fire Volley",
+       "AssetId": "1e5d4433-6159-4c89-9dce-b1040cfb63a4"
+      }
+     }
+    },
+    "shocking_blow_aggression": {
+     "index": 4.5263281503845,
+     "values": {
+      "path": {
+       "Ops": [
+        {
+         "insert": "Shocking Blow",
+         "attributes": {
+          "bold": true
+         }
+        },
+        {
+         "insert": "\n(Aggression)\n"
+        }
+       ],
+       "Str": "Shocking Blow\n(Aggression)\n"
+      },
+      "bonuses": "+ Shocks the surrounding enemies\n- Long cooldowns",
+      "abilities": {
+       "Title": "Quake",
+       "AssetId": "ef19c942-7b51-4b79-bae6-2f7897739cf6"
+      }
+     }
+    }
+   },
+   "inherited": null,
+   "index": 5,
+   "createdAt": "2025-08-08T14:43:28.288Z",
+   "updatedAt": "2025-08-08T14:43:28.288Z"
+  },
+  {
+   "id": "94d38af8-9154-45f9-bf20-22909808aaae",
+   "name": null,
+   "title": "Appearance",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Scales:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Dark red, with cracks through which fire shines (like lava)."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "Wings:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Webbed, with patterns resembling flames."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "Eyes: ",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "Bright yellow, with vertical pupils (glow in the dark)."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "Features:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "Horns:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Curved, like a mountain goat (used for ramming)."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Tail:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " With spikes at the end (can turn red hot)."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Size:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Medium (3 meters at the withers, 10 m with tail)."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      }
+     ],
+     "Str": "Scales: Dark red, with cracks through which fire shines (like lava).\nWings: Webbed, with patterns resembling flames.\nEyes: Bright yellow, with vertical pupils (glow in the dark).\nFeatures:\nHorns: Curved, like a mountain goat (used for ramming).\nTail: With spikes at the end (can turn red hot).\nSize: Medium (3 meters at the withers, 10 m with tail).\n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Scales:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Dark red, with cracks through which fire shines (like lava)."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "Wings:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Webbed, with patterns resembling flames."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "Eyes: ",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "Bright yellow, with vertical pupils (glow in the dark)."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "Features:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "Horns:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Curved, like a mountain goat (used for ramming)."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Tail:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " With spikes at the end (can turn red hot)."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Size:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Medium (3 meters at the withers, 10 m with tail)."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      }
+     ],
+     "Str": "Scales: Dark red, with cracks through which fire shines (like lava).\nWings: Webbed, with patterns resembling flames.\nEyes: Bright yellow, with vertical pupils (glow in the dark).\nFeatures:\nHorns: Curved, like a mountain goat (used for ramming).\nTail: With spikes at the end (can turn red hot).\nSize: Medium (3 meters at the withers, 10 m with tail).\n"
+    }
+   },
+   "inherited": null,
+   "index": 6,
+   "createdAt": "2025-08-08T14:43:28.288Z",
+   "updatedAt": "2025-08-08T14:43:28.288Z"
+  },
+  {
+   "id": "1184e528-4e0f-4ffc-8064-855f5731efe0",
+   "name": null,
+   "title": null,
+   "own": true,
+   "type": "diagram",
+   "props": {
+    "graph": "<mxGraphModel><root><mxCell id=\"0\"/><mxCell id=\"1\" parent=\"0\"/><mxCell id=\"2\" style=\"\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"350\" y=\"110\" width=\"100\" height=\"40\" as=\"geometry\"/></mxCell><mxCell id=\"3\" style=\"\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"220\" y=\"190\" width=\"100\" height=\"40\" as=\"geometry\"/></mxCell><mxCell id=\"4\" style=\"\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"350\" y=\"190\" width=\"100\" height=\"40\" as=\"geometry\"/></mxCell><mxCell id=\"5\" style=\"\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"480\" y=\"190\" width=\"100\" height=\"40\" as=\"geometry\"/></mxCell><mxCell id=\"6\" style=\"exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;\" edge=\"1\" parent=\"1\" source=\"2\" target=\"4\"><mxGeometry relative=\"1\" as=\"geometry\"/></mxCell><mxCell id=\"7\" style=\"exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;\" edge=\"1\" parent=\"1\" source=\"2\" target=\"3\"><mxGeometry relative=\"1\" as=\"geometry\"/></mxCell><mxCell id=\"8\" style=\"exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;\" edge=\"1\" parent=\"1\" source=\"2\" target=\"5\"><mxGeometry relative=\"1\" as=\"geometry\"/></mxCell></root></mxGraphModel>",
+    "values": {
+     "id2": "Fate",
+     "id3": "The Path of Destruction",
+     "id4": "The Path of Peace",
+     "id5": "The Path of Knowledge"
+    }
+   },
+   "computed": {
+    "graph": "<mxGraphModel><root><mxCell id=\"0\"/><mxCell id=\"1\" parent=\"0\"/><mxCell id=\"2\" style=\"\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"350\" y=\"110\" width=\"100\" height=\"40\" as=\"geometry\"/></mxCell><mxCell id=\"3\" style=\"\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"220\" y=\"190\" width=\"100\" height=\"40\" as=\"geometry\"/></mxCell><mxCell id=\"4\" style=\"\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"350\" y=\"190\" width=\"100\" height=\"40\" as=\"geometry\"/></mxCell><mxCell id=\"5\" style=\"\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"480\" y=\"190\" width=\"100\" height=\"40\" as=\"geometry\"/></mxCell><mxCell id=\"6\" style=\"exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;\" edge=\"1\" parent=\"1\" source=\"2\" target=\"4\"><mxGeometry relative=\"1\" as=\"geometry\"/></mxCell><mxCell id=\"7\" style=\"exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;\" edge=\"1\" parent=\"1\" source=\"2\" target=\"3\"><mxGeometry relative=\"1\" as=\"geometry\"/></mxCell><mxCell id=\"8\" style=\"exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;\" edge=\"1\" parent=\"1\" source=\"2\" target=\"5\"><mxGeometry relative=\"1\" as=\"geometry\"/></mxCell></root></mxGraphModel>",
+    "values": {
+     "id2": "Fate",
+     "id3": "The Path of Destruction",
+     "id4": "The Path of Peace",
+     "id5": "The Path of Knowledge"
+    }
+   },
+   "inherited": null,
+   "index": 7.1754313,
+   "createdAt": "2025-08-08T14:43:28.288Z",
+   "updatedAt": "2025-08-08T14:43:28.288Z"
+  },
+  {
+   "id": "a7168bd0-e8ca-4c1b-82f4-f48b52280e44",
+   "name": null,
+   "title": "TODO",
+   "own": true,
+   "type": "checklist",
+   "props": {
+    "11fd1a03d485b4841d8b123396e0388b": {
+     "index": 1.1754311289912,
+     "title": "Implement the dragon model"
+    },
+    "ff5336d5c49905d242ddf59fe9f6b238": {
+     "index": 2.3508622590493,
+     "title": "Configure the parameters"
+    }
+   },
+   "computed": {
+    "11fd1a03d485b4841d8b123396e0388b": {
+     "index": 1.1754311289912,
+     "title": "Implement the dragon model"
+    },
+    "ff5336d5c49905d242ddf59fe9f6b238": {
+     "index": 2.3508622590493,
+     "title": "Configure the parameters"
+    }
+   },
+   "inherited": null,
+   "index": 8.3508625,
+   "createdAt": "2025-08-08T14:43:28.288Z",
+   "updatedAt": "2025-08-08T14:43:28.288Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "star-fill",
+ "index": 3.6601562,
+ "name": null,
+ "ownIcon": "star-fill",
+ "ownTitle": "Main Hero",
+ "parentIds": [
+  "00000000-0000-0000-0000-000000000035"
+ ],
+ "title": "Main Hero",
+ "typeIds": [
+  "00000000-0000-0000-0000-000000000035"
+ ],
+ "workspaceId": "84dc9906-f13a-40cd-a3b0-d015bdcce41a",
+ "values": {
+  "__meta": {
+   "complete_comp": 0,
+   "complete_progress": 0
+  },
+  "gallery": {
+   "main": {
+    "type": "file",
+    "index": 1.1755483213773,
+    "value": {
+     "Dir": null,
+     "Size": 416692,
+     "Store": "p-EWvDFxqn",
+     "Title": "Главный герой.jpg",
+     "FileId": "1b4b78a3-f2ff-4154-8080-616c97b18077"
+    }
+   }
+  },
+  "description": {
+   "value": "The main character is the last free dragon of his pack, who must save his family from slavery and destruction by the Order of Conquerors."
+  },
+  "locale": {},
+  "props": {
+   "age": "50 years old",
+   "name": "Amber",
+   "race": "The Mutant Fire Dragon",
+   "abilities": "Battle cry",
+   "personality": {
+    "Ops": [
+     {
+      "insert": "Stubborn",
+      "attributes": {
+       "bold": true
+      }
+     },
+     {
+      "insert": ", but not violent. He hates hunters, but he doesn't want to kill for no reason."
+     },
+     {
+      "insert": "\n",
+      "attributes": {
+       "list": "bullet"
+      }
+     },
+     {
+      "insert": "Curious",
+      "attributes": {
+       "bold": true
+      }
+     },
+     {
+      "insert": " — interested in ancient artifacts and forgotten magic."
+     },
+     {
+      "insert": "\n",
+      "attributes": {
+       "list": "bullet"
+      }
+     },
+     {
+      "insert": "Sarcastic ",
+      "attributes": {
+       "bold": true
+      }
+     },
+     {
+      "insert": "(comments on the actions of enemies in the style of \"Well, do you still want to play with fire?\")."
+     },
+     {
+      "insert": "\n",
+      "attributes": {
+       "list": "bullet"
+      }
+     }
+    ],
+    "Str": "Stubborn, but not violent. He hates hunters, but he doesn't want to kill for no reason.\nCurious — interested in ancient artifacts and forgotten magic.\nSarcastic (comments on the actions of enemies in the style of \"Well, do you still want to play with fire?\").\n"
+   }
+  }
+ }
+}
