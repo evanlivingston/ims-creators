@@ -5,6 +5,12 @@
   "private": true,
   "type": "module",
   "author": "ImStocker <support@cr5.space>",
+  "homepage": "https://ims.cr5.space/desktop",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/ImStocker/ims-creators",
+    "type": "git"
+  },
   "description": "Game design editor: write docs, manage game enities, create dialogues, prototype levels",
   "scripts": {
     "dev": "nuxt dev",
@@ -84,14 +90,19 @@
       "asarUnpack": []
     },
     "linux": {
-      "target": [
-        "deb",
-        "rpm",
-        "snap",
-        "AppImage"
-      ],
+      "target": ["deb", "rpm", "snap", "AppImage"],
       "category": "Development",
-      "asarUnpack": []
+      "executableName": "imsc-desktop", 
+      "icon": "resources/icon.png", 
+      "synopsis": "Game design editor and data manager",
+      "desktop": {
+        "Name": "ImscDesktop",
+        "Type": "Application",
+        "Keywords": "game;design;editor;dialogue;"
+      },
+      "asarUnpack": [
+        "**/node_modules/better-sqlite3/**/*" 
+      ]
     },
     "directories": {
       "buildResources": "resources",
