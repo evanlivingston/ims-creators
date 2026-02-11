@@ -58,6 +58,12 @@ cd ../desktop
 npm i
 ```
 
+Copy default env:
+
+```
+cp .env.example .env
+```
+
 Run application
 
 ```
