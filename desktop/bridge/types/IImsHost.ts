@@ -22,3 +22,41 @@ export type IImsHostExposed = {
     [Method in Exclude<keyof IImsHostApi[Key], `\$${string}` | `_${string}`>]: IImsHostApi[Key][Method]
   }
 }
+
+export type ImsHostWrapObject = {
+  'imshost@type': 'object'
+  content: any
+}
+
+export type ImsHostWrapCallback = {
+  'imshost@type': 'callback'
+  id: number
+}
+
+export type ImsHostWrapAbortSignal = {
+  'imshost@type': 'AbortSignal'
+  id: number,
+  aborted: boolean,
+  reason: any,
+}
+
+export type ImsHostIpcCallbackCall = {
+  callbackId: number,
+  invokeId: number,
+  args: any[]
+}
+
+export type ImsHostIpcCallbackResult = {
+  callbackId: number,
+  invokeId: number,
+  result: any,
+  error: null | string
+}
+
+
+export type ImsHostIpcListenerEvent = {
+  listenerId: number,
+  args: any[]
+}
+
+
