@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 import ProjectSettingsManager from '~ims-app-base/logic/managers/ProjectSettingsManager';
 import ProjectManager from '~ims-app-base/logic/managers/ProjectManager';
@@ -24,4 +25,10 @@ export default class DesktopProjectSettingsManager extends ProjectSettingsManage
     }
     await window.imshost.project.saveProjectSettings(project_path, this._projectSettings.values);
   }
+=======
+import ProjectSettingsManager from '~ims-app-base/logic/managers/ProjectSettingsManager';
+
+export default class DesktopProjectSettingsManager extends ProjectSettingsManager {
+
+>>>>>>> 5bf1668 (Added external-plugins)
 }
