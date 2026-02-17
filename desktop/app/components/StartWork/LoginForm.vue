@@ -13,14 +13,14 @@
         @input="mail = $event"
       />
       <FormInput
-        :placeholder="$t('fields.password')"
+        :placeholder="$t('auth.password')"
         :value="password"
         type="password"
         name="password"
         @input="password = $event"
       />
       <FormCheckBox :value="isRemember" @input="isRemember = $event">
-        {{ $t('fields.rememberMe') }}
+        {{ $t('auth.rememberMe') }}
       </FormCheckBox>
     </div>
     <div class="AuthForm-additional">

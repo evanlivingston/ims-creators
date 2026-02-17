@@ -1,4 +1,13 @@
 export default {
+  auth: {
+    rememberMe: 'Remember me',
+    noAccount: "Don't have account yet?",
+    signInButton: 'Sign in',
+    forgotPasswordLink: 'Forgot password?',
+    signUpHereLink: 'Sign up here',
+    password: 'Password',
+    signInHeader: 'Sign in',
+  },
   desktop: {
     welcome: {
       begin: 'Welcome to',
@@ -30,6 +39,9 @@ export default {
       selectProject: 'Select project',
       downloadProject: 'Download project',
       sameProjectTitle: 'Project at given path already exists',
+      needAuth: 'Need auth',
+      needLicense: 'Need buy license',
+      buy: 'Buy',
     },
     mainMenu: {
       settings: 'Settings',
