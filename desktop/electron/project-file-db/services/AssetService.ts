@@ -18,11 +18,12 @@ import type { AssetQueryWhere, AssetsShortResult, AssetShort, AssetsFullResult, 
 import type { AssetBlockEntity } from "~ims-app-base/logic/types/BlocksType";
 import type { IProjectDatabaseAsset } from "~ims-app-base/logic/types/IProjectDatabase";
 import type { ApiRequestList, ApiResultListWithTotal, ApiResultListWithMore } from "~ims-app-base/logic/types/ProjectTypes";
-import { type AssetPropsPlainObjectValue, type AssetPropsPlainObject, type AssetPropValue, compareAssetPropValues, assignPlainValueToAssetProps, extractRemapParentProps, type AssetProps, remapAssetProps, convertAssetPropsToPlainObject, type AssetPropValueText, walkAssetPropValueTextOps, type AssetPropValueAsset, parseAssetNewBlockRef, applyPropsChange } from "~ims-app-base/logic/types/Props";
+import { type AssetPropsPlainObjectValue, type AssetPropsPlainObject, type AssetPropValue, compareAssetPropValues, assignPlainValueToAssetProps, extractRemapParentProps, type AssetProps, remapAssetProps, convertAssetPropsToPlainObject, type AssetPropValueText, walkAssetPropValueTextOps, type AssetPropValueAsset, parseAssetNewBlockRef, applyPropsChange, diffAssetPropObjects } from "~ims-app-base/logic/types/Props";
 import type { AssetPropsSelectionField, AssetPropsSelectionOrder, AssetPropsSelection } from "~ims-app-base/logic/types/PropsSelection";
 import { AssetRights } from "~ims-app-base/logic/types/Rights";
 import { generateNextUniqueNameNumber } from "~ims-app-base/logic/utils/stringUtils";
 import { assert } from "~ims-app-base/logic/utils/typeUtils";
+import axios from "axios";
 
    
 export class AssetService implements IProjectDatabaseAsset{
@@ -1129,6 +1130,60 @@ export class AssetService implements IProjectDatabaseAsset{
             throw new Error('Asset not found')
         }
         await this.saveAssetFileToFile(assets.list[0], target);
+    }
+
+    // если пользователь меняет локальные папки
+    async syncAssets(where: AssetWhereParams){
+        const local_assets = await this.searchAssets({
+            ...where,
+            isSystem: false
+        });
+        const response = await axios.get(`${process.env.CREATORS_API_HOST}assets/full`, {
+                params: {
+                    where,
+                },
+            });
+        const server_assets: any[] = response.data.assetFulls;
+        const synced_asset_ids_set = new Set();
+        for(const local_asset of local_assets){
+            synced_asset_ids_set.add(local_asset.id);
+            const server_asset = server_assets.find(s_a => s_a.id === local_asset.id);
+            if(server_asset){
+                await this.syncAssetsOne(local_asset, server_asset)
+            }
+            else {
+                // Создать на сервере
+            }
+        }
+        for(const server_asset of server_assets){
+            if(synced_asset_ids_set.has(server_asset.id)) {
+                continue;
+            }
+            synced_asset_ids_set.add(server_asset.id);
+            // Добавить в локальный проект
+        }
+    }
+
+    // если на сервере появился файл, то они будут скачиваться и сохранятсья
+
+    async syncAssetsOne(local_asset: ProjectFileDbAsset, server_asset: ProjectFileDbAsset) {
+        if(server_asset) {
+            for(const server_block of server_asset.blocks){
+                const local_block = local_asset.blocks.find(x => {
+                    if(server_block.id) {
+                        return x.id === server_block.id;
+                    }
+                    else {
+                        return server_block.name && x.name === server_block.id;
+                    }
+                });
+                diffAssetPropObjects(
+                    assignPlainValueToAssetProps({}, server_block),
+                    assignPlainValueToAssetProps({}, local_block ?? {})
+                )
+            }
+        }
+        // возвращается входной параметр для asset change batch
     }
 
 }

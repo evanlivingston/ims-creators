@@ -51,6 +51,7 @@
           class="WelcomeForm-Content-Actions-item-one"
           :class="{ hidden: pageName !== 'start' }"
           @create-project="pageName = 'createProject'"
+          @sign-in="pageName = 'signIn'"
           @select-projects="pageName = 'selectProject'"
         />
         <WelcomeFormContentCreateProject
@@ -59,6 +60,13 @@
           :class="{ hidden: pageName !== 'createProject' }"
           @back="pageName = 'start'"
           :create-project-params="createProjectParams"
+        />
+        <WelcomeFormContentSignIn
+          v-if="pageName === 'signIn'"
+          class="WelcomeForm-Content-Actions-item-two"
+          :class="{ hidden: pageName !== 'signIn' }"
+          @back="pageName = 'start'"
+          @success-login="pageName = 'selectProject'"
         />
         <WelcomeFormContentSelectProject
           v-if="pageName === 'selectProject'"
@@ -81,6 +89,7 @@ import WelcomeFormContentCreateProject from './WelcomeFormContentCreateProject.v
 import WelcomeFormContentSelectProject from './WelcomeFormContentSelectProject.vue';
 import UiManager from '~ims-app-base/logic/managers/UiManager';
 import BetaBadge from '../Common/BetaBadge.vue';
+import WelcomeFormContentSignIn from './WelcomeFormContentSignIn.vue';
 
 export default defineComponent({
   name: 'WelcomeForm',
@@ -89,7 +98,8 @@ export default defineComponent({
     WelcomeFormContentStart,
     WelcomeFormContentCreateProject,
     WelcomeFormContentSelectProject,
-    BetaBadge
+    BetaBadge,
+    WelcomeFormContentSignIn
   },
   data() {
     return {

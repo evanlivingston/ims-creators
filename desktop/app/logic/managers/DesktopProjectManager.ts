@@ -3,6 +3,8 @@ import type { AssetShort } from '~ims-app-base/logic/types/AssetsType';
 import type { LocalProjectInitInfo } from "#bridge/api/ImsHostProject";
 import type { Workspace } from '~ims-app-base/logic/types/Workspaces';
 import { convertTranslatedTitle } from "~ims-app-base/logic/utils/assets";
+import axios from "axios";
+import AuthManager from "~ims-app-base/logic/managers/AuthManager";
 
 export const availableFilenameRegexp = new RegExp("[^- А-Яа-яa-zA-Z,@.;'`!)(]+", 'g');
 function prepareFileBasenameByEntityTitle(title: string){
@@ -11,6 +13,43 @@ function prepareFileBasenameByEntityTitle(title: string){
 
 export default class DesktopProjectManager extends ProjectManager{
     private _projectLocalPath: string | null = null;
+
+    async createProject({
+        title,
+        template_ids,
+        menu_settings,
+        init_script,
+        isPublicTasks,
+    }: {
+        title: string;
+        template_ids?: string[];
+        menu_settings?: {
+        'menu-gamedesign': boolean;
+        'menu-team': boolean;
+        'menu-about': boolean;
+        };
+        init_script?: string;
+        isPublicTasks?: boolean;
+    }){
+        const timezone_shift = -new Date().getTimezoneOffset();
+        const isPublicAbout = !!(menu_settings && menu_settings['menu-about']);
+        const userInfo = this.appManager.get(AuthManager).getUserInfo();
+        const params: any = {
+            title,
+            timezoneShift: timezone_shift,
+            templateIds: template_ids ?? [],
+            lang: userInfo?.language ? userInfo.language : 'en',
+            initScript: init_script,
+            isPublicGdd: false,
+            isPublicTasks: !!isPublicTasks,
+            isPublicAbout: isPublicAbout,
+            isPublicPulse: isPublicAbout,
+        };
+        const response = await axios.post(`${process.env.CREATORS_API_HOST}app/projects`, {
+            params
+        });
+        return response.data.id;
+    }
 
     async initializeLocalProject(localPath: string, initParams?: { title: string, id: string | null}): Promise<LocalProjectInitInfo> {
         const res = await window.imshost.project.initProject(localPath, initParams);

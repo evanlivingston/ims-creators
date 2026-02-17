@@ -28,48 +28,67 @@
           </template>
         </ValueSwitcher>
       </div>
-      <div class="WelcomeFormContentCreateProject-Action">
-        <div class="WelcomeFormContentStart-Action-left">
-          <div class="WelcomeFormContentStart-Action-title">{{$t('desktop.welcome.name')}}</div>
-          <!-- <div class="WelcomeFormContentStart-Action-subtext">{{$t('desktop.welcome.nameTooltip')}}</div> -->
+      <div v-if="needAuth || needLicense">
+        <div class="WelcomeFormContentCreateProject-message">
+          {{ $t('desktop.welcome.' + (needLicense ? 'needLicense' : 'needAuth')) }}
+          <button v-if="needLicense" class="is-button accent">
+            {{$t('desktop.welcome.buy')}}
+          </button>
         </div>
-        <ims-input
-          ref="inputName"
-          v-model="params.projectName"
-          class="WelcomeFormContentStart-Action-right"
-          placeholder="Name"
-          type="text"
-        ></ims-input>
+        <login-form v-if="needAuth"
+            class="WelcomeFormContentStart-login"
+            :open-external="true"
+            @success-login="needAuth=true"
+        />
       </div>
-      <div class="WelcomeFormContentCreateProject-Action">
-        <div class="WelcomeFormContentStart-Action-left">
-          <div class="WelcomeFormContentStart-Action-title">{{$t('desktop.welcome.location')}}</div>
-          <!-- <div class="WelcomeFormContentStart-Action-subtext">{{$t('desktop.welcome.locationTooltip')}}</div> -->
+      <template v-else>
+        <div class="WelcomeFormContentCreateProject-Action">
+          <div class="WelcomeFormContentStart-Action-left">
+            <div class="WelcomeFormContentStart-Action-title">{{$t('desktop.welcome.name')}}</div>
+            <!-- <div class="WelcomeFormContentStart-Action-subtext">{{$t('desktop.welcome.nameTooltip')}}</div> -->
+          </div>
+          <ims-input
+            ref="inputName"
+            v-model="params.projectName"
+            class="WelcomeFormContentStart-Action-right"
+            placeholder="Name"
+            type="text"
+          ></ims-input>
         </div>
-        <SelectFolderForm 
-          :value="params.projectLocation"
-          :placeholder="$t('desktop.welcome.location')"
-          @update="params.projectLocation = $event">
-        </SelectFolderForm>
-      </div>
-      <div class="WelcomeFormContentCreateProject-Action">
-        <div class="WelcomeFormContentStart-Action-left">
-          <div class="WelcomeFormContentStart-Action-title">{{$t('desktop.welcome.template')}}</div>
+        <div class="WelcomeFormContentCreateProject-Action">
+          <div class="WelcomeFormContentStart-Action-left">
+            <div class="WelcomeFormContentStart-Action-title">{{$t('desktop.welcome.location')}}</div>
+            <!-- <div class="WelcomeFormContentStart-Action-subtext">{{$t('desktop.welcome.locationTooltip')}}</div> -->
+          </div>
+          <SelectFolderForm 
+            :value="params.projectLocation"
+            :placeholder="$t('desktop.welcome.location')"
+            @update="params.projectLocation = $event">
+          </SelectFolderForm>
         </div>
-        <select-template
-          :value="currentProjectTemplateId"
-          @update="currentProjectTemplateId = $event"
-          class="WelcomeFormContentStart-Action-right">
-        </select-template>
-      </div>
+        <div class="WelcomeFormContentCreateProject-Action">
+          <div class="WelcomeFormContentStart-Action-left">
+            <div class="WelcomeFormContentStart-Action-title">{{$t('desktop.welcome.template')}}</div>
+          </div>
+          <select-template
+            :value="currentProjectTemplateId"
+            @update="currentProjectTemplateId = $event"
+            class="WelcomeFormContentStart-Action-right">
+          </select-template>
+        </div>
+      </template>
     </div>
     <div v-if="params.projectName && hasWarning" class="WelcomeFormContentCreateProject-warning">
       <i class="ri-error-warning-fill"></i>
       {{ $t('desktop.welcome.sameProjectTitle') }}
     </div>
-    <AdvancedForm :project-folder-name="params.projectFolderName" @update:folder-name="params.projectFolderName = $event"></AdvancedForm>
+    <AdvancedForm v-if="!needAuth && !needLicense" :project-folder-name="params.projectFolderName" @update:folder-name="params.projectFolderName = $event"></AdvancedForm>
     <div class="WelcomeFormContentCreateProject-create">
-      <button class="is-button accent" :class="{ loading }" @click="createProject" :disabled="!canCreate || hasWarning">{{$t('desktop.welcome.create')}}</button>
+      <button class="is-button accent" 
+        :class="{ loading }" @click="createProject" 
+        :disabled="!canCreate || hasWarning || needAuth || needLicense">
+        {{$t('desktop.welcome.create')}}
+      </button>
     </div>
   </div>
 </template>
@@ -86,6 +105,8 @@ import ImsSelect from '~ims-app-base/components/Common/ImsSelect.vue';
 import SelectTemplate from '~ims-creators/components/Project/SelectTemplate.vue';
 import DesktopProjectManager from '#logic/managers/DesktopProjectManager';
 import DesktopCreatorManager from '#logic/managers/DesktopCreatorManager';
+import AuthManager from '~ims-app-base/logic/managers/AuthManager';
+import LoginForm from './LoginForm.vue';
 
 const forbiddenFilenameCharsRegexp = new RegExp("[^- А-Яа-яa-zA-Z0-9,@.;'`!)(]+", 'g');
 
@@ -105,6 +126,7 @@ export default defineComponent({
     AdvancedForm,
     ImsSelect,
     SelectTemplate,
+    LoginForm,
   },
   emits: ['back'],
   props: {
@@ -145,6 +167,15 @@ export default defineComponent({
     }
   },
   computed: {
+    needAuth(){
+      return this.params.projectType === 'cloud' && !this.userInfo;
+    },
+    needLicense(){
+      return this.params.projectType === 'cloud' && this.userInfo;
+    },
+    userInfo(){
+      return this.$getAppManager().get(AuthManager).getUserInfo();
+    },
     projectName(){
       return this.params.projectName;
     },
@@ -159,12 +190,12 @@ export default defineComponent({
           title: this.$t('desktop.welcome.local'),
           icon: 'ri-computer-fill',
         },
-        // {
-        //   id: 'cloud',
-        //   name: 'cloud',
-        //   title: this.$t('desktop.welcome.cloud'),
-        //   icon: 'ri-cloud-fill',
-        // },
+        {
+          id: 'cloud',
+          name: 'cloud',
+          title: this.$t('desktop.welcome.cloud'),
+          icon: 'ri-cloud-fill',
+        },
       ]
     },
     canCreate(){
@@ -184,30 +215,27 @@ export default defineComponent({
             throw new Error(this.$t('fields.allFieldsMustBeFulled'));
           }
           
-          // const new_project_info = await this.$getAppManager()
-          // .get(ProjectManager)
-          // .createProject({
-          //   title: this.params.projectName,
-          //   template_ids: [],
-          //   menu_settings: {
-          //     'menu-about': false,
-          //     'menu-gamedesign': true,
-          //     'menu-team': true,
-          //   },
-          //   init_script: 'starter',
-          //   useStarterTemplate: true,
-          // });
+          const new_project_info =this.params.projectType === 'cloud' ? await this.$getAppManager()
+          .get(DesktopProjectManager)
+          .createProject({
+            title: this.params.projectName,
+            templateIds: [this.currentProjectTemplateId],
+            menu_settings: {
+              'menu-about': false,
+              'menu-gamedesign': true,
+              'menu-team': true,
+            },
+            init_script: 'starter',
+          }) : null;
 
-          // if(new_project_info){
-            await this.$getAppManager().get(DesktopProjectManager).initializeLocalProject(this.projectPath, {
-              id: null,
-              title: this.params.projectName,
-            });
-            if(this.currentProjectTemplateId){
-              await this.$getAppManager().get(DesktopProjectManager).importTemplateProject(this.currentProjectTemplateId);
-            }
-            await this.$getAppManager().get(DesktopCreatorManager).openProjectWindow(this.projectPath);          
-          // }
+          await this.$getAppManager().get(DesktopProjectManager).initializeLocalProject(this.projectPath, {
+            id: new_project_info?.id ?? null,
+            title: this.params.projectName,
+          });
+          if(this.currentProjectTemplateId){
+            await this.$getAppManager().get(DesktopProjectManager).importTemplateProject(this.currentProjectTemplateId);
+          }
+          await this.$getAppManager().get(DesktopCreatorManager).openProjectWindow(this.projectPath);          
         })
         this.loading = false;
       
@@ -283,5 +311,19 @@ export default defineComponent({
   display: flex;
   align-items: center;
   gap: 5px;
+}
+
+.WelcomeFormContentCreateProject-message{
+  background-color: var(--app-menu-bg-color);
+  border: 1px solid var(--app-menu-bg-color);
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin: 10px 0;
+}
+.WelcomeFormContentStart-login{
+  padding: 0 !important;
+  & > .AuthForm-header{
+    display: none;
+  }
 }
 </style>

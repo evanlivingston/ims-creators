@@ -1,4 +1,13 @@
 export default {
+  auth: {
+    rememberMe: 'Запомнить меня',
+    noAccount: 'Еще нет аккаунта?',
+    signInButton: 'Войти',
+    forgotPasswordLink: 'Забыли пароль?',
+    signUpHereLink: 'Зарегистрируйтесь здесь',
+    password: 'Пароль',
+    signInHeader: 'Вход',
+  },
   desktop: {
     welcome: {
       begin: 'Добро пожаловать в',
@@ -30,6 +39,9 @@ export default {
       selectProject: 'Выберите проект',
       downloadProject: 'Скачать проект',
       sameProjectTitle: 'Проект по заданному пути уже существует',
+      needAuth: 'Необходимо авторизоваться',
+      needLicense: 'Необходимо приобрести лицензию',
+      buy: 'Купить',
     },
     mainMenu: {
       settings: 'Настройки',

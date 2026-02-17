@@ -75,7 +75,7 @@ export default defineComponent({
   components: {
     ImsSelect,
   },
-  emits: ['create-project', 'select-projects'],
+  emits: ['create-project', 'select-projects', 'sign-in'],
   computed: {
     options(){
       return [
@@ -93,6 +93,15 @@ export default defineComponent({
           subTitle: this.$t('desktop.welcome.openFolderAsProjectTooltip'),
           buttonTitle: this.$t('desktop.welcome.open'),
           action: () => this.openFolderAsProject(),
+        },
+        {
+          title: this.$t('desktop.welcome.openCloudProject'),
+          subTitle: this.$t('desktop.welcome.openCloudProjectTooltip'),
+          buttonTitle: this.userInfo ? this.$t('desktop.welcome.select') : this.$t('desktop.welcome.signIn'),
+          action: () => {
+            if (this.userInfo) this.$emit('select-projects')
+            else this.$emit('sign-in');
+          },
         },
       ]
     },
