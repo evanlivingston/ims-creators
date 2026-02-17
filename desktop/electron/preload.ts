@@ -1,8 +1,10 @@
+import type { ImsHostIpcCallbackCall, ImsHostIpcCallbackResult, ImsHostIpcListenerEvent } from '#bridge/types/IImsHost';
 import type { UpdateNewVersion } from '#logic/types/AutoUpdateTypes';
-import type { IpcRendererEvent } from 'electron';
+import type { ContextBridge, IpcRenderer, IpcRendererEvent, WebUtils } from 'electron';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const { ipcRenderer, contextBridge, webUtils } = require('electron');
+const { ipcRenderer, contextBridge, webUtils } :
+      { ipcRenderer: IpcRenderer, contextBridge: ContextBridge, webUtils: WebUtils} = require('electron');
 
 let inited = false;
 let initPromiseResolve!: () => void;
@@ -37,7 +39,38 @@ ipcRenderer.on('init', async (_ev: IpcRendererEvent) => {
         );
       }
 
+      const callbacksMap = new Map<number, (...args: any[]) => any>();
+      ipcRenderer.on('imshost-callback-call', async (event: IpcRendererEvent, eventData: ImsHostIpcCallbackCall) => {
+        const callback = callbacksMap.get(eventData.callbackId);
+        let callbackResult: ImsHostIpcCallbackResult = {
+            callbackId: eventData.callbackId,
+            invokeId: eventData.invokeId,
+            result: null,
+            error: null
+        }
+        try {
+          if (!callback) throw new Error('ImsHost callback id ' + eventData.callbackId + ' is not registered')
+          const result = await callback(...eventData.args);
+          callbackResult.result = result;
+        }
+        catch (err: any){
+          callbackResult.error = err.message;
+        }
+        ipcRenderer.send('imshost-callback-result', callbackResult)
+      })
+
+
       contextBridge.exposeInMainWorld('imshostRaw', imshost);
+      contextBridge.exposeInMainWorld('imshostOnCallbackCall', (id: number, callback: (...args: any[]) => any): (() => void) => {
+        callbacksMap.set(id, callback);
+        return () => callbacksMap.delete(id);
+      });
+      contextBridge.exposeInMainWorld('imshostSendEvent', (listenerId: number, args: any[]) => {
+        ipcRenderer.send('imshost-listener-event', {
+          listenerId,
+          args
+        } as ImsHostIpcListenerEvent)
+      });
       initPromiseResolve();
     }
     catch (err: any){

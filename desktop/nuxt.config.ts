@@ -106,9 +106,9 @@ export default defineNuxtConfig({
     tsConfig: {
       compilerOptions: {
         paths: {
-          '#components/*': ['../app/components/*'],
-          '#logic/*': ['../app/logic/*'],
-          '#bridge/*': ['../bridge/*'],
+          '#components/*': ['./app/components/*'],
+          '#logic/*': ['./app/logic/*'],
+          '#bridge/*': ['./bridge/*'],
           '~ims-app-base/*': ['../ims-app-base/app/*'],
           '~ims-creators/*': ['../creators/app/*'],
           '~ims-plugin-base/*': ['../ims-app-base/ims-plugins/base/*'],
