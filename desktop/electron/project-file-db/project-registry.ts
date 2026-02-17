@@ -16,3 +16,11 @@ export async function closeProjectDb(projectPath: string): Promise<void> {
     await db.destroy();
     projectDbMap.delete(projectPath);
 }
+
+export async function closeAllProjectDb(){
+    const closing_projects = [...projectDbMap.entries()];
+    for (const [path, db] of closing_projects){
+        await db.destroy();
+        projectDbMap.delete(path);
+    }
+}

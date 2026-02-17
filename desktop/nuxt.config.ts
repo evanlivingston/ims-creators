@@ -29,7 +29,9 @@ const viteElectronBuildConfig: ViteConfig = {
     },
   },
   define: {
-    'process.env.CREATORS_API_HOST': JSON.stringify(process.env.CREATORS_API_HOST)
+    'process.env.CREATORS_API_HOST': JSON.stringify(process.env.CREATORS_API_HOST),
+    'process.env.AUTH_API_HOST': JSON.stringify(process.env.AUTH_API_HOST),
+    'process.env.FILE_STORAGE_API_HOST': JSON.stringify(process.env.FILE_STORAGE_API_HOST)
   },
   resolve: {
     alias: {

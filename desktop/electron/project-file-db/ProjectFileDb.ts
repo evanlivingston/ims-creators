@@ -11,9 +11,14 @@ import path from 'node:path';
 import { AssetRights } from "~ims-app-base/logic/types/Rights";
 import type { AssetPropsPlainObject } from "~ims-app-base/logic/types/Props";
 import type { AssetCommentDTO } from "~ims-app-base/logic/types/CommentTypes";
+import watcher, { type AsyncSubscription } from "@parcel/watcher"
+import log from 'electron-log/main';
+import { ApiService } from "./services/ApiService";
+import { getMainTokenStorage } from "../main-token-storage";
 
 export const PROJECT_META_FOLDER = '.imsc'
 export const PROJECT_META_INDEX = '.imsc/index.json'
+const PROJECT_META_FS_WATCHER_SNAPSHOT = '.imsc/fs-snapshot.txt'
 
 export type ProjectFileDbAssetBlock = {
     id: string;
@@ -76,12 +81,14 @@ export type ProjectFileDbInfo = {
 
 export class ProjectFileDb  {
     private _info: ProjectFileDbInfo | null = null;
+    private _fsWatcherSubscription: AsyncSubscription | null = null;
 
     public fileSystem = new FileSystemService(this)
     public asset = new AssetService(this)
     public workspace = new WorkspaceService(this);
     public project = new ProjectService(this);
-    
+    public api = new ApiService(this)
+
     public RootGddFolder =  {...RootGddFolder}
 
     constructor(public localPath: string){
@@ -159,11 +166,45 @@ export class ProjectFileDb  {
             }
             return changed_workspace
         }));
+
+        this.api.init(getMainTokenStorage())
+
+        this._initWatcher();
        
     }      
 
-    async destroy(){
 
+    private _getWatcherIgnore(): string[]{
+        return [
+            '**/' + PROJECT_META_FOLDER
+        ]
+    }
+
+    private async _initWatcher(){
+        this._fsWatcherSubscription = await watcher.subscribe(this.localPath, (err, events) => {
+            log.log(err, events);
+        }, {
+            ignore: this._getWatcherIgnore()
+        });
+    }
+
+    async destroy(){
+        if (!this._info){
+            return;
+        }
+        try {
+            await watcher.writeSnapshot(this.localPath, path.join(this.localPath, PROJECT_META_FS_WATCHER_SNAPSHOT),{
+                ignore: this._getWatcherIgnore()
+            })
+        }
+        catch (err: any){
+            log.error('Failed to write fs snapshot', err.message)
+        }
+        if (this._fsWatcherSubscription){
+            this._fsWatcherSubscription.unsubscribe();
+            this._fsWatcherSubscription = null;
+        }
+        this._info = null;
     }
 
     get info(){

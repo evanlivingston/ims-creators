@@ -1,9 +1,10 @@
-import type { AssetHistoryDTO } from "../../../logic/types/AssetHistory";
-import type { AssetQueryWhere, AssetsShortResult, AssetsFullResult, AssetsGraph, AssetCreateDTO, AssetWhereParams, AssetSetDTO, AssetDeleteResultDTO, CreateRefDTO, AssetReferencesResult, AssetsChangeResult, AssetMoveParams, AssetMoveResult, AssetChangeBatchOpDTO } from "../../../logic/types/AssetsType";
-import type { ApiRequestList, ApiResultListWithTotal, ApiResultListWithMore, ProjectFullInfo } from "../../../logic/types/ProjectTypes";
-import type { AssetProps, AssetPropsPlainObject } from "../../../logic/types/Props";
-import type { AssetPropsSelection } from "../../../logic/types/PropsSelection";
-import type { WorkspaceQueryDTOWhere, Workspace, ChangeWorkspaceRequest, WorkspaceMoveParams, WorkspaceMoveResult } from "../../../logic/types/Workspaces";
+
+import type { AssetHistoryDTO } from "~ims-app-base/logic/types/AssetHistory";
+import type { AssetQueryWhere, AssetsShortResult, AssetsFullResult, AssetsGraph, AssetCreateDTO, AssetsChangeResult, AssetWhereParams, AssetSetDTO, AssetDeleteResultDTO, CreateRefDTO, AssetReferencesResult, AssetMoveParams, AssetMoveResult, AssetChangeBatchOpDTO, AssetsBatchChangeResultDTO } from "~ims-app-base/logic/types/AssetsType";
+import type { ApiRequestList, ApiResultListWithTotal, ApiResultListWithMore, ProjectFullInfo } from "~ims-app-base/logic/types/ProjectTypes";
+import type { AssetProps, AssetPropsPlainObject } from "~ims-app-base/logic/types/Props";
+import type { AssetPropsSelection } from "~ims-app-base/logic/types/PropsSelection";
+import type { WorkspaceQueryDTOWhere, Workspace, ChangeWorkspaceRequest, WorkspaceMoveParams, WorkspaceMoveResult } from "~ims-app-base/logic/types/Workspaces";
 import { getProjectDb } from "../../electron/project-file-db/project-registry";
 import { ImsHostBase } from "./ImsHostBase";
 
@@ -213,7 +214,7 @@ export class ImsHostProject extends ImsHostBase {
         return project_db.asset.assetsMove(params);
     }
     
-    assetsChangeBatch(projectPath: string, params: { ops: AssetChangeBatchOpDTO[]; }, options: { pid?: string; } | undefined): Promise<import("../../../logic/types/AssetsType").AssetsBatchChangeResultDTO> {
+    assetsChangeBatch(projectPath: string, params: { ops: AssetChangeBatchOpDTO[]; }, options: { pid?: string; } | undefined): Promise<AssetsBatchChangeResultDTO> {
 
         const project_db = getProjectDb(projectPath);
         return project_db.asset.assetsChangeBatch(params, options);    
