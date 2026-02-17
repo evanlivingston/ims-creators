@@ -183,6 +183,10 @@ export function registerImsHostWindow(win: BrowserWindow): IImsHostApi {
   return api;
 }
 
+export function getImsHostWindow(win: BrowserWindow): IImsHostApi | null {
+  return registeredWindows.get(win) ?? null;
+}
+
 export function unregisterImsHostWindow(win: BrowserWindow) {
   registeredWindows.delete(win);
 }
