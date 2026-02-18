@@ -96,9 +96,11 @@
       "icon": "resources/icon.png", 
       "synopsis": "Game design editor and data manager",
       "desktop": {
-        "Name": "ImscDesktop",
-        "Type": "Application",
-        "Keywords": "game;design;editor;dialogue;"
+        "entry": {          
+          "Name": "ImscDesktop",
+          "Type": "Application",
+          "Keywords": "game;design;editor;dialogue;"
+        }
       },
       "asarUnpack": [
         "**/node_modules/better-sqlite3/**/*" 
