@@ -986,6 +986,17 @@ export class AssetService implements IProjectDatabaseAsset{
         }
     }
 
+    private async _deleteAssetFileFromFilesystem(asset: ProjectFileDbAsset){
+        if (!asset.localName) return;
+        const local_path = getAssetLocalPath(asset, this.db)
+        try {
+            await shell.trashItem(local_path);
+        }
+        catch (err: any){
+            // Ignore error
+        }
+    }
+
     private async _assetsDeleteImpl(changeRecord: HistoryChangeRecord, where: AssetWhereParams, options?: { pid?: string; }): Promise<{ids: string[]}> {
         const deleting_assets = await this.searchAssets({
             ...where,
@@ -994,9 +1005,7 @@ export class AssetService implements IProjectDatabaseAsset{
         if(deleting_assets.length > 0){
             for(const asset of deleting_assets){
                 this.deleteOwnAssetFromCollectionOnly(asset.id);
-                if(asset.localName) {
-                    await shell.trashItem(asset.localName);
-                }
+                await this._deleteAssetFileFromFilesystem(asset);
                 changeRecord.addChange(asset.id, {
                     restore: true
                 })

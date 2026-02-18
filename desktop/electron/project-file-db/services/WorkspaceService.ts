@@ -159,8 +159,7 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
         const workspace_file_basename = params.title ? params.title : workspace_id;
         let parent_workspace_path = this.db.localPath;
         if(params.parentId) {
-            const imw_file_path = this.db.workspace.workspaces.byId.get(params.parentId)?.localName;
-            if(imw_file_path) parent_workspace_path = imw_file_path.replace(/\.imw\.json$/, '');
+            parent_workspace_path = getWorkspaceLocalPathById(params.parentId, this.db)
         }
         const suggest_title = generateNextUniqueNameNumber(
             (workspace_file_basename ?? 'untitled').replace(forbiddenFilenameCharsRegexp, '_').trim(),
@@ -241,6 +240,29 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
         return getWorkspaceLocalPathById(workspace_id, this.db);
     }
 
+    private async _deleteWorkspaceFileFromFilesystem(workspace: ProjectFileDbWorkspace){
+        if (!workspace.localName) return;
+
+        const local_path_folder = getWorkspaceLocalPath(workspace, this.db)
+        const local_path_meta = local_path_folder + ".imw.json";
+
+        // 1. Delete meta file
+        try {
+            await shell.trashItem(local_path_meta);
+        }
+        catch (err: any){
+            // Ignore error
+        }
+        
+        // 2. Delete entire folder
+        try {
+            await shell.trashItem(local_path_folder);
+        }
+        catch (err: any){
+            // Ignore error
+        }
+    }
+
     async workspacesDelete(workspace_id: string): Promise<void> {
         const workspace = this.workspaces.byId.get(workspace_id);
         if (!workspace){
@@ -252,8 +274,7 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
             workspaceids: workspace_id
         })
         if(workspace.localName) {
-            const folder_local_path = workspace.localName.replace('.imw.json', '');
-            await shell.trashItem(folder_local_path);
+            await this._deleteWorkspaceFileFromFilesystem(workspace);
         }
         this.workspaces.delete(workspace_id);
         for (const nested_workspace of nested_workspaces){
