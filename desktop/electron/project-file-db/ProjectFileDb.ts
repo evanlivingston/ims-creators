@@ -4,21 +4,15 @@ import { FileSystemService } from "./services/FileSystemService";
 import { AssetService } from "./services/AssetService";
 import { WorkspaceService } from "./services/WorkspaceService";
 import { ProjectService } from "./services/ProjectService";
-import SystemBundle from "./system-assets-bundle.json"
 import { assert } from "~ims-app-base/logic/utils/typeUtils";
 import fs from 'node:fs';
 import path from 'node:path';
-import { AssetRights } from "~ims-app-base/logic/types/Rights";
 import type { AssetPropsPlainObject } from "~ims-app-base/logic/types/Props";
 import type { AssetCommentDTO } from "~ims-app-base/logic/types/CommentTypes";
-import watcher, { type AsyncSubscription } from "@parcel/watcher"
-import log from 'electron-log/main';
 import { ApiService } from "./services/ApiService";
 import { getMainTokenStorage } from "../main-token-storage";
-
-export const PROJECT_META_FOLDER = '.imsc'
-export const PROJECT_META_INDEX = '.imsc/index.json'
-const PROJECT_META_FS_WATCHER_SNAPSHOT = '.imsc/fs-snapshot.txt'
+import { PROJECT_META_FOLDER, PROJECT_META_INDEX } from "./project-db-constants";
+import { AssetRights } from "~ims-app-base/logic/types/Rights";
 
 export type ProjectFileDbAssetBlock = {
     id: string;
@@ -65,14 +59,6 @@ const RootGddFolder: ProjectFileDbWorkspace = {
     unread: 0
 }
 
-export const ASSET_BASE_ORDERING = [
-  'index',
-  'title',
-  'name',
-  'createdAt',
-  'id',
-];
-
 export type ProjectFileDbInfo = {
     id: string;
     title: string;   
@@ -81,7 +67,8 @@ export type ProjectFileDbInfo = {
 
 export class ProjectFileDb  {
     private _info: ProjectFileDbInfo | null = null;
-    private _fsWatcherSubscription: AsyncSubscription | null = null;
+    private _initing: Promise<void> | null = null;
+    private _destroying: Promise<void> | null = null;
 
     public fileSystem = new FileSystemService(this)
     public asset = new AssetService(this)
@@ -95,7 +82,11 @@ export class ProjectFileDb  {
 
     }
 
-    async init(initParams?: { title: string, id: string | null}){
+    get isDestroying(){
+        return !!this._destroying;
+    }
+
+    private async _initImpl(initParams?: { title: string, id: string | null}){
         await fs.promises.mkdir(path.join(this.localPath, PROJECT_META_FOLDER), {
           recursive: true
         });
@@ -122,89 +113,44 @@ export class ProjectFileDb  {
           await fs.promises.writeFile(path.join(this.localPath, PROJECT_META_INDEX), JSON.stringify(this._info), 'utf-8')
         }
 
-        this.asset.assets.clear();
-        this.asset.systemAssets.clear();
-        this.workspace.workspaces.clear();
-
-        // System
-        this.asset.systemAssets.addMany((SystemBundle.assets as unknown as ProjectFileDbAsset[]).map(asset => {
-            return {...asset, rights: 1}
-        }))
-        this.asset.assets.addMany((SystemBundle.assets as unknown as ProjectFileDbAsset[]).map(asset => {
-            return {...asset, rights: 1}
-        }));
-        this.workspace.workspaces.addMany((SystemBundle.workspaces as unknown as ProjectFileDbWorkspace[]).map(workspace => {
-            return {...workspace, rights: 1}
-        }));
-
-        // User
-        const user_files = await this.fileSystem.loadWorkspace(this.localPath, this.RootGddFolder.id, this.localPath);
-        if (this.info.id){
-            this.RootGddFolder.projectId = this.info.id;
-        }
-        this.RootGddFolder.localName ='';
-        this.asset.assets.addMany(user_files.assets.map(asset => {
-            const changed_asset: ProjectFileDbAsset = { 
-                ...asset,
-                projectId: this.info.id,
-                rights: 5
-            }
-            if (!changed_asset.workspaceId){
-                changed_asset.workspaceId = this.RootGddFolder.id;
-            }
-            return changed_asset
-        }));
-        this.workspace.workspaces.add(this.RootGddFolder)
-        this.workspace.workspaces.addMany(user_files.workspaces.map(workspace => {
-            const changed_workspace =  {
-                ...workspace, 
-                projectId: this.info.id,
-                rights: 5
-            }
-            if (!changed_workspace.parentId){
-                changed_workspace.parentId = this.RootGddFolder.id;
-            }
-            return changed_workspace
-        }));
-
         this.api.init(getMainTokenStorage())
+        if (this._info.id){
+            this.api.setCurrentProjectId(this._info.id);
+        }
 
-        this._initWatcher();
-       
+        await this.fileSystem.init()
+    }
+
+    init(initParams?: { title: string, id: string | null}){
+        if (this.isDestroying){
+            throw new Error('Cannot init destroying ProjectFileDb');
+        }
+        if (!this._initing){
+            this._initing = this._initImpl(initParams).catch(err => {
+                this._initing = null;
+                throw err;
+            })
+        }
+        return this._initing;
     }      
 
 
-    private _getWatcherIgnore(): string[]{
-        return [
-            '**/' + PROJECT_META_FOLDER
-        ]
-    }
-
-    private async _initWatcher(){
-        this._fsWatcherSubscription = await watcher.subscribe(this.localPath, (err, events) => {
-            log.log(err, events);
-        }, {
-            ignore: this._getWatcherIgnore()
-        });
-    }
-
-    async destroy(){
+    private async _destroyImpl(){
         if (!this._info){
             return;
         }
-        try {
-            await watcher.writeSnapshot(this.localPath, path.join(this.localPath, PROJECT_META_FS_WATCHER_SNAPSHOT),{
-                ignore: this._getWatcherIgnore()
+        await this.fileSystem.destroy();
+        this._info = null;
+    }
+
+    async destroy(){
+        if (!this._destroying){
+            this._destroying = this._destroyImpl().catch(err => {
+                this._destroying = null;
+                throw err;
             })
         }
-        catch (err: any){
-            log.error('Failed to write fs snapshot', err.message)
-        }
-        if (this._fsWatcherSubscription){
-            this._fsWatcherSubscription.unsubscribe();
-            this._fsWatcherSubscription = null;
-        }
-        this._info = null;
+        return this._destroying;
     }
 
     get info(){

@@ -5,8 +5,15 @@ import { AssetRights } from '~ims-app-base/logic/types/Rights';
 import { v4 as uuidv4 } from 'uuid';
 import { absolutePathToUuid } from "../utils/files";
 import { MARKDOWN_ASSET_ID, BLOCK_NAME_META } from "~ims-app-base/logic/constants";
+import SystemBundle from "../system-assets-bundle.json"
+import watcher, { type AsyncSubscription } from "@parcel/watcher"
+import path from "node:path";
+import { PROJECT_META_FOLDER, PROJECT_META_FS_WATCHER_SNAPSHOT } from "../project-db-constants";
+import log from 'electron-log/main';
    
 export class FileSystemService{
+
+    private _fsWatcherSubscription: AsyncSubscription | null = null;
 
     constructor(public db: ProjectFileDb){
 
@@ -208,6 +215,88 @@ export class FileSystemService{
         return {
             assets: res_assets,
             workspaces: res_workspaces,
+        }
+    }
+
+    private _getWatcherIgnore(): string[]{
+        return [
+            '**/' + PROJECT_META_FOLDER
+        ]
+    }
+
+    private async _initWatcher(){
+        this._fsWatcherSubscription = await watcher.subscribe(this.db.localPath, (err, events) => {
+            log.log(err, events);
+        }, {
+            ignore: this._getWatcherIgnore()
+        });
+    }
+
+
+    async init(){
+
+
+        this.db.asset.assets.clear();
+        this.db.asset.systemAssets.clear();
+        this.db.workspace.workspaces.clear();
+
+        // System
+        this.db.asset.systemAssets.addMany((SystemBundle.assets as unknown as ProjectFileDbAsset[]).map(asset => {
+            return {...asset, rights: 1}
+        }))
+        this.db.asset.assets.addMany((SystemBundle.assets as unknown as ProjectFileDbAsset[]).map(asset => {
+            return {...asset, rights: 1}
+        }));
+        this.db.workspace.workspaces.addMany((SystemBundle.workspaces as unknown as ProjectFileDbWorkspace[]).map(workspace => {
+            return {...workspace, rights: 1}
+        }));
+
+        // User
+        const user_files = await this.loadWorkspace(this.db.localPath, this.db.RootGddFolder.id, this.db.localPath);
+        if (this.db.info.id){
+            this.db.RootGddFolder.projectId = this.db.info.id;
+        }
+        this.db.RootGddFolder.localName ='';
+        this.db.asset.assets.addMany(user_files.assets.map(asset => {
+            const changed_asset: ProjectFileDbAsset = { 
+                ...asset,
+                projectId: this.db.info.id,
+                rights: 5
+            }
+            if (!changed_asset.workspaceId){
+                changed_asset.workspaceId = this.db.RootGddFolder.id;
+            }
+            return changed_asset
+        }));
+        this.db.workspace.workspaces.add(this.db.RootGddFolder)
+        this.db.workspace.workspaces.addMany(user_files.workspaces.map(workspace => {
+            const changed_workspace =  {
+                ...workspace, 
+                projectId: this.db.info.id,
+                rights: 5
+            }
+            if (!changed_workspace.parentId){
+                changed_workspace.parentId = this.db.RootGddFolder.id;
+            }
+            return changed_workspace
+        }));
+        
+        this._initWatcher();
+    }
+
+    async destroy(){
+
+        try {
+            await watcher.writeSnapshot(this.db.localPath, path.join(this.db.localPath, PROJECT_META_FS_WATCHER_SNAPSHOT),{
+                ignore: this._getWatcherIgnore()
+            })
+        }
+        catch (err: any){
+            log.error('Failed to write fs snapshot', err.message)
+        }
+        if (this._fsWatcherSubscription){
+            this._fsWatcherSubscription.unsubscribe();
+            this._fsWatcherSubscription = null;
         }
     }
 }
