@@ -10,15 +10,27 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import { viteImsResolvePlugin } from "../ims-app-base/config/vite-ims-resolve-plugin"
 import type { ViteConfig } from 'nuxt/schema';
 
+const dist_electron_path = path.join(__dirname, 'dist-electron')
+const dist_client_path = path.join(__dirname, 'dist-client')
 if (process.env.NODE_ENV === 'production'){
-  fs.rmSync(path.join(__dirname, 'dist-electron'), {
+  fs.rmSync(dist_electron_path, {
       recursive: true,
       force: true,
   });
-  fs.rmSync(path.join(__dirname, 'dist-client'), {
+  fs.rmSync(dist_client_path, {
       recursive: true,
       force: true,
   });
+}
+else {
+  const main_entry = path.join(dist_electron_path, 'main.js');
+  if (!fs.existsSync(main_entry)){
+    // Add stub main.js to eliminate missing entry error, when dev script is running at first time
+    fs.mkdirSync(dist_electron_path, {
+      recursive: true
+    })
+    fs.writeFileSync(main_entry, ''); 
+  }
 }
 
 const viteElectronBuildConfig: ViteConfig = {
