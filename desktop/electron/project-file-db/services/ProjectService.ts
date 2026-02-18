@@ -1,9 +1,6 @@
 import axios from "axios";
 import type { ProjectFullInfo } from '~ims-app-base/logic/types/ProjectTypes'
 import type { ProjectFileDb } from "../ProjectFileDb"
-import { Service } from '~ims-app-base/logic/managers/ApiWorker';
-import { openBlobFile } from '~ims-app-base/logic/utils/dataUtils';
-import { once } from "node:events";
 import fs from "node:fs";
 import type { Readable } from "node:stream";
 import tmp from "tmp";

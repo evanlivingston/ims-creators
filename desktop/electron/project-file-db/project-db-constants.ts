@@ -9,3 +9,11 @@ export const ASSET_BASE_ORDERING = [
   'createdAt',
   'id',
 ];
+
+export const WORKSPACE_BASE_ORDERING = [
+  'index',
+  'title',
+  'name',
+  'createdAt',
+  'id',
+];

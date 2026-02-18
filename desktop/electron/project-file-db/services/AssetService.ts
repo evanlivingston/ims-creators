@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { getFieldDescriptor } from "../asset-fields";
-import { ASSET_BASE_ORDERING, type ProjectFileDb, type ProjectFileDbAsset, type ProjectFileDbAssetBlock } from "../ProjectFileDb";
+import { type ProjectFileDb, type ProjectFileDbAsset, type ProjectFileDbAssetBlock } from "../ProjectFileDb";
 import { ProjectFileDbCollection } from "../ProjectFileDbCollection";
 import fs from 'node:fs';
 import * as node_path from 'path';
@@ -24,6 +24,7 @@ import { AssetRights } from "~ims-app-base/logic/types/Rights";
 import { generateNextUniqueNameNumber } from "~ims-app-base/logic/utils/stringUtils";
 import { assert } from "~ims-app-base/logic/utils/typeUtils";
 import axios from "axios";
+import { ASSET_BASE_ORDERING } from "../project-db-constants";
 
    
 export class AssetService implements IProjectDatabaseAsset{

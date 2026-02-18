@@ -4,7 +4,7 @@ import type { ApiRequestList, ApiResultListWithTotal } from "~ims-app-base/logic
 import { compareAssetPropValues, assignPlainValueToAssetProps } from "~ims-app-base/logic/types/Props";
 import type { AssetPropsSelectionOrder } from "~ims-app-base/logic/types/PropsSelection";
 import type { WorkspaceQueryDTOWhere, Workspace, ChangeWorkspaceRequest, WorkspaceMoveParams, WorkspaceMoveResult } from "~ims-app-base/logic/types/Workspaces";
-import { ASSET_BASE_ORDERING, type ProjectFileDb, type ProjectFileDbWorkspace } from "../ProjectFileDb";
+import { type ProjectFileDb, type ProjectFileDbWorkspace } from "../ProjectFileDb";
 import { ProjectFileDbCollection } from "../ProjectFileDbCollection";
 import fs from 'node:fs';
 import { v4 as uuidv4 } from 'uuid';
@@ -16,6 +16,7 @@ import JSZip from "jszip";
 import { once } from "node:events";
 import { PassThrough, type Writable } from "node:stream";
 import { shell } from 'electron'
+import { WORKSPACE_BASE_ORDERING } from "../project-db-constants";
    
 export class WorkspaceService implements IProjectDatabaseWorkspace{
 
@@ -110,7 +111,7 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
     }
     
     private async _sortWorkspaces(workspaces: ProjectFileDbWorkspace[], order: AssetPropsSelectionOrder[]): Promise<ProjectFileDbWorkspace[]>{
-        const order_items = order && order.length > 0 ? order : ASSET_BASE_ORDERING;
+        const order_items = order && order.length > 0 ? order : WORKSPACE_BASE_ORDERING;
         return workspaces.sort((a,b) => {
             for(const order_item of order_items){
                 let order_field: string;
