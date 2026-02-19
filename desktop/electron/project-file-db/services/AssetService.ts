@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { getFieldDescriptor } from "../asset-fields";
-import { ASSET_BASE_ORDERING, type ProjectFileDb, type ProjectFileDbAsset, type ProjectFileDbAssetBlock } from "../ProjectFileDb";
+import { type ProjectFileDb, type ProjectFileDbAsset, type ProjectFileDbAssetBlock } from "../ProjectFileDb";
 import { ProjectFileDbCollection } from "../ProjectFileDbCollection";
 import fs from 'node:fs';
 import * as node_path from 'path';
@@ -24,6 +24,7 @@ import { AssetRights } from "~ims-app-base/logic/types/Rights";
 import { generateNextUniqueNameNumber } from "~ims-app-base/logic/utils/stringUtils";
 import { assert } from "~ims-app-base/logic/utils/typeUtils";
 import axios from "axios";
+import { ASSET_BASE_ORDERING } from "../project-db-constants";
 
    
 export class AssetService implements IProjectDatabaseAsset{
@@ -985,6 +986,17 @@ export class AssetService implements IProjectDatabaseAsset{
         }
     }
 
+    private async _deleteAssetFileFromFilesystem(asset: ProjectFileDbAsset){
+        if (!asset.localName) return;
+        const local_path = getAssetLocalPath(asset, this.db)
+        try {
+            await shell.trashItem(local_path);
+        }
+        catch (err: any){
+            // Ignore error
+        }
+    }
+
     private async _assetsDeleteImpl(changeRecord: HistoryChangeRecord, where: AssetWhereParams, options?: { pid?: string; }): Promise<{ids: string[]}> {
         const deleting_assets = await this.searchAssets({
             ...where,
@@ -993,9 +1005,7 @@ export class AssetService implements IProjectDatabaseAsset{
         if(deleting_assets.length > 0){
             for(const asset of deleting_assets){
                 this.deleteOwnAssetFromCollectionOnly(asset.id);
-                if(asset.localName) {
-                    await shell.trashItem(asset.localName);
-                }
+                await this._deleteAssetFileFromFilesystem(asset);
                 changeRecord.addChange(asset.id, {
                     restore: true
                 })

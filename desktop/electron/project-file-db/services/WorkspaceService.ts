@@ -4,7 +4,7 @@ import type { ApiRequestList, ApiResultListWithTotal } from "~ims-app-base/logic
 import { compareAssetPropValues, assignPlainValueToAssetProps } from "~ims-app-base/logic/types/Props";
 import type { AssetPropsSelectionOrder } from "~ims-app-base/logic/types/PropsSelection";
 import type { WorkspaceQueryDTOWhere, Workspace, ChangeWorkspaceRequest, WorkspaceMoveParams, WorkspaceMoveResult } from "~ims-app-base/logic/types/Workspaces";
-import { ASSET_BASE_ORDERING, type ProjectFileDb, type ProjectFileDbWorkspace } from "../ProjectFileDb";
+import { type ProjectFileDb, type ProjectFileDbWorkspace } from "../ProjectFileDb";
 import { ProjectFileDbCollection } from "../ProjectFileDbCollection";
 import fs from 'node:fs';
 import { v4 as uuidv4 } from 'uuid';
@@ -16,6 +16,7 @@ import JSZip from "jszip";
 import { once } from "node:events";
 import { PassThrough, type Writable } from "node:stream";
 import { shell } from 'electron'
+import { WORKSPACE_BASE_ORDERING } from "../project-db-constants";
    
 export class WorkspaceService implements IProjectDatabaseWorkspace{
 
@@ -110,7 +111,7 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
     }
     
     private async _sortWorkspaces(workspaces: ProjectFileDbWorkspace[], order: AssetPropsSelectionOrder[]): Promise<ProjectFileDbWorkspace[]>{
-        const order_items = order && order.length > 0 ? order : ASSET_BASE_ORDERING;
+        const order_items = order && order.length > 0 ? order : WORKSPACE_BASE_ORDERING;
         return workspaces.sort((a,b) => {
             for(const order_item of order_items){
                 let order_field: string;
@@ -158,8 +159,7 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
         const workspace_file_basename = params.title ? params.title : workspace_id;
         let parent_workspace_path = this.db.localPath;
         if(params.parentId) {
-            const imw_file_path = this.db.workspace.workspaces.byId.get(params.parentId)?.localName;
-            if(imw_file_path) parent_workspace_path = imw_file_path.replace(/\.imw\.json$/, '');
+            parent_workspace_path = getWorkspaceLocalPathById(params.parentId, this.db)
         }
         const suggest_title = generateNextUniqueNameNumber(
             (workspace_file_basename ?? 'untitled').replace(forbiddenFilenameCharsRegexp, '_').trim(),
@@ -240,6 +240,29 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
         return getWorkspaceLocalPathById(workspace_id, this.db);
     }
 
+    private async _deleteWorkspaceFileFromFilesystem(workspace: ProjectFileDbWorkspace){
+        if (!workspace.localName) return;
+
+        const local_path_folder = getWorkspaceLocalPath(workspace, this.db)
+        const local_path_meta = local_path_folder + ".imw.json";
+
+        // 1. Delete meta file
+        try {
+            await shell.trashItem(local_path_meta);
+        }
+        catch (err: any){
+            // Ignore error
+        }
+        
+        // 2. Delete entire folder
+        try {
+            await shell.trashItem(local_path_folder);
+        }
+        catch (err: any){
+            // Ignore error
+        }
+    }
+
     async workspacesDelete(workspace_id: string): Promise<void> {
         const workspace = this.workspaces.byId.get(workspace_id);
         if (!workspace){
@@ -251,8 +274,7 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
             workspaceids: workspace_id
         })
         if(workspace.localName) {
-            const folder_local_path = workspace.localName.replace('.imw.json', '');
-            await shell.trashItem(folder_local_path);
+            await this._deleteWorkspaceFileFromFilesystem(workspace);
         }
         this.workspaces.delete(workspace_id);
         for (const nested_workspace of nested_workspaces){

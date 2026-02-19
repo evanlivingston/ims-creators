@@ -1,6 +1,7 @@
 import type { ImsHostIpcCallbackCall, ImsHostIpcCallbackResult, ImsHostIpcListenerEvent } from '#bridge/types/IImsHost';
 import type { UpdateNewVersion } from '#logic/types/AutoUpdateTypes';
 import type { ContextBridge, IpcRenderer, IpcRendererEvent, WebUtils } from 'electron';
+import type { IApiTokenStorage, TokenMainSavedData } from '~ims-app-base/logic/managers/ApiWorker';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { ipcRenderer, contextBridge, webUtils } :
@@ -95,4 +96,24 @@ contextBridge.exposeInMainWorld('requestNewVersionAvailable',
         await func(new_version)
     );
   }
+);
+
+
+contextBridge.exposeInMainWorld('imsToken',{
+    getMain(){
+      return ipcRenderer.sendSync('imsTokenGetMain')
+    },
+    async clear(){
+      await ipcRenderer.invoke('imsTokenClear')
+    },
+    async getRefreshToken(){
+      return await ipcRenderer.invoke('imsTokenGetRefreshToken')
+    },
+    async save(main: TokenMainSavedData, token: string | undefined){
+      await ipcRenderer.invoke('imsTokenSave', {
+        main,
+        token
+      })
+    }
+  } as IApiTokenStorage
 );

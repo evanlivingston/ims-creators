@@ -1,0 +1,61 @@
+name: Build Linux Packages
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+          cache-dependency-path: |
+            ims-app-base/package-lock.json
+            creators/package-lock.json
+            desktop/package-lock.json
+
+      - name: Install deps (ims-app-base)
+        run: npm ci
+        working-directory: ims-app-base
+
+      - name: Install deps (creators)
+        run: npm ci
+        working-directory: creators
+
+      - name: Install deps (desktop)
+        run: npm ci
+        working-directory: desktop
+
+      - name: Build Linux packages (deb, rpm, AppImage)
+        run: npm run package -- --linux deb rpm AppImage
+        working-directory: desktop
+
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ImscDesktop-Linux
+          path: |
+            desktop/release/*.AppImage
+            desktop/release/*.deb
+            desktop/release/*.rpm
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            desktop/release/*.AppImage
+            desktop/release/*.deb
+            desktop/release/*.rpm

@@ -1,15 +1,136 @@
-import type { ProjectFileDb, ProjectFileDbAsset, ProjectFileDbWorkspace } from "../ProjectFileDb";
+import { ProjectFileDb, type ProjectFileDbAsset, type ProjectFileDbWorkspace } from "../ProjectFileDb";
 import fs from 'node:fs';
 import * as node_path from 'path';
 import { AssetRights } from '~ims-app-base/logic/types/Rights';
 import { v4 as uuidv4 } from 'uuid';
 import { absolutePathToUuid } from "../utils/files";
 import { MARKDOWN_ASSET_ID, BLOCK_NAME_META } from "~ims-app-base/logic/constants";
+import SystemBundle from "../system-assets-bundle.json"
+import watcher, { type AsyncSubscription } from "@parcel/watcher"
+import path from "node:path";
+import { PROJECT_META_FOLDER, PROJECT_META_FS_WATCHER_SNAPSHOT } from "../project-db-constants";
+import log from 'electron-log/main';
    
 export class FileSystemService{
 
+    private _fsWatcherSubscription: AsyncSubscription | null = null;
+
     constructor(public db: ProjectFileDb){
 
+    }
+
+    async loadFile(local_path: string, workspace_id: string, root_path: string): Promise<{
+        type: 'asset',
+        asset: ProjectFileDbAsset
+    } | {
+        type: 'workspace',
+        workspace: ProjectFileDbWorkspace
+    } | null>{
+    
+        const local_name = node_path.basename(local_path);
+        const extname = node_path.extname(local_name);
+        
+        if (extname !== '.json' && extname !== '.md'){
+            return null
+        }
+
+        const file_info = await fs.promises.stat(local_path);
+        const created_at = file_info.birthtime.toISOString();
+        const updated_at = file_info.mtime.toISOString();
+
+        const file = await fs.promises.readFile(local_path, { encoding: 'utf8' });
+        if (extname === '.json') {
+            if (/\.ima[ \d\(\)\[\]_]*\.json$/i.test(local_name)) {
+                const asset = JSON.parse(file) as ProjectFileDbAsset;
+                asset.localName = local_name
+                asset.workspaceId = workspace_id;
+                asset.createdAt = created_at;
+                asset.updatedAt = updated_at;
+                return {
+                    type: 'asset',
+                    asset
+                }
+            }
+            else if (/\.imw[ \d\(\)\[\]_]*\.json$/i.test(local_name)){
+                const workspace_info = JSON.parse(file) as ProjectFileDbWorkspace;
+                workspace_info.localName = local_name
+                workspace_info.parentId = workspace_id;
+                workspace_info.createdAt = created_at;
+                workspace_info.updatedAt = updated_at;
+                return {
+                    type: 'workspace',
+                    workspace: workspace_info
+                };
+            }
+        }
+        else if(extname === '.md'){
+            const asset_full: ProjectFileDbAsset = {
+                id: absolutePathToUuid(local_path, root_path),
+                projectId: this.db.project.db.info.id ?? '',
+                workspaceId: workspace_id,
+                name: null,
+                title: node_path.basename(local_name, extname),
+                icon: 'markdown-fill',
+                isAbstract: false,
+                typeIds: [MARKDOWN_ASSET_ID],
+                createdAt: created_at,
+                updatedAt: updated_at,
+                deletedAt: null,
+                rights: AssetRights.FULL_ACCESS,
+                index: null,
+                creatorUserId: null,
+                unread: 0,
+                hasImage: false,
+                parentIds: [MARKDOWN_ASSET_ID],
+                ownTitle: null,
+                ownIcon: 'markdown-fill',
+                blocks: [{
+                    id: uuidv4(),
+                    type: 'props',
+                    name: BLOCK_NAME_META,
+                    title: null,
+                    index: 0,
+                    createdAt: created_at,
+                    updatedAt: updated_at,
+                    ownTitle: null,
+                    own: true,
+                    props: {
+                        format: 'md',
+                    },
+                    computed: {
+                        format: 'md',
+                    },
+                    inherited: {},
+                },
+                {
+                    id: uuidv4(),
+                    type: 'markdown',
+                    name: null,
+                    title: null,
+                    index: 1,
+                    createdAt: created_at,
+                    updatedAt: updated_at,
+                    ownTitle: null,
+                    own: true,
+                    props: {
+                        value: file,
+                    },
+                    computed: {
+                        value: file,
+                    },
+                    inherited: {},
+                }],
+                comments: [],
+                references: [],
+                lastViewedAt: null,
+                localName: local_name,
+            };
+            return {
+                type: 'asset',
+                asset: asset_full
+            };
+        }
+        return null;
     }
 
     private async _loadFiles(items: fs.Dirent[], path: string, workspace_id: string, root_path: string): Promise<{
@@ -24,99 +145,18 @@ export class FileSystemService{
             }
             if (item.isFile()){
                 try {
-                    const extname = node_path.extname(item.name);
-                    if (extname !== '.json' && extname !== '.md'){
-                        continue;
-                    }
-                
-                    const local_name = item.name;
-                    const local_path = node_path.join(path, local_name);
-                    const file_info = await fs.promises.stat(local_path);
-                    const created_at = file_info.birthtime.toISOString();
-                    const updated_at = file_info.mtime.toISOString();
-
-                    const file = await fs.promises.readFile(local_path, { encoding: 'utf8' });
-                    if (extname === '.json') {
-                        if (/\.ima[ \d\(\)\[\]_]*\.json$/i.test(item.name)) {
-                            const asset = JSON.parse(file) as ProjectFileDbAsset;
-                            asset.localName = local_name
-                            asset.workspaceId = workspace_id;
-                            asset.createdAt = created_at;
-                            asset.updatedAt = updated_at;
-                            assets.set(asset.localName, asset);
+                    const loaded = await this.loadFile(
+                        node_path.join(path, item.name),
+                        workspace_id,
+                        root_path
+                    )
+                    if (loaded){
+                        if (loaded.type === 'asset'){
+                            assets.set(item.name, loaded.asset)
                         }
-                        else if (/\.imw[ \d\(\)\[\]_]*\.json$/i.test(item.name)){
-                            const workspace_info = JSON.parse(file) as ProjectFileDbWorkspace;
-                            workspace_info.localName = local_name
-                            workspace_info.parentId = workspace_id;
-                            workspace_info.createdAt = created_at;
-                            workspace_info.updatedAt = updated_at;
-                            workspaces.set(workspace_info.localName, workspace_info);
+                        else if (loaded.type === 'workspace'){
+                            workspaces.set(item.name, loaded.workspace)
                         }
-                    }
-                    else if(extname === '.md'){
-                        const asset_full: ProjectFileDbAsset = {
-                            id: absolutePathToUuid(local_path, root_path),
-                            projectId: this.db.project.db.info.id ?? '',
-                            workspaceId: workspace_id,
-                            name: null,
-                            title: node_path.basename(item.name, node_path.extname(item.name)),
-                            icon: 'markdown-fill',
-                            isAbstract: false,
-                            typeIds: [MARKDOWN_ASSET_ID],
-                            createdAt: created_at,
-                            updatedAt: updated_at,
-                            deletedAt: null,
-                            rights: AssetRights.FULL_ACCESS,
-                            index: null,
-                            creatorUserId: null,
-                            unread: 0,
-                            hasImage: false,
-                            parentIds: [MARKDOWN_ASSET_ID],
-                            ownTitle: null,
-                            ownIcon: 'markdown-fill',
-                            blocks: [{
-                                id: uuidv4(),
-                                type: 'props',
-                                name: BLOCK_NAME_META,
-                                title: null,
-                                index: 0,
-                                createdAt: created_at,
-                                updatedAt: updated_at,
-                                ownTitle: null,
-                                own: true,
-                                props: {
-                                    format: 'md',
-                                },
-                                computed: {
-                                    format: 'md',
-                                },
-                                inherited: {},
-                            },
-                            {
-                                id: uuidv4(),
-                                type: 'markdown',
-                                name: null,
-                                title: null,
-                                index: 1,
-                                createdAt: created_at,
-                                updatedAt: updated_at,
-                                ownTitle: null,
-                                own: true,
-                                props: {
-                                    value: file,
-                                },
-                                computed: {
-                                    value: file,
-                                },
-                                inherited: {},
-                            }],
-                            comments: [],
-                            references: [],
-                            lastViewedAt: null,
-                            localName: local_name,
-                        };
-                        assets.set(local_name, asset_full);
                     }
                 }
                 catch(err) {
@@ -175,6 +215,88 @@ export class FileSystemService{
         return {
             assets: res_assets,
             workspaces: res_workspaces,
+        }
+    }
+
+    private _getWatcherIgnore(): string[]{
+        return [
+            '**/' + PROJECT_META_FOLDER
+        ]
+    }
+
+    private async _initWatcher(){
+        this._fsWatcherSubscription = await watcher.subscribe(this.db.localPath, (err, events) => {
+            log.log(err, events);
+        }, {
+            ignore: this._getWatcherIgnore()
+        });
+    }
+
+
+    async init(){
+
+
+        this.db.asset.assets.clear();
+        this.db.asset.systemAssets.clear();
+        this.db.workspace.workspaces.clear();
+
+        // System
+        this.db.asset.systemAssets.addMany((SystemBundle.assets as unknown as ProjectFileDbAsset[]).map(asset => {
+            return {...asset, rights: 1}
+        }))
+        this.db.asset.assets.addMany((SystemBundle.assets as unknown as ProjectFileDbAsset[]).map(asset => {
+            return {...asset, rights: 1}
+        }));
+        this.db.workspace.workspaces.addMany((SystemBundle.workspaces as unknown as ProjectFileDbWorkspace[]).map(workspace => {
+            return {...workspace, rights: 1}
+        }));
+
+        // User
+        const user_files = await this.loadWorkspace(this.db.localPath, this.db.RootGddFolder.id, this.db.localPath);
+        if (this.db.info.id){
+            this.db.RootGddFolder.projectId = this.db.info.id;
+        }
+        this.db.RootGddFolder.localName ='';
+        this.db.asset.assets.addMany(user_files.assets.map(asset => {
+            const changed_asset: ProjectFileDbAsset = { 
+                ...asset,
+                projectId: this.db.info.id,
+                rights: 5
+            }
+            if (!changed_asset.workspaceId){
+                changed_asset.workspaceId = this.db.RootGddFolder.id;
+            }
+            return changed_asset
+        }));
+        this.db.workspace.workspaces.add(this.db.RootGddFolder)
+        this.db.workspace.workspaces.addMany(user_files.workspaces.map(workspace => {
+            const changed_workspace =  {
+                ...workspace, 
+                projectId: this.db.info.id,
+                rights: 5
+            }
+            if (!changed_workspace.parentId){
+                changed_workspace.parentId = this.db.RootGddFolder.id;
+            }
+            return changed_workspace
+        }));
+        
+        this._initWatcher();
+    }
+
+    async destroy(){
+
+        try {
+            await watcher.writeSnapshot(this.db.localPath, path.join(this.db.localPath, PROJECT_META_FS_WATCHER_SNAPSHOT),{
+                ignore: this._getWatcherIgnore()
+            })
+        }
+        catch (err: any){
+            log.error('Failed to write fs snapshot', err.message)
+        }
+        if (this._fsWatcherSubscription){
+            this._fsWatcherSubscription.unsubscribe();
+            this._fsWatcherSubscription = null;
         }
     }
 }

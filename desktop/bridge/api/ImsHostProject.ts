@@ -1,10 +1,11 @@
-import type { AssetHistoryDTO } from "../../../logic/types/AssetHistory";
-import type { AssetQueryWhere, AssetsShortResult, AssetsFullResult, AssetsGraph, AssetCreateDTO, AssetWhereParams, AssetSetDTO, AssetDeleteResultDTO, CreateRefDTO, AssetReferencesResult, AssetsChangeResult, AssetMoveParams, AssetMoveResult, AssetChangeBatchOpDTO } from "../../../logic/types/AssetsType";
-import type { ApiRequestList, ApiResultListWithTotal, ApiResultListWithMore, ProjectFullInfo } from "../../../logic/types/ProjectTypes";
-import type { AssetProps, AssetPropsPlainObject } from "../../../logic/types/Props";
-import type { AssetPropsSelection } from "../../../logic/types/PropsSelection";
-import type { WorkspaceQueryDTOWhere, Workspace, ChangeWorkspaceRequest, WorkspaceMoveParams, WorkspaceMoveResult } from "../../../logic/types/Workspaces";
-import { getProjectDb } from "../../electron/project-file-db/project-registry";
+
+import type { AssetHistoryDTO } from "~ims-app-base/logic/types/AssetHistory";
+import type { AssetQueryWhere, AssetsShortResult, AssetsFullResult, AssetsGraph, AssetCreateDTO, AssetsChangeResult, AssetWhereParams, AssetSetDTO, AssetDeleteResultDTO, CreateRefDTO, AssetReferencesResult, AssetMoveParams, AssetMoveResult, AssetChangeBatchOpDTO, AssetsBatchChangeResultDTO } from "~ims-app-base/logic/types/AssetsType";
+import type { ApiRequestList, ApiResultListWithTotal, ApiResultListWithMore, ProjectFullInfo } from "~ims-app-base/logic/types/ProjectTypes";
+import type { AssetProps, AssetPropsPlainObject } from "~ims-app-base/logic/types/Props";
+import type { AssetPropsSelection } from "~ims-app-base/logic/types/PropsSelection";
+import type { WorkspaceQueryDTOWhere, Workspace, ChangeWorkspaceRequest, WorkspaceMoveParams, WorkspaceMoveResult } from "~ims-app-base/logic/types/Workspaces";
+import { closeProjectDb, requestProjectDb } from "../../electron/project-file-db/project-registry";
 import { ImsHostBase } from "./ImsHostBase";
 
 export type LocalProjectInitInfo = {
@@ -16,20 +17,23 @@ export type LocalProjectInitInfo = {
 export class ImsHostProject extends ImsHostBase {
 
     async initProject(projectPath: string, initParams?: { title: string, id: string | null}): Promise<LocalProjectInitInfo>{
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         await project_db.init(initParams);
         return {
             ...project_db.info,
             localPath: project_db.localPath
         }
-
+    }
+    
+    async closeProject(projectPath: string): Promise<void>{
+        await closeProjectDb(projectPath, this._window);
     }
     
     async assetsGetShort(
         projectPath: string,
         query: ApiRequestList<AssetQueryWhere>,
     ): Promise<AssetsShortResult> {
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.asset.assetsGetShort(query)
     }
 
@@ -37,14 +41,14 @@ export class ImsHostProject extends ImsHostBase {
         projectPath: string,
     query: ApiRequestList<AssetQueryWhere>,
     ): Promise<AssetsFullResult> {
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.asset.assetsGetFull(query);
     }
 
     async assetsGraph(
         projectPath: string,query: ApiRequestList<AssetQueryWhere>): Promise<AssetsGraph> {
   
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.asset.assetsGraph(query)
     }
 
@@ -63,7 +67,7 @@ export class ImsHostProject extends ImsHostBase {
         query: AssetPropsSelection,
         options?: { folded: boolean },
     ): Promise<ApiResultListWithTotal<T>> {
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         if (options?.folded){
             return project_db.asset.assetsGetView<T>(query, options)
         }
@@ -77,7 +81,7 @@ export class ImsHostProject extends ImsHostBase {
         params: AssetCreateDTO
     ): Promise<AssetsChangeResult> {
     
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.asset.assetsCreate(params)
     }
 
@@ -90,7 +94,7 @@ export class ImsHostProject extends ImsHostBase {
         options?: { pid?: string },
     ): Promise<AssetsChangeResult> {
    
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.asset.assetsChange(params, options)
     }
 
@@ -100,7 +104,7 @@ export class ImsHostProject extends ImsHostBase {
         options?: { pid?: string },
     ): Promise<AssetDeleteResultDTO> {
    
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.asset.assetsDelete(where, options)
     }
 
@@ -110,7 +114,7 @@ export class ImsHostProject extends ImsHostBase {
         options?: { pid?: string },
     ): Promise<AssetsChangeResult> {
    
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.asset.assetsRestore(where, options)
     }
 
@@ -119,7 +123,7 @@ export class ImsHostProject extends ImsHostBase {
         params: CreateRefDTO
     ): Promise<AssetReferencesResult> {
    
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.asset.assetsCreateRef(params);
     }
 
@@ -128,7 +132,7 @@ export class ImsHostProject extends ImsHostBase {
         params: CreateRefDTO
     ): Promise<{ ids: string[] }> {
     
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.asset.assetsDeleteRef(params);
     }
 
@@ -137,7 +141,7 @@ export class ImsHostProject extends ImsHostBase {
         assetId: string,
     ): Promise<ApiResultListWithMore<AssetHistoryDTO>> {
     
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.asset.assetsGetHistory(assetId);
     }
 
@@ -146,7 +150,7 @@ export class ImsHostProject extends ImsHostBase {
         query: ApiRequestList<WorkspaceQueryDTOWhere>,
     ): Promise<ApiResultListWithTotal<Workspace>> {
     
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.workspace.workspacesGet(query)
     }
 
@@ -154,7 +158,7 @@ export class ImsHostProject extends ImsHostBase {
         projectPath: string,
         params: ChangeWorkspaceRequest
     ): Promise<Workspace> {
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.workspace.workspacesCreate(params);
     }
 
@@ -162,7 +166,7 @@ export class ImsHostProject extends ImsHostBase {
         projectPath: string,
         asset_id: string,
     ): Promise<string> {
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.asset.getAssetLocalPath(asset_id);
     }
 
@@ -170,7 +174,7 @@ export class ImsHostProject extends ImsHostBase {
         projectPath: string,
         workspace_id: string,
     ): Promise<string> {
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.workspace.getWorkspaceLocalPath(workspace_id);
     }
 
@@ -179,7 +183,7 @@ export class ImsHostProject extends ImsHostBase {
         workspace_id: string,
         params: ChangeWorkspaceRequest,
     ): Promise<Workspace> {
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.workspace.workspacesChange(workspace_id, params);
     }
 
@@ -187,7 +191,7 @@ export class ImsHostProject extends ImsHostBase {
         projectPath: string,
         params: WorkspaceMoveParams,
     ): Promise<WorkspaceMoveResult> {
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.workspace.workspacesMove(params);
     }
 
@@ -195,56 +199,56 @@ export class ImsHostProject extends ImsHostBase {
         projectPath: string,
         workspace_id: string
     ): Promise<void> {
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.workspace.workspacesDelete(workspace_id);
     }
 
     async loadProjectInfo(
         projectPath: string
     ): Promise<ProjectFullInfo> {
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.project.loadProjectInfo();
     }
     
     assetsMove(
         projectPath: string, params: AssetMoveParams
     ): Promise<AssetMoveResult> {
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.asset.assetsMove(params);
     }
     
-    assetsChangeBatch(projectPath: string, params: { ops: AssetChangeBatchOpDTO[]; }, options: { pid?: string; } | undefined): Promise<import("../../../logic/types/AssetsType").AssetsBatchChangeResultDTO> {
+    assetsChangeBatch(projectPath: string, params: { ops: AssetChangeBatchOpDTO[]; }, options: { pid?: string; } | undefined): Promise<AssetsBatchChangeResultDTO> {
 
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.asset.assetsChangeBatch(params, options);    
     }
 
     assetsChangeUndo(projectPath: string, params: { changeId: string; }, options: { pid?: string; } | undefined): Promise<AssetsChangeResult> {
 
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.asset.assetsChangeUndo(params, options);
     }
 
     exportAssetToFile(projectPath: string, assetId: string, targetPath: string){
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.asset.exportToFile(assetId, targetPath);
 
     }
 
     exportWorkspaceToFile(projectPath: string, workspaceId: string, targetPath: string){
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.workspace.exportToFile(workspaceId, targetPath);
 
     }
 
     importWorkspaceToFile(projectPath: string, workspaceId: string, targetPath: string){
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.workspace.exportToFile(workspaceId, targetPath);
     }
 
     
     async importTemplateProject(projectPath: string, templateId: string){
-        const project_db = getProjectDb(projectPath);
+        const project_db = requestProjectDb(projectPath, this._window);
         return project_db.project.importTemplateProject(templateId);
     }
 }

@@ -9,6 +9,8 @@ import autoUpdateManager from './auto-update-manager';
 const VUEDEVTOOLS_ID = 'nhdogjmejiglipccpnnnanhbledajbpd';
 
 import log from 'electron-log/main';
+import { closeAllProjectDb } from './project-file-db/project-registry';
+import { initMainTokenStorage } from './main-token-storage';
 
 function getDefaultWindowArgs(): WindowArgs {
   return {
@@ -47,7 +49,8 @@ async function initApp(){
       }
     ]);
     
-    app.on('window-all-closed', () => {
+    app.on('window-all-closed', async () => {
+      await closeAllProjectDb()
       if (process.platform !== 'darwin') {
         app.quit();
       }
@@ -57,6 +60,7 @@ async function initApp(){
       log.log("App ready")
 
       initImsHostApi();
+      initMainTokenStorage();
 
       protocol.handle('localfile', async (request) => {
         try {
