@@ -29,6 +29,7 @@ import TaskManager from '~ims-app-base/logic/managers/TaskManager';
 import DesktopTaskManager from './DesktopTaskManager';
 import DesktopProjectContentManager from './DesktopProjectContentManager';
 import DesktopUpdateManager from './DesktopUpdateManager';
+import DesktopAuthManager from './DesktopAuthManager';
 
 export function createApiTokenStorage(
   context: AppManagerContext,
@@ -120,7 +121,7 @@ export default function createDesktopAppManager(
   const app_manager = new AppManager(context, $appConfiguration);
   const apiManager = new ApiManager(app_manager);
   app_manager.register(apiManager);
-  app_manager.register(AuthManager, new AuthManager(app_manager));
+  app_manager.register(DesktopAuthManager, new AuthManager(app_manager));
   app_manager.register(DesktopCreatorManager, new DesktopCreatorManager(app_manager));
   app_manager.register(new CreatorAssetManager(app_manager));
   const desktopProjectManager = new DesktopProjectManager(app_manager);

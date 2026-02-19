@@ -18,7 +18,7 @@ import type { AssetQueryWhere, AssetsShortResult, AssetShort, AssetsFullResult, 
 import type { AssetBlockEntity } from "~ims-app-base/logic/types/BlocksType";
 import type { IProjectDatabaseAsset } from "~ims-app-base/logic/types/IProjectDatabase";
 import type { ApiRequestList, ApiResultListWithTotal, ApiResultListWithMore } from "~ims-app-base/logic/types/ProjectTypes";
-import { type AssetPropsPlainObjectValue, type AssetPropsPlainObject, type AssetPropValue, compareAssetPropValues, assignPlainValueToAssetProps, extractRemapParentProps, type AssetProps, remapAssetProps, convertAssetPropsToPlainObject, type AssetPropValueText, walkAssetPropValueTextOps, type AssetPropValueAsset, parseAssetNewBlockRef, applyPropsChange, diffAssetPropObjects } from "~ims-app-base/logic/types/Props";
+import { type AssetPropsPlainObjectValue, type AssetPropsPlainObject, type AssetPropValue, compareAssetPropValues, assignPlainValueToAssetProps, extractRemapParentProps, type AssetProps, remapAssetProps, convertAssetPropsToPlainObject, type AssetPropValueText, walkAssetPropValueTextOps, type AssetPropValueAsset, parseAssetNewBlockRef, applyPropsChange, diffAssetPropObjects, stringifyAssetNewBlockRef } from "~ims-app-base/logic/types/Props";
 import type { AssetPropsSelectionField, AssetPropsSelectionOrder, AssetPropsSelection } from "~ims-app-base/logic/types/PropsSelection";
 import { AssetRights } from "~ims-app-base/logic/types/Rights";
 import { generateNextUniqueNameNumber } from "~ims-app-base/logic/utils/stringUtils";
@@ -1132,41 +1132,77 @@ export class AssetService implements IProjectDatabaseAsset{
         await this.saveAssetFileToFile(assets.list[0], target);
     }
 
+    async copyAssetToServer(localAssetId: string): Promise<AssetsFullResult> {
+        const full = this.assets.byId.get(localAssetId);
+        if (!full) throw new Error('Asset not found');
+        let blocks:
+            | {
+                [blockKey: string]: AssetBlockParamsDTO;
+            }
+            | undefined = undefined;
+        for (const r of full.blocks) {
+            const key = stringifyAssetNewBlockRef(null, r.id);
+            if (!blocks) blocks = {};
+            blocks[key] = {
+                index: r.index,
+                name: r.name,
+                title: r.title,
+                props: assignPlainValueToAssetProps({}, r.props),
+                type: r.type,
+            };
+        }
+        return await axios.post(`${process.env.CREATORS_API_HOST}assets/create`, {
+            set: {
+                icon: full.ownIcon ?? undefined,
+                title: full.title,
+                isAbstract: full.isAbstract,
+                parentIds: full.parentIds,
+                workspaceId: full.workspaceId ?? undefined,
+                blocks,
+            },
+        });
+    }
+
     // если пользователь меняет локальные папки
     async syncAssets(where: AssetWhereParams){
         const local_assets = await this.searchAssets({
             ...where,
             isSystem: false
         });
-        const response = await axios.get(`${process.env.CREATORS_API_HOST}assets/full`, {
+        const response: {data: AssetsFullResult} = await axios.get(`${process.env.CREATORS_API_HOST}assets/full`, {
                 params: {
                     where,
                 },
             });
-        const server_assets: any[] = response.data.assetFulls;
+        const server_asset_ids: string[] = response.data.ids;
         const synced_asset_ids_set = new Set();
         for(const local_asset of local_assets){
             synced_asset_ids_set.add(local_asset.id);
-            const server_asset = server_assets.find(s_a => s_a.id === local_asset.id);
-            if(server_asset){
-                await this.syncAssetsOne(local_asset, server_asset)
+            const server_asset_id = server_asset_ids.find(s_a => s_a === local_asset.id);
+            if(server_asset_id){
+                const change_ops = await this.syncAssetsOne(local_asset, response.data.objects.assetFulls[server_asset_id])
+                await this.assetsChangeBatch({
+                    ops: change_ops,
+                })
             }
             else {
-                // Создать на сервере
+                await this.copyAssetToServer(local_asset.id);
             }
         }
-        for(const server_asset of server_assets){
-            if(synced_asset_ids_set.has(server_asset.id)) {
+        for(const server_asset_id of server_asset_ids){
+            if(synced_asset_ids_set.has(server_asset_id)) {
                 continue;
             }
-            synced_asset_ids_set.add(server_asset.id);
+            synced_asset_ids_set.add(server_asset_id);
             // Добавить в локальный проект
+            this.assetsCreate(response.data.objects.assetFulls[server_asset_id]);
         }
     }
 
-    // если на сервере появился файл, то они будут скачиваться и сохранятсья
+    // если на сервере появился файл, то они будут скачиваться и сохраняться
 
-    async syncAssetsOne(local_asset: ProjectFileDbAsset, server_asset: ProjectFileDbAsset) {
+    async syncAssetsOne(local_asset: ProjectFileDbAsset, server_asset: ProjectFileDbAsset): Promise<AssetChangeBatchOpDTO[]> {
+        const change_ops: AssetChangeBatchOpDTO[] = [];
         if(server_asset) {
             for(const server_block of server_asset.blocks){
                 const local_block = local_asset.blocks.find(x => {
@@ -1177,13 +1213,16 @@ export class AssetService implements IProjectDatabaseAsset{
                         return server_block.name && x.name === server_block.id;
                     }
                 });
-                diffAssetPropObjects(
-                    assignPlainValueToAssetProps({}, server_block),
-                    assignPlainValueToAssetProps({}, local_block ?? {})
+                const change_op = diffAssetPropObjects(
+                    assignPlainValueToAssetProps({}, local_block ?? {}),
+                    assignPlainValueToAssetProps({}, server_block)
                 )
+                change_ops.push({...change_op, where: {
+                    id: server_asset.id,
+                }});
             }
         }
-        // возвращается входной параметр для asset change batch
+        return change_ops;
     }
 
 }

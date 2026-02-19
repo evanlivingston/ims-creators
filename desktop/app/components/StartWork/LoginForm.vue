@@ -67,7 +67,8 @@ import { defineComponent } from 'vue';
 import FormInput from '~ims-app-base/components/Form/FormInput.vue';
 import FormCheckBox from '~ims-app-base/components/Form/FormCheckBox.vue';
 import AuthManager from '~ims-app-base/logic/managers/AuthManager';
-import UiManager from '~ims-app-base/logic/managers/UiManager';
+import DesktopAuthManager from '#logic/managers/DesktopAuthManager';
+import DesktopUiManager from '#logic/managers/DesktopUiManager';
 export default defineComponent({
   name: 'LoginForm',
   components: {
@@ -96,7 +97,7 @@ export default defineComponent({
   },
   computed: {
     userInfo() {
-      return this.$getAppManager().get(AuthManager).getUserInfo();
+      return this.$getAppManager().get(DesktopAuthManager).getUserInfo();
     },
   },
   methods: {
@@ -105,19 +106,19 @@ export default defineComponent({
       if (this.mail.length > 0) {
         if (this.password.length > 0) {
           await this.$getAppManager()
-            .get(UiManager)
+            .get(DesktopUiManager)
             .doTask(async () => {
               const res = await this.$getAppManager()
-                .get(AuthManager)
-                .login(this.mail, this.password, 'site', this.isRemember);
+                .get(DesktopAuthManager)
+                .login(this.mail, this.password, 'site');
               if (res.notConfirmed) {
                 this.$getAppManager()
-                  .get(UiManager)
+                  .get(DesktopUiManager)
                   .showError(this.$t('auth.needConfirmEmail'));
                 this.showRequestButton = true;
               } else if (res.missingName || res.missingEmail) {
                 this.$getAppManager()
-                  .get(UiManager)
+                  .get(DesktopUiManager)
                   .showError(this.$t('auth.needCompleteRegistration'));
                 this.$emit('completeRegistration', {
                   missingName: res.missingName,
@@ -130,7 +131,7 @@ export default defineComponent({
             });
         } else {
           this.$getAppManager()
-            .get(UiManager)
+            .get(DesktopUiManager)
             .showError(
               this.$t('auth.errors.fieldIsEmpty', {
                 field: this.$t('fields.password'),
@@ -139,7 +140,7 @@ export default defineComponent({
         }
       } else {
         this.$getAppManager()
-          .get(UiManager)
+          .get(DesktopUiManager)
           .showError(this.$t('auth.errors.fieldIsEmpty', { field: 'Email' }));
       }
       this.inProcess = false;
@@ -147,17 +148,17 @@ export default defineComponent({
     async requestNewCode() {
       this.inProcess = true;
       await this.$getAppManager()
-        .get(UiManager)
+        .get(DesktopUiManager)
         .doTask(async () => {
           await this.$getAppManager()
-            .get(AuthManager)
+            .get(DesktopAuthManager)
             .confirmRequest(
               this.password,
               this.userInfo?.language ? this.userInfo.language : 'en',
               this.mail,
             );
           this.$getAppManager()
-            .get(UiManager)
+            .get(DesktopUiManager)
             .showSuccess(this.$t('auth.newConfirmationCodeSent'));
         });
       this.inProcess = false;

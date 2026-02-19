@@ -7,6 +7,7 @@ export default {
     signUpHereLink: 'Зарегистрируйтесь здесь',
     password: 'Пароль',
     signInHeader: 'Вход',
+    newConfirmationCodeSent: 'Новый код подтверждения отправлен на почту',
   },
   desktop: {
     welcome: {
