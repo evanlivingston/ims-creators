@@ -84,10 +84,10 @@
       {{ $t('desktop.welcome.sameProjectTitle') }}
     </div>
     <AdvancedForm v-if="!needAuth && !needLicense" :project-folder-name="params.projectFolderName" @update:folder-name="params.projectFolderName = $event"></AdvancedForm>
-    <div class="WelcomeFormContentCreateProject-create">
+    <div class="WelcomeFormContentCreateProject-create" v-if="!needAuth && !needLicense">
       <button class="is-button accent" 
         :class="{ loading }" @click="createProject" 
-        :disabled="!canCreate || hasWarning || needAuth || needLicense">
+        :disabled="!canCreate || hasWarning">
         {{$t('desktop.welcome.create')}}
       </button>
     </div>
