@@ -51,7 +51,7 @@ const MainTokenStorage: IApiTokenStorage = {
     },
     clear: async function (): Promise<void> {
         CurrentRefreshToken = undefined;
-        const auth_data = await window.imshost.storage.getItem<Partial<{userId: string}>>("auth")
+        const auth_data = await storageGetKey<Partial<{userId: string}>>("auth")
         await storageSetKey('auth', null);
         if (auth_data && auth_data.userId){
             await privateStorageDeleteKey(auth_data.userId, 'auth');

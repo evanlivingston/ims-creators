@@ -33,6 +33,7 @@
         type="button"
         class="is-button is-button-action accent"
         :disabled="inProcess"
+        :class="{ loading: inProcess }"
         @click="login()"
       >
         {{ $t('auth.signInButton') }}
@@ -66,9 +67,8 @@
 import { defineComponent } from 'vue';
 import FormInput from '~ims-app-base/components/Form/FormInput.vue';
 import FormCheckBox from '~ims-app-base/components/Form/FormCheckBox.vue';
-import AuthManager from '~ims-app-base/logic/managers/AuthManager';
-import DesktopAuthManager from '#logic/managers/DesktopAuthManager';
 import DesktopUiManager from '#logic/managers/DesktopUiManager';
+import AuthManager from '~ims-app-base/logic/managers/AuthManager';
 export default defineComponent({
   name: 'LoginForm',
   components: {
@@ -97,7 +97,7 @@ export default defineComponent({
   },
   computed: {
     userInfo() {
-      return this.$getAppManager().get(DesktopAuthManager).getUserInfo();
+      return this.$getAppManager().get(AuthManager).getUserInfo();
     },
   },
   methods: {
@@ -109,8 +109,8 @@ export default defineComponent({
             .get(DesktopUiManager)
             .doTask(async () => {
               const res = await this.$getAppManager()
-                .get(DesktopAuthManager)
-                .login(this.mail, this.password, 'site');
+                .get(AuthManager)
+                .login(this.mail, this.password, 'site', this.isRemember);
               if (res.notConfirmed) {
                 this.$getAppManager()
                   .get(DesktopUiManager)
@@ -151,7 +151,7 @@ export default defineComponent({
         .get(DesktopUiManager)
         .doTask(async () => {
           await this.$getAppManager()
-            .get(DesktopAuthManager)
+            .get(AuthManager)
             .confirmRequest(
               this.password,
               this.userInfo?.language ? this.userInfo.language : 'en',

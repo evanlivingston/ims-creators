@@ -33,6 +33,7 @@
         <div class="DesktopApp-page-header-menuSpace">
           <new-version-box class="DesktopApp-page-header-menuSpace-item"></new-version-box>
         </div>
+        <app-user-info></app-user-info>
       </div>
       <div class="DesktopApp-page-content">
         <slot />
@@ -59,6 +60,7 @@ import type { DesktopTab } from '#logic/types/DesktopTabController';
 import { ScreenSize } from '~ims-app-base/logic/managers/UiManager';
 import AuthManager from '~ims-app-base/logic/managers/AuthManager';
 import NewVersionBox from '#components/Update/NewVersionBox.vue';
+import AppUserInfo from '#components/App/AppUserInfo.vue';
 
 export default defineComponent({
   name: 'ProjectLayout',
@@ -66,7 +68,8 @@ export default defineComponent({
     AppMenu,
     AppMenuToggle,
     TabList,
-    NewVersionBox
+    NewVersionBox,
+    AppUserInfo,
   },
   provide() {
     return {

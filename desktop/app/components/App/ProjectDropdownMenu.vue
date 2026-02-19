@@ -92,27 +92,22 @@ export default defineComponent({
       await this.$getAppManager().get(AuthManager).logout();
       await openSignInLink(this.$router as any);
     },
-    changeLang(val: LangStr) {
-      this.lang = val;
-      let lang = 'en';
-      if (val === 'ru') {
-        lang = 'ru';
-      }
-      if (this.$route.meta?.locale) {
-        this.$router.replace({
-          ...this.$route,
-          params: {
-            ...this.$route.params,
-            lang: this.$route.meta.mainLocale === lang ? '' : lang,
-          },
-        } as any);
-      }
+    changeLang(lang: LangStr) {
+      this.currentLang = lang;
     },
     async openProject(project_path: string){
       await this.$getAppManager().get(DesktopCreatorManager).openProjectWindow(project_path);
     }
   },
   computed: {
+    currentLang: {
+      get() {
+        return this.$getAppManager().get(UiManager).getLanguage();
+      },
+      set(val: LangStr) {
+        this.$getAppManager().get(UiManager).setLanguage(val);
+      },
+    },
     projectTitle(){
       if(this.isDesktop) {
         return `${this.$t('desktop.welcome.localProject')}:\n${this.currentProject?.localPath}`;
@@ -183,7 +178,7 @@ export default defineComponent({
         {
           title: this.$t('desktop.mainMenu.openOtherProject'),
           children: [
-            ...this.recentProjectList.map(el => {
+            ...this.recentProjectList.map((el: any) => {
               return {
                 title: el.localPath,
                 action: this.projectInfo?.localPath === el.localPath ? undefined : () => this.openProject(el.localPath),

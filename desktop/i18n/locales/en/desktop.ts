@@ -39,8 +39,8 @@ export default {
       selectProject: 'Select project',
       downloadProject: 'Download project',
       sameProjectTitle: 'Project at given path already exists',
-      needAuth: 'Need auth',
-      needLicense: 'Need buy license',
+      needAuth: 'Please enter to your PRO-account to create cloud project',
+      needLicense: 'Please buy PRO-license to create cloud project',
       buy: 'Buy',
     },
     mainMenu: {
@@ -88,6 +88,7 @@ export default {
         autoUpdate: 'Check for updates when the app starts',
       },
       close: 'Close',
+      logout: 'Log out',
     },
     about: {
       aboutCaption: 'About',

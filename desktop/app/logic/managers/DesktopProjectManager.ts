@@ -14,6 +14,15 @@ function prepareFileBasenameByEntityTitle(title: string){
 export default class DesktopProjectManager extends ProjectManager{
     private _projectLocalPath: string | null = null;
 
+    getCurrentAccountValueInProject() {
+        const user_info = this.appManager.get(AuthManager).getUserInfo();
+        if (!user_info) return null;
+        return {
+            AccountId: user_info.id.toString(),
+            Name: user_info.name,
+        };
+    }
+
     async createProject({
         title,
         template_ids,

@@ -31,14 +31,15 @@
       <div v-if="needAuth || needLicense">
         <div class="WelcomeFormContentCreateProject-message">
           {{ $t('desktop.welcome.' + (needLicense ? 'needLicense' : 'needAuth')) }}
-          <button v-if="needLicense" class="is-button accent">
+          <button v-if="needLicense" 
+            class="is-button accent" 
+            @click="buyLicense()">
             {{$t('desktop.welcome.buy')}}
           </button>
         </div>
         <login-form v-if="needAuth"
             class="WelcomeFormContentStart-login"
             :open-external="true"
-            @success-login="needAuth=true"
         />
       </div>
       <template v-else>
@@ -200,11 +201,17 @@ export default defineComponent({
     },
     canCreate(){
       return this.params.projectName && this.params.projectFolderName && this.params.projectLocation;
+    },
+    lang() {
+      return this.$getAppManager().get(UiManager).getLanguage();
     }
   },
   methods: {
     async checkExistsProject(val: string){
       this.hasWarning = await window.imshost.fs.exists(val);
+    },
+    buyLicense(){
+      window.location.replace(`https://ims.cr5.space/app/prices`)
     },
     async createProject() {
       this.loading = true;
@@ -319,6 +326,9 @@ export default defineComponent({
   border-radius: 10px;
   padding: 10px 15px;
   margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .WelcomeFormContentStart-login{
   padding: 0 !important;

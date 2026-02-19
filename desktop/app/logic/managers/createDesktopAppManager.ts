@@ -44,7 +44,7 @@ export default function createDesktopAppManager(
   const app_manager = new AppManager(context, $appConfiguration);
   const apiManager = new ApiManager(app_manager);
   app_manager.register(apiManager);
-  app_manager.register(DesktopAuthManager, new AuthManager(app_manager));
+  app_manager.register(AuthManager, new DesktopAuthManager(app_manager));
   app_manager.register(DesktopCreatorManager, new DesktopCreatorManager(app_manager));
   app_manager.register(new CreatorAssetManager(app_manager));
   const desktopProjectManager = new DesktopProjectManager(app_manager);
@@ -73,6 +73,7 @@ export default function createDesktopAppManager(
     await app_manager.get(LocalFsSyncManager).init();
 
     await desktopUiManager.init(context);
+    await app_manager.get<DesktopAuthManager>(AuthManager).init();
     await app_manager.get(DesktopCreatorManager).init();
     await app_manager.get(ProjectManager).init();
     await app_manager.get(CreatorAssetManager).init(project_database);
