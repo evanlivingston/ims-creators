@@ -3,6 +3,9 @@ import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
 import * as node_path from 'path';
 import ExternalPluginBlockTypeDefinition from '~ims-app-base/logic/types/ExternalPluginBlockTypeDefinition';
 import PluginControllerExternal, { type PublicPluginApi } from '~ims-app-base/logic/managers/Plugin/PluginControllerExternal';
+import { DefaultBlockEditorController, type BlockEditorController } from '../../../../../ims-app-base/app/logic/types/BlockEditorController';
+import type { ResolvedAssetBlock } from '../../../../../ims-app-base/app/logic/utils/assets';
+import ExternalPluginBlockEditorController from '../../../../../ims-app-base/app/logic/types/ExternalPluginBlockEditorController';
 
 async function parsePluginLocale(plugin_path: string, locale_paths: Record<string, any>) {
   const plugin_locales: PluginDescriptorLocale = {};
@@ -65,7 +68,17 @@ export default class PluginControllerProd extends PluginControllerExternal {
             switch (content_item.type) {
               case 'block': {
                 const component_content_string = await window.imshost.fs.readTextFile(node_path.join(this._pluginPath, content_item.component));
-                // const component_controller_string = await window.imshost.fs.readTextFile(node_path.join(this._pluginPath, content_item.controller));
+                const component_controller_string = await window.imshost.fs.readTextFile(node_path.join(this._pluginPath, content_item.controller));
+
+                let getBlockControllerDescriptor: (() => ExternalPluginBlockEditorController) | undefined = undefined;
+                if (component_controller_string) {
+                  const AsyncFunction = Object.getPrototypeOf(
+                    async function () {},
+                  ).constructor;
+                  const func = new AsyncFunction(component_controller_string);
+                  
+                  getBlockControllerDescriptor = await func();
+                }
   
                 const definition = new (class extends ExternalPluginBlockTypeDefinition {
                   override name = content_item.name;
@@ -80,6 +93,14 @@ export default class PluginControllerProd extends PluginControllerExternal {
                         plugin_locale,
                       );
                       return title;
+                  }
+
+                  override createController(appManager: IAppManager, getResolvedBlock: () => ResolvedAssetBlock | null): BlockEditorController {
+                    if (getBlockControllerDescriptor) {
+                      return new ExternalPluginBlockEditorController(appManager, getResolvedBlock, getBlockControllerDescriptor)
+                    } else {
+                      return new DefaultBlockEditorController(appManager, getResolvedBlock)
+                    }
                   }
                 })(component_content_string, this);
                 
