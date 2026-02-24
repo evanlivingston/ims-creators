@@ -1,14 +1,38 @@
-import PluginControllerBase, { type PluginContentDescriptorBase } from '~ims-app-base/logic/managers/Plugin/PluginControllerBase';
-import type { IAppManager } from '../../../../../ims-app-base/app/logic/managers/IAppManager';
+import PluginControllerBase, { convertTranslatedPluginTitle, type PluginContentDescriptorBase, type PluginDescriptorLocale } from '~ims-app-base/logic/managers/Plugin/PluginControllerBase';
+import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
 import * as node_path from 'path';
-import ExternalPluginBlockTypeDefinition from '../../../../../ims-app-base/app/logic/types/ExternalPluginBlockTypeDefinition';
+import ExternalPluginBlockTypeDefinition from '~ims-app-base/logic/types/ExternalPluginBlockTypeDefinition';
+import PluginControllerExternal, { type PublicPluginApi } from '~ims-app-base/logic/managers/Plugin/PluginControllerExternal';
 
-export default class PluginControllerProd extends PluginControllerBase {
+async function parsePluginLocale(plugin_path: string, locale_paths: Record<string, any>) {
+  const plugin_locales: PluginDescriptorLocale = {};
+
+  for (const [lang_key, lang_path] of Object.entries(locale_paths)) {
+    const locale_path = node_path.join(plugin_path, lang_path);
+    const locales = JSON.parse(await window.imshost.fs.readTextFile(locale_path));
+    plugin_locales[lang_key] = locales;
+  }
+
+  return plugin_locales;
+}
+
+
+
+export default class PluginControllerProd extends PluginControllerExternal {
   protected _pluginPath: string;
 
   constructor(appManager: IAppManager, plugin_path: string) {
     super(appManager);
     this._pluginPath = plugin_path;
+  }
+
+  getPublicPluginApi(): PublicPluginApi {
+    // TODO: When 'module' activate this._pluginDescriptor is null and doesn't have any locale
+    return {
+      $t: (key: string) => {
+        return convertTranslatedPluginTitle(key, this.appManager, this._pluginDescriptor?.locale ?? null)
+      },
+    };
   }
 
   override async load(): Promise<void> {
@@ -21,6 +45,18 @@ export default class PluginControllerProd extends PluginControllerBase {
       try {
         const manifest_path = node_path.join(manifest_entry.parentPath, manifest_entry.name)
         const parsed_manifest = JSON.parse(await window.imshost.fs.readTextFile(manifest_path));
+
+        if (parsed_manifest.icon) {
+          const icon_path = node_path.join(this._pluginPath, parsed_manifest.icon);
+          const icon_buffer = await window.imshost.fs.readFile(icon_path);
+          parsed_manifest.icon = "data:application/octet-stream;base64," + Buffer.from(icon_buffer).toString('base64');
+        }
+
+        let plugin_locale: PluginDescriptorLocale | null = null;
+        if (parsed_manifest.locale) {
+          plugin_locale = await parsePluginLocale(this._pluginPath, parsed_manifest.locale);
+          parsed_manifest.locale = plugin_locale;
+        }
   
         const parsed_manifest_content: PluginContentDescriptorBase<any, any>[] = []
         
@@ -34,11 +70,18 @@ export default class PluginControllerProd extends PluginControllerBase {
                 const definition = new (class extends ExternalPluginBlockTypeDefinition {
                   override name = content_item.name;
                   override icon = content_item.icon;
+                  
                   override resizableBlockHeight = content_item.resizableBlockHeight;
-                  constructor(component: string) {
-                    super(component);
+
+                  override get title() {
+                      const title = convertTranslatedPluginTitle(
+                        content_item.title,
+                        this.pluginController.appManager,
+                        plugin_locale,
+                      );
+                      return title;
                   }
-                })(component_content_string);
+                })(component_content_string, this);
                 
                 parsed_manifest_content.push({
                   type: "block",
@@ -50,6 +93,7 @@ export default class PluginControllerProd extends PluginControllerBase {
               };
               case 'module': {
                 const code = await window.imshost.fs.readTextFile(node_path.join(this._pluginPath, content_item.code));
+
                 parsed_manifest_content.push({
                   type: 'module',
                   content: {
@@ -59,7 +103,10 @@ export default class PluginControllerProd extends PluginControllerBase {
                       ).constructor;
                       const func = new AsyncFunction('onDeactivated', code);
                       let deactivate_cb = () => {};
-                      await func((callback: () => void) => deactivate_cb = callback);
+                      await func(
+                        (callback: () => void) => (deactivate_cb = callback),
+                        // public_plugin_api
+                      );
                       return deactivate_cb;
                     }
                   }
@@ -68,11 +115,6 @@ export default class PluginControllerProd extends PluginControllerBase {
               };
             }
           }
-        }
-        if (parsed_manifest.icon) {
-          const icon_path = node_path.join(this._pluginPath, parsed_manifest.icon);
-          const icon_buffer = await window.imshost.fs.readFile(icon_path);
-          parsed_manifest.icon = "data:application/octet-stream;base64," + Buffer.from(icon_buffer).toString('base64');
         }
         this._pluginDescriptor = {
           ...parsed_manifest,

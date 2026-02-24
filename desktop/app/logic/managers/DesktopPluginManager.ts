@@ -42,10 +42,9 @@ export default class DesktopPluginManager extends PluginManager {
         hasUpdates: null,
         controller: plugin,
         installedFrom: PluginInstalledFrom.DEV,
-        disabledContent: saved_plugin.disabledContent
+        // disabledContent: saved_plugin.disabledContent
       }
       this._installedPlugins.set(saved_plugin.name, installed_plugin);
-      // installed_plugin.controller.setDisabledPluginContent(saved_plugin.disabledContent);
       return true;
     }
     catch (err: any) {
@@ -64,7 +63,6 @@ export default class DesktopPluginManager extends PluginManager {
         name: saved_plugin.name,
         controller: plugin,
         installedFrom: saved_plugin.from,
-        disabledContent: saved_plugin.disabledContent ? [...saved_plugin.disabledContent] : []
       });
 
       return true
