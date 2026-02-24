@@ -3,9 +3,9 @@ import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
 import * as node_path from 'path';
 import ExternalPluginBlockTypeDefinition from '~ims-app-base/logic/types/ExternalPluginBlockTypeDefinition';
 import PluginControllerExternal, { type PublicPluginApi } from '~ims-app-base/logic/managers/Plugin/PluginControllerExternal';
-import { DefaultBlockEditorController, type BlockEditorController } from '../../../../../ims-app-base/app/logic/types/BlockEditorController';
-import type { ResolvedAssetBlock } from '../../../../../ims-app-base/app/logic/utils/assets';
-import ExternalPluginBlockEditorController from '../../../../../ims-app-base/app/logic/types/ExternalPluginBlockEditorController';
+import { DefaultBlockEditorController, type BlockEditorController } from '~ims-app-base/logic/types/BlockEditorController';
+import type { ResolvedAssetBlock } from '~ims-app-base/logic/utils/assets';
+import ExternalPluginBlockEditorController, { type ExternalPluginBlockControllerDescriptor, type GetPluginBlockController } from '~ims-app-base/logic/types/ExternalPluginBlockEditorController';
 
 async function parsePluginLocale(plugin_path: string, locale_paths: Record<string, any>) {
   const plugin_locales: PluginDescriptorLocale = {};
@@ -30,7 +30,6 @@ export default class PluginControllerProd extends PluginControllerExternal {
   }
 
   getPublicPluginApi(): PublicPluginApi {
-    // TODO: When 'module' activate this._pluginDescriptor is null and doesn't have any locale
     return {
       $t: (key: string) => {
         return convertTranslatedPluginTitle(key, this.appManager, this._pluginDescriptor?.locale ?? null)
@@ -68,16 +67,16 @@ export default class PluginControllerProd extends PluginControllerExternal {
             switch (content_item.type) {
               case 'block': {
                 const component_content_string = await window.imshost.fs.readTextFile(node_path.join(this._pluginPath, content_item.component));
-                const component_controller_string = await window.imshost.fs.readTextFile(node_path.join(this._pluginPath, content_item.controller));
+                const component_controller_string = content_item.controller ? await window.imshost.fs.readTextFile(node_path.join(this._pluginPath, content_item.controller)) : undefined;
 
-                let getBlockControllerDescriptor: (() => ExternalPluginBlockEditorController) | undefined = undefined;
+                let getPluginController: GetPluginBlockController | undefined = undefined;
                 if (component_controller_string) {
                   const AsyncFunction = Object.getPrototypeOf(
                     async function () {},
                   ).constructor;
                   const func = new AsyncFunction(component_controller_string);
                   
-                  getBlockControllerDescriptor = await func();
+                  getPluginController = await func();
                 }
   
                 const definition = new (class extends ExternalPluginBlockTypeDefinition {
@@ -96,8 +95,8 @@ export default class PluginControllerProd extends PluginControllerExternal {
                   }
 
                   override createController(appManager: IAppManager, getResolvedBlock: () => ResolvedAssetBlock | null): BlockEditorController {
-                    if (getBlockControllerDescriptor) {
-                      return new ExternalPluginBlockEditorController(appManager, getResolvedBlock, getBlockControllerDescriptor)
+                    if (getPluginController) {
+                      return new ExternalPluginBlockEditorController(appManager, getResolvedBlock, getPluginController)
                     } else {
                       return new DefaultBlockEditorController(appManager, getResolvedBlock)
                     }
@@ -118,15 +117,16 @@ export default class PluginControllerProd extends PluginControllerExternal {
                 parsed_manifest_content.push({
                   type: 'module',
                   content: {
-                    async activate() {
+                    activate: async () => {
+                      const public_plugin_api = this.getPublicPluginApi();
                       const AsyncFunction = Object.getPrototypeOf(
                         async function () {},
                       ).constructor;
-                      const func = new AsyncFunction('onDeactivated', code);
+                      const func = new AsyncFunction('onDeactivated', 'pluginApi', code);
                       let deactivate_cb = () => {};
                       await func(
                         (callback: () => void) => (deactivate_cb = callback),
-                        // public_plugin_api
+                        public_plugin_api
                       );
                       return deactivate_cb;
                     }
