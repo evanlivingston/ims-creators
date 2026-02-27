@@ -11,6 +11,7 @@ import SyncStoreCore from "~ims-app-base/logic/types/SyncStoreCore";
 import ApiManager from "~ims-app-base/logic/managers/ApiManager";
 import CreatorAssetManager from "~ims-app-base/logic/managers/CreatorAssetManager";
 import ProjectManager from "~ims-app-base/logic/managers/ProjectManager";
+import ProjectSettingsManager from '~ims-app-base/logic/managers/ProjectSettingsManager';
 
 const PROJECT_META_INDEX = '.imsc/index.json';
 
@@ -117,6 +118,9 @@ export default class DesktopCreatorManager extends AppSubManagerBase{
             .get(CreatorAssetManager)
             .updateWorkspacesCache(appInfo.project.rootWorkspaces);
         }
+        this.appManager
+          .get(ProjectSettingsManager)
+          .setCurrentProjectSettings(appInfo.project?.settings ?? null);
 
         this._loadedForProjectId = appInfo.project ? appInfo.project.id : null;
         this._loadedForProjectShortLink = appInfo.project
