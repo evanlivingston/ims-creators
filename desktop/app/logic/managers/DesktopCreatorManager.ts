@@ -43,10 +43,10 @@ export default class DesktopCreatorManager extends AppSubManagerBase{
      
     async appLoadData(project: { id?: string; shortLink?: string; } | null): Promise<AppLoadResult> {
         let is_loaded = this.isLoaded;
-        const localPath = project?.id ?? null;
+        const norm_local_path = project?.id ? project?.id.replaceAll("\\", "/") : null;0
         if (is_loaded) {
             is_loaded =
-                (project && localPath === this._loadedForProjectPath) ||
+                (project && norm_local_path === this._loadedForProjectPath) ||
                 (!project && !this._loadedForProjectPath);
         }
         if (is_loaded && this._loadedData) return this._loadedData;
@@ -68,8 +68,8 @@ export default class DesktopCreatorManager extends AppSubManagerBase{
         }
 
         if (project){
-            assert(localPath);
-            local_project_info = await this.appManager.get(DesktopProjectManager).initializeLocalProject(localPath);
+            assert(norm_local_path);
+            local_project_info = await this.appManager.get(DesktopProjectManager).initializeLocalProject(norm_local_path);
             this.addToProjectListIfNotAdded(local_project_info);
         }   
 
@@ -95,7 +95,9 @@ export default class DesktopCreatorManager extends AppSubManagerBase{
     }
 
     appActivate(appInfo: AppLoadResult, localPath: string): void {
-        if (this.isLoaded && this._loadedData === appInfo) {
+        const norm_local_path = localPath.replaceAll("\\", "/");
+
+        if (this.isLoaded && (this._loadedForProjectPath === norm_local_path)) {
             return;
         }
 
@@ -124,7 +126,7 @@ export default class DesktopCreatorManager extends AppSubManagerBase{
             : null;
         this._loadedData = appInfo;
         this.isLoaded = true;
-        this._loadedForProjectPath = localPath;
+        this._loadedForProjectPath = norm_local_path;
     }
 
 
@@ -207,6 +209,7 @@ export default class DesktopCreatorManager extends AppSubManagerBase{
                 shortLink: this._loadedForProjectShortLink ?? undefined,
                 }
             : null;
+        this._loadedForProjectPath = null;
         this._loadedForProjectId = null;
         this._loadedForProjectShortLink = null;
         this._loadedData = null;
