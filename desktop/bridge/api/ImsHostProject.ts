@@ -1,7 +1,7 @@
 
 import type { AssetHistoryDTO } from "~ims-app-base/logic/types/AssetHistory";
 import type { AssetQueryWhere, AssetsShortResult, AssetsFullResult, AssetsGraph, AssetCreateDTO, AssetsChangeResult, AssetWhereParams, AssetSetDTO, AssetDeleteResultDTO, CreateRefDTO, AssetReferencesResult, AssetMoveParams, AssetMoveResult, AssetChangeBatchOpDTO, AssetsBatchChangeResultDTO } from "~ims-app-base/logic/types/AssetsType";
-import type { ApiRequestList, ApiResultListWithTotal, ApiResultListWithMore, ProjectFullInfo } from "~ims-app-base/logic/types/ProjectTypes";
+import type { ApiRequestList, ApiResultListWithTotal, ApiResultListWithMore, ProjectFullInfo, ProjectSettingsValue } from "~ims-app-base/logic/types/ProjectTypes";
 import type { AssetProps, AssetPropsPlainObject } from "~ims-app-base/logic/types/Props";
 import type { AssetPropsSelection } from "~ims-app-base/logic/types/PropsSelection";
 import type { WorkspaceQueryDTOWhere, Workspace, ChangeWorkspaceRequest, WorkspaceMoveParams, WorkspaceMoveResult } from "~ims-app-base/logic/types/Workspaces";
@@ -209,6 +209,16 @@ export class ImsHostProject extends ImsHostBase {
     ): Promise<ProjectFullInfo> {
         const project_db = requestProjectDb(projectPath, this._window);
         return project_db.project.loadProjectInfo();
+    }
+
+    async loadProjectSettings(projectPath: string): Promise<ProjectSettingsValue> {
+      const project_db = requestProjectDb(projectPath, this._window);
+      return project_db.project.loadProjectSettings();
+    }
+
+    async saveProjectSettings(projectPath: string, projectSettings: ProjectSettingsValue) {
+      const project_db = requestProjectDb(projectPath, this._window);
+      return project_db.project.saveProjectSettings(projectSettings);
     }
     
     assetsMove(

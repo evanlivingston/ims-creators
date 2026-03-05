@@ -30,6 +30,8 @@ import DesktopTaskManager from './DesktopTaskManager';
 import DesktopProjectContentManager from './DesktopProjectContentManager';
 import DesktopUpdateManager from './DesktopUpdateManager';
 import DesktopAuthManager from './DesktopAuthManager';
+import ProjectSettingsManager from '~ims-app-base/logic/managers/ProjectSettingsManager';
+import DesktopProjectSettingsManager from './DesktopProjectSettingsManager';
 
 export function createApiTokenStorage(
   context: AppManagerContext,
@@ -64,7 +66,8 @@ export default function createDesktopAppManager(
   const desktopProjectContentManager = new DesktopProjectContentManager(app_manager);
   app_manager.register(ProjectContentManager, desktopProjectContentManager);
   app_manager.register(new GlobalStateManager(app_manager));
-  app_manager.register(TaskManager, new DesktopTaskManager(app_manager))
+  app_manager.register(TaskManager, new DesktopTaskManager(app_manager));
+  app_manager.register(ProjectSettingsManager, new DesktopProjectSettingsManager(app_manager));
   
   const project_database = new ProjectDatabaseViaDesktopApi(desktopProjectManager);
 
