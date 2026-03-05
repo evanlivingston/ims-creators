@@ -17,6 +17,7 @@ import { once } from "node:events";
 import { PassThrough, type Writable } from "node:stream";
 import { shell } from 'electron'
 import { WORKSPACE_BASE_ORDERING } from "../project-db-constants";
+import type { WorkspaceEntity } from "./SyncService";
    
 export class WorkspaceService implements IProjectDatabaseWorkspace{
 
@@ -191,10 +192,11 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
             throw new Error("Workspace doesn't exist");
         }
         const props = params.props ? assignPlainValueToAssetProps({}, params.props) : {};
-        const new_workspace_info = {
+        const new_workspace_info: ProjectFileDbWorkspace = {
             ...workspace,
             ...params,
             props,
+            id: workspace.id,
         }
         
         const old_path = getWorkspaceLocalPath(workspace, this.db);
@@ -399,5 +401,16 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
         const zip_stream = zip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
             .pipe(fs.createWriteStream(targetPath));
         await once(zip_stream, 'finish');
+    }
+
+    convertServerWorkspaceToLocal (server_workspace: WorkspaceEntity): Workspace {
+        const local_workspace: Workspace = {
+            ...server_workspace,
+            rights: 5,
+            createdAt: server_workspace.createdAt.toISOString(),
+            updatedAt: server_workspace.updatedAt.toISOString(),
+            props: server_workspace.props ?? {},
+        }
+        return local_workspace; 
     }
 }

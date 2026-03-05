@@ -42,7 +42,6 @@ export default defineComponent({
       const res = await window.imshost.fs.showSelectDirectoryDialog({
         defaultPath: this.value,
       });
-      console.log(res.filePaths[0]);
       if(!res.canceled){
         this.updateValue(res.filePaths[0]);
       }

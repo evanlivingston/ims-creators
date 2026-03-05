@@ -14,18 +14,17 @@ import { HistoryChangeRecord } from "../logic/HistoryChangeRecord";
 import { shell } from 'electron';
 import { BLOCK_NAME_META } from "~ims-app-base/logic/constants";
 import type { AssetHistoryDTO } from "~ims-app-base/logic/types/AssetHistory";
-import type { AssetQueryWhere, AssetsShortResult, AssetShort, AssetsFullResult, AssetsGraphItem, AssetsGraph, AssetBlockParamsDTO, AssetSetDTO, AssetCreateDTO, AssetsChangeResult, AssetChangeDTO, AssetChangeBatchOpDTO, AssetsBatchChangeResultDTO, AssetWhereParams, AssetDeleteResultDTO, CreateRefDTO, AssetReferencesResult, AssetDeleteRefResultDTO, AssetMoveParams, AssetMoveResult } from "~ims-app-base/logic/types/AssetsType";
+import type { AssetQueryWhere, AssetsShortResult, AssetShort, AssetsFullResult, AssetsGraphItem, AssetsGraph, AssetBlockParamsDTO, AssetSetDTO, AssetCreateDTO, AssetsChangeResult, AssetChangeDTO, AssetChangeBatchOpDTO, AssetsBatchChangeResultDTO, AssetWhereParams, AssetDeleteResultDTO, CreateRefDTO, AssetReferencesResult, AssetDeleteRefResultDTO, AssetMoveParams, AssetMoveResult, AssetFull } from "~ims-app-base/logic/types/AssetsType";
 import type { AssetBlockEntity } from "~ims-app-base/logic/types/BlocksType";
 import type { IProjectDatabaseAsset } from "~ims-app-base/logic/types/IProjectDatabase";
-import type { ApiRequestList, ApiResultListWithTotal, ApiResultListWithMore } from "~ims-app-base/logic/types/ProjectTypes";
+import type { ApiRequestList, ApiResultListWithTotal, ApiResultListWithMore, ChangesStreamRequest, ChangesStreamResponse } from "~ims-app-base/logic/types/ProjectTypes";
 import { type AssetPropsPlainObjectValue, type AssetPropsPlainObject, type AssetPropValue, compareAssetPropValues, assignPlainValueToAssetProps, extractRemapParentProps, type AssetProps, remapAssetProps, convertAssetPropsToPlainObject, type AssetPropValueText, walkAssetPropValueTextOps, type AssetPropValueAsset, parseAssetNewBlockRef, applyPropsChange, diffAssetPropObjects, stringifyAssetNewBlockRef } from "~ims-app-base/logic/types/Props";
 import type { AssetPropsSelectionField, AssetPropsSelectionOrder, AssetPropsSelection } from "~ims-app-base/logic/types/PropsSelection";
 import { AssetRights } from "~ims-app-base/logic/types/Rights";
 import { generateNextUniqueNameNumber } from "~ims-app-base/logic/utils/stringUtils";
 import { assert } from "~ims-app-base/logic/utils/typeUtils";
-import axios from "axios";
 import { ASSET_BASE_ORDERING } from "../project-db-constants";
-
+import { SQLITE_NOW_STM } from "./SyncService";
    
 export class AssetService implements IProjectDatabaseAsset{
 
@@ -945,8 +944,16 @@ export class AssetService implements IProjectDatabaseAsset{
 
             }
         }
-    
-        const affected_res = await this.assetsGetFull({
+        const affectedIds = [...createdIds, ...updatedIds, ...deletedIds];
+        if(affectedIds.length > 0) {
+            await this.db.dataSource.createQueryRunner().query(`
+                INSERT INTO assets (id, need_sync)
+                VALUES ` + [...affectedIds].map(i => `(?,${SQLITE_NOW_STM})`).join(',') +
+                ` ON CONFLICT (id) DO UPDATE SET need_sync = ${SQLITE_NOW_STM};
+            `, [...affectedIds]);
+        }
+
+        const updatedOrCreated = await this.assetsGetFull({
             where: {
                 id: [...createdIds, ...updatedIds],
             }
@@ -954,7 +961,7 @@ export class AssetService implements IProjectDatabaseAsset{
         this._sessionChangeHistory.set(changeRecord.changeId, changeRecord)
 
         return {
-            ...affected_res,
+            ...updatedOrCreated,
             changeId: changeRecord.changeId,
             createdIds: [...createdIds],
             deletedIds:  [...deletedIds],
@@ -1012,8 +1019,10 @@ export class AssetService implements IProjectDatabaseAsset{
             }
         }
         this._sessionDeletedAssets.addMany(deleting_assets)
+        const deleting_asset_ids = deleting_assets.map(a => a.id)
+
         return {
-            ids: deleting_assets.map(a => a.id)
+            ids: deleting_asset_ids
         }
     }
    async assetsRestore( where: AssetWhereParams, options?: { pid?: string; }): Promise<AssetsChangeResult> {
@@ -1142,97 +1151,40 @@ export class AssetService implements IProjectDatabaseAsset{
         await this.saveAssetFileToFile(assets.list[0], target);
     }
 
-    async copyAssetToServer(localAssetId: string): Promise<AssetsFullResult> {
-        const full = this.assets.byId.get(localAssetId);
-        if (!full) throw new Error('Asset not found');
-        let blocks:
-            | {
-                [blockKey: string]: AssetBlockParamsDTO;
-            }
-            | undefined = undefined;
-        for (const r of full.blocks) {
-            const key = stringifyAssetNewBlockRef(null, r.id);
-            if (!blocks) blocks = {};
-            blocks[key] = {
-                index: r.index,
-                name: r.name,
-                title: r.title,
-                props: assignPlainValueToAssetProps({}, r.props),
-                type: r.type,
-            };
+    convertServerAssetToLocal (server_asset: AssetFull): ProjectFileDbAsset{
+        const local_asset: ProjectFileDbAsset = {
+            id: server_asset.id,   
+            typeIds: [...server_asset.typeIds],
+            parentIds: [...server_asset.parentIds],
+            ownTitle: server_asset.ownTitle,
+            ownIcon: server_asset.ownIcon,
+            blocks: [],
+            comments: server_asset.comments,
+            references: server_asset.references,
+            projectId: server_asset.projectId,
+            workspaceId: server_asset.workspaceId,
+            name: server_asset.name,
+            title: server_asset.title,
+            icon: server_asset.icon,
+            isAbstract: server_asset.isAbstract,
+            createdAt: server_asset.createdAt,
+            updatedAt: server_asset.updatedAt,
+            deletedAt: server_asset.deletedAt,
+            rights: server_asset.rights,
+            index: server_asset.index,
+            creatorUserId: server_asset.creatorUserId,
+            unread: server_asset.unread,
+            hasImage: server_asset.hasImage,
+            localName: server_asset.localName
         }
-        return await axios.post(`${process.env.CREATORS_API_HOST}assets/create`, {
-            set: {
-                icon: full.ownIcon ?? undefined,
-                title: full.title,
-                isAbstract: full.isAbstract,
-                parentIds: full.parentIds,
-                workspaceId: full.workspaceId ?? undefined,
-                blocks,
-            },
-        });
+        for(const block of server_asset.blocks){
+            local_asset.blocks.push({
+                ...block,
+                props: convertAssetPropsToPlainObject(block.props),
+                computed: convertAssetPropsToPlainObject(block.computed),
+                inherited: block.inherited ? convertAssetPropsToPlainObject(block.inherited) : null,
+            })
+        }
+        return local_asset; 
     }
-
-    // если пользователь меняет локальные папки
-    async syncAssets(where: AssetWhereParams){
-        const local_assets = await this.searchAssets({
-            ...where,
-            isSystem: false
-        });
-        const response: {data: AssetsFullResult} = await axios.get(`${process.env.CREATORS_API_HOST}assets/full`, {
-                params: {
-                    where,
-                },
-            });
-        const server_asset_ids: string[] = response.data.ids;
-        const synced_asset_ids_set = new Set();
-        for(const local_asset of local_assets){
-            synced_asset_ids_set.add(local_asset.id);
-            const server_asset_id = server_asset_ids.find(s_a => s_a === local_asset.id);
-            if(server_asset_id){
-                const change_ops = await this.syncAssetsOne(local_asset, response.data.objects.assetFulls[server_asset_id])
-                await this.assetsChangeBatch({
-                    ops: change_ops,
-                })
-            }
-            else {
-                await this.copyAssetToServer(local_asset.id);
-            }
-        }
-        for(const server_asset_id of server_asset_ids){
-            if(synced_asset_ids_set.has(server_asset_id)) {
-                continue;
-            }
-            synced_asset_ids_set.add(server_asset_id);
-            // Добавить в локальный проект
-            this.assetsCreate(response.data.objects.assetFulls[server_asset_id]);
-        }
-    }
-
-    // если на сервере появился файл, то они будут скачиваться и сохраняться
-
-    async syncAssetsOne(local_asset: ProjectFileDbAsset, server_asset: ProjectFileDbAsset): Promise<AssetChangeBatchOpDTO[]> {
-        const change_ops: AssetChangeBatchOpDTO[] = [];
-        if(server_asset) {
-            for(const server_block of server_asset.blocks){
-                const local_block = local_asset.blocks.find(x => {
-                    if(server_block.id) {
-                        return x.id === server_block.id;
-                    }
-                    else {
-                        return server_block.name && x.name === server_block.id;
-                    }
-                });
-                const change_op = diffAssetPropObjects(
-                    assignPlainValueToAssetProps({}, local_block ?? {}),
-                    assignPlainValueToAssetProps({}, server_block)
-                )
-                change_ops.push({...change_op, where: {
-                    id: server_asset.id,
-                }});
-            }
-        }
-        return change_ops;
-    }
-
 }
