@@ -2,27 +2,15 @@ import { HttpMethods, Service } from "~ims-app-base/logic/managers/ApiWorker";
 import type { AssetsFullResult, AssetBlockParamsDTO, AssetsChangeResult, AssetSetDTO } from "~ims-app-base/logic/types/AssetsType";
 import type { ChangesStreamResponse, ChangesStreamRequest, ApiResultListWithTotal } from "~ims-app-base/logic/types/ProjectTypes";
 import { stringifyAssetNewBlockRef, assignPlainValueToAssetProps, type AssetProps, diffAssetPropObjects } from "~ims-app-base/logic/types/Props";
-import type { ProjectFileDb, ProjectFileDbAsset, ProjectFileDbWorkspace } from "../ProjectFileDb";
 import { type AssetPropWhere } from "~ims-app-base/logic/types/PropsWhere";
 import type { Workspace, WorkspaceQueryDTOWhere } from "~ims-app-base/logic/types/Workspaces";
 import log from 'electron-log/main';
-import type { ChangeWorkspaceDTO, WorkspaceDTO } from "~ims-app-base/logic/types/RightsAndRoles";
-import ApiError, { ApiErrorCodes } from "~ims-app-base/logic/types/ApiError";
+import type { ChangeWorkspaceDTO } from "~ims-app-base/logic/types/RightsAndRoles";
+import { syncEntity, type SyncTableRow } from "./sync-helpers";
+import type { ProjectFileDb, ProjectFileDbAsset, ProjectFileDbWorkspace } from "../../ProjectFileDb";
 
 const SYNC_CHUNK_SIZE = 50;
 export const SQLITE_NOW_STM = `strftime('%Y-%m-%dT%H:%M:%fZ', 'now')`;
-export type SyncTableRow = {
-    id: string,
-    server_state: string,
-    server_deleted: number,
-}
-
-export enum SyncConflict {
-    MODIFIED_DELETED = 'MODIFIED_DELETED',
-    DUPLICATE = 'DUPLICATE',
-    NO_ACCESS = 'NO_ACCESS',
-    ERROR = 'ERROR',
-}
 
 export type WorkspaceEntity = {
     id: string;
@@ -30,9 +18,9 @@ export type WorkspaceEntity = {
     title: string;
     name: string | null;
     parentId: string;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt?: Date;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt?: string;
     index: number | null;
     props: AssetProps | null;
 }
@@ -274,7 +262,119 @@ export class SyncService {
         await this._syncAssets(db_assets);
     }
 
-    private async _loadFromServerAsset(db_asset_id: string){
+    private async _syncAsset(db_asset: SyncTableRow){
+        await syncEntity<ProjectFileDbAsset, AssetSetDTO>(db_asset, {
+            db: this.db, 
+            entityTable: 'assets',
+            serverLoad: (id) => this._loadFromServerAsset(id),
+            serverPut: async (id, change, create) => {
+                const server_asset_full: AssetsFullResult = create ? 
+                    await this.db.api.call(Service.CREATORS, HttpMethods.POST, `assets/create`, {
+                        id,
+                        set: change
+                    }) :  
+                    await this.db.api.call(Service.CREATORS, HttpMethods.POST, `assets/change`, {
+                        where: {
+                            id: [id],
+                        },
+                        set: change
+                    });
+                if (!server_asset_full.objects.assetFulls[id]){
+                    return null;
+                }
+                return this.db.asset.convertServerAssetToLocal(
+                    server_asset_full.objects.assetFulls[id]
+                );
+            },
+            serverDelete: async (id) => {
+                await this.db.api.call(Service.CREATORS, HttpMethods.POST, `assets/delete`, {
+                    where: {
+                        id: [id],
+                    }
+                });
+            },
+            localLoad: async (id) => await this.db.asset.assets.byId.get(id) ?? null,
+            localPut: async (id, change, create) => {
+                let res: AssetsFullResult;
+                if (create){
+                    res = await this.db.asset.assetsCreate({
+                        id: id,
+                        set: change
+                    });
+                }
+                else {  
+                    res = await this.db.asset.assetsChange({
+                        where: {
+                            id
+                        },
+                        set: change
+                    });
+                }
+            },
+            localDelete: async (id) => {
+                await this.db.asset.assetsDelete({
+                    id: [id],
+                })
+            },
+            getChanges: (source, target) => this.getAssetsChanges(source, target),
+        })
+    }
+
+    private async _syncAssets(db_assets: SyncTableRow[]){
+        for(const db_asset of db_assets){
+            await this._syncAsset(db_asset);
+        }
+    }
+
+    private async _syncWorkspace(db_workspace: SyncTableRow){
+        await syncEntity<ProjectFileDbWorkspace, ChangeWorkspaceDTO>(db_workspace, {
+            db: this.db, 
+            entityTable: 'workspaces',
+            serverLoad: (id) => this._loadFromServerWorkspace(id),
+            serverPut: async (id, change, create) => {
+                const server_workspace_full: WorkspaceEntity =  create ? 
+                    await this.db.api.call(Service.CREATORS, HttpMethods.POST, `workspaces`, {
+                        id,
+                        ...change
+                    }) : 
+                    await this.db.api.call(Service.CREATORS, HttpMethods.PATCH, `workspaces/${id}`, change);
+                if (!server_workspace_full){
+                    return null;
+                }
+                return this.db.workspace.convertServerWorkspaceToLocal(server_workspace_full)
+            },
+            serverDelete: async (id) => {
+                await this.db.api.call(Service.CREATORS, HttpMethods.DELETE, `workspaces/${id}`);
+            },
+            localLoad: async (id) => this.db.workspace.workspaces.byId.get(id) ?? null,
+            localPut: async (id, change, create) => {
+                if (create){
+                    await this.db.workspace.workspacesCreate({
+                        ...change,
+                        id,
+                        props: assignPlainValueToAssetProps({}, change.props ?? {}),
+                    });
+                }
+                else {  
+                    await this.db.workspace.workspacesChange(id, change);
+                }
+            },
+            localDelete: async (id) => {
+                await this.db.workspace.workspacesDelete(id)
+            },
+            getChanges: (source, target) => this.getWorkspacesChanges(source, target),
+        });
+    }
+
+    private async _syncWorkspaces(db_workspaces: SyncTableRow[]){
+        const need_sync_workspaces_map = new Map(db_workspaces.map(w => [w.id, w]));
+        for(const db_workspace of db_workspaces){
+            await this._checkParentWorkspaceNeedSyncAndSync(need_sync_workspaces_map, db_workspace.id);
+        }
+    }
+
+    
+    private async _loadFromServerAsset(db_asset_id: string): Promise<ProjectFileDbAsset | null>{
         const server_asset_full: AssetsFullResult = await this.db.api.call(Service.CREATORS, HttpMethods.GET, `assets/full`, {
             where: JSON.stringify({
                 id: [db_asset_id],
@@ -289,148 +389,18 @@ export class SyncService {
         }
     }
 
-    private async _syncAsset(db_asset: SyncTableRow){
-        let conflict: SyncConflict | null = null;
-        let conflict_message: string | null = null;
-        let old_server_state: ProjectFileDbAsset | null = db_asset.server_state ? JSON.parse(db_asset.server_state) : null;
-        let new_server_state: ProjectFileDbAsset | null;
-        let local_state: ProjectFileDbAsset | null | undefined = undefined
-        try {
-
-            const was_synced_before = !!old_server_state
-            if (
-                !db_asset.server_deleted && 
-                !old_server_state
-            ){
-                old_server_state = await this._loadFromServerAsset(db_asset.id);
-            }
-
-            local_state = this.db.asset.assets.byId.get(db_asset.id) ?? null
-
-            if(old_server_state) {
-                if(local_state) {
-                    const changes_from_local = this.getAssetsChanges(local_state, old_server_state)
-                    const has_local_changes = Object.keys(changes_from_local).length > 0
-        
-                    if(db_asset.server_deleted) {
-                        new_server_state = null
-                        if (has_local_changes){
-                            conflict = SyncConflict.MODIFIED_DELETED;
-                            return;
-                        }
-                        else {
-                            await this.db.asset.assetsDelete({
-                                id: [db_asset.id],
-                            })
-                        }
-                    }
-                    else if (has_local_changes){
-                         const server_asset_full: AssetsFullResult = await this.db.api.call(Service.CREATORS, HttpMethods.POST, `assets/change`, {
-                            where: {
-                                id: [db_asset.id],
-                            },
-                            set: changes_from_local
-                        });
-                        if (!server_asset_full.objects.assetFulls[db_asset.id]){
-                            conflict = SyncConflict.NO_ACCESS
-                            return;
-                        }
-                        new_server_state = this.db.asset.convertServerAssetToLocal(
-                            server_asset_full.objects.assetFulls[db_asset.id]
-                        ); 
-                    }
-                    else {
-                        new_server_state = !db_asset.server_state ? old_server_state : await this._loadFromServerAsset(db_asset.id);
-                        if(!new_server_state) {
-                            conflict = SyncConflict.NO_ACCESS
-                            return;
-                        }
-                    }
-                }
-                else if (was_synced_before) {
-                    // => Deleted locally, but was synced before
-                    await this.db.api.call(Service.CREATORS, HttpMethods.POST, `assets/delete`, {
-                        where: {
-                            id: [db_asset.id],
-                        }
-                    });
-                    new_server_state = null
-                }
-                else {
-                    // Exists on server, but not locally
-                    new_server_state = old_server_state
-                }
-            }
-            else { 
-                // Server has no file
-                if (local_state){
-                    try {
-                        const asset_result = await this.copyAssetToServer(db_asset.id);
-                        new_server_state = this.db.asset.convertServerAssetToLocal(asset_result.objects.assetFulls[db_asset.id]);
-                    }
-                    catch(err: any){
-                        if (err instanceof ApiError && err.code === ApiErrorCodes.ENTITY_ALREADY_EXISTS){
-                            conflict = SyncConflict.DUPLICATE;
-                            return;
-                        }
-                        else {
-                            throw err;
-                        }
-                    }
-                } else {        
-                    new_server_state = null
-                }
-            }
-            if (new_server_state){
-                const changes_from_server = this.getAssetsChanges(new_server_state, local_state)
-                if (!local_state){
-                     await this.db.asset.assetsCreate({
-                        id: db_asset.id,
-                        set: changes_from_server
-                    });
-                }
-                else {
-                    if(Object.keys(changes_from_server).length > 0) {     
-                        await this.db.asset.assetsChange({
-                            where: {
-                                id: db_asset.id
-                            },
-                            set: changes_from_server
-                        });
-                    }
-                }
-            }  
+    private async _loadFromServerWorkspace(db_workspace_id: string): Promise<ProjectFileDbWorkspace | null>{
+        const server_workspaces: ApiResultListWithTotal<Workspace> = await this.db.api.call(Service.CREATORS, HttpMethods.GET, `workspaces`, {
+            where: JSON.stringify({
+                ids: [db_workspace_id],
+            })
+        });
+        const server_workspace = server_workspaces.list[0]
+        if(server_workspace){
+            return this.db.workspace.convertServerWorkspaceToLocal(server_workspace as any)
         }
-        catch(error: any) {
-            if(error instanceof ApiError && error.code === ApiErrorCodes.ACCESS_DENIED){
-                conflict = SyncConflict.NO_ACCESS
-            }
-            else {
-                conflict = SyncConflict.ERROR;
-            }
-            conflict_message = error.message;
-        }
-        finally {
-            const save_server_state = new_server_state! === undefined ? old_server_state : new_server_state
-            if (save_server_state === null && local_state === null){                
-                await this.db.dataSource.createQueryRunner().query(`
-                    DELETE FROM assets
-                    WHERE id = ?;
-                `, [db_asset.id])
-            }
-            else {
-                await this.db.dataSource.createQueryRunner().query(`
-                    UPDATE assets
-                    SET synced_at = need_sync, conflict = ?, conflict_message = ?, server_state = ?
-                    WHERE id = ?;
-                `, [conflict, conflict_message, JSON.stringify(save_server_state), db_asset.id]);
-            }
-        }
-    }
-
-    private async _syncAssets(db_assets: SyncTableRow[]){
-        for(const db_asset of db_assets){
-            await this._syncAsset(db_asset);
+        else {
+            return null;
         }
     }
 
@@ -455,7 +425,7 @@ export class SyncService {
             changes.isAbstract = source_asset.isAbstract;
         }
         if(!target_asset || source_asset.parentIds.length !== target_asset.parentIds.length ||
-            source_asset.parentIds.some((val, ind) => target_asset.parentIds[ind] !== val)
+            source_asset.parentIds.some((val: any, ind: number) => target_asset.parentIds[ind] !== val)
         ) {
             changes.parentIds = source_asset.parentIds;
         }
@@ -464,7 +434,7 @@ export class SyncService {
         }
 
         for(const source_block of source_asset.blocks){
-            const target_block = target_asset ? target_asset.blocks.find(x => x.id === source_block.id) : null;
+            const target_block = target_asset ? target_asset.blocks.find((x: { id: any; }) => x.id === source_block.id) : null;
             const block_change: AssetBlockParamsDTO = {}
             let any_block_change = false;
             if(!target_block || source_block.title !== target_block.title) {
@@ -504,7 +474,7 @@ export class SyncService {
         }
         if (target_asset){
             for(const server_block of target_asset.blocks){
-                const local_block = source_asset.blocks.find(x => x.id === server_block.id);
+                const local_block = source_asset.blocks.find((x: { id: any; }) => x.id === server_block.id);
                 if(!local_block){  
                     if (!changes.blocks){
                         changes.blocks = {}
@@ -519,31 +489,28 @@ export class SyncService {
         return changes;
     }
 
-    getWorkspacesChanges(local_workspace: ProjectFileDbWorkspace, server_workspace: ProjectFileDbWorkspace): ChangeWorkspaceDTO {
+    getWorkspacesChanges(source_workspace: ProjectFileDbWorkspace, target_workspace: ProjectFileDbWorkspace | null): ChangeWorkspaceDTO {
         const changes: ChangeWorkspaceDTO = {};
-        if(local_workspace.title !== server_workspace.title) {
-            changes.title = local_workspace.title;
+        if(!target_workspace || source_workspace.title !== target_workspace.title) {
+            changes.title = source_workspace.title;
         }
-        if(local_workspace.name !== server_workspace.name) {
-            changes.name = local_workspace.name;
+        if(!target_workspace || source_workspace.name !== target_workspace.name) {
+            changes.name = source_workspace.name;
         }
-        if(local_workspace.index !== server_workspace.index) {
-            changes.index = local_workspace.index;
+        if(!target_workspace || source_workspace.index !== target_workspace.index) {
+            changes.index = source_workspace.index;
         }
-        if(local_workspace.parentId !== server_workspace.parentId) {
-            changes.parentId = local_workspace.parentId ?? undefined;
+        if(!target_workspace || source_workspace.parentId !== target_workspace.parentId) {
+            changes.parentId = source_workspace.parentId ?? undefined;
         }
-        const change_asset_props: AssetProps[] = diffAssetPropObjects(
-                    assignPlainValueToAssetProps({}, local_workspace.props ?? {}),
-                    assignPlainValueToAssetProps({}, server_workspace.props ?? {})
-                )
-        if(change_asset_props.length > 0){
-            for(const change of change_asset_props){
-                changes.props = {
-                    ...changes.props,
-                    ...change,
-                }; 
-            }
+        const source_props = assignPlainValueToAssetProps({}, source_workspace.props ?? {})
+        const change_props: AssetProps[] = target_workspace ? diffAssetPropObjects(
+                    source_props,
+                    assignPlainValueToAssetProps({}, target_workspace.props ?? {}) 
+                ) :
+                    [source_props]
+        if(change_props.length > 0){
+            changes.props = source_props
         }
         return changes;
     }
@@ -590,9 +557,9 @@ export class SyncService {
         }
         else {
             const server_workspaces: ApiResultListWithTotal<Workspace> = await this.db.api.call(Service.CREATORS, HttpMethods.GET, `workspaces`, {
-                where: {
+                where: JSON.stringify({
                     ids: [db_workspace.id],
-                }
+                })
             });
             const server_workspace = server_workspaces.list[0];
             if(server_workspace?.parentId){
@@ -601,143 +568,5 @@ export class SyncService {
         }
         await this._syncWorkspace(db_workspace);
         need_sync_workspaces_map.delete(db_workspace.id);
-    }
-
-    private async _syncWorkspace(db_workspace: SyncTableRow){
-        let conflict: SyncConflict | null = null;
-        let conflict_message: string | null = null;
-        let server_state: Workspace | null = JSON.parse(db_workspace.server_state);
-        try {
-            const local_workspace = this.db.workspace.workspaces.byId.get(db_workspace.id);
-            if(db_workspace.server_state) {
-                if(local_workspace) {
-                    const changes_from_local = this.getWorkspacesChanges(local_workspace, JSON.parse(db_workspace.server_state));
-                    if(Object.keys(changes_from_local).length > 0) {              
-                        if(db_workspace.server_deleted) {
-                            conflict = SyncConflict.MODIFIED_DELETED;
-                            return;
-                        }
-                        else {
-                            const server_workspace_full: WorkspaceEntity = await this.db.api.call(Service.CREATORS, HttpMethods.PATCH, `workspaces`, {
-                                where: {
-                                    id: [db_workspace.id],
-                                },
-                                set: {
-                                    ...changes_from_local,
-                                }
-                            });
-                            if (!server_workspace_full){
-                                conflict = SyncConflict.NO_ACCESS
-                                return;
-                            }
-                            server_state = this.db.workspace.convertServerWorkspaceToLocal(server_workspace_full)
-                        }
-                    }       
-                    else if(db_workspace.server_deleted) {
-                        await this.db.workspace.workspacesDelete(db_workspace.id)
-                    }
-                    else {
-                        const server_workspaces: ApiResultListWithTotal<Workspace> = await this.db.api.call(Service.CREATORS, HttpMethods.GET, `workspaces`, {
-                            where: {
-                                ids: [db_workspace.id],
-                            }
-                        });
-                        const server_workspace = server_workspaces.list.find(w => w.id === db_workspace.id);
-                        if(server_workspace){
-                            server_state = this.db.workspace.convertServerWorkspaceToLocal(server_workspace as any)
-                        }
-                        else {
-                            await this.db.dataSource.createQueryRunner().query(`
-                                DELETE FROM workspaces
-                                WHERE id = ?;
-                            `, [db_workspace.id])
-                        }
-                    }
-                }
-                else {
-                    await this.db.api.call(Service.CREATORS, HttpMethods.DELETE, `workspaces/delete/` + db_workspace.id, {});
-                }
-            }
-            else {
-                if(local_workspace) {
-                    try {
-                        // copy workspace to server
-                        const server_workspace: ApiResultListWithTotal<Workspace> = await this.db.api.call(Service.CREATORS, HttpMethods.GET, `workspaces`, {
-                            where: {
-                                ids: [db_workspace.id],
-                            }
-                        });
-                        server_state = this.db.workspace.convertServerWorkspaceToLocal(server_workspace as any);
-                    }
-                    catch(err: any){
-                        if (err instanceof ApiError && err.code === ApiErrorCodes.ENTITY_ALREADY_EXISTS){
-                            conflict = SyncConflict.DUPLICATE;
-                            return;
-                        }
-                        else {
-                            throw err;
-                        }
-                    }
-                } else {
-                    const server_workspaces: ApiResultListWithTotal<WorkspaceEntity> = await this.db.api.call(Service.CREATORS, HttpMethods.GET, `workspaces`, {
-                        where: {
-                            ids: [db_workspace.id],
-                        }
-                    });
-                    if(server_workspaces.total > 0){
-                        server_state = this.db.workspace.convertServerWorkspaceToLocal(server_workspaces.list[0])
-                    }
-                    else {
-                        await this.db.dataSource.createQueryRunner().query(`
-                            DELETE FROM workspaces
-                            WHERE id = ?;
-                        `, [db_workspace.id])
-                    }
-                }
-            }
-
-            if (server_state){
-                if (!local_workspace){
-                     await this.db.workspace.workspacesCreate({
-                        ...(server_state),
-                        id: db_workspace.id,
-                        props: assignPlainValueToAssetProps({}, server_state.props),
-                    });
-                }
-                else {
-                    const changes_from_server = this.getWorkspacesChanges(local_workspace, JSON.parse(db_workspace.server_state))
-                    if(Object.keys(changes_from_server).length > 0) {     
-                        await this.db.workspace.workspacesCreate({
-                            ...(server_state),
-                            id: db_workspace.id,
-                            props: assignPlainValueToAssetProps({}, server_state.props),
-                        });
-                    }
-                }
-            } 
-        }
-        catch(error: any) {
-            if(error instanceof ApiError && error.code === ApiErrorCodes.ACCESS_DENIED){
-                conflict = SyncConflict.NO_ACCESS
-            }
-            else {
-                conflict = SyncConflict.ERROR;
-            }
-            conflict_message = error.message;
-        }
-        finally {
-            await this.db.dataSource.createQueryRunner().query(`
-                UPDATE workspaces
-                SET synced_at = need_sync, conflict = ?, conflict_message = ?, server_state = ?
-                WHERE id = ?;
-            `, [conflict, conflict_message, server_state, db_workspace.id]);
-        }
-    }
-
-    private async _syncWorkspaces(db_workspaces: SyncTableRow[]){
-        const need_sync_workspaces_map = new Map(db_workspaces.map(w => [w.id, w]));
-        for(const db_workspace of db_workspaces){
-            await this._checkParentWorkspaceNeedSyncAndSync(need_sync_workspaces_map, db_workspace.id);
-        }
     }
 }

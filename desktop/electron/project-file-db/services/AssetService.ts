@@ -24,7 +24,7 @@ import { AssetRights } from "~ims-app-base/logic/types/Rights";
 import { generateNextUniqueNameNumber } from "~ims-app-base/logic/utils/stringUtils";
 import { assert } from "~ims-app-base/logic/utils/typeUtils";
 import { ASSET_BASE_ORDERING } from "../project-db-constants";
-import { SQLITE_NOW_STM } from "./SyncService";
+import { SQLITE_NOW_STM } from "./SyncService/SyncService";
    
 export class AssetService implements IProjectDatabaseAsset{
 

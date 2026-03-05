@@ -15,7 +15,7 @@ import { PROJECT_META_FOLDER, PROJECT_META_INDEX } from "./project-db-constants"
 import { AssetRights } from "~ims-app-base/logic/types/Rights";
 import type { DataSource } from "typeorm";
 import { getProjectDataSource } from "./project-data-source";
-import { SyncService } from "./services/SyncService";
+import { SyncService } from "./services/SyncService/SyncService";
 
 export type ProjectFileDbAssetBlock = {
     id: string;
