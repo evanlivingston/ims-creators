@@ -1,5 +1,6 @@
 <template>
   <ims-select
+    v-if="projectTemplatesLoaded"
     v-model="currentProjectTemplateId"
     :reduce="(o: any) => o.id"
     :get-option-key="(o: any) => o.id"
@@ -25,6 +26,9 @@
       {{ option.title }}
     </template>
   </ims-select>
+  <div v-else class="is-input SelectTemplate-load">
+    <div class="loaderSpinner"></div>
+  </div>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
@@ -94,6 +98,10 @@ export default defineComponent({
 <style>
 .SelectTemplate {
   width: 100%;
+}
+.SelectTemplate-load {
+  text-align: center;
+  width: 250px;
 }
 .SelectTemplate-option {
   display: flex;
