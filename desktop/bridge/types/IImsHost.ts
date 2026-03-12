@@ -5,6 +5,7 @@ import type { ImsHostShell } from '../api/ImsHostShell';
 import type { ImsHostStorage } from '../api/ImsHostStorage';
 import type { ImsHostWindow } from '../api/ImsHostWindow';
 import type { ImsHostApp } from '../api/ImsHostApp';
+import type ImsHostPlugin from '../api/ImsHostPlugin';
 
 export interface IImsHostApi  {
   fs: ImsHostFs;
@@ -13,7 +14,8 @@ export interface IImsHostApi  {
   storage: ImsHostStorage;
   project: ImsHostProject;
   autoUpdate: ImsHostAutoUpdate;
-  app: ImsHostApp
+  app: ImsHostApp,
+  plugin: ImsHostPlugin;
 }
 
 // Automatically exclude $ or _ prefixed methods in imshost apis

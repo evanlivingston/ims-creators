@@ -29,6 +29,7 @@ import TaskManager from '~ims-app-base/logic/managers/TaskManager';
 import DesktopTaskManager from './DesktopTaskManager';
 import DesktopProjectContentManager from './DesktopProjectContentManager';
 import DesktopUpdateManager from './DesktopUpdateManager';
+import DesktopPluginManager from './DesktopPluginManager';
 import DesktopAuthManager from './DesktopAuthManager';
 import ProjectSettingsManager from '~ims-app-base/logic/managers/ProjectSettingsManager';
 import DesktopProjectSettingsManager from './DesktopProjectSettingsManager';
@@ -59,7 +60,7 @@ export default function createDesktopAppManager(
   app_manager.register(new DialogManager(app_manager));
   app_manager.register(new CommentManager(app_manager));
   app_manager.register(new LocalFsSyncManager(app_manager));
-  app_manager.register(new PluginManager(app_manager));
+  app_manager.register(PluginManager, new DesktopPluginManager(app_manager));
   app_manager.register(EditorManager, new DesktopEditorManager(app_manager));
   app_manager.register(new DesktopUpdateManager(app_manager));
   app_manager.register(ExportFormatManager, new DesktopExportFormatManager(app_manager));
@@ -81,12 +82,15 @@ export default function createDesktopAppManager(
     await app_manager.get(ProjectManager).init();
     await app_manager.get(CreatorAssetManager).init(project_database);
     await app_manager.get(ExportFormatManager).init();
+    await app_manager.get(PluginManager).init();
   });
 
 
   app_manager.addInitRoutine(async () => {
-    await app_manager.get(PluginManager).activatePlugin(pluginBase())
-    await app_manager.get(PluginManager).activatePlugin(pluginCreators())
+    await app_manager.get(PluginManager).activateInternalPlugin(pluginBase());
+    await app_manager.get(PluginManager).activateInternalPlugin(pluginCreators());
+
+    await app_manager.get(PluginManager).activateSavedPlugins();
   });
 
   app_manager.addStateRoutine({
