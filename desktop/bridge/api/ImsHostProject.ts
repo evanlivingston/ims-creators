@@ -7,6 +7,7 @@ import type { AssetPropsSelection } from "~ims-app-base/logic/types/PropsSelecti
 import type { WorkspaceQueryDTOWhere, Workspace, ChangeWorkspaceRequest, WorkspaceMoveParams, WorkspaceMoveResult } from "~ims-app-base/logic/types/Workspaces";
 import { closeProjectDb, requestProjectDb } from "../../electron/project-file-db/project-registry";
 import { ImsHostBase } from "./ImsHostBase";
+import type { ProjectFileDbInitParams } from "~~/electron/project-file-db/ProjectFileDb";
 
 export type LocalProjectInitInfo = {
     id: string | null,
@@ -16,7 +17,7 @@ export type LocalProjectInitInfo = {
 
 export class ImsHostProject extends ImsHostBase {
 
-    async initProject(projectPath: string, initParams?: { title: string, id: string | null}): Promise<LocalProjectInitInfo>{
+    async initProject(projectPath: string, initParams?: ProjectFileDbInitParams): Promise<LocalProjectInitInfo>{
         const project_db = requestProjectDb(projectPath, this._window);
         await project_db.init(initParams);
         return {

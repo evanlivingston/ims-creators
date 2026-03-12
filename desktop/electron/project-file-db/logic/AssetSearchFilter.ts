@@ -102,11 +102,11 @@ export class AssetSearchFilter{
         }
         // TODO: add intersection check with this.where.workspaceids
         if (this.where.inside){
-            if (isUUID(this.where.type)){
-                this._filterInsideWorkspaceIds = [this.where.type]
+            if (isUUID(this.where.inside)){
+                this._filterInsideWorkspaceIds = [this.where.inside]
             }
             else {
-                const inside_workspace = this.db.workspace.workspaces.byName.get(this.where.type);
+                const inside_workspace = this.db.workspace.workspaces.byName.get(this.where.inside);
                 if (!inside_workspace){
                     this._resultNothing = true;
                 }

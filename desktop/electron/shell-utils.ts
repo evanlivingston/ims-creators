@@ -2,9 +2,10 @@
 import child_process, { type SpawnOptions } from 'node:child_process';
 import { shell } from 'electron';
 
-export function launch(command: string, args: string[] = []){
+export async function launch(command: string, args: string[] = []){
     if (!args || args.length === 0){
-        return shell.openPath(command);
+        const error = await shell.openPath(command);
+        if (error) throw new Error(error)
     }
     else {
         command = command.trim();

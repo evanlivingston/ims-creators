@@ -81,13 +81,13 @@ export function getWorkspaceLocalPathById(workspace_id: string | null, db: Proje
         assert(file.localName);
         const file_local_ext = getImsExtname(file.localName);
         parent_path = getWorkspaceLocalPathById(parent_id, db);
-        const suggest_title = generateNextUniqueNameNumber(
+        const suggest_title_with_ext = generateNextUniqueNameNumber(
             prepareFileBasenameByEntityTitle(file.title ?? 'untitled'),
             (name) => !fs.existsSync(path.join(parent_path, name )),
             ' - ',
             file_local_ext
         );
-        const new_w_file_path = path.join(parent_path, suggest_title)
+        const new_w_file_path = path.join(parent_path, suggest_title_with_ext)
         const old_w_file_path = old_local_path + (is_workspace ? '.imw.json' : '');
         // перемещаю информацию о файле (.im(a|w).json)
         try {

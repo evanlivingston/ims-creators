@@ -1,7 +1,7 @@
 import type { AssetQueryWhere } from "~ims-app-base/logic/types/AssetsType";
 import type { IProjectDatabaseWorkspace } from "~ims-app-base/logic/types/IProjectDatabase";
 import type { ApiRequestList, ApiResultListWithTotal } from "~ims-app-base/logic/types/ProjectTypes";
-import { compareAssetPropValues, assignPlainValueToAssetProps } from "~ims-app-base/logic/types/Props";
+import { compareAssetPropValues, assignPlainValueToAssetProps, convertAssetPropsToPlainObject } from "~ims-app-base/logic/types/Props";
 import type { AssetPropsSelectionOrder } from "~ims-app-base/logic/types/PropsSelection";
 import type { WorkspaceQueryDTOWhere, Workspace, ChangeWorkspaceRequest, WorkspaceMoveParams, WorkspaceMoveResult } from "~ims-app-base/logic/types/Workspaces";
 import { type ProjectFileDb, type ProjectFileDbWorkspace } from "../ProjectFileDb";
@@ -17,6 +17,7 @@ import { once } from "node:events";
 import { PassThrough, type Writable } from "node:stream";
 import { shell } from 'electron'
 import { WORKSPACE_BASE_ORDERING } from "../project-db-constants";
+import { SQLITE_NOW_STM, type WorkspaceEntity } from "./SyncService/SyncService";
    
 export class WorkspaceService implements IProjectDatabaseWorkspace{
 
@@ -154,7 +155,7 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
         return res;
     }
     async workspacesCreate(params: ChangeWorkspaceRequest): Promise<Workspace> {
-        const workspace_id = uuidv4();
+        const workspace_id = params.id ?? uuidv4();
         const workspace_props = assignPlainValueToAssetProps({}, params.props ?? {})
         const workspace_file_basename = params.title ? params.title : workspace_id;
         let parent_workspace_path = this.db.localPath;
@@ -165,7 +166,8 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
             (workspace_file_basename ?? 'untitled').replace(forbiddenFilenameCharsRegexp, '_').trim(),
             (name) => !fs.existsSync(node_path.join(parent_workspace_path, name + '')),
         );
-        const workspace_local_path = node_path.join(parent_workspace_path, suggest_title + '.imw.json');
+        const suggest_title_with_ext = suggest_title + '.imw.json'
+        const workspace_local_path = node_path.join(parent_workspace_path, suggest_title_with_ext);
         const workspace: ProjectFileDbWorkspace = {
             id: workspace_id,
             title: params.title ?? '',
@@ -177,13 +179,20 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
             rights: AssetRights.FULL_ACCESS,
             index: params.index ?? null,
             props: workspace_props,
-            localName: suggest_title,
+            localName: suggest_title_with_ext,
         };
         this.workspaces.add(workspace);
         await fs.promises.writeFile(workspace_local_path, JSON.stringify(workspace, null, 1));
         const folder_local_path = workspace_local_path.replace(/\.imw\.json$/, '');
         await fs.promises.mkdir(folder_local_path);
+        await this.markNotSyncedWorkspace(workspace_id);
         return workspace;
+    }
+    private async markNotSyncedWorkspace(id: string){
+        await this.db.dataSource.createQueryRunner().query(`
+            INSERT INTO workspaces (id, need_sync)
+            VALUES (?,${SQLITE_NOW_STM}) ON CONFLICT (id) DO UPDATE SET need_sync = ${SQLITE_NOW_STM};
+        `, [id]);
     }
     async workspacesChange(workspace_id: string, params: ChangeWorkspaceRequest): Promise<Workspace> {
         const workspace = this.workspaces.byId.get(workspace_id);
@@ -191,10 +200,11 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
             throw new Error("Workspace doesn't exist");
         }
         const props = params.props ? assignPlainValueToAssetProps({}, params.props) : {};
-        const new_workspace_info = {
+        const new_workspace_info: ProjectFileDbWorkspace = {
             ...workspace,
             ...params,
             props,
+            id: workspace.id,
         }
         
         const old_path = getWorkspaceLocalPath(workspace, this.db);
@@ -206,6 +216,7 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
         // сохраняю информацию о файле
         await fs.promises.writeFile(local_path, JSON.stringify(new_workspace_info, null, 1));
         this.workspaces.replace(new_workspace_info);
+        await this.markNotSyncedWorkspace(workspace_id);
         return new_workspace_info;
     }
 
@@ -283,6 +294,8 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
         for (const nested_asset of nested_assets){
             this.db.asset.deleteOwnAssetFromCollectionOnly(nested_asset.id);
         }
+        await this.markNotSyncedWorkspace(workspace_id);
+        
     }
     
     async workspacesMove(params: WorkspaceMoveParams): Promise<WorkspaceMoveResult> {
@@ -399,5 +412,14 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
         const zip_stream = zip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
             .pipe(fs.createWriteStream(targetPath));
         await once(zip_stream, 'finish');
+    }
+
+    convertServerWorkspaceToLocal (server_workspace: WorkspaceEntity): ProjectFileDbWorkspace {
+        const local_workspace: ProjectFileDbWorkspace = {
+            ...server_workspace,
+            rights: 5,
+            props: convertAssetPropsToPlainObject(server_workspace.props ?? {}),
+        }
+        return local_workspace; 
     }
 }

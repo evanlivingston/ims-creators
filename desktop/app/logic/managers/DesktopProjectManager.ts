@@ -5,6 +5,10 @@ import type { Workspace } from '~ims-app-base/logic/types/Workspaces';
 import { convertTranslatedTitle } from "~ims-app-base/logic/utils/assets";
 import axios from "axios";
 import AuthManager from "~ims-app-base/logic/managers/AuthManager";
+import ApiManager from "~ims-app-base/logic/managers/ApiManager";
+import { HttpMethods, Service } from "~ims-app-base/logic/managers/ApiWorker";
+import type { ProjectFullInfo } from "~ims-app-base/logic/types/ProjectTypes";
+import type { ProjectFileDbInitParams } from "~~/electron/project-file-db/ProjectFileDb";
 
 export const availableFilenameRegexp = new RegExp("[^- А-Яа-яa-zA-Z,@.;'`!)(]+", 'g');
 function prepareFileBasenameByEntityTitle(title: string){
@@ -39,7 +43,7 @@ export default class DesktopProjectManager extends ProjectManager{
         };
         init_script?: string;
         isPublicTasks?: boolean;
-    }){
+    }): Promise<ProjectFullInfo> {
         const timezone_shift = -new Date().getTimezoneOffset();
         const isPublicAbout = !!(menu_settings && menu_settings['menu-about']);
         const userInfo = this.appManager.get(AuthManager).getUserInfo();
@@ -54,13 +58,15 @@ export default class DesktopProjectManager extends ProjectManager{
             isPublicAbout: isPublicAbout,
             isPublicPulse: isPublicAbout,
         };
-        const response = await axios.post(`${process.env.CREATORS_API_HOST}app/projects`, {
-            params
+        const response = await this.appManager
+        .get(ApiManager)
+        .call<ProjectFullInfo>(Service.CREATORS, HttpMethods.POST, 'app/projects', {
+            ...params
         });
-        return response.data.id;
+        return response;
     }
 
-    async initializeLocalProject(localPath: string, initParams?: { title: string, id: string | null}): Promise<LocalProjectInitInfo> {
+    async initializeLocalProject(localPath: string, initParams?: ProjectFileDbInitParams): Promise<LocalProjectInitInfo> {
         const res = await window.imshost.project.initProject(localPath, initParams);
         this._projectLocalPath = localPath;
         return res;

@@ -108,6 +108,7 @@ import DesktopProjectManager from '#logic/managers/DesktopProjectManager';
 import DesktopCreatorManager from '#logic/managers/DesktopCreatorManager';
 import AuthManager from '~ims-app-base/logic/managers/AuthManager';
 import LoginForm from './LoginForm.vue';
+import type { Workspace } from '~ims-app-base/logic/types/Workspaces';
 
 const forbiddenFilenameCharsRegexp = new RegExp("[^- А-Яа-яa-zA-Z0-9,@.;'`!)(]+", 'g');
 
@@ -172,7 +173,7 @@ export default defineComponent({
       return this.params.projectType === 'cloud' && !this.userInfo;
     },
     needLicense(){
-      return this.params.projectType === 'cloud' && this.userInfo;
+      return this.params.projectType === 'cloud' && !this.userInfo.licenses.find((l: { productName: string | string[]; }) => l.productName.includes('pro'));
     },
     userInfo(){
       return this.$getAppManager().get(AuthManager).getUserInfo();
@@ -223,21 +224,26 @@ export default defineComponent({
           }
           
           const new_project_info =this.params.projectType === 'cloud' ? await this.$getAppManager()
-          .get(DesktopProjectManager)
-          .createProject({
-            title: this.params.projectName,
-            templateIds: [this.currentProjectTemplateId],
-            menu_settings: {
-              'menu-about': false,
-              'menu-gamedesign': true,
-              'menu-team': true,
-            },
-            init_script: 'starter',
-          }) : null;
+            .get(DesktopProjectManager)
+            .createProject({
+              title: this.params.projectName,
+              templateIds: [this.currentProjectTemplateId],
+              menu_settings: {
+                'menu-about': false,
+                'menu-gamedesign': true,
+                'menu-team': true,
+              },
+              init_script: 'starter',
+            }) : null;
+          let rootWorkspaceId = null
+          if (new_project_info){
+            rootWorkspaceId = new_project_info.rootWorkspaces.find((w: Workspace) => w.name === 'gdd')?.id;
+          }
 
           await this.$getAppManager().get(DesktopProjectManager).initializeLocalProject(this.projectPath, {
             id: new_project_info?.id ?? null,
             title: this.params.projectName,
+            rootWorkspaceId
           });
           if(this.currentProjectTemplateId){
             await this.$getAppManager().get(DesktopProjectManager).importTemplateProject(this.currentProjectTemplateId);
