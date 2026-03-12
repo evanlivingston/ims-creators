@@ -10,7 +10,7 @@ import EditorManager from '~ims-app-base/logic/managers/EditorManager';
 import { getProjectLinkHref } from '~ims-app-base/logic/router/routes-helpers';
 import ProjectManager from '~ims-app-base/logic/managers/ProjectManager';
 
-function parseWikiLink(text: string): { title: string; id: string } | null {
+function parseIMSWikiLink(text: string): { title: string; id: string } | null {
   const match = text.match(/^\[(.+?)\]\(#asset:([0-9a-f-]+)\)$/i);
   if (match) {
     return { title: match[1].trim(), id: match[2] };
@@ -83,6 +83,22 @@ function isCursorInRange(
   });
 }
 
+function getCachedAssetFromString(
+  asset_string: string,
+  appManager: IAppManager,
+) {
+  const parsed_asset_data = parseIMSWikiLink(asset_string);
+  if (parsed_asset_data) {
+    return appManager
+      .get(CreatorAssetManager)
+      .getAssetShortViaCacheSync(parsed_asset_data.id);
+  } else {
+    return appManager
+      .get(CreatorAssetManager)
+      .getAssetShortByTitleViaCacheSync(asset_string);
+  }
+}
+
 // Define a state effect to trigger a refresh of decorations
 export const refreshDecorations = StateEffect.define<null>();
 
@@ -99,12 +115,11 @@ export const replacements = (config: PluginConfig): Extension => {
         if (isCursorInRange(state, from + 2, to - 2)) return;
 
         const asset_string = state.sliceDoc(from + 2, to - 2);
-        const parsed_asset_data = parseWikiLink(asset_string);
-        if (!parsed_asset_data) return;
 
-        const cached_asset = config.appManager
-          .get(CreatorAssetManager)
-          .getAssetShortViaCacheSync(parsed_asset_data.id);
+        const cached_asset = getCachedAssetFromString(
+          asset_string,
+          config.appManager,
+        );
 
         if (cached_asset) {
           const decoration = Decoration.replace({
@@ -117,8 +132,6 @@ export const replacements = (config: PluginConfig): Extension => {
             ),
           });
           widgets.push(decoration.range(from + 2, to - 2));
-        } else {
-          return;
         }
       },
     });
@@ -145,17 +158,19 @@ export const replacements = (config: PluginConfig): Extension => {
     },
   });
 
+  type MissedAssetQuery =
+    | { kind: 'byId'; id: string }
+    | { kind: 'byTitle'; title: string };
+
   // ViewPlugin to handle async fetching
   const asyncFetcher = ViewPlugin.fromClass(
     class {
-      private pending: Set<string> = new Set();
+      private pending: Set<MissedAssetQuery> = new Set();
 
       constructor(private _view: EditorView) {}
 
       update(update: ViewUpdate) {
-        if (!update.docChanged) return;
-
-        const missingIds = new Set<string>();
+        const missingAssets = new Set<MissedAssetQuery>();
         const state = update.state;
 
         syntaxTree(state).iterate({
@@ -164,33 +179,52 @@ export const replacements = (config: PluginConfig): Extension => {
             if (from + 2 === to - 2) return;
 
             const asset_string = state.sliceDoc(from + 2, to - 2);
-            const parsed_asset_data = parseWikiLink(asset_string);
-            if (!parsed_asset_data) return;
 
-            const cached_asset = config.appManager
-              .get(CreatorAssetManager)
-              .getAssetShortViaCacheSync(parsed_asset_data.id);
+            const cached_asset = getCachedAssetFromString(
+              asset_string,
+              config.appManager,
+            );
 
             if (cached_asset === undefined) {
-              missingIds.add(parsed_asset_data.id);
+              const parsed_asset_data = parseIMSWikiLink(asset_string);
+              if (parsed_asset_data) {
+                missingAssets.add({ kind: 'byId', id: parsed_asset_data.id });
+              } else {
+                missingAssets.add({ kind: 'byTitle', title: asset_string });
+              }
             }
           },
         });
 
-        for (const id of missingIds) {
-          if (this.pending.has(id)) continue;
-          this.pending.add(id);
+        for (const asset_query of missingAssets) {
+          if (this.pending.has(asset_query)) continue;
+          this.pending.add(asset_query);
 
-          config.appManager
-            .get(CreatorAssetManager)
-            .getAssetShortViaCache(id)
-            .then(() => {
-              this.pending.delete(id);
-              this._view.dispatch({ effects: refreshDecorations.of(null) });
-            })
-            .catch(() => {
-              this.pending.delete(id);
-            });
+          if (asset_query.kind === 'byId') {
+            config.appManager
+              .get(CreatorAssetManager)
+              .getAssetShortViaCache(asset_query.id)
+              .then(() => {
+                this.pending.delete(asset_query);
+                this._view.dispatch({ effects: refreshDecorations.of(null) });
+              })
+              .finally(() => {
+                this.pending.delete(asset_query);
+              });
+          } else {
+            config.appManager
+              .get(CreatorAssetManager)
+              .getAssetShortsList({ where: { query: asset_query.title } })
+              .then((res) => {
+                this.pending.delete(asset_query);
+                if (res.list.length) {
+                  this._view.dispatch({ effects: refreshDecorations.of(null) });
+                }
+              })
+              .finally(() => {
+                this.pending.delete(asset_query);
+              });
+          }
         }
       }
     },

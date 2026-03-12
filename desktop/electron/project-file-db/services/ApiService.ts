@@ -1,6 +1,7 @@
 import axios, { type AxiosRequestConfig } from "axios";
 import { ApiWorker, type IApiTokenStorage, Service, type HttpRequestParams, HttpMethods, type AuthTokenInfo } from "~ims-app-base/logic/managers/ApiWorker";
 import type { ProjectFileDb } from "../ProjectFileDb";
+import { assert } from '~ims-app-base/logic/utils/typeUtils';
 
 export class ApiService {
   protected _apiWorker: ApiWorker | null = null;

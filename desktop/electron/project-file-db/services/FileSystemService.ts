@@ -253,10 +253,6 @@ export class FileSystemService{
 
         // User
         const user_files = await this.loadWorkspace(this.db.localPath, this.db.RootGddFolder.id, this.db.localPath);
-        if (this.db.info.id){
-            this.db.RootGddFolder.projectId = this.db.info.id;
-        }
-        this.db.RootGddFolder.localName ='';
         this.db.asset.assets.addMany(user_files.assets.map(asset => {
             const changed_asset: ProjectFileDbAsset = { 
                 ...asset,

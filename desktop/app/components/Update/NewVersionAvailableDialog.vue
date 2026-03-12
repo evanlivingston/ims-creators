@@ -119,7 +119,7 @@ export default defineComponent({
   text-align: center;
 }
 .NewVersionAvailableDialog{
-  width: 500px;
+  min-width: 500px;
 }
 .NewVersionAvailableDialog-image{
   width: calc(100% + 30px);

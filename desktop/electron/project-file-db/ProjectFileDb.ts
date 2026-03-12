@@ -13,6 +13,9 @@ import { ApiService } from "./services/ApiService";
 import { getMainTokenStorage } from "../main-token-storage";
 import { PROJECT_META_FOLDER, PROJECT_META_INDEX } from "./project-db-constants";
 import { AssetRights } from "~ims-app-base/logic/types/Rights";
+import type { DataSource } from "typeorm";
+import { getProjectDataSource } from "./project-data-source";
+import { SyncService } from "./services/SyncService/SyncService";
 
 export type ProjectFileDbAssetBlock = {
     id: string;
@@ -62,19 +65,29 @@ const RootGddFolder: ProjectFileDbWorkspace = {
 export type ProjectFileDbInfo = {
     id: string;
     title: string;   
-    inited: boolean
+    inited: boolean;
+    rootWorkspaceId: string | null
+}
+
+
+export type ProjectFileDbInitParams = { 
+    title: string, 
+    id: string | null, 
+    rootWorkspaceId: string | null
 }
 
 export class ProjectFileDb  {
     private _info: ProjectFileDbInfo | null = null;
     private _initing: Promise<void> | null = null;
+    private _dataSource: DataSource | null = null;
     private _destroying: Promise<void> | null = null;
 
     public fileSystem = new FileSystemService(this)
     public asset = new AssetService(this)
     public workspace = new WorkspaceService(this);
     public project = new ProjectService(this);
-    public api = new ApiService(this)
+    public api = new ApiService(this);
+    public sync = new SyncService(this);
 
     public RootGddFolder =  {...RootGddFolder}
 
@@ -86,7 +99,7 @@ export class ProjectFileDb  {
         return !!this._destroying;
     }
 
-    private async _initImpl(initParams?: { title: string, id: string | null}){
+    private async _initImpl(initParams?: ProjectFileDbInitParams){
         await fs.promises.mkdir(path.join(this.localPath, PROJECT_META_FOLDER), {
           recursive: true
         });
@@ -97,7 +110,8 @@ export class ProjectFileDb  {
           this._info = {
               id: projectInfo.id ?? '',
               title:projectInfo.title,
-              inited: projectInfo.inited
+              inited: projectInfo.inited,
+              rootWorkspaceId: projectInfo.rootWorkspaceId
           }
         } catch (err: any) {
           if (!/^ENOENT:/.test(err.message)){
@@ -108,20 +122,34 @@ export class ProjectFileDb  {
           this._info = {
             id: initParams?.id ?? '',
             title,
-            inited: true
+            inited: true,
+            rootWorkspaceId: initParams?.rootWorkspaceId ?? null
           }
           await fs.promises.writeFile(path.join(this.localPath, PROJECT_META_INDEX), JSON.stringify(this._info), 'utf-8')
         }
 
+        
         this.api.init(getMainTokenStorage())
         if (this._info.id){
             this.api.setCurrentProjectId(this._info.id);
+            this.RootGddFolder.projectId = this._info.id;
         }
-
+        this.RootGddFolder.localName ='';
+        if (this._info.rootWorkspaceId){
+            this.RootGddFolder.id = this._info.rootWorkspaceId
+        }
         await this.fileSystem.init()
+
+        this._dataSource = getProjectDataSource(this.localPath);
+        await this._dataSource.initialize();
+
+        await this._dataSource.runMigrations({
+            transaction: 'all',
+        });
+        this.sync.init();
     }
 
-    init(initParams?: { title: string, id: string | null}){
+    init(initParams?: ProjectFileDbInitParams){
         if (this.isDestroying){
             throw new Error('Cannot init destroying ProjectFileDb');
         }
@@ -140,6 +168,7 @@ export class ProjectFileDb  {
             return;
         }
         await this.fileSystem.destroy();
+        this.sync.destroy();
         this._info = null;
     }
 
@@ -157,7 +186,11 @@ export class ProjectFileDb  {
         assert(this._info, 'ProjectFileDb is not inited');
         return this._info;
     }
-
+  
+    get dataSource(): DataSource {
+        assert(this._dataSource, 'ProjectDb is not inited');
+        return this._dataSource;
+    }
 
     export(workpsaceId: string, targetPath: string){
         

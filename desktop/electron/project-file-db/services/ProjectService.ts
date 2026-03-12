@@ -1,11 +1,14 @@
 import axios from "axios";
-import type { ProjectFullInfo } from '~ims-app-base/logic/types/ProjectTypes'
+import type { ProjectFullInfo, ProjectSettingsValue } from '~ims-app-base/logic/types/ProjectTypes'
 import type { ProjectFileDb } from "../ProjectFileDb"
 import fs from "node:fs";
 import type { Readable } from "node:stream";
 import tmp from "tmp";
 import JSZip from "jszip";
 import * as node_path from 'path';
+import path from 'node:path';
+import log from 'electron-log/main';
+import { PROJECT_META_SETTINGS } from '../project-db-constants';
 
 function saveStreamToTempFile(stream: Readable,){
     return new Promise<{
@@ -80,6 +83,31 @@ export class ProjectService {
         
     }
 
+    async loadProjectSettings(): Promise<ProjectSettingsValue> {
+      try {
+        const projectSettingsText = await fs.promises.readFile(path.join(this.db.localPath, PROJECT_META_SETTINGS), 'utf-8');
+        const projectSettings = JSON.parse(projectSettingsText);
+        return projectSettings;
+      }
+      catch (err: any) {
+        if (!/^ENOENT:/.test(err.message)){
+          log.error(err);
+        }
+        return {
+          'export-format': {}
+        }
+      }
+
+    }
+
+    async saveProjectSettings(projectSettings: ProjectSettingsValue) {
+      try {
+        await fs.promises.writeFile(path.join(this.db.localPath, PROJECT_META_SETTINGS), JSON.stringify(projectSettings), 'utf-8');
+      } catch (err: any) {
+        log.error(err);
+      }
+    }
+
     async loadProjectInfo(): Promise<ProjectFullInfo>{
         
         const rootWorkspaces = await this.db.workspace.workspacesGet({
@@ -88,6 +116,8 @@ export class ProjectService {
                 isSystem: false
             }
         })
+
+        const projectSettings = await this.loadProjectSettings();
 
         return {
             id: this.db.info.id ?? '',
@@ -107,13 +137,7 @@ export class ProjectService {
                 id: '',
                 rights: 5,
                 values: {
-                    "menu-settings": {
-                        "menu-about": false,
-                        "menu-gamedesign": true,
-                        "menu-team": true
-                    },
-                    "sync-settings": {},
-                    "export-formats": {},
+                    ...projectSettings
                 }
             },
             shortLink: null,

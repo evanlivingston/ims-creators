@@ -77,7 +77,7 @@ export default defineComponent({
     },
     cancelUpdate() {
       this.dialog.close();
-      this.$getAppManager().get(UiManager).showError(this.$t('desktop.about.runUpdate') + this.path);
+      this.$getAppManager().get(UiManager).showSuccess(this.$t('desktop.about.runUpdate') + this.path);
     }
   }
 });
