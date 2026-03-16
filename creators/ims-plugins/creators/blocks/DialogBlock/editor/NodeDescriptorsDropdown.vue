@@ -1,5 +1,5 @@
 <template>
-  <div class="NodeDescriptorsDropdown">
+  <div class="NodeDescriptorsDropdown is-dropdown">
     <div
       v-for="option of nodeDescriptors"
       :key="option.name"
@@ -40,7 +40,9 @@ export default defineComponent({
   background-color: var(--imsde-dropdown-bg-color);
   border-radius: var(--imsde-dropdown-border-radius);
   box-shadow: var(--imsde-dropdown-box-shadow);
-  overflow: hidden;
+  max-height: var(--DropdownContainer-freeHeight);
+  width: max-content;
+  max-width: var(--DropdownContainer-freeWidth);
 }
 .NodeDescriptorsDropdown-item {
   padding: 5px 10px;

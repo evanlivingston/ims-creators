@@ -86,7 +86,6 @@ export default defineComponent({
   background-color: var(--imsde-dropdown-bg-color);
   border-radius: var(--imsde-dropdown-border-radius);
   box-shadow: var(--imsde-dropdown-box-shadow);
-  overflow: hidden;
 }
 .CreateNodeDropdown-item {
   padding: 5px 10px;
