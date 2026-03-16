@@ -66,6 +66,7 @@
             :readonly="readonly"
             :playing-node-data="dialogPlayer.getLastPlayNode(params.id)"
             :dialog-player="dialogPlayer"
+            @change-type="changeNodeType(params.id, $event)"
           ></component>
         </template>
         <template #edge-flow="params">
@@ -259,6 +260,9 @@ export default defineComponent({
     this.resetFocusedListeners(false);
   },
   methods: {
+    changeNodeType(node_id: string, new_type: string) {
+      this.blockControllerMut.changeNodeType(node_id, new_type);
+    },
     getFlowEdgePlayStateClass(source_id: string, target_id: string) {
       const state = this.dialogPlayer.getFlowEdgePlayState(
         source_id,
