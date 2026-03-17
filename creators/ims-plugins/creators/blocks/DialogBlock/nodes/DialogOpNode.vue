@@ -10,15 +10,13 @@
     </div>
     <div class="DialogOpNode-body DialogEditorNode-body">
       <div class="DialogOpNode-content">
-        <div
+        <op-node-type-selector
           v-if="sign && operator === 'opNot'"
+          :operator="operator"
+          :readonly="readonly"
           class="DialogOpNode-sign"
-          :title="
-            $t(`imsDialogEditor.nodes.${nodeDescriptor.name}.description`)
-          "
-        >
-          {{ sign }}
-        </div>
+          @choose="changeType($event)"
+        ></op-node-type-selector>
         <DataField
           v-model="arg1Val"
           :in-id="arg1PinId"
@@ -29,15 +27,13 @@
           :readonly="readonly"
         ></DataField>
         <template v-if="operator !== 'opNot'">
-          <div
+          <op-node-type-selector
             v-if="sign"
+            :operator="operator"
+            :readonly="readonly"
             class="DialogOpNode-sign"
-            :title="
-              $t(`imsDialogEditor.nodes.${nodeDescriptor.name}.description`)
-            "
-          >
-            {{ sign }}
-          </div>
+            @choose="changeType($event)"
+          ></op-node-type-selector>
           <DataField
             v-model="arg2Val"
             :in-id="arg2PinId"
@@ -71,11 +67,14 @@ import {
 import { generateDataPinId } from '../editor/DialogEditor';
 import type { ScriptBlockPlainPropValue } from '../logic/nodeStoring';
 import type { ScriptPlayNode } from '../play/ScriptPlayNode';
+import { opOptions } from './getNodeDescriptiors';
+import OpNodeTypeSelector from '../parts/OpNodeTypeSelector.vue';
 
 export default defineComponent({
   name: 'DialogOpNode',
   components: {
     DataField,
+    OpNodeTypeSelector,
   },
   props: {
     readonly: {
@@ -103,6 +102,7 @@ export default defineComponent({
       default: null,
     },
   },
+  emits: ['change-type'],
   data() {
     return {};
   },
@@ -111,38 +111,7 @@ export default defineComponent({
       return Position;
     },
     sign() {
-      switch (this.operator) {
-        case 'opEqual':
-          return '=';
-        case 'opNotEqual':
-          return '≠';
-        case 'opLess':
-          return '<';
-        case 'opLessEqual':
-          return '≤';
-        case 'opMore':
-          return '>';
-        case 'opMoreEqual':
-          return '≥';
-        case 'opPlus':
-          return '+';
-        case 'opMinus':
-          return '-';
-        case 'opMult':
-          return '×';
-        case 'opDiv':
-          return '÷';
-        case 'opMod':
-          return 'MOD';
-        case 'opAnd':
-          return 'AND';
-        case 'opOr':
-          return 'OR';
-        case 'opNot':
-          return 'NOT';
-        default:
-          return null;
-      }
+      return opOptions[this.operator] ? opOptions[this.operator].sign : null;
     },
     inputDataType() {
       return this.nodeDataController.getPinDataType(this.arg1PinId) ?? [];
@@ -188,6 +157,9 @@ export default defineComponent({
     this.updatePins();
   },
   methods: {
+    changeType(opName: string) {
+      this.$emit('change-type', opName);
+    },
     updatePins() {
       this.nodeDataController.setPinDataType(
         this.arg2PinId,
@@ -234,17 +206,6 @@ export default defineComponent({
 });
 </script>
 
-<style>
-.DialogOpNode-sign {
-  color: var(--imsde-node-color);
-}
-[data-theme='ims-light'] {
-  .DialogOpNode-sign {
-    color: var(--imsde-node-content-text-color);
-  }
-}
-</style>
-
 <style lang="scss" scoped>
 .DialogOpNode-body {
   padding: 7px 0;
@@ -253,12 +214,6 @@ export default defineComponent({
 .DialogOpNode-addOption {
   font-weight: bold;
   font-size: 12px;
-}
-.DialogOpNode-sign {
-  text-align: center;
-  font-size: 30px;
-  line-height: 30px;
-  margin: 5px 0;
 }
 .DialogOpNode-body-dataOut {
   position: absolute;

@@ -66,6 +66,7 @@
             :readonly="readonly"
             :playing-node-data="dialogPlayer.getLastPlayNode(params.id)"
             :dialog-player="dialogPlayer"
+            @change-type="changeNodeType(params.id, $event)"
           ></component>
         </template>
         <template #edge-flow="params">
@@ -84,18 +85,24 @@
         {{ $t('imsDialogEditor.addStartLevelHint') }}
       </div>
     </div>
-    <CreateNodeDropdown
+    <div
       v-if="createNodeContext && createNodeContext.clickedAt"
       class="DialogEditor-createNode"
       :style="{
         left: `${createNodeContext.clickedAt.x}px`,
         top: `${createNodeContext.clickedAt.y}px`,
       }"
-      :allowed-types="createNodeContext.allowedTypes"
-      :need-data-in="createNodeContext.needDataIn"
-      :need-data-out="createNodeContext.needDataOut"
-      @choose="createNode($event)"
-    ></CreateNodeDropdown>
+    >
+      <dropdown-element :shown="!!createNodeContext">
+        <CreateNodeDropdown
+          :allowed-types="createNodeContext.allowedTypes"
+          :need-data-in="createNodeContext.needDataIn"
+          :need-data-out="createNodeContext.needDataOut"
+          @choose="createNode($event)"
+        ></CreateNodeDropdown>
+      </dropdown-element>
+    </div>
+
     <!--<button @click="editVariables">Edit variables</button>-->
   </div>
 </template>
@@ -148,6 +155,7 @@ import {
   type SetClickOutsideCancel,
 } from '~ims-app-base/components/utils/ui';
 import { getNextIndexWithTimestamp } from '~ims-app-base/components/Asset/Editor/blockUtils';
+import DropdownElement from '~ims-app-base/components/Common/DropdownElement.vue';
 
 type CreateNodeContext = {
   clickedAt: { x: number; y: number } | null;
@@ -177,6 +185,7 @@ export default defineComponent({
     CreateNodeDropdown,
     BezierEdge,
     DialogPlayToolbar,
+    DropdownElement,
   },
   inject: ['projectContext'],
   props: {
@@ -259,6 +268,9 @@ export default defineComponent({
     this.resetFocusedListeners(false);
   },
   methods: {
+    changeNodeType(node_id: string, new_type: string) {
+      this.blockControllerMut.changeNodeType(node_id, new_type);
+    },
     getFlowEdgePlayStateClass(source_id: string, target_id: string) {
       const state = this.dialogPlayer.getFlowEdgePlayState(
         source_id,

@@ -85,6 +85,7 @@ export default {
       searchSettings: 'Поиск настроек',
       groups: {
         common: 'Общие',
+        plugins: 'Плагины',
         other: 'Другое',
       },
       fields: {
@@ -97,6 +98,17 @@ export default {
         autoUpdate: 'Проверять обновления при запуске приложения',
       },
       close: 'Закрыть',
+      plugins: {
+        searchPlugin: 'Введите название плагина',
+        uninstallButton: 'Удалить',
+        version: 'Версия',
+        installFromDisk: 'Установить с диска',
+        delete: {
+          uninstallHeader: 'Удалить плагин',
+          deletedMessage: 'Плагин "{title}" удален',
+          confirm: 'Вы уверены, что хотите удалить плагин "{title}"',
+        },
+      },
       logout: 'Выйти',
     },    
     about: {

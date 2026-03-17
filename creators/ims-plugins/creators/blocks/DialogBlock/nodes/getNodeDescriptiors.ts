@@ -25,24 +25,72 @@ import {
   playNodeExecuteSetVar,
 } from '../play/playNodeExecuteFunctions';
 
-export type NodeDescriptorOpEq = 'opEqual' | 'opNotEqual';
-export type NodeDescriptorOpCompare =
-  | 'opLess'
-  | 'opLessEqual'
-  | 'opMore'
-  | 'opMoreEqual';
-export type NodeDescriptorOpMath =
-  | 'opPlus'
-  | 'opMinus'
-  | 'opMult'
-  | 'opDiv'
-  | 'opMod';
-export type NodeDescriptorOpLogical = 'opAnd' | 'opOr' | 'opNot';
-export type NodeDescriptorOp =
-  | NodeDescriptorOpEq
-  | NodeDescriptorOpCompare
-  | NodeDescriptorOpMath
-  | NodeDescriptorOpLogical;
+const opOptionsEq = {
+  opEqual: {
+    sign: '=',
+  },
+  opNotEqual: {
+    sign: '≠',
+  },
+} as const;
+const opOptionsCompare = {
+  opLess: {
+    sign: '<',
+  },
+  opLessEqual: {
+    sign: '≤',
+  },
+  opMore: {
+    sign: '>',
+  },
+  opMoreEqual: {
+    sign: '≥',
+  },
+} as const;
+const opOptionsMath = {
+  opPlus: {
+    sign: '+',
+  },
+  opMinus: {
+    sign: '-',
+  },
+  opMult: {
+    sign: '×',
+  },
+  opDiv: {
+    sign: '÷',
+  },
+  opMod: {
+    sign: 'MOD',
+  },
+} as const;
+const opOptionsLogical = {
+  opAnd: {
+    sign: 'AND',
+    type: 'logical',
+  },
+  opOr: {
+    sign: 'OR',
+    type: 'logical',
+  },
+  opNot: {
+    sign: 'NOT',
+    type: 'logical',
+  },
+} as const;
+
+export const opOptions = {
+  ...opOptionsEq,
+  ...opOptionsCompare,
+  ...opOptionsMath,
+  ...opOptionsLogical,
+} as const;
+
+export type NodeDescriptorOpEq = keyof typeof opOptionsEq;
+export type NodeDescriptorOpCompare = keyof typeof opOptionsCompare;
+export type NodeDescriptorOpMath = keyof typeof opOptionsMath;
+export type NodeDescriptorOpLogical = keyof typeof opOptionsLogical;
+export type NodeDescriptorOp = keyof typeof opOptions;
 
 export function getNodeDescriptors(): NodeDescriptor[] {
   return [
@@ -144,7 +192,7 @@ export function getNodeDescriptors(): NodeDescriptor[] {
       color: '#cccccc',
       type: NodeType.EXEC_END,
     },
-    ...(['opEqual', 'opNotEqual'] as NodeDescriptorOpEq[]).map((op) => {
+    ...(Object.keys(opOptionsEq) as NodeDescriptorOpEq[]).map((op) => {
       return {
         name: op,
         icon: 'ri-code-line',
@@ -163,54 +211,41 @@ export function getNodeDescriptors(): NodeDescriptor[] {
         playDataCompute: playDataComputeOpFabric(op),
       };
     }),
-    ...(
-      [
-        'opLess',
-        'opLessEqual',
-        'opMore',
-        'opMoreEqual',
-      ] as NodeDescriptorOpCompare[]
-    ).map((op) => {
-      return {
-        name: op,
-        icon: 'ri-code-line',
-        node: DialogOpNode,
-        params: {
-          operator: op,
-        },
-        color: '#f7ea84',
-        type: NodeType.DATA,
-        dataInTypes: [
-          {
-            Type: AssetPropType.INTEGER,
+    ...(Object.keys(opOptionsCompare) as NodeDescriptorOpCompare[]).map(
+      (op) => {
+        return {
+          name: op,
+          icon: 'ri-code-line',
+          node: DialogOpNode,
+          params: {
+            operator: op,
           },
-          {
-            Type: AssetPropType.FLOAT,
-          },
-          {
-            Type: AssetPropType.STRING,
-          },
-          {
-            Type: AssetPropType.TEXT,
-          },
-        ],
-        dataOutTypes: [
-          {
-            Type: AssetPropType.BOOLEAN,
-          },
-        ],
-        playDataCompute: playDataComputeOpFabric(op),
-      };
-    }),
-    ...(
-      [
-        'opPlus',
-        'opMinus',
-        'opMult',
-        'opDiv',
-        'opMod',
-      ] as NodeDescriptorOpMath[]
-    ).map((op) => {
+          color: '#f7ea84',
+          type: NodeType.DATA,
+          dataInTypes: [
+            {
+              Type: AssetPropType.INTEGER,
+            },
+            {
+              Type: AssetPropType.FLOAT,
+            },
+            {
+              Type: AssetPropType.STRING,
+            },
+            {
+              Type: AssetPropType.TEXT,
+            },
+          ],
+          dataOutTypes: [
+            {
+              Type: AssetPropType.BOOLEAN,
+            },
+          ],
+          playDataCompute: playDataComputeOpFabric(op),
+        };
+      },
+    ),
+    ...(Object.keys(opOptionsMath) as NodeDescriptorOpMath[]).map((op) => {
       return {
         name: op,
         icon: 'ri-calculator-line',
@@ -239,29 +274,31 @@ export function getNodeDescriptors(): NodeDescriptor[] {
         playDataCompute: playDataComputeOpFabric(op),
       };
     }),
-    ...(['opAnd', 'opOr', 'opNot'] as NodeDescriptorOpLogical[]).map((op) => {
-      return {
-        name: op,
-        icon: 'ri-contrast-fill',
-        node: DialogOpNode,
-        params: {
-          operator: op,
-        },
-        color: '#f7ea84',
-        type: NodeType.DATA,
-        dataInTypes: [
-          {
-            Type: AssetPropType.BOOLEAN,
+    ...(Object.keys(opOptionsLogical) as NodeDescriptorOpLogical[]).map(
+      (op) => {
+        return {
+          name: op,
+          icon: 'ri-contrast-fill',
+          node: DialogOpNode,
+          params: {
+            operator: op,
           },
-        ],
-        dataOutTypes: [
-          {
-            Type: AssetPropType.BOOLEAN,
-          },
-        ],
-        playDataCompute: playDataComputeOpFabric(op),
-      };
-    }),
+          color: '#f7ea84',
+          type: NodeType.DATA,
+          dataInTypes: [
+            {
+              Type: AssetPropType.BOOLEAN,
+            },
+          ],
+          dataOutTypes: [
+            {
+              Type: AssetPropType.BOOLEAN,
+            },
+          ],
+          playDataCompute: playDataComputeOpFabric(op),
+        };
+      },
+    ),
     {
       name: 'constBoolean',
       icon: 'ri-circle-line',

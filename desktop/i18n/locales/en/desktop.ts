@@ -84,6 +84,7 @@ export default {
       searchSettings: 'Search for settings',
       groups: {
         common: 'Common',
+        plugins: 'Plugins',
         other: 'Other',
       },
       fields: {
@@ -96,6 +97,17 @@ export default {
         autoUpdate: 'Check for updates when the app starts',
       },
       close: 'Close',
+      plugins: {
+        searchPlugin: 'Search for a plugin',
+        uninstallButton: 'Uninstall',
+        version: 'Version',
+        installFromDisk: 'Install from disk',
+        delete: {
+          uninstallHeader: 'Uninstall plugin',
+          deletedMessage: '"{title}" plugin deleted',
+          confirm: 'Are you sure to want delete "{title}" plugin?',
+        },
+      },
       logout: 'Log out',
     },
     about: {
