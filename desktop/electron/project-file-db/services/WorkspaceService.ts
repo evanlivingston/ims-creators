@@ -413,13 +413,4 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
             .pipe(fs.createWriteStream(targetPath));
         await once(zip_stream, 'finish');
     }
-
-    convertServerWorkspaceToLocal (server_workspace: WorkspaceEntity): ProjectFileDbWorkspace {
-        const local_workspace: ProjectFileDbWorkspace = {
-            ...server_workspace,
-            rights: 5,
-            props: convertAssetPropsToPlainObject(server_workspace.props ?? {}),
-        }
-        return local_workspace; 
-    }
 }

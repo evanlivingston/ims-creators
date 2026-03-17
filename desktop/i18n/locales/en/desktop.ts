@@ -9,6 +9,14 @@ export default {
     signInHeader: 'Sign in',
   },
   desktop: {
+    fsSync: {
+      header: 'Errors of synchronization',
+      synchronization: 'Synchronization',
+      syncButton: 'Resynchronize',
+      notSyncedAssets: 'Not synced assets',
+      notSyncedWorkspaces: 'Not synced workspaces',
+      noErrors: 'No errors',
+    },
     welcome: {
       begin: 'Welcome to',
       version: 'Version',

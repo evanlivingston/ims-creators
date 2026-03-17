@@ -6,6 +6,7 @@ export class Initial1771499452638 implements MigrationInterface {
         await queryRunner.query(`
             CREATE TABLE assets(
                 id uuid NOT NULL,
+                title varchar,
                 need_sync datetime,
                 synced_at datetime,
                 server_state JSONB,
@@ -18,6 +19,7 @@ export class Initial1771499452638 implements MigrationInterface {
         await queryRunner.query(`
             CREATE TABLE workspaces(
                 id uuid NOT NULL,
+                title varchar,
                 need_sync datetime,
                 synced_at datetime,
                 server_state JSONB,
@@ -25,6 +27,17 @@ export class Initial1771499452638 implements MigrationInterface {
                 conflict_message varchar,
                 server_deleted bool,
                 PRIMARY KEY (id)
+            );
+        `);
+
+        
+        await queryRunner.query(`
+            CREATE TABLE files(
+                server_file_id uuid NOT NULL,
+                local_path varchar NOT NULL,
+                server_store varchar,
+                created_at datetime,
+                PRIMARY KEY (local_path)
             );
         `);
 
@@ -44,6 +57,7 @@ export class Initial1771499452638 implements MigrationInterface {
         await queryRunner.query(`DELETE TABLE assets`);
         await queryRunner.query(`DELETE TABLE workspaces`);
         await queryRunner.query(`DELETE TABLE sync_logs`);
+        await queryRunner.query(`DELETE TABLE files`);
     }
 
 }

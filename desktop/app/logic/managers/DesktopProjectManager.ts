@@ -58,12 +58,36 @@ export default class DesktopProjectManager extends ProjectManager{
             isPublicAbout: isPublicAbout,
             isPublicPulse: isPublicAbout,
         };
-        const response = await this.appManager
+        const project_info = await this.appManager
         .get(ApiManager)
         .call<ProjectFullInfo>(Service.CREATORS, HttpMethods.POST, 'app/projects', {
             ...params
         });
-        return response;
+        //change settings of menu
+        await this.appManager
+        .get(ApiManager)
+        .call(Service.CREATORS, HttpMethods.POST, 'assets/change', 
+        {
+            "where": {
+                "id": project_info.settings?.id
+            },
+            "set": {
+                "blocks": {
+                    "menu-settings": {
+                        "props": {
+                            "menu-gamedesign": true,
+                            "menu-team": true,
+                            "menu-about": false,
+                            "is-public-planning": false
+                        }
+                    }
+                }
+            }
+        },
+        {
+            pid: project_info.id,
+        });
+        return project_info;
     }
 
     async initializeLocalProject(localPath: string, initParams?: ProjectFileDbInitParams): Promise<LocalProjectInitInfo> {

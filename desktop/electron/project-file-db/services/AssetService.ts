@@ -18,13 +18,14 @@ import type { AssetQueryWhere, AssetsShortResult, AssetShort, AssetsFullResult, 
 import type { AssetBlockEntity } from "~ims-app-base/logic/types/BlocksType";
 import type { IProjectDatabaseAsset } from "~ims-app-base/logic/types/IProjectDatabase";
 import type { ApiRequestList, ApiResultListWithTotal, ApiResultListWithMore, ChangesStreamRequest, ChangesStreamResponse } from "~ims-app-base/logic/types/ProjectTypes";
-import { type AssetPropsPlainObjectValue, type AssetPropsPlainObject, type AssetPropValue, compareAssetPropValues, assignPlainValueToAssetProps, extractRemapParentProps, type AssetProps, remapAssetProps, convertAssetPropsToPlainObject, type AssetPropValueText, walkAssetPropValueTextOps, type AssetPropValueAsset, parseAssetNewBlockRef, applyPropsChange, diffAssetPropObjects, stringifyAssetNewBlockRef } from "~ims-app-base/logic/types/Props";
+import { type AssetPropsPlainObjectValue, type AssetPropsPlainObject, type AssetPropValue, compareAssetPropValues, assignPlainValueToAssetProps, extractRemapParentProps, type AssetProps, remapAssetProps, convertAssetPropsToPlainObject, type AssetPropValueText, walkAssetPropValueTextOps, type AssetPropValueAsset, parseAssetNewBlockRef, applyPropsChange, diffAssetPropObjects, stringifyAssetNewBlockRef, getAssetPropType } from "~ims-app-base/logic/types/Props";
 import type { AssetPropsSelectionField, AssetPropsSelectionOrder, AssetPropsSelection } from "~ims-app-base/logic/types/PropsSelection";
 import { AssetRights } from "~ims-app-base/logic/types/Rights";
 import { generateNextUniqueNameNumber } from "~ims-app-base/logic/utils/stringUtils";
 import { assert } from "~ims-app-base/logic/utils/typeUtils";
 import { ASSET_BASE_ORDERING } from "../project-db-constants";
 import { SQLITE_NOW_STM } from "./SyncService/SyncService";
+import { HttpMethods, Service } from "~ims-app-base/logic/managers/ApiWorker";
    
 export class AssetService implements IProjectDatabaseAsset{
 
@@ -944,20 +945,28 @@ export class AssetService implements IProjectDatabaseAsset{
 
             }
         }
-        const affectedIds = [...createdIds, ...updatedIds, ...deletedIds];
-        if(affectedIds.length > 0) {
-            await this.db.dataSource.createQueryRunner().query(`
-                INSERT INTO assets (id, need_sync)
-                VALUES ` + [...affectedIds].map(i => `(?,${SQLITE_NOW_STM})`).join(',') +
-                ` ON CONFLICT (id) DO UPDATE SET need_sync = ${SQLITE_NOW_STM};
-            `, [...affectedIds]);
-        }
 
         const updatedOrCreated = await this.assetsGetFull({
             where: {
                 id: [...createdIds, ...updatedIds],
             }
           })
+
+        if(updatedOrCreated.ids.length > 0) {
+            await this.db.dataSource.createQueryRunner().query(`
+                INSERT INTO assets (id, title, need_sync)
+                VALUES ` + updatedOrCreated.ids.map(i => `(?,?, ${SQLITE_NOW_STM})`).join(',') +
+                ` ON CONFLICT (id) DO UPDATE SET need_sync = ${SQLITE_NOW_STM};
+            `, updatedOrCreated.ids.map(id => 
+                [id, updatedOrCreated.objects.assetFulls[id].title]).flat());
+        }
+        if(deletedIds.size > 0) {
+            await this.db.dataSource.createQueryRunner().query(`
+                INSERT INTO assets (id, need_sync)
+                VALUES ` + [...deletedIds].map(i => `(?, ${SQLITE_NOW_STM})`).join(',') +
+                ` ON CONFLICT (id) DO UPDATE SET need_sync = ${SQLITE_NOW_STM};
+            `, [...deletedIds]);
+        }
         this._sessionChangeHistory.set(changeRecord.changeId, changeRecord)
 
         return {
@@ -1149,42 +1158,5 @@ export class AssetService implements IProjectDatabaseAsset{
             throw new Error('Asset not found')
         }
         await this.saveAssetFileToFile(assets.list[0], target);
-    }
-
-    convertServerAssetToLocal (server_asset: AssetFull): ProjectFileDbAsset{
-        const local_asset: ProjectFileDbAsset = {
-            id: server_asset.id,   
-            typeIds: [...server_asset.typeIds],
-            parentIds: [...server_asset.parentIds],
-            ownTitle: server_asset.ownTitle,
-            ownIcon: server_asset.ownIcon,
-            blocks: [],
-            comments: server_asset.comments,
-            references: server_asset.references,
-            projectId: server_asset.projectId,
-            workspaceId: server_asset.workspaceId,
-            name: server_asset.name,
-            title: server_asset.title,
-            icon: server_asset.icon,
-            isAbstract: server_asset.isAbstract,
-            createdAt: server_asset.createdAt,
-            updatedAt: server_asset.updatedAt,
-            deletedAt: server_asset.deletedAt,
-            rights: server_asset.rights,
-            index: server_asset.index,
-            creatorUserId: server_asset.creatorUserId,
-            unread: server_asset.unread,
-            hasImage: server_asset.hasImage,
-            localName: server_asset.localName
-        }
-        for(const block of server_asset.blocks){
-            local_asset.blocks.push({
-                ...block,
-                props: convertAssetPropsToPlainObject(block.props),
-                computed: convertAssetPropsToPlainObject(block.computed),
-                inherited: block.inherited ? convertAssetPropsToPlainObject(block.inherited) : null,
-            })
-        }
-        return local_asset; 
     }
 }
