@@ -44,10 +44,14 @@
           </SelectFolderForm>
         </div>
       </div>
+      <div v-if="project && hasWarning" class="WelcomeFormContentCreateProject-warning">
+        <i class="ri-error-warning-fill"></i>
+        {{ $t('desktop.welcome.sameProjectTitle') }}
+      </div>
       <AdvancedForm :project-folder-name="projectFolderName"
         @update:folder-name="projectFolderName = $event"></AdvancedForm>
       <div class="WelcomeFormContentSelectProject-create">
-        <button class="is-button accent" @click="downloadProject" :disabled="!canCreate">{{$t('desktop.welcome.downloadProject')}}</button>
+        <button class="is-button accent" @click="downloadProject" :disabled="!canCreate || hasWarning">{{$t('desktop.welcome.downloadProject')}}</button>
       </div>
   </div>
 </template>
@@ -56,11 +60,15 @@ import { defineComponent } from 'vue';
 import AdvancedForm from './AdvancedForm.vue';
 import ImsSelect from '~ims-app-base/components/Common/ImsSelect.vue';
 import ImsInput from '~ims-app-base/components/Common/ImsInput.vue';
-import type { ProjectShortInfo } from '~ims-app-base/logic/types/ProjectTypes';
+import type { ProjectInfoWithParams, ProjectShortInfo } from '~ims-app-base/logic/types/ProjectTypes';
 import UiManager from '~ims-app-base/logic/managers/UiManager';
 import SelectFolderForm from '../Common/SelectFolderForm.vue';
 import path from 'path';
 import DesktopCreatorManager from '#logic/managers/DesktopCreatorManager';
+import { forbiddenFilenameCharsRegexp } from '#bridge/utils/regex';
+import DesktopProjectManager from '#logic/managers/DesktopProjectManager';
+import ApiManager from '~ims-app-base/logic/managers/ApiManager';
+import { HttpMethods, Service } from '~ims-app-base/logic/managers/ApiWorker';
 
 export default defineComponent({
   name: 'WelcomeFormContentSelectProject',
@@ -76,6 +84,7 @@ export default defineComponent({
       projectLocation: '',
       project: null as ProjectShortInfo | null,
       projectFolderName: '',
+      hasWarning: false,
     }
   },
   async mounted(){
@@ -90,11 +99,32 @@ export default defineComponent({
     },
     canCreate(){
       return this.project && this.projectFolderName && this.projectLocation;
-    }
+    },
+    projectPath(){
+      return path.join(this.projectLocation, this.projectFolderName);
+    },
   },
   methods: {
+    async checkExistsProject(val: string){
+      this.hasWarning = await window.imshost.fs.exists(val);
+    },
     async downloadProject() {
-      if(this.canCreate){
+      if(this.canCreate && this.project){
+        let rootWorkspaceId = null
+        if (this.project.id){
+          const projectInfo: ProjectInfoWithParams = await this.$getAppManager()
+            .get(ApiManager)
+            .call(Service.CREATORS, HttpMethods.GET, 'project/info', {
+              pid: this.project.id,
+            });
+          rootWorkspaceId = projectInfo.rootWorkspaces.find((w) => w.name === 'gdd')?.id;
+        }
+
+        await this.$getAppManager().get(DesktopProjectManager).initializeLocalProject(this.projectPath, {
+          id: this.project.id ?? null,
+          title: this.project.title,
+          rootWorkspaceId
+        });
         await this.$getAppManager().get(DesktopCreatorManager).openProjectWindow(path.join(this.projectLocation, this.projectFolderName), false);
       }
       else {
@@ -108,10 +138,16 @@ export default defineComponent({
     }
   },
   watch: {
+    async projectPath(new_val: string){
+      await this.checkExistsProject(new_val);
+    },
     project(){
       if(this.project){
         this.projectFolderName = this.project.title;
       }      
+    },
+    projectName(new_val: string){
+      this.projectFolderName = new_val.trim().replace(forbiddenFilenameCharsRegexp, '_');
     }
   }
 });

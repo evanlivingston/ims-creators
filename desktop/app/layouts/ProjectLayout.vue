@@ -33,6 +33,7 @@
         <div class="DesktopApp-page-header-menuSpace">
           <new-version-box class="DesktopApp-page-header-menuSpace-item"></new-version-box>
         </div>
+        <app-sync-menu></app-sync-menu>
         <app-user-info></app-user-info>
       </div>
       <div class="DesktopApp-page-content">
@@ -61,6 +62,7 @@ import { ScreenSize } from '~ims-app-base/logic/managers/UiManager';
 import AuthManager from '~ims-app-base/logic/managers/AuthManager';
 import NewVersionBox from '#components/Update/NewVersionBox.vue';
 import AppUserInfo from '#components/App/AppUserInfo.vue';
+import AppSyncMenu from '#components/Sync/AppSyncMenu.vue';
 
 export default defineComponent({
   name: 'ProjectLayout',
@@ -70,6 +72,7 @@ export default defineComponent({
     TabList,
     NewVersionBox,
     AppUserInfo,
+    AppSyncMenu,
   },
   provide() {
     return {

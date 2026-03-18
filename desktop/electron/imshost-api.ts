@@ -8,6 +8,8 @@ import { ImsHostProject } from '#bridge/api/ImsHostProject';
 import { ImsHostApp } from '#bridge/api/ImsHostApp';
 import log from 'electron-log/main';
 import { ImsHostAutoUpdate } from '#bridge/api/ImsHostAutoUpdate';
+import { ImsHostSync } from '#bridge/api/ImsHostSync';
+import ImsHostPlugin from '../bridge/api/ImsHostPlugin';
 
 const registeredWindows = new Map<BrowserWindow, IImsHostApi>();
 
@@ -176,8 +178,10 @@ export function registerImsHostWindow(win: BrowserWindow): IImsHostApi {
     window: new ImsHostWindow(win),
     storage: new ImsHostStorage(win),
     project: new ImsHostProject(win),
+    sync: new ImsHostSync(win),
     autoUpdate: new ImsHostAutoUpdate(win),
-    app: new ImsHostApp(win)
+    app: new ImsHostApp(win),
+    plugin: new ImsHostPlugin(win),
   }
   registeredWindows.set(win, api);
   return api;

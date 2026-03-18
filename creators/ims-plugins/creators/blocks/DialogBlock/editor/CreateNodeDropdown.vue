@@ -1,19 +1,10 @@
 <template>
-  <div class="CreateNodeDropdown">
-    <div
-      v-for="option of nodeDesсriptors"
-      :key="option.name"
-      class="CreateNodeDropdown-item"
-      :style="{
-        '--imsde-node-color': option.color,
-      }"
-      :title="$t(`imsDialogEditor.nodes.${option.name}.description`)"
-      @click="choseOption(option)"
-    >
-      <i class="CreateNodeDropdown-item-icon" :class="option.icon"></i>
-      {{ $t(`imsDialogEditor.nodes.${option.name}.title`) }}
-    </div>
-  </div>
+  <node-descriptors-dropdown
+    class="CreateNodeDropdown"
+    :node-descriptors="nodeDesсriptors"
+    @choose="chooseOption($event)"
+  >
+  </node-descriptors-dropdown>
 </template>
 
 <script lang="ts">
@@ -22,10 +13,13 @@ import { defineComponent } from 'vue';
 import { getNodeDescriptors } from '../nodes/getNodeDescriptiors';
 import type { NodeDescriptor, NodeType } from '../nodes/NodeDescriptor';
 import type { AssetPropValueType } from '~ims-app-base/logic/types/Props';
+import NodeDescriptorsDropdown from './NodeDescriptorsDropdown.vue';
 
 export default defineComponent({
   name: 'CreateNodeDropdown',
-  components: {},
+  components: {
+    NodeDescriptorsDropdown,
+  },
   props: {
     allowedTypes: {
       type: Array<NodeType>,
@@ -45,9 +39,6 @@ export default defineComponent({
     },
   },
   emits: ['choose'],
-  data() {
-    return {};
-  },
   computed: {
     nodeDesсriptors() {
       const need_data_in_set = this.needDataIn
@@ -83,7 +74,7 @@ export default defineComponent({
     },
   },
   methods: {
-    choseOption(opt: NodeDescriptor) {
+    chooseOption(opt: NodeDescriptor) {
       this.$emit('choose', opt);
     },
   },
@@ -95,7 +86,6 @@ export default defineComponent({
   background-color: var(--imsde-dropdown-bg-color);
   border-radius: var(--imsde-dropdown-border-radius);
   box-shadow: var(--imsde-dropdown-box-shadow);
-  overflow: hidden;
 }
 .CreateNodeDropdown-item {
   padding: 5px 10px;

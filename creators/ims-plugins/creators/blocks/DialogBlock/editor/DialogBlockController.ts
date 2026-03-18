@@ -703,6 +703,13 @@ export class DialogBlockController
     this.savePropsDelayed();
   }
 
+  changeNodeType(nodeId: string, new_type: string) {
+    const node = this.state.nodes.find((n) => n.id === nodeId);
+    if (!node) return;
+    node.type = new_type;
+    this.savePropsDelayed();
+  }
+
   saveProps() {
     const changer = this.changer;
     if (!changer) {

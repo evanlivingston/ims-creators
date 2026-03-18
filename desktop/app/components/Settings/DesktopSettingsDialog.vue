@@ -47,6 +47,7 @@ import DialogContent from '~ims-app-base/components/Dialog/DialogContent.vue';
 import DesktopSettingsDialog_common from './DesktopSettingsDialog_common.vue';
 import DesktopSettingsDialog_other from './DesktopSettingsDialog_other.vue';
 import FormSearch from '~ims-app-base/components/Form/FormSearch.vue';
+import DesktopSettingsDialog_plugins from './DesktopSettingsDialog_plugins.vue';
 
 type DialogProps = {
     tabOptions: any,
@@ -100,6 +101,10 @@ export default defineComponent({
         {
             name: 'common',
             component: DesktopSettingsDialog_common
+        },
+        {
+            name: 'plugins',
+            component: DesktopSettingsDialog_plugins
         },
         {
             name: 'other',

@@ -109,8 +109,7 @@ import DesktopCreatorManager from '#logic/managers/DesktopCreatorManager';
 import AuthManager from '~ims-app-base/logic/managers/AuthManager';
 import LoginForm from './LoginForm.vue';
 import type { Workspace } from '~ims-app-base/logic/types/Workspaces';
-
-const forbiddenFilenameCharsRegexp = new RegExp("[^- А-Яа-яa-zA-Z0-9,@.;'`!)(]+", 'g');
+import { forbiddenFilenameCharsRegexp } from '#bridge/utils/regex';
 
 export type CreateProjectParams = {
   projectLocation?: string,
