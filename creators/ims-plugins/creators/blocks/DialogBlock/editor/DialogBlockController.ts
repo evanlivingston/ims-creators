@@ -42,6 +42,7 @@ import { watch } from 'vue';
 import type { BlockContentItem } from '~ims-app-base/logic/types/BlockTypeDefinition';
 import { getNodeDescriptorOfType } from '../nodes/getNodeDescriptiors';
 import type { MenuListItem } from '~ims-app-base/logic/types/MenuList';
+import type { IProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 
 export type DialogVariable = ScriptBlockPlainVariable;
 
@@ -810,9 +811,10 @@ export class DialogBlockController
     return true;
   }
 
-  async manageVariables() {
+  async manageVariables(projectContext: IProjectContext) {
     await this.appManager.get(DialogManager).show(ManageVariableListDialog, {
       dialogController: this,
+      projectContext,
     });
   }
 

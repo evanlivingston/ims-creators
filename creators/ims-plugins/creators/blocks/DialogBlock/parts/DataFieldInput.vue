@@ -4,6 +4,7 @@
     :class="{
       'DataFieldInput-active-with-counter':
         dataType.Type === AssetPropType.TEXT,
+      hasBorder,
     }"
   >
     <template v-if="dataType.Type === AssetPropType.BOOLEAN">
@@ -35,6 +36,7 @@
         ref="input"
         v-model="modeValueComp"
         class="DataFieldInput-text"
+        :class="{ focus: elementInFocus }"
         :placeholder="
           placeholder ? placeholder : $t('imsDialogEditor.common.noValue')
         "
@@ -47,6 +49,7 @@
         v-else
         :value="modeValueComp"
         class="DataFieldInput-text"
+        :class="{ disabled: readonly }"
       ></imc-presenter>
       <div class="DataFieldInput-counter" :class="{ hidden: !elementInFocus }">
         {{ textLength }}
@@ -110,6 +113,10 @@ export default defineComponent({
   },
   props: {
     readonly: {
+      type: Boolean,
+      default: false,
+    },
+    hasBorder: {
       type: Boolean,
       default: false,
     },
@@ -178,6 +185,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+@use '~ims-app-base/style/new-vars-mixins.scss';
+
 .DataFieldInput-text {
   padding-bottom: 10px;
 }
@@ -185,6 +194,18 @@ export default defineComponent({
   &:hover {
     .DataFieldInput-counter.hidden {
       display: block;
+    }
+  }
+
+  &.hasBorder {
+    margin-top: 0;
+
+    .DataFieldInput-text {
+      @include new-vars-mixins.is-input;
+
+      :deep(.ql-editor.ql-blank::before) {
+        display: none;
+      }
     }
   }
 }

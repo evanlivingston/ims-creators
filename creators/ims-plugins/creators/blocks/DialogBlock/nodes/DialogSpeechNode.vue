@@ -243,6 +243,7 @@ export default defineComponent({
     DialogSpeechNodeAttachCover,
     FilePresenter,
   },
+  inject: ['projectContext'],
   props: {
     id: {
       type: String,
@@ -500,6 +501,7 @@ export default defineComponent({
         .get(DialogManager)
         .show(SpeechParametersDialog, {
           dialogController: this.dialogController,
+          projectContext: this.projectContext,
         });
     },
     playOptionConditionPass(option_index: number) {

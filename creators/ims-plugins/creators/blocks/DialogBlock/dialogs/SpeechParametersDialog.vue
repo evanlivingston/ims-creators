@@ -65,9 +65,11 @@ import type {
   DialogBlockController,
   DialogVariable,
 } from '../editor/DialogBlockController';
+import type { IProjectContext } from '../../../../../../ims-app-base/app/logic/types/IProjectContext';
 
 type DialogProps = {
   dialogController: DialogBlockController;
+  projectContext: IProjectContext;
 };
 
 type DialogResult = boolean | undefined | null;
@@ -77,6 +79,11 @@ export default defineComponent({
   components: {
     DialogContent,
     VariableList,
+  },
+  provide() {
+    return {
+      projectContext: this.dialog.state.projectContext,
+    };
   },
   props: {
     dialog: {
@@ -167,7 +174,7 @@ export default defineComponent({
 
 <style lang="scss" rel="stylesheet/scss" scoped>
 .SpeechParametersDialog {
-  width: 600px;
+  width: 700px;
   max-width: 100%;
   margin: auto;
   .Dialog-message {

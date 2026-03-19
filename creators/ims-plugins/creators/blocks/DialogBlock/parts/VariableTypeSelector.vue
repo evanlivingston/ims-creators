@@ -158,6 +158,7 @@ export default defineComponent({
 .VariableTypeSelector-kind {
   flex: 1;
   overflow: hidden;
+  min-width: 120px;
 }
 
 .VariableTypeSelector-type-circle {

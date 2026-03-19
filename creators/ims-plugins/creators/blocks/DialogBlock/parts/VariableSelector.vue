@@ -30,6 +30,8 @@ import type {
   DialogBlockController,
   DialogVariable,
 } from '../editor/DialogBlockController';
+import type { IProjectContext } from '~ims-app-base/logic/types/IProjectContext';
+import { assert } from '~ims-app-base/logic/utils/typeUtils';
 
 type VarOpt = {
   variable: DialogVariable | null;
@@ -44,6 +46,7 @@ export default defineComponent({
   components: {
     ImsSelect,
   },
+  inject: ['projectContext'],
   props: {
     dialogController: {
       type: Object as PropType<DialogBlockController>,
@@ -95,7 +98,10 @@ export default defineComponent({
   methods: {
     setVariable(new_val: VarOpt | null) {
       if (new_val && !new_val.variable && new_val.key === VAR_OPT_MANAGE_KEY) {
-        this.dialogController.manageVariables();
+        assert(this.projectContext, 'Project context is not provided');
+        this.dialogController.manageVariables(
+          this.projectContext as IProjectContext,
+        );
       } else {
         this.$emit(
           'update:modelValue',

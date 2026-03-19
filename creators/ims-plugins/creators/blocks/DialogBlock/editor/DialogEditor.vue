@@ -103,7 +103,17 @@
       </dropdown-element>
     </div>
 
-    <!--<button @click="editVariables">Edit variables</button>-->
+    <menu-button class="DialogEditor-variables">
+      <template #button="{ toggle }">
+        <button class="is-button is-button-action" @click="toggle">
+          <i class="ri-arrow-up-s-line"></i>
+          {{ $t('imsDialogEditor.var.variables') }}
+        </button>
+      </template>
+      <manage-variables-dropdown
+        :dialog-controller="blockControllerMut"
+      ></manage-variables-dropdown>
+    </menu-button>
   </div>
 </template>
 
@@ -156,6 +166,8 @@ import {
 } from '~ims-app-base/components/utils/ui';
 import { getNextIndexWithTimestamp } from '~ims-app-base/components/Asset/Editor/blockUtils';
 import DropdownElement from '~ims-app-base/components/Common/DropdownElement.vue';
+import MenuButton from '../../../../../../ims-app-base/app/components/Common/MenuButton.vue';
+import ManageVariablesDropdown from '../parts/ManageVariablesDropdown.vue';
 
 type CreateNodeContext = {
   clickedAt: { x: number; y: number } | null;
@@ -186,6 +198,8 @@ export default defineComponent({
     BezierEdge,
     DialogPlayToolbar,
     DropdownElement,
+    MenuButton,
+    ManageVariablesDropdown,
   },
   inject: ['projectContext'],
   props: {
@@ -625,9 +639,6 @@ export default defineComponent({
         this.savePropsDelayed();
       }
     },
-    async manageVariables() {
-      await this.blockControllerMut.manageVariables();
-    },
     onDragOver(event: DragEvent) {
       if (this.readonly) {
         return;
@@ -879,6 +890,18 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   pointer-events: none;
+}
+.DialogEditor-variables {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+
+  .is-button {
+    padding-left: 18px;
+    &:not(:hover):not(:focus) {
+      --button-bg-color: var(--local-bg-color);
+    }
+  }
 }
 .DialogEditor-hint-inner {
   padding: 10px 20px;

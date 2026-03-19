@@ -1,14 +1,26 @@
 <template>
-  <div v-if="variableList.length > 0" class="VariableList-list">
+  <div v-if="variableList.length > 0" class="VariableList-grid">
+    <div class="VariableList-grid-row">
+      <div class="VariableList-grid-column"></div>
+      <div class="VariableList-grid-column">
+        {{ $t('imsDialogEditor.var.name') }}
+      </div>
+      <div class="VariableList-grid-column">
+        {{ $t('imsDialogEditor.var.type') }}
+      </div>
+      <div class="VariableList-grid-column">
+        {{ $t('imsDialogEditor.var.defaultValue') }}
+      </div>
+    </div>
     <sortable-list
-      handle-selector=".VariableListItem-row-drag"
+      handle-selector=".VariableListItem-drag"
       id-key="name"
       :list="variableList"
       @update:list="changeList($event)"
     >
       <template #default="{ item }">
         <variable-list-item
-          class="VariableList-row"
+          class="VariableList-item"
           :variable-controller="variableController"
           :variable="item"
           :show-auto-fill="showAutoFill"
@@ -87,10 +99,29 @@ export default defineComponent({
 <style lang="scss" rel="stylesheet/scss" scoped>
 @use '~ims-app-base/style/Form';
 
-.VariableList-list {
+.VariableList-grid {
+  --variable-list-columns: 20px 200px 240px minmax(150px, 1fr) min-content;
+  --variable-list-column-gap: 2px;
+
   margin-bottom: 20px;
 }
+
+.VariableList-grid-row {
+  display: grid;
+  grid-template-columns: var(--variable-list-columns);
+  color: var(--local-sub-text-color);
+  column-gap: var(--variable-list-column-gap);
+}
+:deep(.SortableList-item) {
+  padding: 5px 0px;
+
+  &:not(:last-child) {
+    border-bottom: 1px dashed var(--local-border-color);
+  }
+}
 .VariableList-empty {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  font-style: italic;
+  color: var(--local-sub-text-color);
 }
 </style>

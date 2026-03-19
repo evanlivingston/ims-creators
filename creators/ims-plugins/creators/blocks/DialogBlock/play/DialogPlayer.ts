@@ -445,7 +445,9 @@ export class DialogPlayer {
         this._initDemoMode();
       }
       try {
-        let context = createScriptPlayContext();
+        let context = createScriptPlayContext(
+          this.dialogController.getVariables(),
+        );
 
         while (!context.ended) {
           playing_state.history = [
