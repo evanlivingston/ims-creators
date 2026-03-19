@@ -30,13 +30,13 @@ export default class DesktopTaskManager extends TaskManager {
     override assignTasksTo(where: TaskQueryDTOWhere, account: AssetPropValueAccount | null): Promise<void> {
         throw new Error("Method not implemented.");
     }
-    override getBacklogWorkspaceId(): string | null {
+    override async getBacklogWorkspaceId(): Promise<string | null> {
         return null;
     }
     override moveTasksToArchive(where: TaskQueryDTOWhere, setArchived?: boolean): Promise<void> {
         throw new Error("Method not implemented.");
     }
-    override getTaskBoardsWorkspaceId(): string | null {
+    override async getTaskBoardsWorkspaceId(): Promise<string | null> {
         return null;
     }
     override async getFirstColumnOfBoard(board_id: string): Promise<TaskBoardColumn | null> {

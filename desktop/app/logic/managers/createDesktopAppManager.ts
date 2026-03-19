@@ -82,7 +82,7 @@ export default function createDesktopAppManager(
     await app_manager.get<DesktopAuthManager>(AuthManager).init();
     await app_manager.get(DesktopCreatorManager).init();
     await app_manager.get(ProjectManager).init();
-    await app_manager.get(CreatorAssetManager).init(project_database);
+    await app_manager.get(CreatorAssetManager).init(project_database, true);
     await app_manager.get(ExportFormatManager).init();
     await app_manager.get(DesktopSyncManager).init();
     await app_manager.get(PluginManager).init();
