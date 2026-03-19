@@ -14,8 +14,8 @@ import {
   assignPlainValueToAssetProps,
   castAssetPropValueToString,
   castAssetPropValueToText,
+  diffAssetPropObjects,
   makeBlockRef,
-  sameAssetPropObjects,
   truncateAssetPropValueText,
   type AssetProps,
   type AssetPropValue,
@@ -718,23 +718,16 @@ export class DialogBlockController
     }
     const exported = exportDialogBlockData(this.state);
 
-    if (!sameAssetPropObjects(exported, this.resolvedBlock.computed, true)) {
+    const changes = diffAssetPropObjects(exported, this.resolvedBlock.computed);
+
+    if (changes && changes.length) {
       this._expectPropsChange = true;
       try {
-        const op = this.changer.makeOpId();
-        this.changer.deleteBlockPropKey(
+        this.changer.registerBlockPropsChanges(
           this.resolvedBlock.assetId,
           makeBlockRef(this.resolvedBlock),
           null,
-          '',
-          op,
-        );
-        this.changer.setBlockPropKeys(
-          this.resolvedBlock.assetId,
-          makeBlockRef(this.resolvedBlock),
-          null,
-          exported,
-          op,
+          changes,
         );
       } finally {
         setTimeout(() => {
