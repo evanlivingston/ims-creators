@@ -5,6 +5,7 @@ import type { ImsHostShell } from '../api/ImsHostShell';
 import type { ImsHostStorage } from '../api/ImsHostStorage';
 import type { ImsHostWindow } from '../api/ImsHostWindow';
 import type { ImsHostApp } from '../api/ImsHostApp';
+import type { ImsHostSync } from '#bridge/api/ImsHostSync';
 import type ImsHostPlugin from '../api/ImsHostPlugin';
 
 export interface IImsHostApi  {
@@ -13,6 +14,7 @@ export interface IImsHostApi  {
   window: ImsHostWindow;
   storage: ImsHostStorage;
   project: ImsHostProject;
+  sync: ImsHostSync;
   autoUpdate: ImsHostAutoUpdate;
   app: ImsHostApp,
   plugin: ImsHostPlugin;

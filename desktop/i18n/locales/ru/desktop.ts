@@ -10,6 +10,14 @@ export default {
     newConfirmationCodeSent: 'Новый код подтверждения отправлен на почту',
   },
   desktop: {
+    fsSync: {
+      header: 'Ошибки синхронизации',
+      synchronization: 'Синхронизация',
+      syncButton: 'Синхронизировать снова',
+      notSyncedAssets: 'Несинхронизированные элементы',
+      notSyncedWorkspaces: 'Несинхронизированные папки',
+      noErrors: 'Нет ошибок',
+    },
     welcome: {
       begin: 'Добро пожаловать в',
       version: 'Версия',
