@@ -30,9 +30,11 @@ import type { DialogInterface } from '~ims-app-base/logic/managers/DialogManager
 import type { DialogBlockController } from '../editor/DialogBlockController';
 import VariableList from './VariableList.vue';
 import { nodeVariableAdd } from '../logic/nodeVariables';
+import type { IProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 
 type DialogProps = {
   dialogController: DialogBlockController;
+  projectContext: IProjectContext;
 };
 
 type DialogResult = void;
@@ -42,6 +44,11 @@ export default defineComponent({
   components: {
     DialogContent,
     VariableList,
+  },
+  provide() {
+    return {
+      projectContext: this.dialog.state.projectContext,
+    };
   },
   props: {
     dialog: {

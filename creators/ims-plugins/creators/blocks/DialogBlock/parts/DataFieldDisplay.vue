@@ -5,6 +5,7 @@
       :data-type="dataType"
       :model-value="modelValue"
       :readonly="true"
+      :has-border="hasBorder"
     ></DataFieldInput>
     <imc-presenter v-else :value="modelValue"></imc-presenter>
   </div>
@@ -29,6 +30,10 @@ export default defineComponent({
     modelValue: {
       type: [Object, String, Boolean, Number, null] as PropType<AssetPropValue>,
       default: null,
+    },
+    hasBorder: {
+      type: Boolean,
+      default: false,
     },
     dataType: {
       type: [Object, null] as PropType<AssetPropValueType | null>,

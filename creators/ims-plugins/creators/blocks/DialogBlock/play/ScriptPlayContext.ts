@@ -1,5 +1,6 @@
 import type { AssetPropValue } from '~ims-app-base/logic/types/Props';
 import type { ScriptPlayNode } from './ScriptPlayNode';
+import type { ScriptBlockPlainVariable } from '../logic/nodeStoring';
 
 export type ScriptPlayContext = {
   variables: Map<string, AssetPropValue>;
@@ -8,9 +9,16 @@ export type ScriptPlayContext = {
   ended: boolean;
 };
 
-export function createScriptPlayContext(): ScriptPlayContext {
+export function createScriptPlayContext(
+  variables: ScriptBlockPlainVariable[],
+): ScriptPlayContext {
   return {
-    variables: new Map(),
+    variables: new Map(
+      variables.map((v) => [
+        v.name,
+        v.default !== undefined ? v.default : null,
+      ]),
+    ),
     nodeParams: new Map(),
     currentNode: null,
     ended: false,

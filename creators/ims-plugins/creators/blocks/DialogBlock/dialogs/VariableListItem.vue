@@ -1,16 +1,18 @@
 <template>
-  <div class="VariableListItem-row">
-    <i class="VariableListItem-row-drag ri-draggable"></i>
-    <FormCheckBox
-      v-if="showAutoFill"
-      :value="variable.autoFill"
-      :icon="'ri-arrow-right-box-line'"
-      :help-text="$t('imsDialogEditor.speech.autoSubstitutionHelpText')"
-      @input="changeVariable(variable, { autoFill: $event })"
-    />
-    <div class="VariableListItem-row-name">
+  <div class="VariableListItem">
+    <div class="VariableListItem-column VariableListItem-manage">
+      <i class="VariableListItem-drag ri-draggable"></i>
+    </div>
+    <div class="VariableListItem-column VariableListItem-name">
+      <FormCheckBox
+        v-if="showAutoFill"
+        :value="variable.autoFill"
+        :icon="'ri-arrow-right-box-line'"
+        :help-text="$t('imsDialogEditor.speech.autoSubstitutionHelpText')"
+        @input="changeVariable(variable, { autoFill: $event })"
+      />
       <div
-        class="VariableListItem-row-name-value"
+        class="VariableListItem-name-input"
         @click="editMode = true"
         @focusout="editMode = false"
       >
@@ -26,13 +28,28 @@
         :message="variable.description"
       />
     </div>
-    <div class="VariableListItem-row-type">
+    <div class="VariableListItem-column VariableListItem-type">
       <variable-type-selector
+        class="VariableListItem-type-input"
         :model-value="variable.type"
-        @update:model-value="changeVariable(variable, { type: $event })"
+        @update:model-value="
+          changeVariable(variable, { type: $event, default: undefined })
+        "
       ></variable-type-selector>
     </div>
-    <div class="VariableListItem-row-menu">
+    <div
+      v-if="variable.type"
+      class="VariableListItem-column VariableListItem-defaultValue"
+    >
+      <data-field-input
+        :data-type="variable.type"
+        :model-value="variable.default"
+        class="VariableListItem-defaultValue-input"
+        :has-border="true"
+        @update:model-value="changeVariable(variable, { default: $event })"
+      ></data-field-input>
+    </div>
+    <div class="VariableListItem-column VariableListItem-menu">
       <menu-button>
         <menu-list :menu-list="getVariableMenu(variable)" />
       </menu-button>
@@ -61,6 +78,7 @@ import type { IDialogVariableController } from '../editor/DialogVariableControll
 import ImcPresenter from '~ims-app-base/components/ImcText/ImcPresenter.vue';
 import type { ScriptBlockPlainVariable } from '../logic/nodeStoring';
 import FormCheckBox from '~ims-app-base/components/Form/FormCheckBox.vue';
+import DataFieldInput from '../parts/DataFieldInput.vue';
 
 export default defineComponent({
   name: 'VariableListItem',
@@ -72,6 +90,7 @@ export default defineComponent({
     FormBuilderFieldTooltip,
     ImcPresenter,
     FormCheckBox,
+    DataFieldInput,
   },
   props: {
     variableController: {
@@ -213,16 +232,69 @@ export default defineComponent({
 @use '~ims-app-base/style/Form';
 @use '~ims-app-base/style/devices-mixins';
 
-.VariableListItem-row {
+.VariableListItem {
+  display: grid;
+  grid-template-columns: var(--variable-list-columns);
+  column-gap: var(--variable-list-column-gap);
+}
+
+.VariableListItem-column {
+  // border: 1px solid #eee;
   display: flex;
-  gap: 5px;
   align-items: center;
-  margin-bottom: 5px;
-  @include devices-mixins.device-type(not-pc) {
-    flex-wrap: wrap;
+}
+
+.VariableListItem-manage {
+  grid-column: 1;
+}
+
+.VariableListItem-name {
+  grid-column: 2;
+  gap: 5px;
+}
+
+.VariableListItem-name-input {
+  flex: 1;
+  min-width: 0;
+
+  :deep(.ImsInput) {
+    max-width: 100%;
   }
 }
-.VariableListItem-row-drag {
+
+.VariableListItem-type {
+  grid-column: 3;
+
+  .VariableListItem-type-input {
+    display: flex;
+    width: 100%;
+  }
+}
+.VariableListItem-defaultValue {
+  grid-column: 4;
+  padding-left: 5px;
+}
+.VariableListItem-defaultValue-input {
+  position: relative;
+  display: flex;
+  width: 100%;
+  margin-top: 0px;
+}
+:deep(.DataFieldInput-text) {
+  width: 100%;
+}
+:deep(.DataFieldInput-number) {
+  max-width: 100%;
+}
+:deep(.DataFieldInput-string) {
+  width: 100%;
+  max-width: 100%;
+}
+.VariableListItem-menu {
+  grid-column: 5;
+}
+
+.VariableListItem-drag {
   color: var(--local-sub-text-color);
   cursor: grab;
 }
@@ -234,21 +306,5 @@ export default defineComponent({
 
 .VariableListItem-empty {
   text-align: center;
-}
-
-.VariableListItem-row-name {
-  flex: 1;
-  display: flex;
-  min-width: 122px;
-  overflow: hidden;
-  padding: 4px 4px 4px 0;
-}
-.VariableListItem-row-name-value {
-  flex: 1;
-  min-width: 50px;
-}
-.VariableListItem-row-type {
-  flex: 2;
-  flex-wrap: wrap;
 }
 </style>
