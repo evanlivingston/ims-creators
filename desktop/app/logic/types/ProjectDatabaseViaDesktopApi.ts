@@ -1,6 +1,6 @@
 import type { AssetHistoryDTO } from "~ims-app-base/logic/types/AssetHistory";
 import type { AssetQueryWhere, AssetsShortResult, AssetsFullResult, AssetsGraph, AssetCreateDTO, AssetWhereParams, AssetDeleteResultDTO, CreateRefDTO, AssetReferencesResult, AssetChangeDTO, AssetsChangeResult, AssetMoveParams, AssetMoveResult, AssetChangeBatchOpDTO, AssetsBatchChangeResultDTO } from "~ims-app-base/logic/types/AssetsType";
-import type { IProjectDatabase } from "~ims-app-base/logic/types/IProjectDatabase";
+import type { IProjectDatabase, IProjectDatabaseEventHandler, ProjectContentChangeEventArg } from "~ims-app-base/logic/types/IProjectDatabase";
 import type { ApiRequestList, ApiResultListWithTotal, ApiResultListWithMore } from "~ims-app-base/logic/types/ProjectTypes";
 import type { AssetProps, AssetPropsPlainObject } from "~ims-app-base/logic/types/Props";
 import type { AssetPropsSelection } from "~ims-app-base/logic/types/PropsSelection";
@@ -174,5 +174,17 @@ export class ProjectDatabaseViaDesktopApi implements IProjectDatabase {
     const info = this._projectManager.getProjectInfo();
     assert(info?.localPath, 'Project is not selected');
     return window.imshost.project.workspacesMove(info.localPath, params);
+  }
+
+  subscribeEvents(
+    pid: string,
+    callback: (changes: ProjectContentChangeEventArg) => void,
+  ): IProjectDatabaseEventHandler {
+    // TODO: implement
+    return {
+      cancel: () => {},
+      isConnected: () => false,
+      listenContent: () => {}
+    }
   }
 }
