@@ -26,6 +26,7 @@
       {{ $t('imsDialogEditor.var.noVariablesYet') }}
     </div>
     <button
+      v-if="!readonly"
       class="is-button is-button-action ManageVariablesDropdown-button"
       @click="manageVariables"
     >
@@ -50,6 +51,10 @@ export default defineComponent({
     dialogController: {
       type: Object as PropType<DialogBlockController>,
       required: true,
+    },
+    readonly: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {

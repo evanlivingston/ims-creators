@@ -112,6 +112,7 @@
       </template>
       <manage-variables-dropdown
         :dialog-controller="blockControllerMut"
+        :readonly="readonly"
       ></manage-variables-dropdown>
     </menu-button>
   </div>
