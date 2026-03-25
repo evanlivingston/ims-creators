@@ -27,7 +27,7 @@ import {
 } from 'vue';
 import DialogHost from '~ims-app-base/components/Dialog/DialogHost.vue';
 import DialogManager from '~ims-app-base/logic/managers/DialogManager';
-import LocalFsSyncManager from '~ims-app-base/logic/managers/LocalFsSyncManager';
+import LocalFsSyncSubContext from '~ims-app-base/logic/managers/LocalFsSyncSubContext';
 import UiManager from '~ims-app-base/logic/managers/UiManager';
 import UiPreferenceManager from '~ims-app-base/logic/managers/UiPreferenceManager';
 import AppToasts from '~ims-app-base/components/Common/AppToasts.vue';
@@ -72,7 +72,7 @@ function handleResize() {
 onMounted(async () => {
   await appManager.get(UiPreferenceManager).initClient();
   await appManager.get(UiManager).initClient();
-  await appManager.get(LocalFsSyncManager).initClient();
+  await appManager.get(LocalFsSyncSubContext).initClient();
   const updateManager = appManager.get(DesktopUpdateManager);
   if (updateManager.isAutoCheckingUpdateEnabled){
     updateManager.checkAndShowNewVersion();

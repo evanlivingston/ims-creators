@@ -19,7 +19,7 @@ import UiManager from '~ims-app-base/logic/managers/UiManager';
 import { assert } from '~ims-app-base/logic/utils/typeUtils';
 import { wikiLinks } from './plugins/wiki-links';
 import { imcImages } from './plugins/imc-images';
-import EditorManager from '~ims-app-base/logic/managers/EditorManager';
+import EditorSubContext from '~ims-app-base/logic/managers/EditorManager';
 import { blurHandler } from './plugins/blur-handler';
 import { headingId } from './plugins/heading-id';
 
@@ -75,7 +75,7 @@ export default defineComponent({
           handler: (files: FileList) => {
             for (const file of files) {
               const upload_job = this.$getAppManager()
-                .get(EditorManager)
+                .get(EditorSubContext)
                 .attachFile(file, file.name);
               upload_job.awaitResult().then(
                 (img) => {

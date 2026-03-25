@@ -1,4 +1,4 @@
-import TaskManager, { type TaskBoardColumn } from "~ims-app-base/logic/managers/TaskManager";
+import TaskManager, { type TaskBoardColumn } from "~ims-app-base/logic/managers/TaskSubContext";
 import type { AssetSetDTO } from "~ims-app-base/logic/types/AssetsType";
 import type { TaskEntity, TaskQueryDTOWhere } from "~ims-app-base/logic/types/BoardTypes";
 import type { AssetPropValueAccount } from "~ims-app-base/logic/types/Props";

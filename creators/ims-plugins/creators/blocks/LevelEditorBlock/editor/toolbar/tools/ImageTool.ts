@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { loadImage } from '~ims-app-base/logic/utils/imageUtils';
 import { getSrcByFileId } from '~ims-app-base/logic/utils/files';
 import type { ToolSection } from '../ToolManager';
-import EditorManager from '~ims-app-base/logic/managers/EditorManager';
+import EditorSubContext from '~ims-app-base/logic/managers/EditorManager';
 
 export type ImageToolComponentProps = {
   menuList: MenuListItem[];
@@ -124,7 +124,7 @@ export default class ImageTool extends Tool {
   async uploadBlob(blob: Blob, file_name: string) {
     await this.appManager.get(UiManager).doTask(async () => {
       this._uploadJob = this.appManager
-        .get(EditorManager)
+        .get(EditorSubContext)
         .attachFile(blob, file_name);
       const res = await this._uploadJob.awaitResult();
       if (!res) return;

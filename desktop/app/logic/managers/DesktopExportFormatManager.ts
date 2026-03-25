@@ -1,7 +1,7 @@
 import SyncStoreCore from '~ims-app-base/logic/types/SyncStoreCore';
 import ExportFormatManager, { type ExportFormatWithId } from '~ims-app-base/logic/managers/ExportFormatManager';
 import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
-import ProjectSettingsManager from '~ims-app-base/logic/managers/ProjectSettingsManager';
+import ProjectSettingsManager from '~ims-app-base/logic/managers/SettingsSubContext';
 
 export default class DesktopExportFormatManager extends ExportFormatManager {
   protected _core: SyncStoreCore;

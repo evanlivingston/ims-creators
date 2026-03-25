@@ -1,4 +1,4 @@
-import PluginManager from '~ims-app-base/logic/managers/Plugin/PluginManager';
+import PluginManager from '~ims-app-base/logic/project-sub-contexts/PluginSubContext';
 import PluginControllerDev from './Plugins/PluginControllerDev';
 import { PluginInstalledFrom, type PluginSavedDescription } from '~ims-app-base/logic/managers/Plugin/PluginEntity';
 import * as node_path from "path";

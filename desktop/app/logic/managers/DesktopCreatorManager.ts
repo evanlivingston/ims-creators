@@ -11,7 +11,7 @@ import SyncStoreCore from "~ims-app-base/logic/types/SyncStoreCore";
 import ApiManager from "~ims-app-base/logic/managers/ApiManager";
 import CreatorAssetManager from "~ims-app-base/logic/managers/CreatorAssetManager";
 import ProjectManager from "~ims-app-base/logic/managers/ProjectManager";
-import ProjectSettingsManager from '~ims-app-base/logic/managers/ProjectSettingsManager';
+import ProjectSettingsManager from '~ims-app-base/logic/managers/SettingsSubContext';
 
 const PROJECT_META_INDEX = '.imsc/index.json';
 

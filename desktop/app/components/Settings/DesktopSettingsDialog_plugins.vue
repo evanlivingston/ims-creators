@@ -25,7 +25,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import FormSearch from '~ims-app-base/components/Form/FormSearch.vue';
-import PluginManager from '~ims-app-base/logic/managers/Plugin/PluginManager';
+import PluginManager from '~ims-app-base/logic/project-sub-contexts/PluginSubContext';
 import { PluginInstalledFrom, type PluginListItemEntity } from '~ims-app-base/logic/managers/Plugin/PluginEntity';
 import DesktopSettingsDialog_plugins_plugin from './DesktopSettingsDialog_plugins_plugin.vue';
 import UiManager from '~ims-app-base/logic/managers/UiManager';

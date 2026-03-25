@@ -15,7 +15,7 @@
 import { defineComponent } from 'vue';
 import MenuButton from '~ims-app-base/components/Common/MenuButton.vue';
 import MenuList from '~ims-app-base/components/Common/MenuList.vue';
-import ProjectContentManager from '~ims-app-base/logic/managers/ProjectContentManager';
+import ProjectContentManager from '~ims-app-base/logic/project-sub-contexts/ImportExportSubContext';
 import ProjectManager from '~ims-app-base/logic/managers/ProjectManager';
 import { openProjectLink } from '~ims-app-base/logic/router/routes-helpers';
 import type { MenuListItem } from '~ims-app-base/logic/types/MenuList';

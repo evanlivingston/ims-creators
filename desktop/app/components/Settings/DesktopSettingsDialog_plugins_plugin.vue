@@ -27,7 +27,7 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
 import type { PluginListItemEntity } from '~ims-app-base/logic/managers/Plugin/PluginEntity';
-import PluginManager from '~ims-app-base/logic/managers/Plugin/PluginManager';
+import PluginManager from '~ims-app-base/logic/project-sub-contexts/PluginSubContext';
 import UiManager from '~ims-app-base/logic/managers/UiManager';
 import DialogManager from '~ims-app-base/logic/managers/DialogManager';
 import ConfirmDialog from '~ims-app-base/components/Common/ConfirmDialog.vue';

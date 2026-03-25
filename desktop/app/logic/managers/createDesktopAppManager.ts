@@ -8,14 +8,14 @@ import DesktopCreatorManager from './DesktopCreatorManager';
 import ProjectManager from '~ims-app-base/logic/managers/ProjectManager';
 import CreatorAssetManager from '~ims-app-base/logic/managers/CreatorAssetManager';
 import type { BaseAppConfiguration } from '~ims-app-base/logic/configurations/base-app-configuration'
-import CommentManager from '~ims-app-base/logic/managers/CommentManager';
+import CommentSubContext from '~ims-app-base/logic/managers/CommentSubContext';
 import type { AppManagerContext } from '~ims-app-base/logic/managers/IAppManager';
-import PluginManager from '~ims-app-base/logic/managers/Plugin/PluginManager';
-import EditorManager from '~ims-app-base/logic/managers/EditorManager';
-import ProjectContentManager from '~ims-app-base/logic/managers/ProjectContentManager';
+import PluginManager from '~ims-app-base/logic/project-sub-contexts/PluginSubContext';
+import EditorSubContext from '~ims-app-base/logic/managers/EditorManager';
+import ProjectContentManager from '~ims-app-base/logic/project-sub-contexts/ImportExportSubContext';
 import GlobalStateManager from '~ims-app-base/logic/managers/GlobalStateManager';
 import ExportFormatManager from '~ims-app-base/logic//managers/ExportFormatManager';
-import LocalFsSyncManager from '~ims-app-base/logic/managers/LocalFsSyncManager';
+import LocalFsSyncSubContext from '~ims-app-base/logic/managers/LocalFsSyncSubContext';
 import DesktopUiManager from './DesktopUiManager';
 import DesktopProjectManager from './DesktopProjectManager'
 import { ProjectDatabaseViaDesktopApi } from '../types/ProjectDatabaseViaDesktopApi';
@@ -25,13 +25,13 @@ import DesktopExportFormatManager from './DesktopExportFormatManager';
 
 import pluginBase from '~ims-plugin-base/index'
 import pluginCreators from '~ims-plugin-creators/index'
-import TaskManager from '~ims-app-base/logic/managers/TaskManager';
+import TaskManager from '~ims-app-base/logic/managers/TaskSubContext';
 import DesktopTaskManager from './DesktopTaskManager';
 import DesktopProjectContentManager from './DesktopProjectContentManager';
 import DesktopUpdateManager from './DesktopUpdateManager';
 import DesktopPluginManager from './DesktopPluginManager';
 import DesktopAuthManager from './DesktopAuthManager';
-import ProjectSettingsManager from '~ims-app-base/logic/managers/ProjectSettingsManager';
+import ProjectSettingsManager from '~ims-app-base/logic/managers/SettingsSubContext';
 import DesktopProjectSettingsManager from './DesktopProjectSettingsManager';
 import DesktopSyncManager from './DesktopSyncManager';
 
@@ -59,10 +59,10 @@ export default function createDesktopAppManager(
   app_manager.register(DesktopUiManager, desktopUiManager);
   app_manager.register(UiPreferenceManager, new UiPreferenceManager(app_manager));
   app_manager.register(new DialogManager(app_manager));
-  app_manager.register(new CommentManager(app_manager));
-  app_manager.register(new LocalFsSyncManager(app_manager));
+  app_manager.register(new CommentSubContext(app_manager));
+  app_manager.register(new LocalFsSyncSubContext(app_manager));
   app_manager.register(PluginManager, new DesktopPluginManager(app_manager));
-  app_manager.register(EditorManager, new DesktopEditorManager(app_manager));
+  app_manager.register(EditorSubContext, new DesktopEditorManager(app_manager));
   app_manager.register(new DesktopUpdateManager(app_manager));
   app_manager.register(new DesktopSyncManager(app_manager));
   app_manager.register(ExportFormatManager, new DesktopExportFormatManager(app_manager));
@@ -76,7 +76,7 @@ export default function createDesktopAppManager(
 
   app_manager.addInitRoutine(async () => {
     await app_manager.get(ApiManager).init(createApiTokenStorage(context));
-    await app_manager.get(LocalFsSyncManager).init();
+    await app_manager.get(LocalFsSyncSubContext).init();
 
     await desktopUiManager.init(context);
     await app_manager.get<DesktopAuthManager>(AuthManager).init();

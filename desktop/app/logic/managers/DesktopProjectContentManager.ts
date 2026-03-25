@@ -1,4 +1,4 @@
-import ProjectContentManager from "../../../../ims-app-base/app/logic/managers/ProjectContentManager";
+import ProjectContentManager from "../../../../ims-app-base/app/logic/project-sub-contexts/ImportExportSubContext";
 
 export default class DesktopProjectContentManager extends ProjectContentManager{
     override async saveWithCustomFormat(file: {

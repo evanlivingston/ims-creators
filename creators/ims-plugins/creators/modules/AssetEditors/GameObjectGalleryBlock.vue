@@ -102,7 +102,7 @@ import { getClipboardImagesContent } from '~ims-app-base/logic/utils/clipboard';
 import type { AssetChanger } from '~ims-app-base/logic/types/AssetChanger';
 import ScreenshotRenderer from '~ims-app-base/components/Common/ScreenshotRenderer.vue';
 import { makeBlockRef } from '~ims-app-base/logic/types/Props';
-import EditorManager, {
+import EditorSubContext, {
   type UploadingJob,
 } from '~ims-app-base/logic/managers/EditorManager';
 
@@ -239,7 +239,7 @@ export default defineComponent({
         .get(UiManager)
         .doTask(async () => {
           this.uploadJob = this.$getAppManager()
-            .get(EditorManager)
+            .get(EditorSubContext)
             .attachFile(blob, file_name);
 
           const res = await this.uploadJob.awaitResult();

@@ -6,7 +6,7 @@ import {
   GAME_OBJECT_ASSET_ID,
   MARKDOWN_ASSET_ID,
 } from '~ims-app-base/logic/constants';
-import EditorManager from '~ims-app-base/logic/managers/EditorManager';
+import EditorSubContext from '~ims-app-base/logic/managers/EditorManager';
 import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
 
 export default function () {
@@ -18,7 +18,7 @@ export default function () {
           const cancel_callbacks: { cancel: () => void }[] = [];
 
           cancel_callbacks.push(
-            appManager.get(EditorManager).registerAssetLayout({
+            appManager.get(EditorSubContext).registerAssetLayout({
               name: 'gameobject',
               pageComponent: defineAsyncComponent(
                 () =>
@@ -36,7 +36,7 @@ export default function () {
           );
 
           cancel_callbacks.push(
-            appManager.get(EditorManager).registerAssetLayout({
+            appManager.get(EditorSubContext).registerAssetLayout({
               name: 'markdown',
               pageComponent: defineAsyncComponent(
                 () =>
@@ -55,31 +55,31 @@ export default function () {
 
           cancel_callbacks.push(
             appManager
-              .get(EditorManager)
+              .get(EditorSubContext)
               .registerAssetLayoutBind(LEVEL_ASSET_ID, 'full'),
           );
 
           cancel_callbacks.push(
             appManager
-              .get(EditorManager)
+              .get(EditorSubContext)
               .registerAssetLayoutBind(DIAGRAM_ASSET_ID, 'full'),
           );
 
           cancel_callbacks.push(
             appManager
-              .get(EditorManager)
+              .get(EditorSubContext)
               .registerAssetLayoutBind(SCRIPT_ASSET_ID, 'full'),
           );
 
           cancel_callbacks.push(
             appManager
-              .get(EditorManager)
+              .get(EditorSubContext)
               .registerAssetLayoutBind(GAME_OBJECT_ASSET_ID, 'gameobject'),
           );
 
           cancel_callbacks.push(
             appManager
-              .get(EditorManager)
+              .get(EditorSubContext)
               .registerAssetLayoutBind(MARKDOWN_ASSET_ID, 'markdown'),
           );
 

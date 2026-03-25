@@ -1,5 +1,5 @@
 
-import ProjectSettingsManager from '~ims-app-base/logic/managers/ProjectSettingsManager';
+import ProjectSettingsManager from '~ims-app-base/logic/managers/SettingsSubContext';
 import ProjectManager from '~ims-app-base/logic/managers/ProjectManager';
 import type { AssetPropsPlainObject } from '~ims-app-base/logic/types/Props';
 import type { ProjectSettingsValue } from '~ims-app-base/logic/types/ProjectTypes';

@@ -1,4 +1,4 @@
-import EditorManager, { type UploadingJob } from "~ims-app-base/logic/managers/EditorManager";
+import EditorSubContext, { type UploadingJob } from "~ims-app-base/logic/managers/EditorManager";
 import { v4 as uuidv4 } from 'uuid';
 import type { AssetPropValueFile } from "~ims-app-base/logic/types/Props";
 import { assert } from "~ims-app-base/logic/utils/typeUtils";
@@ -6,7 +6,7 @@ import ProjectManager from "~ims-app-base/logic/managers/ProjectManager";
 import { md5 } from 'hash-wasm';
 import * as node_path from 'path';
 
-export class DesktopEditorManager extends EditorManager{
+export class DesktopEditorManager extends EditorSubContext{
    
   private readonly ATTACHMENTS_DIR = 'attachments';
 

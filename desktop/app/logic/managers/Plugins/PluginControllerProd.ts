@@ -1,11 +1,11 @@
 import PluginControllerBase, { convertTranslatedPluginTitle, type PluginContentDescriptorBase, type PluginDescriptorLocale } from '~ims-app-base/logic/managers/Plugin/PluginControllerBase';
 import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
 import * as node_path from 'path';
-import ExternalPluginBlockTypeDefinition from '~ims-app-base/logic/types/ExternalPluginBlockTypeDefinition';
+import ExternalPluginBlockTypeDefinition from '~ims-app-base/logic/plugin/ExternalPluginBlockTypeDefinition';
 import PluginControllerExternal, { type PublicPluginApi } from '~ims-app-base/logic/managers/Plugin/PluginControllerExternal';
 import { DefaultBlockEditorController, type BlockEditorController } from '~ims-app-base/logic/types/BlockEditorController';
 import type { ResolvedAssetBlock } from '~ims-app-base/logic/utils/assets';
-import ExternalPluginBlockEditorController, { type ExternalPluginBlockControllerDescriptor, type GetPluginBlockController } from '~ims-app-base/logic/types/ExternalPluginBlockEditorController';
+import ExternalPluginBlockEditorController, { type ExternalPluginBlockControllerDescriptor, type GetPluginBlockController } from '~ims-app-base/logic/plugin/ExternalPluginBlockEditorController';
 
 async function parsePluginLocale(plugin_path: string, locale_paths: Record<string, any>) {
   const plugin_locales: PluginDescriptorLocale = {};

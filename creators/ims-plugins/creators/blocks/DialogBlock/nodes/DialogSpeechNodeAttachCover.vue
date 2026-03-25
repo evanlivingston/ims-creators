@@ -25,7 +25,7 @@ import UiManager from '~ims-app-base/logic/managers/UiManager';
 import type { IProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 import { assert } from '~ims-app-base/logic/utils/typeUtils';
 import { getClipboardImagesContent } from '~ims-app-base/logic/utils/clipboard';
-import EditorManager from '~ims-app-base/logic/managers/EditorManager';
+import EditorSubContext from '~ims-app-base/logic/managers/EditorManager';
 
 const AllowedExtensions = new Set(['jpg', 'jpeg', 'png', 'bmp', 'svg', 'gif']);
 
@@ -71,7 +71,7 @@ export default defineComponent({
   methods: {
     async selectFiles() {
       const files = await this.$getAppManager()
-        .get(EditorManager)
+        .get(EditorSubContext)
         .pickFiles({
           accept: [...AllowedExtensions].map((x) => `.${x}`).join(','),
         });
@@ -96,7 +96,7 @@ export default defineComponent({
           this.uploading = true;
           try {
             const upload_job = this.$getAppManager()
-              .get(EditorManager)
+              .get(EditorSubContext)
               .attachFile(file.blob, file.name);
             const res = await upload_job.awaitResult();
             this.$emit('update:modelValue', res);
