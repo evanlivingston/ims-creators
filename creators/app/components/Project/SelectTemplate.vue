@@ -17,9 +17,14 @@
             {{ option.description }}
           </div>
         </div>
-        <button class="is-button" @click="openLink(option.id)">
+        <a
+          :href="getOpenLink(option.id)"
+          target="_blank"
+          class="is-button"
+          @click.stop
+        >
           <i class="ri-eye-fill"></i>
-        </button>
+        </a>
       </div>
     </template>
     <template #selected-option="{ option }">
@@ -86,10 +91,8 @@ export default defineComponent({
     this.projectTemplatesLoaded = true;
   },
   methods: {
-    openLink(project_id: string) {
-      window.location.replace(
-        `https://ims.cr5.space/app/p/${project_id}/project`,
-      );
+    getOpenLink(project_id: string) {
+      return `https://ims.cr5.space/app/p/${project_id}/project`;
     },
   },
 });
