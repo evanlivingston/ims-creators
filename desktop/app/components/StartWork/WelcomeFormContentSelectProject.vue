@@ -60,7 +60,7 @@ import { defineComponent } from 'vue';
 import AdvancedForm from './AdvancedForm.vue';
 import ImsSelect from '~ims-app-base/components/Common/ImsSelect.vue';
 import ImsInput from '~ims-app-base/components/Common/ImsInput.vue';
-import type { ProjectInfoWithParams, ProjectShortInfo } from '~ims-app-base/logic/types/ProjectTypes';
+import type { ProjectFullInfo, ProjectShortInfo } from '~ims-app-base/logic/types/ProjectTypes';
 import UiManager from '~ims-app-base/logic/managers/UiManager';
 import SelectFolderForm from '../Common/SelectFolderForm.vue';
 import path from 'path';
@@ -112,7 +112,7 @@ export default defineComponent({
       if(this.canCreate && this.project){
         let rootWorkspaceId = null
         if (this.project.id){
-          const projectInfo: ProjectInfoWithParams = await this.$getAppManager()
+          const projectInfo: ProjectFullInfo = await this.$getAppManager()
             .get(ApiManager)
             .call(Service.CREATORS, HttpMethods.GET, 'project/info', {
               pid: this.project.id,
