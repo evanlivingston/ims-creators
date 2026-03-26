@@ -87,7 +87,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent, inject, type PropType } from 'vue';
 import { Position } from '@vue-flow/core';
 import type { NodeDescriptor } from './NodeDescriptor';
 import ExecHandle from '../parts/ExecHandle.vue';
@@ -108,6 +108,7 @@ import DataFieldInput from '../parts/DataFieldInput.vue';
 import type { ScriptBlockPlainPropValue } from '../logic/nodeStoring';
 import type { ScriptPlayNode } from '../play/ScriptPlayNode';
 import type { DialogPlayer } from '../play/DialogPlayer';
+import { injectedProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 
 export default defineComponent({
   name: 'DialogTriggerNode',
@@ -146,6 +147,13 @@ export default defineComponent({
       type: Object as PropType<DialogPlayer>,
       required: true,
     },
+  },
+  setup() {
+    const projectContext = inject(injectedProjectContext);
+    assert(projectContext, 'Project context not provided');
+    return {
+      projectContext,
+    };
   },
   computed: {
     Position() {
@@ -233,7 +241,7 @@ export default defineComponent({
     },
     async addParameter(is_out: boolean) {
       const new_variable = await nodeVariableAdd(
-        this.$getAppManager(),
+        this.projectContext,
         this[is_out ? 'outputParameters' : 'inputParameters'],
         {
           alreadyExist: this.$t(
@@ -260,7 +268,7 @@ export default defineComponent({
     },
     async changeParameter(param: DialogVariable, is_out: boolean) {
       const new_variable = await nodeVariableChange(
-        this.$getAppManager(),
+        this.projectContext,
         this[is_out ? 'outputParameters' : 'inputParameters'],
         param,
         {
@@ -279,7 +287,7 @@ export default defineComponent({
     },
     async duplicateParameter(param: DialogVariable, is_out: boolean) {
       const new_variable = await nodeVariableDuplicate(
-        this.$getAppManager(),
+        this.projectContext,
         this[is_out ? 'outputParameters' : 'inputParameters'],
         param,
         {

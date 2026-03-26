@@ -9,7 +9,6 @@ import { ScriptPlayGraph } from './ScriptPlayGraph';
 import { extractDialogBlockPlain } from '../editor/DialogEditor';
 import type { DialogBlockController } from '../editor/DialogBlockController';
 import type { FlowViewportHelper } from '../editor/FlowViewportHelper';
-import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
 import UiManager from '~ims-app-base/logic/managers/UiManager';
 import type { ScriptPlayNode } from './ScriptPlayNode';
 import type { AssetPropValue } from '~ims-app-base/logic/types/Props';
@@ -31,7 +30,7 @@ type DialogPlayingState = {
   stop: boolean;
   moveInterrupted: boolean;
   debug: boolean;
-  dialog: DialogHandler<void> | null;
+  dialog: DialogHandler<void, typeof PlayerDialog> | null;
 };
 
 export class DialogPlayer {
@@ -39,10 +38,9 @@ export class DialogPlayer {
   private _debugNodeSwitchTime = 1000;
 
   constructor(
-    protected appManager: IAppManager,
+    protected projectContext: IProjectContext,
     protected dialogController: DialogBlockController,
     protected viewportHelper: FlowViewportHelper,
-    protected projectContext: IProjectContext,
   ) {}
 
   get isPlaying() {
@@ -301,7 +299,7 @@ export class DialogPlayer {
       return;
     }
 
-    this._playingState.dialog = this.appManager
+    this._playingState.dialog = this.projectContext.appManager
       .get(DialogManager)
       .create(PlayerDialog, {
         dialogPlayer: this,
@@ -427,7 +425,7 @@ export class DialogPlayer {
     if (this._playingState) {
       return;
     }
-    await this.appManager.get(UiManager).doTask(async () => {
+    await this.projectContext.appManager.get(UiManager).doTask(async () => {
       this._playingState = {
         pausePromise: null,
         pauseResolve: null,

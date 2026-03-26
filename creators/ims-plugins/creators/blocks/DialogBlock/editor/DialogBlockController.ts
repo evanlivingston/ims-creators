@@ -22,7 +22,6 @@ import {
   type AssetPropValueType,
 } from '~ims-app-base/logic/types/Props';
 import type { NodeData, NodeDataController } from './NodeDataController';
-import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
 import DialogManager from '~ims-app-base/logic/managers/DialogManager';
 import ManageVariableListDialog from '../dialogs/ManageVariableListDialog.vue';
 import type {
@@ -61,10 +60,10 @@ export class DialogBlockController
   private _assignedDataTypePins = new Map<string, AssetPropValueType[]>();
 
   constructor(
-    appManager: IAppManager,
+    projectContext: IProjectContext,
     getResolvedBlock: () => ResolvedAssetBlock | null,
   ) {
-    super(appManager, getResolvedBlock);
+    super(projectContext, getResolvedBlock);
     this.savePropsDelayed = debounceForThis(function (this: any) {
       this.saveProps();
     }, 300);
@@ -172,7 +171,7 @@ export class DialogBlockController
             changed_keys,
           );
         } catch (err: any) {
-          this.appManager.get(UiManager).showError(err);
+          this.projectContext.appManager.get(UiManager).showError(err);
         }
       }
     } catch {
@@ -752,7 +751,9 @@ export class DialogBlockController
   addVariable(variable: DialogVariable) {
     if (this.state.variables.own.hasOwnProperty(variable.name)) {
       throw new Error(
-        this.appManager.$t('imsDialogEditor.var.variableAlreadyExists'),
+        this.projectContext.appManager.$t(
+          'imsDialogEditor.var.variableAlreadyExists',
+        ),
       );
     }
     this.state.variables.own = {
@@ -805,10 +806,12 @@ export class DialogBlockController
   }
 
   async manageVariables(projectContext: IProjectContext) {
-    await this.appManager.get(DialogManager).show(ManageVariableListDialog, {
-      dialogController: this,
-      projectContext,
-    });
+    await this.projectContext.appManager
+      .get(DialogManager)
+      .show(ManageVariableListDialog, {
+        dialogController: this,
+        projectContext,
+      });
   }
 
   getMainSpeech(): DialogVariable[] {
@@ -820,7 +823,9 @@ export class DialogBlockController
   addMainSpeech(variable: DialogVariable) {
     if (this.state.__settings.speech.main.hasOwnProperty(variable.name)) {
       throw new Error(
-        this.appManager.$t('imsDialogEditor.var.variableAlreadyExists'),
+        this.projectContext.appManager.$t(
+          'imsDialogEditor.var.variableAlreadyExists',
+        ),
       );
     }
     this.state.__settings.speech.main = {
@@ -872,7 +877,9 @@ export class DialogBlockController
   addOptionSpeech(variable: DialogVariable) {
     if (this.state.__settings.speech.option.hasOwnProperty(variable.name)) {
       throw new Error(
-        this.appManager.$t('imsDialogEditor.var.variableAlreadyExists'),
+        this.projectContext.appManager.$t(
+          'imsDialogEditor.var.variableAlreadyExists',
+        ),
       );
     }
     this.state.__settings.speech.option = {
@@ -950,7 +957,7 @@ export class DialogBlockController
       itemId: 'root',
       title: this.resolvedBlock.title
         ? this.resolvedBlock.title
-        : this.appManager.$t('blockTypes.titles.script'),
+        : this.projectContext.appManager.$t('blockTypes.titles.script'),
       children: [],
     };
 
@@ -961,7 +968,7 @@ export class DialogBlockController
     for (const node of nodes_sorted) {
       assert(root_anchor.children);
       const node_desc = node.type ? getNodeDescriptorOfType(node.type) : null;
-      let title = this.appManager.$t(
+      let title = this.projectContext.appManager.$t(
         `imsDialogEditor.nodes.${node.type}.title`,
       );
       let title_val: AssetPropValue = null;
@@ -976,7 +983,7 @@ export class DialogBlockController
           : null;
         if (variable) {
           title_val =
-            this.appManager.$t(
+            this.projectContext.appManager.$t(
               'imsDialogEditor.contents.' +
                 (node.type === 'getVar' ? 'varGet' : 'varSet'),
             ) +
@@ -1025,7 +1032,7 @@ export class DialogBlockController
     return [
       {
         title:
-          this.appManager.$t('common.dialogs.delete') +
+          this.projectContext.appManager.$t('common.dialogs.delete') +
           (items.length > 1 ? ` (${items.length})` : ''),
         danger: true,
         action: async () => {

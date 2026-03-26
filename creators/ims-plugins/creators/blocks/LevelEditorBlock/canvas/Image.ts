@@ -1,19 +1,19 @@
 import * as fabric from 'fabric';
-import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
 import type { AssetPropValueFile } from '~ims-app-base/logic/types/Props';
 import { getSrcByFileId } from '~ims-app-base/logic/utils/files';
 import UiManager from '~ims-app-base/logic/managers/UiManager';
+import type { IProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 
 export default class Image extends fabric.FabricImage {
   displayingWidth?: number;
   displayingHeight?: number;
 
   constructor(
-    appManager: IAppManager,
+    projectContext: IProjectContext,
     file: AssetPropValueFile,
     renderProps: Partial<fabric.ImageProps>,
   ) {
-    const imageURL = getSrcByFileId(appManager, file);
+    const imageURL = getSrcByFileId(projectContext.appManager, file);
 
     super(document.createElement('img'), {
       ...renderProps,
@@ -38,7 +38,7 @@ export default class Image extends fabric.FabricImage {
         }
       })
       .catch((err) => {
-        appManager.get(UiManager).showError(err);
+        projectContext.appManager.get(UiManager).showError(err);
         if (this.canvas) {
           this.canvas.remove(this);
         }

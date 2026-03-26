@@ -19,7 +19,7 @@ import UiManager from '~ims-app-base/logic/managers/UiManager';
 import { assert } from '~ims-app-base/logic/utils/typeUtils';
 import { wikiLinks } from './plugins/wiki-links';
 import { imcImages } from './plugins/imc-images';
-import EditorSubContext from '~ims-app-base/logic/managers/EditorManager';
+import EditorSubContext from '~ims-app-base/logic/project-sub-contexts/EditorSubContext';
 import { blurHandler } from './plugins/blur-handler';
 import { headingId } from './plugins/heading-id';
 

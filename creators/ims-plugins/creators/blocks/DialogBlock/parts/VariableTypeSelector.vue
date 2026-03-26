@@ -42,18 +42,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent, inject, type PropType } from 'vue';
 import {
   type AssetPropValueType,
   AssetPropType,
 } from '~ims-app-base/logic/types/Props';
 import ImsSelect from '~ims-app-base/components/Common/ImsSelect.vue';
 import SelectAssetComboBox from '~ims-app-base/components/Asset/SelectAssetComboBox.vue';
-import CreatorAssetManager from '~ims-app-base/logic/managers/CreatorAssetManager';
 import isUUID from 'validator/es/lib/isUUID';
 import type { AssetForSelection } from '~ims-app-base/logic/types/AssetsType';
-import ProjectManager from '~ims-app-base/logic/managers/ProjectManager';
 import type { AssetPropWhere } from '~ims-app-base/logic/types/PropsWhere';
+import { injectedProjectContext } from '~ims-app-base/logic/types/IProjectContext';
+import { assert } from '~ims-app-base/logic/utils/typeUtils';
+import { AssetSubContext } from '~ims-app-base/logic/project-sub-contexts/AssetSubContext';
 
 type VarTypeOpt = {
   type: AssetPropType;
@@ -73,6 +74,13 @@ export default defineComponent({
     },
   },
   emits: ['update:modelValue'],
+  setup() {
+    const projectContext = inject(injectedProjectContext);
+    assert(projectContext, 'Project context not provided');
+    return {
+      projectContext,
+    };
+  },
   computed: {
     selectedTypeOption() {
       const model_value = this.modelValue;
@@ -105,17 +113,17 @@ export default defineComponent({
       const asset_id = this.modelValue.Kind;
       if (!isUUID(asset_id)) return null;
       return (
-        this.$getAppManager()
-          .get(CreatorAssetManager)
+        this.projectContext
+          .get(AssetSubContext)
           .getAssetShortViaCacheSync(asset_id) ?? null
       );
     },
     selectAssetWhere(): AssetPropWhere {
+      const gdd_id = this.projectContext
+        .get(AssetSubContext)
+        .getWorkspaceByNameViaCacheSync('gdd')?.id;
       const res: AssetPropWhere = {
-        workspaceids:
-          this.$getAppManager()
-            .get(ProjectManager)
-            .getWorkspaceIdByName('gdd') ?? null,
+        workspaceids: gdd_id ?? null,
       };
       return res;
     },

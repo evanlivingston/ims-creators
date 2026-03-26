@@ -83,7 +83,7 @@ import {
   type ResolvedAssetBlock,
 } from '~ims-app-base/logic/utils/assets';
 import type { AssetBlockEditorVM } from '~ims-app-base/logic/vm/AssetBlockEditorVM';
-import EditorSubContext from '~ims-app-base/logic/managers/EditorManager';
+import EditorSubContext from '~ims-app-base/logic/project-sub-contexts/EditorSubContext';
 import ImsSelect from '~ims-app-base/components/Common/ImsSelect.vue';
 import {
   type LocaleBlockLocaleField,

@@ -1,4 +1,3 @@
-import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
 import type { LevelEditorShape } from '../../LevelEditor';
 import type BaseShapeController from '../BaseShapeController';
 import EllipseController from './EllipseController';
@@ -8,16 +7,17 @@ import PointerController from './PointerController';
 import PolygonController from './PolygonController';
 import RectController from './RectController';
 import TextboxController from './TextboxController';
+import type { IProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 
-export function getShapeControllers(appManager: IAppManager) {
+export function getShapeControllers(projectContext: IProjectContext) {
   const list = [
-    new RectController(appManager),
-    new TextboxController(appManager),
-    new EllipseController(appManager),
-    new PolygonController(appManager),
-    new ImageController(appManager),
-    new PointerController(appManager),
-    new GroupController(appManager),
+    new RectController(projectContext),
+    new TextboxController(projectContext),
+    new EllipseController(projectContext),
+    new PolygonController(projectContext),
+    new ImageController(projectContext),
+    new PointerController(projectContext),
+    new GroupController(projectContext),
   ] as BaseShapeController<LevelEditorShape>[];
   const map: { [name: string]: BaseShapeController<LevelEditorShape> } = {};
   for (const element of list) {

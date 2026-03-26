@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { loadImage } from '~ims-app-base/logic/utils/imageUtils';
 import { getSrcByFileId } from '~ims-app-base/logic/utils/files';
 import type { ToolSection } from '../ToolManager';
-import EditorSubContext from '~ims-app-base/logic/managers/EditorManager';
+import EditorSubContext from '~ims-app-base/logic/project-sub-contexts/EditorSubContext';
 
 export type ImageToolComponentProps = {
   menuList: MenuListItem[];

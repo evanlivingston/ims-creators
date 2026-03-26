@@ -13,7 +13,7 @@ import { getShapeControllers } from './editor/shapes/controllers';
 import { shapeValueToString } from './canvas/DecorationLabel';
 import SelectionManager from './editor/SelectionManager';
 import type { ResolvedAssetBlock } from '~ims-app-base/logic/utils/assets';
-import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
+import type { IProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 
 export type LevelEditorBlockContentUserData = {};
 export default class LevelEditorBlockController extends BlockEditorController {
@@ -21,10 +21,10 @@ export default class LevelEditorBlockController extends BlockEditorController {
   selectionManager: SelectionManager;
 
   constructor(
-    appManager: IAppManager,
+    projectContext: IProjectContext,
     getResolvedBlock: () => ResolvedAssetBlock | null,
   ) {
-    super(appManager, getResolvedBlock);
+    super(projectContext, getResolvedBlock);
 
     this.selectionManager = reactive(
       new SelectionManager(this),
@@ -122,7 +122,7 @@ export default class LevelEditorBlockController extends BlockEditorController {
       itemId: 'root',
       title: this.resolvedBlock.title
         ? this.resolvedBlock.title
-        : this.appManager.$t('blockTypes.titles.leveleditor'),
+        : this.projectContext.appManager.$t('blockTypes.titles.leveleditor'),
       children: [],
     };
 
@@ -147,7 +147,9 @@ export default class LevelEditorBlockController extends BlockEditorController {
 
         const title =
           shapeValueToString(shape.value) ??
-          this.appManager.$t('levelEditor.shapes.' + shape_controller.name);
+          this.projectContext.appManager.$t(
+            'levelEditor.shapes.' + shape_controller.name,
+          );
 
         const menu_item = {
           blockId: this.resolvedBlock.id,

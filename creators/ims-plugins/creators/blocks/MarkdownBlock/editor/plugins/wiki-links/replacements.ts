@@ -6,7 +6,7 @@ import type { DecorationSet, WidgetType, ViewUpdate } from '@codemirror/view';
 import type { PluginConfig } from './index';
 import CreatorAssetManager from '~ims-app-base/logic/managers/CreatorAssetManager';
 import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
-import EditorSubContext from '~ims-app-base/logic/managers/EditorManager';
+import EditorSubContext from '~ims-app-base/logic/project-sub-contexts/EditorSubContext';
 import { getProjectLinkHref } from '~ims-app-base/logic/router/routes-helpers';
 import ProjectManager from '~ims-app-base/logic/managers/ProjectManager';
 

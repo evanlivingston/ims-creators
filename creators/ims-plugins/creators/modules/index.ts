@@ -6,7 +6,7 @@ import {
   GAME_OBJECT_ASSET_ID,
   MARKDOWN_ASSET_ID,
 } from '~ims-app-base/logic/constants';
-import EditorSubContext from '~ims-app-base/logic/managers/EditorManager';
+import EditorSubContext from '~ims-app-base/logic/project-sub-contexts/EditorSubContext';
 import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
 
 export default function () {

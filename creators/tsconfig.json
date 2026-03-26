@@ -4,7 +4,7 @@
   "compilerOptions": {
     "skipLibCheck": true,
     "noImplicitAny": false,
-    "types": [ "@types/wicg-file-system-access", "vitest/globals"]
+    "types": [ "@types/wicg-file-system-access"]
   },
   "exclude": [
     "node_modules",
