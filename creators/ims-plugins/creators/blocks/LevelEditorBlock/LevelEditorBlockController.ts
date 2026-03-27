@@ -141,7 +141,7 @@ export default class LevelEditorBlockController extends BlockEditorController {
       assert(root_anchor.children);
 
       for (const shape of sorted_shapes) {
-        const shape_controller = getShapeControllers(this.appManager).map[
+        const shape_controller = getShapeControllers(this.projectContext).map[
           shape.type
         ];
 

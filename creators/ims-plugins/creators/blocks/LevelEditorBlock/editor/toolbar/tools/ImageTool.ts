@@ -1,5 +1,3 @@
-import type { UploadingJob } from '~ims-app-base/logic/managers/FileManager';
-import ProjectManager from '~ims-app-base/logic/managers/ProjectManager';
 import UiManager from '~ims-app-base/logic/managers/UiManager';
 import type { MenuListItem } from '~ims-app-base/logic/types/MenuList';
 import { getClipboardImagesContent } from '~ims-app-base/logic/utils/clipboard';
@@ -9,7 +7,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { loadImage } from '~ims-app-base/logic/utils/imageUtils';
 import { getSrcByFileId } from '~ims-app-base/logic/utils/files';
 import type { ToolSection } from '../ToolManager';
-import EditorSubContext from '~ims-app-base/logic/project-sub-contexts/EditorSubContext';
+import EditorSubContext, {
+  type UploadingJob,
+} from '~ims-app-base/logic/project-sub-contexts/EditorSubContext';
 
 export type ImageToolComponentProps = {
   menuList: MenuListItem[];
@@ -37,7 +37,7 @@ export default class ImageTool extends Tool {
     this.componentProps = {
       menuList: [
         {
-          title: this.appManager.$t(
+          title: this.projectContext.appManager.$t(
             'assetEditor.galleryBlockAddFileFromComputer',
           ),
           action: async () => {
@@ -46,7 +46,9 @@ export default class ImageTool extends Tool {
           icon: 'file',
         },
         {
-          title: this.appManager.$t('assetEditor.galleryBlockPasteFromBuffer'),
+          title: this.projectContext.appManager.$t(
+            'assetEditor.galleryBlockPasteFromBuffer',
+          ),
           action: async () => await this.getFileFromBuffer(),
           icon: 'ri-clipboard-line',
         },
@@ -59,7 +61,7 @@ export default class ImageTool extends Tool {
   }
 
   private get projectId() {
-    return this.appManager.get(ProjectManager).getProjectInfo()?.id;
+    return this.projectContext.projectInfo.id;
   }
 
   async processFiles(files: File[]) {
@@ -67,8 +69,8 @@ export default class ImageTool extends Tool {
     for (const file of files) {
       const ext = file.name.split('.').pop();
       if (!ext || !AllowedExtensions.has(ext.toLowerCase())) {
-        this.appManager.get(UiManager).showError(
-          this.appManager.$t('file.errorUnsupportedFormat', {
+        this.projectContext.appManager.get(UiManager).showError(
+          this.projectContext.appManager.$t('file.errorUnsupportedFormat', {
             file: file.name,
           }),
         );
@@ -122,8 +124,8 @@ export default class ImageTool extends Tool {
     }
   }
   async uploadBlob(blob: Blob, file_name: string) {
-    await this.appManager.get(UiManager).doTask(async () => {
-      this._uploadJob = this.appManager
+    await this.projectContext.appManager.get(UiManager).doTask(async () => {
+      this._uploadJob = this.projectContext
         .get(EditorSubContext)
         .attachFile(blob, file_name);
       const res = await this._uploadJob.awaitResult();
@@ -135,9 +137,9 @@ export default class ImageTool extends Tool {
 
   private async _addImageToCanvas(imageFile: AssetPropValueFile) {
     const vpCenter = this.controller.canvas.getVpCenter();
-    const imageURL = getSrcByFileId(this.appManager, imageFile);
+    const imageURL = getSrcByFileId(this.projectContext.appManager, imageFile);
 
-    await this.appManager.get(UiManager).doTask(async () => {
+    await this.projectContext.appManager.get(UiManager).doTask(async () => {
       this._loading = true;
       const imageElement = await loadImage(imageURL);
 
@@ -159,12 +161,14 @@ export default class ImageTool extends Tool {
   }
 
   async getFileFromBuffer() {
-    this.appManager.get(UiManager).doTask(async () => {
+    this.projectContext.appManager.get(UiManager).doTask(async () => {
       const files: { blob: Blob; name: string }[] =
         await getClipboardImagesContent();
       if (files.length === 0) {
         throw Error(
-          this.appManager.$t('assetEditor.galleryBlockPasteFromBufferEmpty'),
+          this.projectContext.appManager.$t(
+            'assetEditor.galleryBlockPasteFromBufferEmpty',
+          ),
         );
       }
       await this.uploadFiles(files);
