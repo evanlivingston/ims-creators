@@ -304,6 +304,7 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
                 ids: params.ids,
             }
         });
+        const touchedWIds: string[] = [];
 
         const generated_indexes = new Map<string, number>();
         if (params.indexFrom !== undefined || params.indexTo !== undefined){
@@ -346,8 +347,14 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
         }
 
         if (params.parentId !== undefined){
+            if (params.parentId){
+                touchedWIds.push(params.parentId)
+            }
             for (const workspace of avail_workspaces.list){
                 if (workspace.parentId !== params.parentId){
+                    if (workspace.parentId){
+                        touchedWIds.push(workspace.parentId)
+                    }
                     const new_workspace_info = {...workspace, parentId: params.parentId}
                     const old_path = getWorkspaceLocalPath(workspace, this.db);
                     const local_path = await applyImsFileLocationChange(new_workspace_info, old_path, this.db);
@@ -366,7 +373,8 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
                     parentId: params.parentId !== undefined ? params.parentId : w.parentId,
                     index: generated_index !== undefined ? generated_index : w.index
                 }
-            })
+            }),
+            touchedWIds: [...new Set(touchedWIds)]
         };  
     }
 
