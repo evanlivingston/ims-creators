@@ -8,7 +8,7 @@
         }"
         :title="$t(`imsDialogEditor.nodes.${operator}.description`)"
         :disabled="readonly"
-        @click.prevent="toggle"
+        @click.prevent="onButtonClick($event, toggle)"
       >
         {{ sign }}
       </button>
@@ -65,6 +65,12 @@ export default defineComponent({
   methods: {
     chooseOption(descriptor: NodeDescriptor) {
       this.$emit('choose', descriptor.name);
+    },
+    onButtonClick(event: MouseEvent, toggle: () => void) {
+      if (event.ctrlKey || event.metaKey || event.altKey) {
+        return;
+      }
+      toggle();
     },
   },
 });
