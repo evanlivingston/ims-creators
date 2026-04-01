@@ -492,7 +492,10 @@ export default defineComponent({
       }
       this.blockControllerMut.savePropsDelayed();
     },
-    onMouseDown() {
+    onMouseDown(event: MouseEvent) {
+      if (event.shiftKey) {
+        event.preventDefault();
+      }
       if (this.readonly) {
         return;
       }
