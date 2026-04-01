@@ -27,9 +27,9 @@ export function createEditor(
 
   const config_element = xmlDoc.getRootNode().childNodes[0];
   const editor = new mx.mxEditor(config_element);
-  editor.keyHandler.bindAction(8, 'collapse', false);
   editor.keyHandler.bindAction(13, 'expand', false);
   editor.keyHandler.bindAction(46, 'delete', false);
+  editor.keyHandler.bindAction(8, 'delete', false);
   editor.keyHandler.bindAction(65, 'selectAll', true);
   editor.keyHandler.bindAction(90, 'undo', true);
   editor.keyHandler.bindAction(89, 'redo', true);

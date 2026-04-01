@@ -22,7 +22,7 @@
         v-model:nodes="blockControllerMut.state.nodes"
         v-model:edges="blockControllerMut.state.edges"
         :connection-mode="ConnectionMode.Strict"
-        delete-key-code="Delete"
+        :delete-key-code="['Delete', 'Backspace']"
         :edges-updatable="!readonly"
         :nodes-draggable="!readonly"
         :nodes-connectable="!readonly"

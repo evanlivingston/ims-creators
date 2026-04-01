@@ -85,6 +85,11 @@ export function initMxGraphClientSide(): Promise<{
         return uuidv4();
       };
 
+      const oldIsControlDown = mx.mxEvent.isControlDown;
+      mx.mxEvent.isControlDown = function (evt) {
+        return oldIsControlDown.call(this, evt) || mx.mxEvent.isMetaDown(evt);
+      };
+
       return {
         mx,
       };
