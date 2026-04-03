@@ -21,6 +21,9 @@
         ref="flow"
         v-model:nodes="blockControllerMut.state.nodes"
         v-model:edges="blockControllerMut.state.edges"
+        :selection-key-code="true"
+        :multi-selection-key-code="['Meta', 'Shift', 'Control']"
+        :pan-on-drag="[2]"
         :connection-mode="ConnectionMode.Strict"
         :delete-key-code="['Delete', 'Backspace']"
         :edges-updatable="!readonly"
@@ -242,6 +245,7 @@ export default defineComponent({
       dialogPlayer,
       isFocused: false,
       clickOutside: null as SetClickOutsideCancel | null,
+      mouseDownTime: 0,
     };
   },
   computed: {
@@ -492,15 +496,13 @@ export default defineComponent({
       }
       this.blockControllerMut.savePropsDelayed();
     },
-    onMouseDown(event: MouseEvent) {
-      if (event.shiftKey) {
-        event.preventDefault();
-      }
+    onMouseDown() {
       if (this.readonly) {
         return;
       }
       this.createNodeContext = null;
       this.isFocused = true;
+      this.mouseDownTime = Date.now();
     },
     onContextMenu(ev: PointerEvent) {
       if (this.readonly) {
@@ -515,6 +517,11 @@ export default defineComponent({
         return; // Clicked inside the node
       }
       ev.preventDefault();
+      const md_elapsed = Date.now() - this.mouseDownTime;
+      if (md_elapsed > 200) {
+        return; // Pan move
+      }
+
       const editor_bbox = this.$el.getBoundingClientRect();
       const allowed_types = this._getAvailableNodeTypes(null, null);
       this.createNodeContext = {
