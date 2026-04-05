@@ -84,7 +84,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent, inject, type PropType } from 'vue';
 import {
   type AssetPropValueType,
   type AssetPropValue,
@@ -93,7 +93,6 @@ import {
   type AssetPropValueText,
 } from '~ims-app-base/logic/types/Props';
 import isUUID from 'validator/es/lib/isUUID';
-import ProjectManager from '~ims-app-base/logic/managers/ProjectManager';
 import type { AssetPropWhere } from '~ims-app-base/logic/types/PropsWhere';
 import AssetSelectorPropEditor from '~ims-app-base/components/Props/AssetSelectorPropEditor.vue';
 import ImcEditor from '~ims-app-base/components/ImcText/ImcEditor.vue';
@@ -101,6 +100,8 @@ import ImsInput from '~ims-app-base/components/Common/ImsInput.vue';
 import AssetLinkPropPresenter from '~ims-app-base/components/Props/AssetLinkPropPresenter.vue';
 import ImcPresenter from '~ims-app-base/components/ImcText/ImcPresenter.vue';
 import Delta from 'quill-delta';
+import { injectedProjectContext } from '~ims-app-base/logic/types/IProjectContext';
+import { AssetSubContext } from '~ims-app-base/logic/project-sub-contexts/AssetSubContext';
 
 export default defineComponent({
   name: 'DataFieldInput',
@@ -131,6 +132,13 @@ export default defineComponent({
     placeholder: { type: String, default: '' },
   },
   emits: ['update:modelValue'],
+  setup() {
+    const projectContext = inject(injectedProjectContext);
+    assert(projectContext, 'Project context not provided');
+    return {
+      projectContext,
+    };
+  },
   data() {
     return {
       elementInFocus: false,
@@ -152,11 +160,11 @@ export default defineComponent({
       return castAssetPropValueToString(this.modeValueComp);
     },
     selectAssetWhere(): AssetPropWhere {
+      const gdd_id = this.projectContext
+        .get(AssetSubContext)
+        .getWorkspaceByNameViaCacheSync('gdd')?.id;
       const res: AssetPropWhere = {
-        workspaceids:
-          this.$getAppManager()
-            .get(ProjectManager)
-            .getWorkspaceIdByName('gdd') ?? null,
+        workspaceids: gdd_id ?? null,
       };
       if (this.dataType.Kind && isUUID(this.dataType.Kind)) {
         res.typeids = this.dataType.Kind;

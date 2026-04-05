@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent, inject, type PropType } from 'vue';
 
 import LevelEditorToolbar from './toolbar/LevelEditorToolbar.vue';
 import LevelEditorCanvasController from './LevelEditorCanvasController';
@@ -47,7 +47,6 @@ import {
   trackElementSize,
   type TrackElementSizeHandler,
 } from '~ims-app-base/logic/utils/trackElementSize';
-import CreatorAssetManager from '~ims-app-base/logic/managers/CreatorAssetManager';
 import { assert } from '~ims-app-base/logic/utils/typeUtils';
 import { v4 as uuidv4 } from 'uuid';
 import LevelEditorAssetShapeCreate from './LevelEditorAssetShapeCreate.vue';
@@ -57,6 +56,8 @@ import {
 } from '~ims-app-base/components/utils/ui';
 import LevelEditorSidePropertiesPanel from './side-panel/LevelEditorSidePropertiesPanel.vue';
 import type LevelEditorBlockController from '../LevelEditorBlockController';
+import { injectedProjectContext } from '~ims-app-base/logic/types/IProjectContext';
+import { AssetSubContext } from '~ims-app-base/logic/project-sub-contexts/AssetSubContext';
 
 type PointerTypeSelectorContext = {
   menuX: number;
@@ -82,6 +83,13 @@ export default defineComponent({
       type: Object as PropType<LevelEditorBlockController>,
       required: true,
     },
+  },
+  setup() {
+    const projectContext = inject(injectedProjectContext);
+    assert(projectContext, 'Project context not provided');
+    return {
+      projectContext,
+    };
   },
   data() {
     return {
@@ -121,8 +129,8 @@ export default defineComponent({
       if (!this.canvasController) return;
       if (!this.droppedAssetContext) return;
 
-      const asset_preview = await this.$getAppManager()
-        .get(CreatorAssetManager)
+      const asset_preview = await this.projectContext
+        .get(AssetSubContext)
         .getAssetPreviewViaCache(this.droppedAssetContext.assetId);
 
       assert(asset_preview);
@@ -268,7 +276,7 @@ export default defineComponent({
         this.canvasController.destroy();
       }
       this.canvasController = new LevelEditorCanvasController(
-        this.$getAppManager(),
+        this.projectContext,
         this.blockController,
         { canvasEl, canvasContainerEl },
         this.readonly,

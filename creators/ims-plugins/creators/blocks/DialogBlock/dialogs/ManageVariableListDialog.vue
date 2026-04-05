@@ -24,13 +24,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent, inject, type PropType } from 'vue';
 import DialogContent from '~ims-app-base/components/Dialog/DialogContent.vue';
 import type { DialogInterface } from '~ims-app-base/logic/managers/DialogManager';
 import type { DialogBlockController } from '../editor/DialogBlockController';
 import VariableList from './VariableList.vue';
 import { nodeVariableAdd } from '../logic/nodeVariables';
-import type { IProjectContext } from '~ims-app-base/logic/types/IProjectContext';
+import {
+  injectedProjectContext,
+  type IProjectContext,
+} from '~ims-app-base/logic/types/IProjectContext';
 
 type DialogProps = {
   dialogController: DialogBlockController;
@@ -56,6 +59,13 @@ export default defineComponent({
       required: true,
     },
   },
+  setup() {
+    const projectContext = inject(injectedProjectContext);
+    assert(projectContext, 'Project context not provided');
+    return {
+      projectContext,
+    };
+  },
   data() {
     return {};
   },
@@ -73,7 +83,7 @@ export default defineComponent({
     },
     async addVariable() {
       const new_variable = await nodeVariableAdd(
-        this.$getAppManager(),
+        this.projectContext,
         this.variableList,
         {
           alreadyExist: this.$t('imsDialogEditor.var.variableAlreadyExists'),

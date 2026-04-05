@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts" type="text/ecmascript-6">
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent, inject, type PropType } from 'vue';
 import DialogContent from '~ims-app-base/components/Dialog/DialogContent.vue';
 import type { DialogInterface } from '~ims-app-base/logic/managers/DialogManager';
 import VariableList from './VariableList.vue';
@@ -65,7 +65,10 @@ import type {
   DialogBlockController,
   DialogVariable,
 } from '../editor/DialogBlockController';
-import type { IProjectContext } from '../../../../../../ims-app-base/app/logic/types/IProjectContext';
+import {
+  injectedProjectContext,
+  type IProjectContext,
+} from '~ims-app-base/logic/types/IProjectContext';
 
 type DialogProps = {
   dialogController: DialogBlockController;
@@ -90,6 +93,13 @@ export default defineComponent({
       type: Object as PropType<DialogInterface<DialogProps, DialogResult>>,
       required: true,
     },
+  },
+  setup() {
+    const projectContext = inject(injectedProjectContext);
+    assert(projectContext, 'Project context not provided');
+    return {
+      projectContext,
+    };
   },
   computed: {
     mainSpeechController(): IDialogVariableController {
@@ -133,7 +143,7 @@ export default defineComponent({
   methods: {
     async addSettingSpeechMain() {
       const new_variable = await nodeVariableAdd(
-        this.$getAppManager(),
+        this.projectContext,
         this.mainSpeechList,
         {
           alreadyExist: this.$t('imsDialogEditor.var.variableAlreadyExists'),
@@ -145,7 +155,7 @@ export default defineComponent({
     },
     async addSettingSpeechOption() {
       const new_variable = await nodeVariableAdd(
-        this.$getAppManager(),
+        this.projectContext,
         this.optionSpeechList,
         {
           alreadyExist: this.$t('imsDialogEditor.var.variableAlreadyExists'),

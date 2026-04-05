@@ -19,9 +19,11 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, inject } from 'vue';
 import { getShapeControllers } from './shapes/controllers';
 import UiPreferenceManager from '~ims-app-base/logic/managers/UiPreferenceManager';
+import { injectedProjectContext } from '~ims-app-base/logic/types/IProjectContext';
+import { assert } from '~ims-app-base/logic/utils/typeUtils';
 
 const AVAILABLE_SHAPE_TYPES = ['pointer', 'rect', 'ellipse'];
 
@@ -34,6 +36,13 @@ export default defineComponent({
     },
   },
   emits: ['select'],
+  setup() {
+    const projectContext = inject(injectedProjectContext);
+    assert(projectContext, 'Project context not provided');
+    return {
+      projectContext,
+    };
+  },
   data() {
     return {
       buttonRefs: new Map<string, HTMLElement>(),
@@ -41,7 +50,7 @@ export default defineComponent({
   },
   computed: {
     shapeControllers() {
-      return getShapeControllers(this.$getAppManager());
+      return getShapeControllers(this.projectContext);
     },
     options() {
       const options: { name: string; icon: string | null }[] = [];

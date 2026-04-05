@@ -1,8 +1,8 @@
-import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
 import type { BlockEditorController } from '~ims-app-base/logic/types/BlockEditorController';
 import { BlockTypeDefinition } from '~ims-app-base/logic/types/BlockTypeDefinition';
 import type { ResolvedAssetBlock } from '~ims-app-base/logic/utils/assets';
 import LevelEditorBlockController from './LevelEditorBlockController';
+import type { IProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 
 export class LevelEditorBlockDefinition extends BlockTypeDefinition {
   name = 'leveleditor';
@@ -11,9 +11,9 @@ export class LevelEditorBlockDefinition extends BlockTypeDefinition {
   override resizableBlockHeight = true;
 
   override createController(
-    appManager: IAppManager,
+    projectContext: IProjectContext,
     getResolvedBlock: () => ResolvedAssetBlock | null,
   ): BlockEditorController {
-    return new LevelEditorBlockController(appManager, getResolvedBlock);
+    return new LevelEditorBlockController(projectContext, getResolvedBlock);
   }
 }

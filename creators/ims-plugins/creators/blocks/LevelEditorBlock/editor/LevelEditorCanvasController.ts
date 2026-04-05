@@ -1,7 +1,6 @@
 import * as fabric from 'fabric';
 import { markRaw, watch } from 'vue';
 
-import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
 import { INF_GRID_OBJECT_TYPE, InfiniteGrid } from '../canvas/InfiniteGrid';
 import createDefaultToolManager from './toolbar/createDefaultToolManager';
 import type ToolManager from './toolbar/ToolManager';
@@ -26,6 +25,7 @@ import { v4 as uuidv4 } from 'uuid';
 import UiPreferenceManager from '~ims-app-base/logic/managers/UiPreferenceManager';
 import { getShapeControllers } from './shapes/controllers';
 import type LevelEditorBlockController from '../LevelEditorBlockController';
+import type { IProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 
 export function getPointerCoords(
   event: fabric.TPointerEventInfo<fabric.TPointerEvent>,
@@ -53,7 +53,7 @@ export type LevelEditorBlockState = {
 
 export default class LevelEditorCanvasController {
   readonly toolManager: ToolManager;
-  protected readonly appManager: IAppManager;
+  protected readonly projectContext: IProjectContext;
   readonly blockController: LevelEditorBlockController;
   private _sortedShapesCache: string[] | null = null;
 
@@ -81,7 +81,7 @@ export default class LevelEditorCanvasController {
   public readonly MIN_ZOOM_SCALE = 0.1;
 
   constructor(
-    appManager: IAppManager,
+    projectContext: IProjectContext,
     blockController: LevelEditorBlockController,
     canvasInitData: {
       canvasEl: HTMLCanvasElement;
@@ -90,7 +90,7 @@ export default class LevelEditorCanvasController {
     public readonly = false,
   ) {
     this.blockController = blockController;
-    this.appManager = appManager;
+    this.projectContext = projectContext;
 
     this.canvas = markRaw(
       new fabric.Canvas(canvasInitData.canvasEl, {
@@ -130,7 +130,7 @@ export default class LevelEditorCanvasController {
 
     this.toolManager = createDefaultToolManager(
       this.canvas,
-      this.appManager,
+      this.projectContext,
       this,
     ) as ToolManager;
 
@@ -317,7 +317,7 @@ export default class LevelEditorCanvasController {
               });
             }
           } catch (err: any) {
-            this.appManager.get(UiManager).showError(err);
+            this.projectContext.appManager.get(UiManager).showError(err);
           }
         }
       }
@@ -499,7 +499,7 @@ export default class LevelEditorCanvasController {
 
       const previous_object = previous_objects_stack.pop();
 
-      const shape_controller = getShapeControllers(this.appManager).map[
+      const shape_controller = getShapeControllers(this.projectContext).map[
         shape.type
       ];
 
@@ -576,9 +576,8 @@ export default class LevelEditorCanvasController {
             new_fabric_object as fabric.Group
           ).getObjects();
           child_objects.forEach((obj) => {
-            const child_controller = getShapeControllers(this.appManager).map[
-              obj.type
-            ];
+            const child_controller = getShapeControllers(this.projectContext)
+              .map[obj.type];
             child_controller.updateDecoration(obj, shapes[obj.id].value, this);
           });
         }
@@ -639,7 +638,7 @@ export default class LevelEditorCanvasController {
     }
     const new_object = this.convertLevelEditorShapeToFabricObject(shape);
     if (!new_object) {
-      this.appManager
+      this.projectContext.appManager
         .get(UiManager)
         .showError(`Canvas object type ${shape.type} isn't registered`);
       return null;
@@ -717,7 +716,7 @@ export default class LevelEditorCanvasController {
   }
 
   convertLevelEditorShapeToFabricObject(shape: LevelEditorShape) {
-    const controller = getShapeControllers(this.appManager).map[shape.type];
+    const controller = getShapeControllers(this.projectContext).map[shape.type];
     return controller.createFabricObject(shape, this.readonly) ?? null;
   }
 
@@ -1190,7 +1189,7 @@ export default class LevelEditorCanvasController {
 
         if (!existing_shape || !existing_object) return;
 
-        const shape_controller = getShapeControllers(this.appManager).map[
+        const shape_controller = getShapeControllers(this.projectContext).map[
           existing_shape.type
         ];
 
@@ -1334,7 +1333,7 @@ export default class LevelEditorCanvasController {
   }
 
   private _saveViewportTransform(canvas: fabric.Canvas) {
-    this.appManager
+    this.projectContext.appManager
       .get(UiPreferenceManager)
       .setPreference(this._preferenceName, canvas.viewportTransform);
   }
@@ -1347,7 +1346,7 @@ export default class LevelEditorCanvasController {
   }
 
   private _getSavedViewportTransform() {
-    return this.appManager
+    return this.projectContext.appManager
       .get(UiPreferenceManager)
       .getPreference(this._preferenceName, null);
   }

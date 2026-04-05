@@ -6,9 +6,9 @@ import type {
 import type { AssetFullInstanceR } from '~ims-app-base/logic/types/AssetFullInstance';
 import { BlockTypeDefinition } from '~ims-app-base/logic/types/BlockTypeDefinition';
 import { AssetPropType } from '~ims-app-base/logic/types/Props';
-import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
 import type { BlockEditorController } from '~ims-app-base/logic/types/BlockEditorController';
 import { DialogBlockController } from './editor/DialogBlockController';
+import type { IProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 
 export class DialogBlockDefinition extends BlockTypeDefinition {
   name = 'script';
@@ -72,9 +72,9 @@ export class DialogBlockDefinition extends BlockTypeDefinition {
   }
 
   override createController(
-    appManager: IAppManager,
+    projectContext: IProjectContext,
     getResolvedBlock: () => ResolvedAssetBlock | null,
   ): BlockEditorController {
-    return new DialogBlockController(appManager, getResolvedBlock);
+    return new DialogBlockController(projectContext, getResolvedBlock);
   }
 }

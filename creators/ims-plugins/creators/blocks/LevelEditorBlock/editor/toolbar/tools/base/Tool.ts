@@ -1,7 +1,7 @@
 import type { Component } from 'vue';
-import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
 import type LevelEditorCanvasController from '../../../LevelEditorCanvasController';
 import type { ToolSection } from '../../ToolManager';
+import type { IProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 
 export default abstract class Tool {
   abstract readonly name: string;
@@ -16,16 +16,16 @@ export default abstract class Tool {
   abstract section: ToolSection;
 
   protected _onDeactivateCallback: (() => void) | null = null;
-  protected readonly appManager: IAppManager;
+  protected readonly projectContext: IProjectContext;
 
   readonly controller: LevelEditorCanvasController;
 
   constructor(
-    appManager: IAppManager,
+    projectContext: IProjectContext,
     controller: LevelEditorCanvasController,
   ) {
     this.controller = controller;
-    this.appManager = appManager;
+    this.projectContext = projectContext;
   }
 
   init() {}

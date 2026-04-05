@@ -17,16 +17,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, type PropType, inject } from 'vue';
+import { defineComponent, inject, type PropType } from 'vue';
 import MenuButton from '~ims-app-base/components/Common/MenuButton.vue';
 import MenuList from '~ims-app-base/components/Common/MenuList.vue';
 import type { AssetPropValueFile } from '~ims-app-base/logic/types/Props';
 import UiManager from '~ims-app-base/logic/managers/UiManager';
-import type { IProjectContext } from '~ims-app-base/logic/types/IProjectContext';
+import {
+  injectedProjectContext,
+  type IProjectContext,
+} from '~ims-app-base/logic/types/IProjectContext';
+import { assert } from '~ims-app-base/logic/utils/typeUtils';
 import { getClipboardImagesContent } from '~ims-app-base/logic/utils/clipboard';
 import EditorSubContext from '~ims-app-base/logic/project-sub-contexts/EditorSubContext';
-import { injectedProjectContext } from '~ims-app-base/logic/types/IProjectContext';
-import { assert } from '~ims-app-base/logic/utils/typeUtils';
 
 const AllowedExtensions = new Set(['jpg', 'jpeg', 'png', 'bmp', 'svg', 'gif']);
 
@@ -36,6 +38,7 @@ export default defineComponent({
     MenuButton,
     MenuList,
   },
+  inject: ['projectContext'],
   props: {
     modelValue: {
       type: [null, Object] as PropType<AssetPropValueFile | null>,

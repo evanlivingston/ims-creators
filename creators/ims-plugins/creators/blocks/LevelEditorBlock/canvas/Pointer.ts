@@ -1,10 +1,10 @@
 import * as fabric from 'fabric';
-import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
 import UiManager from '~ims-app-base/logic/managers/UiManager';
 import type { AssetPreviewInfo } from '~ims-app-base/logic/types/AssetsType';
 import { getSrcByFileId } from '~ims-app-base/logic/utils/files';
 import type { AssetPropValueFile } from '~ims-app-base/logic/types/Props';
 import type { LevelEditorShape } from '../editor/LevelEditor';
+import type { IProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 import { AssetSubContext } from '~ims-app-base/logic/project-sub-contexts/AssetSubContext';
 
 const POINTER_SIZE = 100;
@@ -19,10 +19,10 @@ export default class Pointer extends fabric.Group {
   readonly line: fabric.Line;
   readonly image: fabric.Rect;
   readonly image_bg: fabric.Rect;
-  readonly appManager: IAppManager;
+  readonly projectContext: IProjectContext;
 
   constructor(
-    appManager: IAppManager,
+    projectContext: IProjectContext,
     value: LevelEditorShape['value'],
     renderProps: Partial<fabric.GroupProps>,
   ) {
@@ -66,7 +66,7 @@ export default class Pointer extends fabric.Group {
     this.line = pointer_line;
     this.image = pointer_image;
     this.image_bg = image_bg;
-    this.appManager = appManager;
+    this.projectContext = projectContext;
 
     this.setValue(value);
   }
@@ -104,9 +104,7 @@ export default class Pointer extends fabric.Group {
   }
 
   private _setImage(asset_id: string) {
-    throw 'Method is not implemented';
-    /* TODO: appManager replace projectContext
-    this.appManager
+    this.projectContext
       .get(AssetSubContext)
       .getAssetPreviewViaCache(asset_id)
       .then((asset: AssetPreviewInfo | null) => {
@@ -121,7 +119,10 @@ export default class Pointer extends fabric.Group {
         }
 
         const asset_image_file = asset.mainImage.value as AssetPropValueFile;
-        const image_url = getSrcByFileId(this.appManager, asset_image_file);
+        const image_url = getSrcByFileId(
+          this.projectContext.appManager,
+          asset_image_file,
+        );
 
         fabric.FabricImage.fromURL(image_url, undefined).then((img) => {
           if (this.image) {
@@ -165,7 +166,7 @@ export default class Pointer extends fabric.Group {
         });
       })
       .catch((err) => {
-        this.appManager.get(UiManager).showError(err);
-      });*/
+        this.projectContext.appManager.get(UiManager).showError(err);
+      });
   }
 }

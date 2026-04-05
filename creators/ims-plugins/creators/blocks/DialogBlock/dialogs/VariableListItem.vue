@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent, inject, type PropType } from 'vue';
 import type { DialogVariable } from '../editor/DialogBlockController';
 import DialogManager from '~ims-app-base/logic/managers/DialogManager';
 import UiManager from '~ims-app-base/logic/managers/UiManager';
@@ -79,6 +79,7 @@ import ImcPresenter from '~ims-app-base/components/ImcText/ImcPresenter.vue';
 import type { ScriptBlockPlainVariable } from '../logic/nodeStoring';
 import FormCheckBox from '~ims-app-base/components/Form/FormCheckBox.vue';
 import DataFieldInput from '../parts/DataFieldInput.vue';
+import { injectedProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 
 export default defineComponent({
   name: 'VariableListItem',
@@ -106,6 +107,13 @@ export default defineComponent({
       default: false,
     },
   },
+  setup() {
+    const projectContext = inject(injectedProjectContext);
+    assert(projectContext, 'Project context not provided');
+    return {
+      projectContext,
+    };
+  },
   data() {
     return {
       editMode: false,
@@ -119,7 +127,7 @@ export default defineComponent({
   methods: {
     async addVariable() {
       const new_variable = await nodeVariableAdd(
-        this.$getAppManager(),
+        this.projectContext,
         this.variableList,
         {
           alreadyExist: this.$t('imsDialogEditor.var.variableAlreadyExists'),
@@ -131,7 +139,7 @@ export default defineComponent({
     },
     async editVariable(variable: DialogVariable) {
       const new_variable = await nodeVariableChange(
-        this.$getAppManager(),
+        this.projectContext,
         this.variableList,
         variable,
         {
@@ -144,7 +152,7 @@ export default defineComponent({
     },
     async duplicateVariable(variable: DialogVariable) {
       const new_variable = await nodeVariableDuplicate(
-        this.$getAppManager(),
+        this.projectContext,
         this.variableList,
         variable,
         {

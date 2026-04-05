@@ -1,6 +1,7 @@
 import DialogManager from '~ims-app-base/logic/managers/DialogManager';
-import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
+import { DialogSubContext } from '~ims-app-base/logic/project-sub-contexts/DialogSubContext';
 import { BlockTypeDefinition } from '~ims-app-base/logic/types/BlockTypeDefinition';
+import type { IProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 import type { AssetProps } from '~ims-app-base/logic/types/Props';
 
 export class TextGridBlockDefinition extends BlockTypeDefinition {
@@ -10,14 +11,14 @@ export class TextGridBlockDefinition extends BlockTypeDefinition {
   override hideInAdding = false;
   override focusOnAdded = false;
   override async beforeBlockCreate(
-    appManager: IAppManager,
+    projectContext: IProjectContext,
     params: { title: string },
   ): Promise<{ title: string; props?: AssetProps } | undefined> {
     const TextGridBlockSettingsDialog = (
       await import('./TextGridBlockSettingsDialog.vue')
     ).default;
-    const res = await appManager
-      .get(DialogManager)
+    const res = await projectContext
+      .get(DialogSubContext)
       .show(TextGridBlockSettingsDialog, {
         columnsCount: 4,
       });

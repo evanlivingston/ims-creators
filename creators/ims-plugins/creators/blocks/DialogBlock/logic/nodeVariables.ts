@@ -1,18 +1,18 @@
 import DialogManager from '~ims-app-base/logic/managers/DialogManager';
-import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
 import type { DialogVariable } from '../editor/DialogBlockController';
 import EnterVariableDialog from '../dialogs/EnterVariableDialog.vue';
 import { normalizeAssetPropPart } from '~ims-app-base/logic/types/Props';
+import type { IProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 
 export async function nodeVariableAdd(
-  appManager: IAppManager,
+  projectContext: IProjectContext,
   list: DialogVariable[],
   messages: {
     alreadyExist: string;
   },
   showAutoFill: boolean = false,
 ): Promise<DialogVariable | null> {
-  const new_param = await appManager
+  const new_param = await projectContext.appManager
     .get(DialogManager)
     .show(EnterVariableDialog, {
       showAutoFill,
@@ -28,7 +28,7 @@ export async function nodeVariableAdd(
 }
 
 export async function nodeVariableChange(
-  appManager: IAppManager,
+  projectContext: IProjectContext,
   list: DialogVariable[],
   param: DialogVariable,
   messages: {
@@ -36,7 +36,7 @@ export async function nodeVariableChange(
   },
   showAutoFill: boolean = false,
 ): Promise<DialogVariable | null> {
-  const new_param = await appManager
+  const new_param = await projectContext.appManager
     .get(DialogManager)
     .show(EnterVariableDialog, {
       showAutoFill,
@@ -54,7 +54,7 @@ export async function nodeVariableChange(
   return new_param;
 }
 export async function nodeVariableDuplicate(
-  appManager: IAppManager,
+  projectContext: IProjectContext,
   list: DialogVariable[],
   param: DialogVariable,
   messages: {
@@ -94,7 +94,7 @@ export async function nodeVariableDuplicate(
 
   const guessed_title = guess_title();
 
-  const new_param = await appManager
+  const new_param = await projectContext.appManager
     .get(DialogManager)
     .show(EnterVariableDialog, {
       showAutoFill,

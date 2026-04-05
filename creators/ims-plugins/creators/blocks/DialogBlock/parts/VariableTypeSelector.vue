@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, type PropType, inject } from 'vue';
+import { defineComponent, inject, type PropType } from 'vue';
 import {
   type AssetPropValueType,
   AssetPropType,
@@ -51,7 +51,6 @@ import ImsSelect from '~ims-app-base/components/Common/ImsSelect.vue';
 import SelectAssetComboBox from '~ims-app-base/components/Asset/SelectAssetComboBox.vue';
 import isUUID from 'validator/es/lib/isUUID';
 import type { AssetForSelection } from '~ims-app-base/logic/types/AssetsType';
-import ProjectManager from '~ims-app-base/logic/managers/ProjectManager';
 import type { AssetPropWhere } from '~ims-app-base/logic/types/PropsWhere';
 import { injectedProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 import { assert } from '~ims-app-base/logic/utils/typeUtils';
@@ -120,11 +119,11 @@ export default defineComponent({
       );
     },
     selectAssetWhere(): AssetPropWhere {
+      const gdd_id = this.projectContext
+        .get(AssetSubContext)
+        .getWorkspaceByNameViaCacheSync('gdd')?.id;
       const res: AssetPropWhere = {
-        workspaceids:
-          this.$getAppManager()
-            .get(ProjectManager)
-            .getWorkspaceIdByName('gdd') ?? null,
+        workspaceids: gdd_id ?? null,
       };
       return res;
     },

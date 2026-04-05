@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts">
-import { type PropType, defineComponent, shallowRef } from 'vue';
+import { type PropType, defineComponent, inject, shallowRef } from 'vue';
 import type {
   mxGraphExportObject,
   mxCellState,
@@ -84,7 +84,6 @@ import { initMxGraphClientSide } from './initMxGraph';
 import ImcDiagramToolbar from './ImcDiagramToolbar.vue';
 import { useImcHTMLRenderer } from '~ims-app-base/components/ImcText/useImcHTMLRenderer';
 import { debounceForThis } from '~ims-app-base/components/utils/ComponentUtils';
-import CreatorAssetManager from '~ims-app-base/logic/managers/CreatorAssetManager';
 import UiManager, { ScreenSize } from '~ims-app-base/logic/managers/UiManager';
 import {
   type AssetProps,
@@ -94,6 +93,8 @@ import {
 } from '~ims-app-base/logic/types/Props';
 import ImcEditor from '~ims-app-base/components/ImcText/ImcEditor.vue';
 import ImcPresenter from '~ims-app-base/components/ImcText/ImcPresenter.vue';
+import { AssetSubContext } from '~ims-app-base/logic/project-sub-contexts/AssetSubContext';
+import { injectedProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 
 export default defineComponent({
   name: 'ImcDiagram',
@@ -112,6 +113,13 @@ export default defineComponent({
     theme: { type: String, required: true },
   },
   emits: ['click', 'ready', 'change'],
+  setup() {
+    const projectContext = inject(injectedProjectContext);
+    assert(projectContext, 'Project context not provided');
+    return {
+      projectContext,
+    };
+  },
   data() {
     return {
       editorComponentLoading: true,
@@ -365,8 +373,8 @@ export default defineComponent({
           id: string;
         };
         if (!event_dt_asset_parsed.id) return;
-        const drop_asset_short = await this.$getAppManager()
-          .get(CreatorAssetManager)
+        const drop_asset_short = await this.projectContext
+          .get(AssetSubContext)
           .getAssetShortViaCache(event_dt_asset_parsed.id);
         if (!drop_asset_short) {
           throw new Error(this.$t('asset.assetNotFound'));

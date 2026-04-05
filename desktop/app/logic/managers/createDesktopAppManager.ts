@@ -11,7 +11,7 @@ import type { BaseAppConfiguration } from '~ims-app-base/logic/configurations/ba
 import CommentSubContext from '~ims-app-base/logic/managers/CommentSubContext';
 import type { AppManagerContext } from '~ims-app-base/logic/managers/IAppManager';
 import PluginManager from '~ims-app-base/logic/project-sub-contexts/PluginSubContext';
-import EditorSubContext from '~ims-app-base/logic/managers/EditorManager';
+import EditorSubContext from '~ims-app-base/logic/project-sub-contexts/EditorSubContext';
 import ProjectContentManager from '~ims-app-base/logic/project-sub-contexts/ImportExportSubContext';
 import GlobalStateManager from '~ims-app-base/logic/managers/GlobalStateManager';
 import ExportFormatManager from '~ims-app-base/logic//managers/ExportFormatManager';

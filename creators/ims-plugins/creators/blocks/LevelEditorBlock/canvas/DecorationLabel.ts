@@ -1,9 +1,8 @@
 import * as fabric from 'fabric';
 import type { LevelEditorShape } from '../editor/LevelEditor';
 import { v4 as uuidv4 } from 'uuid';
-import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
-import { AssetSubContext } from '~ims-app-base/logic/project-sub-contexts/AssetSubContext';
 import type { IProjectContext } from '~ims-app-base/logic/types/IProjectContext';
+import { AssetSubContext } from '~ims-app-base/logic/project-sub-contexts/AssetSubContext';
 
 export function shapeValueToString(value: LevelEditorShape['value']) {
   return typeof value === 'string' ? value : value?.Title;
@@ -27,7 +26,7 @@ export default class DecorationLabel extends fabric.Group {
   private readonly _position: DecorationLabelPosition = 'center';
   private readonly _behavior: DecorationLabelBehavior = 'move-only';
 
-  protected readonly appManager: IAppManager;
+  protected readonly projectContext: IProjectContext;
 
   readonly textbox: fabric.Textbox;
   readonly background: fabric.Rect | null = null;
@@ -35,7 +34,7 @@ export default class DecorationLabel extends fabric.Group {
   constructor(
     value: NonNullable<LevelEditorShape['value']>,
     fabric_object: fabric.FabricObject,
-    appManager: IAppManager,
+    projectContext: IProjectContext,
     options?: {
       position?: DecorationLabelPosition;
       behavior?: DecorationLabelBehavior;
@@ -81,7 +80,7 @@ export default class DecorationLabel extends fabric.Group {
       originY: 'center',
     });
 
-    this.appManager = appManager;
+    this.projectContext = projectContext;
     this.textbox = textbox;
     this.background = background;
 
@@ -156,8 +155,6 @@ export default class DecorationLabel extends fabric.Group {
 
   setValue(new_val: LevelEditorShape['value']) {
     if (typeof new_val !== 'string' && new_val?.AssetId) {
-      throw 'Method is not implemented';
-      /* TODO: appManager replace projectContext
       const cached_asset_short = this.projectContext
         .get(AssetSubContext)
         .getAssetShortViaCacheSync(new_val.AssetId);
@@ -181,7 +178,6 @@ export default class DecorationLabel extends fabric.Group {
       ) {
         new_val.Title = cached_asset_short?.title ?? '';
       }
-        */
     }
 
     const text = shapeValueToString(new_val) ?? '';
