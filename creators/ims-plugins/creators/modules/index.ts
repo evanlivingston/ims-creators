@@ -6,19 +6,19 @@ import {
   GAME_OBJECT_ASSET_ID,
   MARKDOWN_ASSET_ID,
 } from '~ims-app-base/logic/constants';
-import EditorSubContext from '~ims-app-base/logic/managers/EditorManager';
-import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
+import EditorSubContext from '~ims-app-base/logic/project-sub-contexts/EditorSubContext';
+import type { IProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 
 export default function () {
   return [
     {
       type: 'module',
       content: {
-        async activate(appManager: IAppManager) {
+        async activate(projectContext: IProjectContext) {
           const cancel_callbacks: { cancel: () => void }[] = [];
 
           cancel_callbacks.push(
-            appManager.get(EditorSubContext).registerAssetLayout({
+            projectContext.get(EditorSubContext).registerAssetLayout({
               name: 'gameobject',
               pageComponent: defineAsyncComponent(
                 () =>
@@ -36,7 +36,7 @@ export default function () {
           );
 
           cancel_callbacks.push(
-            appManager.get(EditorSubContext).registerAssetLayout({
+            projectContext.get(EditorSubContext).registerAssetLayout({
               name: 'markdown',
               pageComponent: defineAsyncComponent(
                 () =>
@@ -54,31 +54,31 @@ export default function () {
           );
 
           cancel_callbacks.push(
-            appManager
+            projectContext
               .get(EditorSubContext)
               .registerAssetLayoutBind(LEVEL_ASSET_ID, 'full'),
           );
 
           cancel_callbacks.push(
-            appManager
+            projectContext
               .get(EditorSubContext)
               .registerAssetLayoutBind(DIAGRAM_ASSET_ID, 'full'),
           );
 
           cancel_callbacks.push(
-            appManager
+            projectContext
               .get(EditorSubContext)
               .registerAssetLayoutBind(SCRIPT_ASSET_ID, 'full'),
           );
 
           cancel_callbacks.push(
-            appManager
+            projectContext
               .get(EditorSubContext)
               .registerAssetLayoutBind(GAME_OBJECT_ASSET_ID, 'gameobject'),
           );
 
           cancel_callbacks.push(
-            appManager
+            projectContext
               .get(EditorSubContext)
               .registerAssetLayoutBind(MARKDOWN_ASSET_ID, 'markdown'),
           );

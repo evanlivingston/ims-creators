@@ -35,15 +35,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent, type PropType, inject } from 'vue';
 import isUUID from 'validator/es/lib/isUUID';
-import CreatorAssetManager from '~ims-app-base/logic/managers/CreatorAssetManager';
 import { AssetPropType } from '~ims-app-base/logic/types/Props';
 import type { IDialogVariableController } from '../editor/DialogVariableController';
 import VariableListItem from './VariableListItem.vue';
 import SortableList from '~ims-app-base/components/Common/SortableList.vue';
 import UiManager from '~ims-app-base/logic/managers/UiManager';
 import type { ScriptBlockPlainVariable } from '../logic/nodeStoring';
+import { injectedProjectContext } from '~ims-app-base/logic/types/IProjectContext';
+import { assert } from '~ims-app-base/logic/utils/typeUtils';
+import { AssetSubContext } from '~ims-app-base/logic/project-sub-contexts/AssetSubContext';
 
 export default defineComponent({
   name: 'VariableList',
@@ -60,6 +62,13 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+  },
+  setup() {
+    const projectContext = inject(injectedProjectContext);
+    assert(projectContext, 'Project context not provided');
+    return {
+      projectContext,
+    };
   },
   computed: {
     variableList() {
@@ -90,7 +99,7 @@ export default defineComponent({
         asset_ids.push(asset_id);
       }
       this.$getAppManager()
-        .get(CreatorAssetManager)
+        .get(AssetSubContext)
         .requestAssetShortInCacheList(asset_ids);
     },
   },

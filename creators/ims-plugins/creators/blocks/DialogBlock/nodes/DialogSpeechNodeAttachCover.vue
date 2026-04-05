@@ -17,15 +17,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent, type PropType, inject } from 'vue';
 import MenuButton from '~ims-app-base/components/Common/MenuButton.vue';
 import MenuList from '~ims-app-base/components/Common/MenuList.vue';
 import type { AssetPropValueFile } from '~ims-app-base/logic/types/Props';
 import UiManager from '~ims-app-base/logic/managers/UiManager';
 import type { IProjectContext } from '~ims-app-base/logic/types/IProjectContext';
-import { assert } from '~ims-app-base/logic/utils/typeUtils';
 import { getClipboardImagesContent } from '~ims-app-base/logic/utils/clipboard';
-import EditorSubContext from '~ims-app-base/logic/managers/EditorManager';
+import EditorSubContext from '~ims-app-base/logic/project-sub-contexts/EditorSubContext';
+import { injectedProjectContext } from '~ims-app-base/logic/types/IProjectContext';
+import { assert } from '~ims-app-base/logic/utils/typeUtils';
 
 const AllowedExtensions = new Set(['jpg', 'jpeg', 'png', 'bmp', 'svg', 'gif']);
 
@@ -35,7 +36,6 @@ export default defineComponent({
     MenuButton,
     MenuList,
   },
-  inject: ['projectContext'],
   props: {
     modelValue: {
       type: [null, Object] as PropType<AssetPropValueFile | null>,
@@ -43,6 +43,13 @@ export default defineComponent({
     },
   },
   emits: ['update:modelValue'],
+  setup() {
+    const projectContext = inject(injectedProjectContext);
+    assert(projectContext, 'Project context not provided');
+    return {
+      projectContext,
+    };
+  },
   data() {
     return {
       uploading: false,
@@ -70,11 +77,9 @@ export default defineComponent({
   },
   methods: {
     async selectFiles() {
-      const files = await this.$getAppManager()
-        .get(EditorSubContext)
-        .pickFiles({
-          accept: [...AllowedExtensions].map((x) => `.${x}`).join(','),
-        });
+      const files = await this.projectContext.get(EditorSubContext).pickFiles({
+        accept: [...AllowedExtensions].map((x) => `.${x}`).join(','),
+      });
       if (!files || files.length !== 1) return;
 
       await this.attachFile(files[0]);
@@ -95,7 +100,7 @@ export default defineComponent({
 
           this.uploading = true;
           try {
-            const upload_job = this.$getAppManager()
+            const upload_job = this.projectContext
               .get(EditorSubContext)
               .attachFile(file.blob, file.name);
             const res = await upload_job.awaitResult();

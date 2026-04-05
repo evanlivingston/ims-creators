@@ -1,8 +1,9 @@
 import * as fabric from 'fabric';
 import type { LevelEditorShape } from '../editor/LevelEditor';
 import { v4 as uuidv4 } from 'uuid';
-import CreatorAssetManager from '~ims-app-base/logic/managers/CreatorAssetManager';
 import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
+import { AssetSubContext } from '~ims-app-base/logic/project-sub-contexts/AssetSubContext';
+import type { IProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 
 export function shapeValueToString(value: LevelEditorShape['value']) {
   return typeof value === 'string' ? value : value?.Title;
@@ -155,17 +156,19 @@ export default class DecorationLabel extends fabric.Group {
 
   setValue(new_val: LevelEditorShape['value']) {
     if (typeof new_val !== 'string' && new_val?.AssetId) {
-      const cached_asset_short = this.appManager
-        .get(CreatorAssetManager)
+      throw 'Method is not implemented';
+      /* TODO: appManager replace projectContext
+      const cached_asset_short = this.projectContext
+        .get(AssetSubContext)
         .getAssetShortViaCacheSync(new_val.AssetId);
       if (cached_asset_short === undefined) {
-        this.appManager
-          .get(CreatorAssetManager)
+        this.projectContext
+          .get(AssetSubContext)
           .requestAssetShortInCache(new_val.AssetId)
           .then(() => {
             // TODO: test
-            const cached_asset = this.appManager
-              .get(CreatorAssetManager)
+            const cached_asset = this.projectContext
+              .get(AssetSubContext)
               .getAssetShortViaCacheSync(new_val.AssetId);
             if (cached_asset)
               this.textbox.set({
@@ -178,6 +181,7 @@ export default class DecorationLabel extends fabric.Group {
       ) {
         new_val.Title = cached_asset_short?.title ?? '';
       }
+        */
     }
 
     const text = shapeValueToString(new_val) ?? '';

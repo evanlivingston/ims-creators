@@ -1,11 +1,11 @@
 import * as fabric from 'fabric';
 import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
-import CreatorAssetManager from '~ims-app-base/logic/managers/CreatorAssetManager';
 import UiManager from '~ims-app-base/logic/managers/UiManager';
 import type { AssetPreviewInfo } from '~ims-app-base/logic/types/AssetsType';
 import { getSrcByFileId } from '~ims-app-base/logic/utils/files';
 import type { AssetPropValueFile } from '~ims-app-base/logic/types/Props';
 import type { LevelEditorShape } from '../editor/LevelEditor';
+import { AssetSubContext } from '~ims-app-base/logic/project-sub-contexts/AssetSubContext';
 
 const POINTER_SIZE = 100;
 const LINE_HEIGHT = 10;
@@ -104,8 +104,10 @@ export default class Pointer extends fabric.Group {
   }
 
   private _setImage(asset_id: string) {
+    throw 'Method is not implemented';
+    /* TODO: appManager replace projectContext
     this.appManager
-      .get(CreatorAssetManager)
+      .get(AssetSubContext)
       .getAssetPreviewViaCache(asset_id)
       .then((asset: AssetPreviewInfo | null) => {
         if (
@@ -164,6 +166,6 @@ export default class Pointer extends fabric.Group {
       })
       .catch((err) => {
         this.appManager.get(UiManager).showError(err);
-      });
+      });*/
   }
 }
