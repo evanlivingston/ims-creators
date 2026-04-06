@@ -4,11 +4,15 @@ import { Decoration, EditorView, ViewPlugin } from '@codemirror/view';
 import type { EditorState, Extension, Range } from '@codemirror/state';
 import type { DecorationSet, WidgetType, ViewUpdate } from '@codemirror/view';
 import type { PluginConfig } from './index';
-import CreatorAssetManager from '~ims-app-base/logic/managers/CreatorAssetManager';
 import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
 import EditorSubContext from '~ims-app-base/logic/project-sub-contexts/EditorSubContext';
 import { getProjectLinkHref } from '~ims-app-base/logic/router/routes-helpers';
-import ProjectManager from '~ims-app-base/logic/managers/ProjectManager';
+import { AssetSubContext } from '~ims-app-base/logic/project-sub-contexts/AssetSubContext';
+import {
+  injectedProjectContext,
+  type IProjectContext,
+} from '~ims-app-base/logic/types/IProjectContext';
+import { inject } from 'vue';
 
 function parseIMSWikiLink(text: string): { title: string; id: string } | null {
   const match = text.match(/^\[(.+?)\]\(#asset:([0-9a-f-]+)\)$/i);
@@ -45,13 +49,14 @@ function createWikiLinkWidget(
     lineBreaks: 0,
     toDOM: () => {
       const a = document.createElement('a');
-      const project_info = appManager.get(ProjectManager).getProjectInfo();
+      const projectContext = inject(injectedProjectContext);
+      const project_info = projectContext?.projectInfo;
 
       a.innerText = link_data.title;
       a.onclick = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        appManager.get(EditorSubContext).openAsset(link_data.id, 'popup');
+        projectContext?.get(EditorSubContext).openAsset(link_data.id, 'popup');
       };
       if (project_info) {
         a.href = getProjectLinkHref(
@@ -85,16 +90,16 @@ function isCursorInRange(
 
 function getCachedAssetFromString(
   asset_string: string,
-  appManager: IAppManager,
+  projectContext: IProjectContext,
 ) {
   const parsed_asset_data = parseIMSWikiLink(asset_string);
   if (parsed_asset_data) {
-    return appManager
-      .get(CreatorAssetManager)
+    return projectContext
+      .get(AssetSubContext)
       .getAssetShortViaCacheSync(parsed_asset_data.id);
   } else {
-    return appManager
-      .get(CreatorAssetManager)
+    return projectContext
+      .get(AssetSubContext)
       .getAssetShortByTitleViaCacheSync(asset_string);
   }
 }
