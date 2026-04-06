@@ -18,7 +18,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, inject } from 'vue';
 import MenuButton from '~ims-app-base/components/Common/MenuButton.vue';
 import MenuList from '~ims-app-base/components/Common/MenuList.vue';
 import AuthManager from '~ims-app-base/logic/managers/AuthManager';
@@ -27,6 +27,7 @@ import UiManager from '~ims-app-base/logic/managers/UiManager';
 import type { MenuListItem } from '~ims-app-base/logic/types/MenuList';
 import UserProfileIcon from './UserProfileIcon.vue';
 import type { LangStr } from '~ims-app-base/logic/types/ProjectTypes';
+import { injectedProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 
 export default defineComponent({
   name: 'AppUserInfo',
@@ -35,14 +36,20 @@ export default defineComponent({
     MenuButton,
     MenuList,
   },
+  setup() {
+    const projectContext = inject(injectedProjectContext);
+    return {
+      projectContext,
+    };
+  },
   computed: {
     userInfo() {
       return this.$getAppManager().get(AuthManager).getUserInfo();
     },
     userAccountInfo() {
       return this.$getAppManager()
-        .get(ProjectManager)
-        .getCurrentAccountValueInProject();
+        .get(AuthManager)
+        .getCurrentAccountValueInProject(this.projectContext);
     },
     displayingUserName() {
       const account_val = this.userAccountInfo;

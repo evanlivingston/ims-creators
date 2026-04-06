@@ -22,6 +22,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
     projectPath
       ? { id: projectPath } : null
   );
-  appManager.get(DesktopCreatorManager).appActivate(appInfo, projectPath);
+  await appManager.get(DesktopCreatorManager).appActivate(appInfo, projectPath);
   return true;
 });

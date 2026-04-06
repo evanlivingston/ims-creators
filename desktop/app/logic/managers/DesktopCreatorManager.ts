@@ -8,10 +8,7 @@ import type { LocalProjectInitInfo } from "#bridge/api/ImsHostProject";
 import DesktopProjectManager from "./DesktopProjectManager";
 import * as node_path from 'path';
 import SyncStoreCore from "~ims-app-base/logic/types/SyncStoreCore";
-import ApiManager from "~ims-app-base/logic/managers/ApiManager";
-import CreatorAssetManager from "~ims-app-base/logic/managers/CreatorAssetManager";
 import ProjectManager from "~ims-app-base/logic/managers/ProjectManager";
-import ProjectSettingsManager from '~ims-app-base/logic/managers/SettingsSubContext';
 
 const PROJECT_META_INDEX = '.imsc/index.json';
 
@@ -59,13 +56,14 @@ export default class DesktopCreatorManager extends AppSubManagerBase{
             invitations: [],
             newsPopupId: null,
             project: null,
-            projects:[],
+            projects: [],
             role: null,
             subscribers: {
                 isSubscribed: false,
                 total: 0
             },
-            unreadNotificationsCount: 0
+            unreadNotificationsCount: 0,
+            user: null
         }
 
         if (project){
@@ -95,7 +93,7 @@ export default class DesktopCreatorManager extends AppSubManagerBase{
         return app_data;
     }
 
-    appActivate(appInfo: AppLoadResult, localPath: string): void {
+    async appActivate(appInfo: AppLoadResult, localPath: string): Promise<void> {
         const norm_local_path = localPath.replaceAll("\\", "/");
 
         if (this.isLoaded && (this._loadedForProjectPath === norm_local_path)) {
@@ -106,24 +104,13 @@ export default class DesktopCreatorManager extends AppSubManagerBase{
         // смены проекта не ломался рендер страниц, зависящих от projectInfo
 
         this.isLoaded = false;
-        if (appInfo.project) {
-            this.appManager.get(ApiManager).setCurrentProjectId(appInfo.project.id);
-        } else {
-            this.appManager.get(ApiManager).setCurrentProjectId(null);
+        if(appInfo.project) {
+            this.appManager.get(ProjectManager).setCurrentProjectId(appInfo.project.id);
+            await this.appManager.get(ProjectManager).initLoadedProject({
+                user: appInfo.user,
+                project: appInfo.project,
+            });
         }
-        this.appManager.get(CreatorAssetManager).currentProjectUnload();
-        this.appManager
-            .get(ProjectManager)
-            .setCurrentProjectInfo(appInfo.project ?? null, appInfo.role ?? null);
-        if (appInfo.project) {
-            this.appManager
-            .get(CreatorAssetManager)
-            .updateWorkspacesCache(appInfo.project.rootWorkspaces);
-        }
-        this.appManager
-          .get(ProjectSettingsManager)
-          .setCurrentProjectSettings(appInfo.project?.settings ?? null);
-
         this._loadedForProjectId = appInfo.project ? appInfo.project.id : null;
         this._loadedForProjectShortLink = appInfo.project
             ? appInfo.project.shortLink

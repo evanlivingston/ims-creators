@@ -13,9 +13,10 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent, inject, type PropType } from 'vue';
 import AuthManager from '~ims-app-base/logic/managers/AuthManager';
 import ProjectManager from '~ims-app-base/logic/managers/ProjectManager';
+import { injectedProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 import type { AssetPropValueAccount } from '~ims-app-base/logic/types/Props';
 import { getAccountShortAbbr } from '~ims-app-base/logic/utils/stringUtils';
 
@@ -31,6 +32,12 @@ export default defineComponent({
       default: 64,
     },
   },
+  setup() {
+    const projectContext = inject(injectedProjectContext);
+    return {
+      projectContext,
+    };
+  },
   computed: {
     avatarImage() {
       if (!this.displayingUserId) {
@@ -43,15 +50,15 @@ export default defineComponent({
     displayingUserName() {
       if (this.user) return this.user.Name;
       const account_val = this.$getAppManager()
-        .get(ProjectManager)
-        .getCurrentAccountValueInProject();
+        .get(AuthManager)
+        .getCurrentAccountValueInProject(this.projectContext);
       return account_val ? account_val.Name : '';
     },
     displayingUserId() {
       if (this.user) return this.user.AccountId;
       const account_val = this.$getAppManager()
-        .get(ProjectManager)
-        .getCurrentAccountValueInProject();
+        .get(AuthManager)
+        .getCurrentAccountValueInProject(this.projectContext);
       return account_val ? account_val.AccountId : '';
     },
     croppedUserName() {

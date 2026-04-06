@@ -22,7 +22,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, inject } from 'vue';
 import AppNavigationSection from './AppNavigationSection.vue';
 import AuthManager from '~ims-app-base/logic/managers/AuthManager';
 import type { ProjectMenuItem } from '~ims-app-base/logic/configurations/base-app-configuration';
@@ -33,6 +33,7 @@ import ProjectDropdownMenu from './ProjectDropdownMenu.vue';
 import DesktopCreatorManager from '#logic/managers/DesktopCreatorManager';
 import type { AuthTokenInfo } from '~ims-app-base/logic/managers/ApiWorker';
 import type { LocalProjectInitInfo } from '#bridge/api/ImsHostProject';
+import { injectedProjectContext } from '~ims-app-base/logic/types/IProjectContext';
 
 export default defineComponent({
   name: 'AppMenu',
@@ -55,6 +56,12 @@ export default defineComponent({
     },
   },
   emits: ['update:sectionState', 'update:mobileMenuState'],
+  setup() {
+    const projectContext = inject(injectedProjectContext);
+    return {
+      projectContext,
+    };
+  },
   data() {
     return {
       activeTabName: (this.initialSectionName
@@ -74,7 +81,7 @@ export default defineComponent({
     },
     projectMenu(): ProjectMenuItem[] {
       const projectMenu = this.$appConfiguration.getProjectMenu(
-        this.$getAppManager(),
+        this.projectContext,
       );
       return projectMenu;
     },
