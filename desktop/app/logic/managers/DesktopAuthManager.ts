@@ -126,7 +126,7 @@ export default class DesktopAuthManager extends AuthManager{
         return (await this.ensureValidUserInfo()) ?? null;
     }
 
-    async getAvatar(user_id: string, size: number): Promise<string | null> {
+    override async getAvatar(user_id: string, size: number): Promise<string | null> {
         assert(this._avatarsCache);
         const res = await this._avatarsCache.getElement(user_id);
         if (!res || !res.hasAvatar) return null;
@@ -136,7 +136,7 @@ export default class DesktopAuthManager extends AuthManager{
         );
     }
 
-    getAvatarSync(user_id: string, size: number): string | null | undefined {
+    override getAvatarSync(user_id: string, size: number): string | null | undefined {
         assert(this._avatarsCache);
         const res = this._avatarsCache.getElementSync(user_id);
         if (!res) return res;
