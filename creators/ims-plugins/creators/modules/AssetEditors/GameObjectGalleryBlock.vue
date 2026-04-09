@@ -102,9 +102,8 @@ import { getClipboardImagesContent } from '~ims-app-base/logic/utils/clipboard';
 import type { AssetChanger } from '~ims-app-base/logic/types/AssetChanger';
 import ScreenshotRenderer from '~ims-app-base/components/Common/ScreenshotRenderer.vue';
 import { makeBlockRef } from '~ims-app-base/logic/types/Props';
-import EditorSubContext, {
-  type UploadingJob,
-} from '~ims-app-base/logic/managers/EditorManager';
+import type { UploadingJob } from '~ims-app-base/logic/project-sub-contexts/EditorSubContext';
+import EditorSubContext from '~ims-app-base/logic/project-sub-contexts/EditorSubContext';
 
 const AllowedExtensions = new Set(['jpg', 'jpeg', 'png', 'bmp', 'svg', 'gif']);
 

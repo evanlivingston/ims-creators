@@ -1,9 +1,10 @@
-import type { BaseAppConfiguration } from '../logic/configurations/base-app-configuration';
-import type { IAppManager } from '../logic/managers/IAppManager';
+
 import type {
   ComponentCustomOptions as _ComponentCustomOptions,
   ComponentCustomProperties as _ComponentCustomProperties,
 } from 'vue';
+import type { BaseAppConfiguration } from '~ims-app-base/logic/configurations/base-app-configuration';
+import type { IAppManager } from '~ims-app-base/logic/managers/IAppManager';
 
 declare module '#app' {
   interface NuxtApp {
