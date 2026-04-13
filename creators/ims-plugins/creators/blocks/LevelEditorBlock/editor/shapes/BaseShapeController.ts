@@ -132,8 +132,12 @@ export default abstract class BaseShapeController<
 
     if (Object.keys(updates).length > 0) {
       existing_object.set(updates);
-      existing_object.setCoords();
+      this._afterFabricPropsSet(existing_object);
     }
+  }
+
+  protected _afterFabricPropsSet(existing_object: fabric.FabricObject) {
+    existing_object.setCoords();
   }
 
   getSpecialPropertyDescriptors(): ShapePropertyDescriptor<TShape, any>[] {
