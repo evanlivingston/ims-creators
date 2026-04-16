@@ -593,6 +593,20 @@ export default class LevelEditorCanvasController {
       previous_objects_stack.push(existing_object);
     }
 
+    // const selected_object = this.canvas.getActiveObject();
+    // if (selected_object?.type === 'activeselection') {
+    //   const selection = selected_object as fabric.ActiveSelection;
+    //   if (selection._objects.length > 1) {
+    //     const new_selection = new fabric.ActiveSelection(
+    //       selection.removeAll(),
+    //       {
+    //         canvas: this.canvas,
+    //       },
+    //     );
+
+    //     this.canvas.setActiveObject(new_selection);
+    //   }
+    // }
     this.canvas.requestRenderAll();
   }
 
