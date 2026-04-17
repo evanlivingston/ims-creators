@@ -14,13 +14,13 @@ export default class PolygonController extends BaseShapeController<PolygonShape>
   name = 'polygon';
   icon = 'ri-shape-line';
 
-  createFabricObject(shape: PolygonShape) {
+  createFabricObject(shape: PolygonShape, readonly: boolean) {
     const origin = { x: shape.x, y: shape.y };
     const absolutePoints = shape.params.points.map((p) => ({
       x: p.x + origin.x,
       y: p.y + origin.y,
     }));
-    return markRaw(
+    const poly = markRaw(
       new fabric.Polygon(absolutePoints, {
         id: shape.id,
         index: shape.index,
@@ -32,6 +32,34 @@ export default class PolygonController extends BaseShapeController<PolygonShape>
         evented: !shape.locked,
       }),
     );
+    if (!readonly) {
+      this._handlePolygonControls(poly);
+    }
+    return poly;
+  }
+
+  private _handlePolygonControls(polygon: fabric.Polygon) {
+    let editing = false;
+    polygon.on('mousedblclick', () => {
+      editing = !editing;
+      if (editing) {
+        polygon.cornerStyle = 'circle';
+        polygon.hasBorders = false;
+        polygon.controls = fabric.controlsUtils.createPolyControls(polygon);
+      } else {
+        polygon.cornerStyle = 'rect';
+        polygon.hasBorders = true;
+        polygon.controls = fabric.controlsUtils.createObjectDefaultControls();
+      }
+      polygon.setCoords();
+      polygon.canvas?.requestRenderAll();
+    });
+    polygon.on('deselected', () => {
+      editing = false;
+      polygon.cornerStyle = 'rect';
+      polygon.hasBorders = true;
+      polygon.controls = fabric.controlsUtils.createObjectDefaultControls();
+    });
   }
 
   protected override collectUpdates(
