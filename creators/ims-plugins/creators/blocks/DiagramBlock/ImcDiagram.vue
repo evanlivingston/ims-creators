@@ -317,7 +317,11 @@ export default defineComponent({
           }
         }
         const def_parent = graph.getDefaultParent();
-        if (!def_parent.children || def_parent.children.length === 0) {
+        if (
+          !def_parent ||
+          !def_parent.children ||
+          def_parent.children.length === 0
+        ) {
           setTimeout(() => {
             graph.refresh(); // Fix partial display bug when graph is empty
           }, 1);

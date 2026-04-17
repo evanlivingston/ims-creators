@@ -25,8 +25,8 @@ import AuthManager from '~ims-app-base/logic/managers/AuthManager';
 import ProjectManager from '~ims-app-base/logic/managers/ProjectManager';
 import UiManager from '~ims-app-base/logic/managers/UiManager';
 import type { MenuListItem } from '~ims-app-base/logic/types/MenuList';
-import UserProfileIcon from './UserProfileIcon.vue';
 import type { LangStr } from '~ims-app-base/logic/types/ProjectTypes';
+import UserProfileIcon from '~ims-app-base/components/Common/UserProfileIcon.vue';
 
 export default defineComponent({
   name: 'AppUserInfo',

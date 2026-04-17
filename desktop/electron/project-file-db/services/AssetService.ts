@@ -25,7 +25,6 @@ import { generateNextUniqueNameNumber } from "~ims-app-base/logic/utils/stringUt
 import { assert } from "~ims-app-base/logic/utils/typeUtils";
 import { ASSET_BASE_ORDERING } from "../project-db-constants";
 import { SQLITE_NOW_STM } from "./SyncService/SyncService";
-import { HttpMethods, Service } from "~ims-app-base/logic/managers/ApiWorker";
    
 export class AssetService implements IProjectDatabaseAsset{
 
@@ -654,15 +653,18 @@ export class AssetService implements IProjectDatabaseAsset{
             ids: change.ids,
             objects: change.objects,
             total: change.total,
-            changeId: change.changeId
+            changeId: change.changeId,
+            touchedWIds: change.touchedWIds
         }
     }
 
     private async _assetsCreateImpl(changeRecord: HistoryChangeRecord, params: AssetCreateDTO): Promise<{
-        id: string
+        id: string,
+        touchedWIds: string[]
     }> {
         let parent_props: ProjectFileDbAssetBlock[] = [];
         let type_ids: string[] = [];
+        const touchedWIds: string[] = [];
 
         const asset_id = params.id ?? uuidv4();
         const system_asset = this.systemAssets.byId.get(asset_id);
@@ -734,7 +736,8 @@ export class AssetService implements IProjectDatabaseAsset{
         };
         let parent_workspace_path = this.db.localPath;
         if(asset_full.workspaceId) {
-            parent_workspace_path = getWorkspaceLocalPathById(asset_full.workspaceId, this.db)
+            parent_workspace_path = getWorkspaceLocalPathById(asset_full.workspaceId, this.db);
+            touchedWIds.push(asset_full.workspaceId)
         }
         const suggest_title = this.getAssetFileSavingFilename(
             asset_full,
@@ -748,7 +751,8 @@ export class AssetService implements IProjectDatabaseAsset{
             delete: true
         })
         return {
-            id: asset_id
+            id: asset_id,
+            touchedWIds
         }
     }
 
@@ -833,11 +837,16 @@ export class AssetService implements IProjectDatabaseAsset{
             ids: change.ids,
             objects: change.objects,
             total: change.total,
-            changeId: change.changeId
+            changeId: change.changeId,
+            touchedWIds: change.touchedWIds
         }
     }
     
-    private async _assetsChangeImpl(changeRecord: HistoryChangeRecord, params: AssetChangeDTO, options?: { pid?: string; }): Promise<{ids: string[]}> {
+    private async _assetsChangeImpl(changeRecord: HistoryChangeRecord, params: AssetChangeDTO, options?: { pid?: string; }): Promise<{
+        ids: string[],
+        touchedWIds: string[]
+    }> {
+        const touchedWIds: string[] = []
         const assets_from_db = await this.searchAssets(params.where);
         const changing_assets_ids = assets_from_db.map(asset => asset.id);
         if(assets_from_db.length > 0){
@@ -859,14 +868,27 @@ export class AssetService implements IProjectDatabaseAsset{
 
 
                 const old_path = getAssetLocalPath(changing_asset, this.db);
+                const old_workspace_id = changing_asset.workspaceId;
+                const old_title = changing_asset.title;
                 changing_asset = {
                     ...changing_asset,
                     ...params.set,
                     blocks: params.set.blocks ? this._mergeBlocksToSave(changing_asset.blocks, params.set.blocks, undo) : changing_asset.blocks,
                 }
-                if(params.set.workspaceId !== undefined || params.set.title !== undefined) {
+
+                const workspace_id_changed = params.set.workspaceId !== undefined  && old_workspace_id !== params.set.workspaceId !== undefined ;
+                const title_changed = params.set.title !== undefined && old_title !== params.set.title
+                if(workspace_id_changed || title_changed) {
                     const local_path = await applyImsFileLocationChange(changing_asset, old_path, this.db);
                     changing_asset.localName = node_path.basename(local_path);
+                    if(workspace_id_changed){
+                        if (old_workspace_id){
+                            touchedWIds.push(old_workspace_id)
+                        }
+                        if (params.set.workspaceId){
+                            touchedWIds.push(params.set.workspaceId)
+                        }
+                    }
                 }
                 this.assets.replace(changing_asset);
                 await this.saveAssetFile(changing_asset);
@@ -874,7 +896,8 @@ export class AssetService implements IProjectDatabaseAsset{
             }
         }
         return {
-            ids: changing_assets_ids
+            ids: changing_assets_ids,
+            touchedWIds
         };
     }
     async assetsChangeUndo(params: { changeId: string; }, options?: { pid?: string; }): Promise<AssetsChangeResult> {
@@ -904,12 +927,14 @@ export class AssetService implements IProjectDatabaseAsset{
             deletedIds: [],
             createdIds: [],
             updatedIds: [],
+            touchedWIds: [],
             changeId: null
         }
         const changeRecord = new HistoryChangeRecord();
         const createdIds = new  Set<string>()
         const updatedIds = new  Set<string>()
         const deletedIds = new  Set<string>()
+        let touchedWIds: string[] = [];
 
         for (const op of params.ops){
             if (op.create){
@@ -917,11 +942,17 @@ export class AssetService implements IProjectDatabaseAsset{
                     id: (typeof op.create === 'object' ? op.create.id : undefined) ?? undefined,
                     set: op.set
                 })
+                if (res.touchedWIds.length > 0){
+                    touchedWIds = touchedWIds.concat(res.touchedWIds);
+                }
                 createdIds.add(res.id)
             }
             else if (op.set.delete){
                 assert(op.where, "Where is required for delete actions")
                 const res = await this._assetsDeleteImpl(changeRecord, op.where)
+                if (res.touchedWIds.length > 0){
+                    touchedWIds = touchedWIds.concat(res.touchedWIds);
+                }
                 for (const id of res.ids){
                     deletedIds.add(id)
                 }
@@ -929,6 +960,9 @@ export class AssetService implements IProjectDatabaseAsset{
             else if (op.set.restore) {
                 assert(op.where, "Where is required for restore actions")
                 const res = await this._assetsRestore(changeRecord, op.where)
+                if (res.touchedWIds.length > 0){
+                    touchedWIds = touchedWIds.concat(res.touchedWIds);
+                }
                 for (const id of res.ids){
                     createdIds.add(id)
                 }
@@ -939,6 +973,9 @@ export class AssetService implements IProjectDatabaseAsset{
                     set: op.set,
                     where: op.where
                 })
+                if (res.touchedWIds.length > 0){
+                    touchedWIds = touchedWIds.concat(res.touchedWIds);
+                }
                 for (const id of res.ids){
                     updatedIds.add(id)
                 }
@@ -975,6 +1012,7 @@ export class AssetService implements IProjectDatabaseAsset{
             createdIds: [...createdIds],
             deletedIds:  [...deletedIds],
             updatedIds: [...updatedIds],
+            touchedWIds: [...new Set(touchedWIds)]
         };
     }
     async assetsDelete(where: AssetWhereParams, options?: { pid?: string; }): Promise<AssetDeleteResultDTO> {
@@ -990,7 +1028,8 @@ export class AssetService implements IProjectDatabaseAsset{
         })
         return {
             ids: change.deletedIds,
-            changeId: change.changeId
+            changeId: change.changeId,
+            touchedWIds: change.touchedWIds
         }
     }
 
@@ -1013,13 +1052,20 @@ export class AssetService implements IProjectDatabaseAsset{
         }
     }
 
-    private async _assetsDeleteImpl(changeRecord: HistoryChangeRecord, where: AssetWhereParams, options?: { pid?: string; }): Promise<{ids: string[]}> {
+    private async _assetsDeleteImpl(changeRecord: HistoryChangeRecord, where: AssetWhereParams, options?: { pid?: string; }): Promise<{
+        ids: string[], 
+        touchedWIds: string[]
+    }> {
+        const touchedWIds: string[] = []
         const deleting_assets = await this.searchAssets({
             ...where,
             isSystem: false
         });
         if(deleting_assets.length > 0){
             for(const asset of deleting_assets){
+                if (asset.workspaceId){
+                    touchedWIds.push(asset.workspaceId)
+                }
                 this.deleteOwnAssetFromCollectionOnly(asset.id);
                 await this._deleteAssetFileFromFilesystem(asset);
                 changeRecord.addChange(asset.id, {
@@ -1031,7 +1077,8 @@ export class AssetService implements IProjectDatabaseAsset{
         const deleting_asset_ids = deleting_assets.map(a => a.id)
 
         return {
-            ids: deleting_asset_ids
+            ids: deleting_asset_ids,
+            touchedWIds
         }
     }
    async assetsRestore( where: AssetWhereParams, options?: { pid?: string; }): Promise<AssetsChangeResult> {
@@ -1049,11 +1096,16 @@ export class AssetService implements IProjectDatabaseAsset{
             ids: change.ids,
             objects: change.objects,
             total: change.total,
-            changeId: change.changeId
+            changeId: change.changeId,
+            touchedWIds: change.touchedWIds
         }    
     }
     
-   private async _assetsRestore(changeRecord: HistoryChangeRecord,where: AssetWhereParams, options?: { pid?: string; }): Promise<{ ids: string[]}> {
+   private async _assetsRestore(changeRecord: HistoryChangeRecord,where: AssetWhereParams, options?: { pid?: string; }): Promise<{ 
+        ids: string[],    
+        touchedWIds: string[]
+    }> {
+        const touchedWIds: string[] = []
         const filter = await AssetSearchFilter.Create(where, this.db);
         const result = filter.apply(this._sessionDeletedAssets.iterate());
         const restoring_assets = [...result];
@@ -1064,9 +1116,13 @@ export class AssetService implements IProjectDatabaseAsset{
             changeRecord.addChange(asset_full.id, {
                 delete: true
             })
+            if (asset_full.workspaceId){
+                touchedWIds.push(asset_full.workspaceId)
+            }
         }
         return {
-            ids: restoring_assets.map(a => a.id)
+            ids: restoring_assets.map(a => a.id),
+            touchedWIds
         }
     }
     assetsCreateRef(params: CreateRefDTO): Promise<AssetReferencesResult> {
@@ -1141,7 +1197,8 @@ export class AssetService implements IProjectDatabaseAsset{
                     index: avail_asset?.index ?? null,
                     workspaceId: avail_asset?.workspaceId ?? null
                 }
-            })
+            }),
+            touchedWIds: res.touchedWIds
         }
     }
     assetsGetHistory(assetId: string): Promise<ApiResultListWithMore<AssetHistoryDTO>> {
