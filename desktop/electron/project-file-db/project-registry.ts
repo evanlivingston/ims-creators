@@ -1,5 +1,6 @@
 import type { BrowserWindow } from "electron";
 import { ProjectFileDb } from "./ProjectFileDb";
+import path from "node:path"
 
 const projectDbMap = new Map<string, {
     for: Set<BrowserWindow>,
@@ -7,6 +8,7 @@ const projectDbMap = new Map<string, {
 }>();
 
 export function requestProjectDb(projectPath: string, forWindow: BrowserWindow): ProjectFileDb{
+    projectPath = path.normalize(projectPath);
     let requested = projectDbMap.get(projectPath);
     if (!requested || requested.db.isDestroying){
         requested = {
@@ -20,6 +22,7 @@ export function requestProjectDb(projectPath: string, forWindow: BrowserWindow):
 }
 
 export async function closeProjectDb(projectPath: string, forWindow: BrowserWindow): Promise<void> {
+    projectPath = path.normalize(projectPath);
     let requested = projectDbMap.get(projectPath);
     if (!requested){
         return;

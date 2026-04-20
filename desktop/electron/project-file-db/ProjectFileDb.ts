@@ -89,10 +89,15 @@ export class ProjectFileDb  {
     public api = new ApiService(this);
     public sync = new SyncService(this);
 
+    public localPath: string; // Path to root of project. No slash at the end
+
     public RootGddFolder =  {...RootGddFolder}
 
-    constructor(public localPath: string){
-
+    constructor(localPath: string){
+        this.localPath = path.normalize(localPath);
+        if (this.localPath[this.localPath.length - 1] === '/' || this.localPath[this.localPath.length - 1] === '\\'){
+            this.localPath = this.localPath.substring(0, this.localPath.length - 1);
+        }
     }
 
     get isDestroying(){

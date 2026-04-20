@@ -91,26 +91,39 @@ export function getWorkspaceLocalPathById(workspace_id: string | null, db: Proje
         const old_w_file_path = old_local_path + (is_workspace ? '.imw.json' : '');
         // перемещаю информацию о файле (.im(a|w).json)
         try {
-          await fse.move(old_w_file_path, new_w_file_path);
-        }
-        catch (err: any){
-          if (err.code !== 'ENOENT'){
-            throw err;
-          }
-        }
-        if (is_workspace) {
-            // перемещаю содержимое папки
-            const workspace_from = old_w_file_path.replace(/\.imw\.json$/, '');
-            const workspace_to = new_w_file_path.replace(/\.imw\.json$/, '');
 
-            try {
-                await fse.move(workspace_from, workspace_to)
+
+        // move file meta (.im(a|w).json)
+        await db.fileSystem.expectFsChange([
+          old_w_file_path, 
+          new_w_file_path
+        ], async () => {
+          try {
+            await fse.move(old_w_file_path, new_w_file_path);
+          }
+          catch (err: any){
+            if (err.code !== 'ENOENT'){
+              throw err;
             }
-            catch (err: any){
-              if (err.code !== 'ENOENT'){
-                throw err;
-              }
-            }
+          }
+        })
+        if (is_workspace) {
+            // move folder for workspaces 
+            const workspace_folder_from = old_w_file_path.replace(/\.imw\.json$/, '');
+            const workspace_folder_to = new_w_file_path.replace(/\.imw\.json$/, '');
+            await db.fileSystem.expectFsChange([
+              workspace_folder_from, 
+              workspace_folder_to
+            ], async () => {
+                try {
+                    await fse.move(workspace_folder_from, workspace_folder_to)
+                }
+                catch (err: any){
+                  if (err.code !== 'ENOENT'){
+                    throw err;
+                  }
+                }
+            })
         }
         return new_w_file_path;
     }
@@ -122,4 +135,24 @@ export function getWorkspaceLocalPathById(workspace_id: string | null, db: Proje
         /^(.{8})(.{4})(.{4})(.{4})(.{12})$/,
         '$1-$2-$3-$4-$5'
     );
+  }
+
+  export function isDirSync(filepath: string): boolean{
+    const stat = fs.statSync(filepath, {
+      throwIfNoEntry: false
+    })
+    return stat ? stat.isDirectory() : false;
+  }
+  
+  export async function isDir(filepath: string): Promise<boolean> {
+    try {
+        const file_info = await fs.promises.stat(filepath);
+        return file_info.isDirectory();
+    }
+    catch (err: any){
+        if (err.code === 'ENOENT'){
+            return false;
+        }
+        throw err;
+    }
   }

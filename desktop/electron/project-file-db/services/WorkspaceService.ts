@@ -17,6 +17,7 @@ import { once } from "node:events";
 import { PassThrough, type Writable } from "node:stream";
 import { shell } from 'electron'
 import { WORKSPACE_BASE_ORDERING } from "../project-db-constants";
+import { WORKSPACE_EXT } from "./FileSystemService";
 import { SQLITE_NOW_STM, type WorkspaceEntity } from "./SyncService/SyncService";
    
 export class WorkspaceService implements IProjectDatabaseWorkspace{
@@ -182,9 +183,14 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
             localName: suggest_title_with_ext,
         };
         this.workspaces.add(workspace);
-        await fs.promises.writeFile(workspace_local_path, JSON.stringify(workspace, null, 1));
-        const folder_local_path = workspace_local_path.replace(/\.imw\.json$/, '');
-        await fs.promises.mkdir(folder_local_path);
+        const workspace_local_path_folder = workspace_local_path_meta.replace(/\.imw\.json$/, '');
+        await this.db.fileSystem.expectFsChange([
+            workspace_local_path_meta,
+            workspace_local_path_folder
+        ], async () => {
+            await fs.promises.writeFile(workspace_local_path_meta, JSON.stringify(workspace, null, 1));
+            await fs.promises.mkdir(workspace_local_path_folder);
+        })
         await this.markNotSyncedWorkspace(workspace_id);
         return workspace;
     }
@@ -257,21 +263,25 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
         const local_path_folder = getWorkspaceLocalPath(workspace, this.db)
         const local_path_meta = local_path_folder + ".imw.json";
 
-        // 1. Delete meta file
-        try {
-            await shell.trashItem(local_path_meta);
-        }
-        catch (err: any){
-            // Ignore error
-        }
-        
-        // 2. Delete entire folder
-        try {
-            await shell.trashItem(local_path_folder);
-        }
-        catch (err: any){
-            // Ignore error
-        }
+        await this.db.fileSystem.expectFsChange([
+            local_path_folder, local_path_meta
+        ], async () => {
+            // 1. Delete meta file
+            try {
+                await shell.trashItem(local_path_meta);
+            }
+            catch (err: any){
+                // Ignore error
+            }
+            
+            // 2. Delete entire folder
+            try {
+                await shell.trashItem(local_path_folder);
+            }
+            catch (err: any){
+                // Ignore error
+            }
+        })
     }
 
     async workspacesDelete(workspace_id: string): Promise<void> {
@@ -420,5 +430,17 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
         const zip_stream = zip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
             .pipe(fs.createWriteStream(targetPath));
         await once(zip_stream, 'finish');
+    }
+    
+    findByLocalDirPath(localDirPath: string): ProjectFileDbWorkspace | null {
+        if (!localDirPath || localDirPath === '.') return this.db.RootGddFolder;
+        const segments = localDirPath.split(/\\\//);
+        let current_workspace = this.db.RootGddFolder;
+        for (const segment of segments){
+            const next = this.workspaces.iterate().find(x => x.localName === segment + WORKSPACE_EXT && x.parentId === current_workspace.id);
+            if (!next) return null;
+            current_workspace = next;
+        }
+        return current_workspace;
     }
 }

@@ -24,6 +24,9 @@ import { AssetRights } from "~ims-app-base/logic/types/Rights";
 import { generateNextUniqueNameNumber } from "~ims-app-base/logic/utils/stringUtils";
 import { assert } from "~ims-app-base/logic/utils/typeUtils";
 import { ASSET_BASE_ORDERING } from "../project-db-constants";
+import { set } from "date-fns";
+import { WORKSPACE_EXT } from "./FileSystemService";
+
 import { SQLITE_NOW_STM } from "./SyncService/SyncService";
    
 export class AssetService implements IProjectDatabaseAsset{
@@ -184,9 +187,7 @@ export class AssetService implements IProjectDatabaseAsset{
         const parent_asset = parent_id ? await this._getAssetFullById(parent_id) : null;
         if(parent_asset) {
 
-            // добавляю id родителя в начало
-            asset.typeIds = [...parent_asset.typeIds]
-            asset.typeIds.unshift(parent_asset.id);
+            asset.typeIds = [parent_asset.id, ...parent_asset.typeIds]
 
             if(!asset.ownIcon) {
                 asset.icon = parent_asset.icon;
@@ -235,10 +236,16 @@ export class AssetService implements IProjectDatabaseAsset{
         const existing_blocks: ProjectFileDbAssetBlock[] = [];
         for(const block of asset.blocks){
             if(!block.delete){
-                existing_blocks.push({...block});
+                existing_blocks.push({
+                    ...block,
+                    computed: convertAssetPropsToPlainObject({
+                        ...(block.inherited ? assignPlainValueToAssetProps({}, block.inherited) : {}),
+                        ...assignPlainValueToAssetProps({}, block.props)
+                    })
+                });
             }
         }
-        asset.blocks = [...existing_blocks];
+        asset.blocks = existing_blocks;
 
         return asset;
     }
@@ -767,11 +774,17 @@ export class AssetService implements IProjectDatabaseAsset{
         await this.saveAssetFileToFile(asset_full, local_path);
     }
 
-    async saveAssetFileToFile(asset_full: ProjectFileDbAsset, file_path: string){        
-        const writableStream = fs.createWriteStream(file_path);
-        this.saveAssetFileToStream(asset_full, writableStream);
-        writableStream.end();
-        await once(writableStream, 'finish');
+    async saveAssetFileToFile(asset_full: ProjectFileDbAsset, file_path: string){  
+        await this.db.fileSystem.expectFsChange([file_path], async () => {
+            const writableStream = fs.createWriteStream(file_path);
+            this.saveAssetFileToStream(asset_full, writableStream);
+            writableStream.end();
+            await once(writableStream, 'finish');
+            await new Promise<void>((resolve, reject) => writableStream.close((err) => {
+                if (err) reject(err)
+                else resolve();
+            }));
+        })      
     }
 
     saveAssetFileToStream(asset_full: ProjectFileDbAsset, target: Writable){
@@ -1044,12 +1057,16 @@ export class AssetService implements IProjectDatabaseAsset{
     private async _deleteAssetFileFromFilesystem(asset: ProjectFileDbAsset){
         if (!asset.localName) return;
         const local_path = getAssetLocalPath(asset, this.db)
-        try {
-            await shell.trashItem(local_path);
-        }
-        catch (err: any){
-            // Ignore error
-        }
+        await this.db.fileSystem.expectFsChange([
+            local_path
+        ], async () => {
+            try {
+                await shell.trashItem(local_path);
+            }
+            catch (err: any){
+                // Ignore error
+            }
+        })
     }
 
     private async _assetsDeleteImpl(changeRecord: HistoryChangeRecord, where: AssetWhereParams, options?: { pid?: string; }): Promise<{
@@ -1216,4 +1233,14 @@ export class AssetService implements IProjectDatabaseAsset{
         }
         await this.saveAssetFileToFile(assets.list[0], target);
     }
+    findByLocalPath(localPath: string): ProjectFileDbAsset| null {
+        const dirpath = node_path.dirname(localPath);
+        const local_name = node_path.basename(localPath);
+        const workspace = this.db.workspace.findByLocalDirPath(dirpath);
+        if (!workspace) return null;
+
+        const found = this.assets.iterate().find(x => x.localName === local_name && x.workspaceId === workspace.id);
+        return found ?? null;
+    }
+
 }
