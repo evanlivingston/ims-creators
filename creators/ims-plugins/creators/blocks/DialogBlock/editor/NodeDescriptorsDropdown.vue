@@ -43,6 +43,7 @@ export default defineComponent({
   max-height: var(--DropdownContainer-freeHeight);
   width: max-content;
   max-width: var(--DropdownContainer-freeWidth);
+  user-select: none;
 }
 .NodeDescriptorsDropdown-item {
   padding: 5px 10px;
