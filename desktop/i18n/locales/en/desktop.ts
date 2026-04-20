@@ -10,6 +10,11 @@ export default {
   },
   desktop: {
     fsSync: {
+      menu: {
+        errors: 'Errors of synchronization',
+        pause: 'Pause',
+        resume: 'Resume',
+      },
       header: 'Errors of synchronization',
       synchronization: 'Synchronization',
       syncButton: 'Resynchronize',

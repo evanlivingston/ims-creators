@@ -121,6 +121,17 @@ export class SyncService {
         `, [...workspace_ids]);
     }
 
+    async pauseSyncProject(){
+        this._synchronizationTimer = undefined;
+    }
+    
+    async resumeSyncProject(){
+        await this.syncProject();
+        this._synchronizationTimer = setInterval(() => {
+            this.syncProject();
+        }, 60 * 1000);
+    }
+
     async syncProject(){
         if (this._syncProcessRunning) return;
         if (!this.db.info.id) return;

@@ -75,7 +75,8 @@ export type ProjectFileDbInfo = {
 export type ProjectFileDbInitParams = { 
     title: string, 
     id: string | null, 
-    rootWorkspaceId: string | null
+    rootWorkspaceId: string | null,
+    recreate?: true
 }
 
 export class ProjectFileDb  {
@@ -111,20 +112,26 @@ export class ProjectFileDb  {
           recursive: true
         });
 
-        try {
-          const projectInfoText = await fs.promises.readFile(path.join(this.localPath, PROJECT_META_INDEX), 'utf-8')
-          const projectInfo = JSON.parse(projectInfoText);
-          this._info = {
-              id: projectInfo.id ?? '',
-              title:projectInfo.title,
-              inited: projectInfo.inited,
-              rootWorkspaceId: projectInfo.rootWorkspaceId
-          }
-        } catch (err: any) {
-          if (!/^ENOENT:/.test(err.message)){
-            throw err;
-          }
+        let need_recreate = !!initParams?.recreate;
+        if (!need_recreate){
+            try {
+            const projectInfoText = await fs.promises.readFile(path.join(this.localPath, PROJECT_META_INDEX), 'utf-8')
+            const projectInfo = JSON.parse(projectInfoText);
+            this._info = {
+                id: projectInfo.id ?? '',
+                title:projectInfo.title,
+                inited: projectInfo.inited,
+                rootWorkspaceId: projectInfo.rootWorkspaceId
+            }
+            } catch (err: any) {
+                if (!/^ENOENT:/.test(err.message)){
+                    throw err;
+                }
+                need_recreate = true;
+            }
+        }
 
+        if (need_recreate){
           const title = initParams?.title ?? this.localPath.split(/[\\/]/).pop() ?? '';
           this._info = {
             id: initParams?.id ?? '',
@@ -134,7 +141,7 @@ export class ProjectFileDb  {
           }
           await fs.promises.writeFile(path.join(this.localPath, PROJECT_META_INDEX), JSON.stringify(this._info), 'utf-8')
         }
-
+        assert(this._info);
         
         this.api.init(getMainTokenStorage())
         if (this._info.id){
@@ -156,9 +163,14 @@ export class ProjectFileDb  {
         this.sync.init();
     }
 
-    init(initParams?: ProjectFileDbInitParams){
+    async init(initParams?: ProjectFileDbInitParams){
         if (this.isDestroying){
             throw new Error('Cannot init destroying ProjectFileDb');
+        }
+        if(initParams?.recreate) {
+            await this.destroy();
+            this._destroying = null;
+            this._initing = null;
         }
         if (!this._initing){
             this._initing = this._initImpl(initParams).catch(err => {

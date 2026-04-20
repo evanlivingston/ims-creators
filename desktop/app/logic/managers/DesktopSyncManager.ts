@@ -38,6 +38,20 @@ export default class DesktopSyncManager extends AppSubManagerBase {
         }
     }
 
+    async pauseSyncProject(){
+        const local_path = this.appManager.get(ProjectManager).getProjectInfo()?.localPath; 
+        if(local_path){
+            await window.imshost.sync.pauseSyncProject(local_path);
+        }
+    }
+
+    async resumeSyncProject(){
+        const local_path = this.appManager.get(ProjectManager).getProjectInfo()?.localPath; 
+        if(local_path){
+            await window.imshost.sync.resumeSyncProject(local_path);
+        }
+    }
+
     async resyncAssetsAndWorkspaces(asset_ids: string[], workspace_ids: string[]){
         const local_path = this.appManager.get(ProjectManager).getProjectInfo()?.localPath; 
         if(local_path){

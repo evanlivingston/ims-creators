@@ -49,6 +49,8 @@ export function sendEventToProjectDbWindows(projectPath: string, eventName:strin
         return;
     }
     for(const win of requested.for) {
-        win.webContents.send(eventName, ...args)
+        if (win && !win.isDestroyed()){
+            win.webContents.send(eventName, ...args)
+        }
     }
 }

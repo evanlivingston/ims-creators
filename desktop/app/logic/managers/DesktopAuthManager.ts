@@ -8,6 +8,8 @@ import { EntityCache } from "~ims-app-base/logic/types/EntityCache";
 import assert from 'assert';
 
 
+
+
 export default class DesktopAuthManager extends AuthManager{
     private readonly _apiManager: ApiManager;
     private _avatarsCache: EntityCache<AvatarEntity> | undefined;

@@ -172,7 +172,7 @@ export default defineComponent({
       return this.params.projectType === 'cloud' && !this.userInfo;
     },
     needLicense(){
-      return this.params.projectType === 'cloud' && !this.userInfo.licenses.find((l: { productName: string | string[]; }) => l.productName.includes('pro'));
+      return this.params.projectType === 'cloud' && !this.userInfo?.licenses.find((l: { productName: string | string[]; }) => l.productName.includes('pro'));
     },
     userInfo(){
       return this.$getAppManager().get(AuthManager).getUserInfo();
@@ -226,7 +226,7 @@ export default defineComponent({
             .get(DesktopProjectManager)
             .createProject({
               title: this.params.projectName,
-              templateIds: [this.currentProjectTemplateId],
+              template_ids: [this.currentProjectTemplateId],
               menu_settings: {
                 'menu-about': false,
                 'menu-gamedesign': true,
@@ -242,7 +242,7 @@ export default defineComponent({
           await this.$getAppManager().get(DesktopProjectManager).initializeLocalProject(this.projectPath, {
             id: new_project_info?.id ?? null,
             title: this.params.projectName,
-            rootWorkspaceId
+            rootWorkspaceId: rootWorkspaceId ?? null,
           });
           if(this.currentProjectTemplateId){
             await this.$getAppManager().get(DesktopProjectManager).importTemplateProject(this.currentProjectTemplateId);

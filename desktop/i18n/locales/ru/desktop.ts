@@ -11,6 +11,11 @@ export default {
   },
   desktop: {
     fsSync: {
+      menu: {
+        errors: 'Ошибки синхронизации',
+        pause: 'Приостановить',
+        resume: 'Возобновить',
+      },
       header: 'Ошибки синхронизации',
       synchronization: 'Синхронизация',
       syncButton: 'Синхронизировать снова',
