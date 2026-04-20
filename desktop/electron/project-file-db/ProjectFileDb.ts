@@ -16,6 +16,8 @@ import { AssetRights } from "~ims-app-base/logic/types/Rights";
 import type { DataSource } from "typeorm";
 import { getProjectDataSource } from "./project-data-source";
 import { SyncService } from "./services/SyncService/SyncService";
+import type { ProjectContentChangeEventArg } from "~ims-app-base/logic/types/IProjectDatabase";
+import { sendEventToProjectDbWindows } from "./project-registry";
 
 export type ProjectFileDbAssetBlock = {
     id: string;
@@ -197,8 +199,12 @@ export class ProjectFileDb  {
         return this._dataSource;
     }
 
-    export(workpsaceId: string, targetPath: string){
+    export(workspaceId: string, targetPath: string){
         
+    }
+
+    sendProjectChange(changes: ProjectContentChangeEventArg){
+        sendEventToProjectDbWindows(this.localPath, 'contentChange', [changes])
     }
 
 

@@ -67,66 +67,66 @@ export function getWorkspaceLocalPathById(workspace_id: string | null, db: Proje
   return getWorkspaceLocalPath(workspace ?? null, db)
 }
 
- export async function applyImsFileLocationChange(file: ProjectFileDbWorkspace | ProjectFileDbAsset, old_local_path: string, db: ProjectFileDb): Promise<string>{
-        let parent_id: string | null;
-        let parent_path: string = db.localPath;
-        let is_workspace = false;
-        if((file as ProjectFileDbAsset)?.workspaceId){
-            parent_id = (file as ProjectFileDbAsset).workspaceId;
-        }
-        else {
-            parent_id = (file as ProjectFileDbWorkspace).parentId;
-            is_workspace = true;
-        }
-        assert(file.localName);
-        const file_local_ext = getImsExtname(file.localName);
-        parent_path = getWorkspaceLocalPathById(parent_id, db);
-        const suggest_title_with_ext = generateNextUniqueNameNumber(
-            prepareFileBasenameByEntityTitle(file.title ?? 'untitled'),
-            (name) => !fs.existsSync(path.join(parent_path, name )),
-            ' - ',
-            file_local_ext
-        );
-        const new_w_file_path = path.join(parent_path, suggest_title_with_ext)
-        const old_w_file_path = old_local_path + (is_workspace ? '.imw.json' : '');
-        // перемещаю информацию о файле (.im(a|w).json)
-        try {
-
-
-        // move file meta (.im(a|w).json)
-        await db.fileSystem.expectFsChange([
-          old_w_file_path, 
-          new_w_file_path
-        ], async () => {
-          try {
-            await fse.move(old_w_file_path, new_w_file_path);
-          }
-          catch (err: any){
-            if (err.code !== 'ENOENT'){
-              throw err;
-            }
-          }
-        })
-        if (is_workspace) {
-            // move folder for workspaces 
-            const workspace_folder_from = old_w_file_path.replace(/\.imw\.json$/, '');
-            const workspace_folder_to = new_w_file_path.replace(/\.imw\.json$/, '');
-            await db.fileSystem.expectFsChange([
-              workspace_folder_from, 
-              workspace_folder_to
-            ], async () => {
-                try {
-                    await fse.move(workspace_folder_from, workspace_folder_to)
-                }
-                catch (err: any){
-                  if (err.code !== 'ENOENT'){
-                    throw err;
-                  }
-                }
-            })
-        }
-        return new_w_file_path;
+  export async function applyImsFileLocationChange(file: ProjectFileDbWorkspace | ProjectFileDbAsset, old_local_path: string, db: ProjectFileDb): Promise<string> {
+    let parent_id: string | null;
+    let parent_path: string = db.localPath;
+    let is_workspace = false;
+    if((file as ProjectFileDbAsset)?.workspaceId){
+        parent_id = (file as ProjectFileDbAsset).workspaceId;
     }
+    else {
+        parent_id = (file as ProjectFileDbWorkspace).parentId;
+        is_workspace = true;
+    }
+    assert(file.localName);
+    const file_local_ext = getImsExtname(file.localName);
+    parent_path = getWorkspaceLocalPathById(parent_id, db);
+    const suggest_title_with_ext = generateNextUniqueNameNumber(
+        prepareFileBasenameByEntityTitle(file.title ?? 'untitled'),
+        (name) => !fs.existsSync(path.join(parent_path, name )),
+        ' - ',
+        file_local_ext
+    );
+    const new_w_file_path = path.join(parent_path, suggest_title_with_ext)
+    const old_w_file_path = old_local_path + (is_workspace ? '.imw.json' : '');
+    // перемещаю информацию о файле (.im(a|w).json)
+
+
+
+    // move file meta (.im(a|w).json)
+    await db.fileSystem.expectFsChange([
+      old_w_file_path, 
+      new_w_file_path
+    ], async () => {
+      try {
+        await fse.move(old_w_file_path, new_w_file_path);
+      }
+      catch (err: any){
+        if (err.code !== 'ENOENT'){
+          throw err;
+        }
+      }
+    })
+    if (is_workspace) {
+        // move folder for workspaces 
+        const workspace_folder_from = old_w_file_path.replace(/\.imw\.json$/, '');
+        const workspace_folder_to = new_w_file_path.replace(/\.imw\.json$/, '');
+        await db.fileSystem.expectFsChange([
+          workspace_folder_from, 
+          workspace_folder_to
+        ], async () => {
+            try {
+                await fse.move(workspace_folder_from, workspace_folder_to)
+            }
+            catch (err: any){
+              if (err.code !== 'ENOENT'){
+                throw err;
+              }
+            }
+        })
+    }
+    return new_w_file_path;
+  }
 
   export function absolutePathToUuid(filepath: string, root_path: string){
     let relative_path = path.relative(root_path, filepath).replaceAll('\\', '/');

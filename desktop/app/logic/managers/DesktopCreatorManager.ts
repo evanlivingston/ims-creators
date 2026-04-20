@@ -120,6 +120,7 @@ export default class DesktopCreatorManager extends AppSubManagerBase{
             .get(CreatorAssetManager)
             .updateWorkspacesCache(appInfo.project.rootWorkspaces);
         }
+        this.appManager.get(CreatorAssetManager).initForProject(appInfo.project);
         this.appManager
           .get(ProjectSettingsManager)
           .setCurrentProjectSettings(appInfo.project?.settings ?? null);

@@ -41,3 +41,14 @@ export async function closeAllProjectDb(){
         await request.db.destroy();
     }
 }
+
+export function sendEventToProjectDbWindows(projectPath: string, eventName:string, args: any[]){
+    let project_path = path.normalize(projectPath);
+    let requested = projectDbMap.get(project_path);
+    if (!requested){
+        return;
+    }
+    for(const win of requested.for) {
+        win.webContents.send(eventName, ...args)
+    }
+}

@@ -15,7 +15,7 @@ import { generateNextUniqueNameNumber } from "~ims-app-base/logic/utils/stringUt
 import JSZip from "jszip";
 import { once } from "node:events";
 import { PassThrough, type Writable } from "node:stream";
-import { shell } from 'electron'
+import { shell, ipcMain } from 'electron'
 import { WORKSPACE_BASE_ORDERING } from "../project-db-constants";
 import { WORKSPACE_EXT } from "./FileSystemService";
 import { SQLITE_NOW_STM, type WorkspaceEntity } from "./SyncService/SyncService";
@@ -168,7 +168,7 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
             (name) => !fs.existsSync(node_path.join(parent_workspace_path, name + '')),
         );
         const suggest_title_with_ext = suggest_title + '.imw.json'
-        const workspace_local_path = node_path.join(parent_workspace_path, suggest_title_with_ext);
+        const workspace_local_path_meta = node_path.join(parent_workspace_path, suggest_title_with_ext);
         const workspace: ProjectFileDbWorkspace = {
             id: workspace_id,
             title: params.title ?? '',
@@ -192,6 +192,15 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
             await fs.promises.mkdir(workspace_local_path_folder);
         })
         await this.markNotSyncedWorkspace(workspace_id);
+        
+        this.db.sendProjectChange({
+            aUpsIds: [],
+            aDelIds: [],
+            wUpsIds: [workspace_id],
+            wDelIds: [],
+            wTchIds: workspace.parentId ? [workspace.parentId] : [],
+            instigator: null
+        });
         return workspace;
     }
     private async markNotSyncedWorkspace(id: string){
@@ -223,6 +232,25 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
         await fs.promises.writeFile(local_path, JSON.stringify(new_workspace_info, null, 1));
         this.workspaces.replace(new_workspace_info);
         await this.markNotSyncedWorkspace(workspace_id);
+               
+        const wTchIds = [];
+        if(workspace.parentId !== new_workspace_info.parentId){
+            if(workspace.parentId){
+              wTchIds.push(workspace.parentId)  
+            }
+            if(new_workspace_info.parentId){
+              wTchIds.push(new_workspace_info.parentId)  
+            }
+        }
+        this.db.sendProjectChange({
+            aUpsIds: [],
+            aDelIds: [],
+            wUpsIds: [workspace.id],
+            wDelIds: [],
+            wTchIds,
+            instigator: null
+        });
+
         return new_workspace_info;
     }
 
@@ -305,7 +333,15 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
             this.db.asset.deleteOwnAssetFromCollectionOnly(nested_asset.id);
         }
         await this.markNotSyncedWorkspace(workspace_id);
-        
+                       
+        this.db.sendProjectChange({
+            aUpsIds: [],
+            aDelIds: [workspace.id],
+            wUpsIds: [],
+            wDelIds: [],
+            wTchIds: workspace.parentId ? [workspace.parentId] : [],
+            instigator: null
+        });
     }
     
     async workspacesMove(params: WorkspaceMoveParams): Promise<WorkspaceMoveResult> {
@@ -374,6 +410,16 @@ export class WorkspaceService implements IProjectDatabaseWorkspace{
                 }
             }
         }
+
+                
+        this.db.sendProjectChange({
+            aUpsIds: [],
+            aDelIds: [],
+            wUpsIds: params.ids,
+            wDelIds: [],
+            wTchIds: [...new Set(touchedWIds)],
+            instigator: null
+        });
 
         return {
             list: avail_workspaces.list.map(w => {

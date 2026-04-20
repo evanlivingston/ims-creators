@@ -11,12 +11,12 @@ import isUUID from 'validator/es/lib/isUUID';
 import { once } from "node:events";
 import type { Writable } from "node:stream";
 import { HistoryChangeRecord } from "../logic/HistoryChangeRecord";
-import { shell } from 'electron';
+import { shell, ipcMain } from 'electron';
 import { BLOCK_NAME_META } from "~ims-app-base/logic/constants";
 import type { AssetHistoryDTO } from "~ims-app-base/logic/types/AssetHistory";
 import type { AssetQueryWhere, AssetsShortResult, AssetShort, AssetsFullResult, AssetsGraphItem, AssetsGraph, AssetBlockParamsDTO, AssetSetDTO, AssetCreateDTO, AssetsChangeResult, AssetChangeDTO, AssetChangeBatchOpDTO, AssetsBatchChangeResultDTO, AssetWhereParams, AssetDeleteResultDTO, CreateRefDTO, AssetReferencesResult, AssetDeleteRefResultDTO, AssetMoveParams, AssetMoveResult, AssetFull } from "~ims-app-base/logic/types/AssetsType";
 import type { AssetBlockEntity } from "~ims-app-base/logic/types/BlocksType";
-import type { IProjectDatabaseAsset } from "~ims-app-base/logic/types/IProjectDatabase";
+import type { IProjectDatabaseAsset, ProjectContentChangeEventArg } from "~ims-app-base/logic/types/IProjectDatabase";
 import type { ApiRequestList, ApiResultListWithTotal, ApiResultListWithMore, ChangesStreamRequest, ChangesStreamResponse } from "~ims-app-base/logic/types/ProjectTypes";
 import { type AssetPropsPlainObjectValue, type AssetPropsPlainObject, type AssetPropValue, compareAssetPropValues, assignPlainValueToAssetProps, extractRemapParentProps, type AssetProps, remapAssetProps, convertAssetPropsToPlainObject, type AssetPropValueText, walkAssetPropValueTextOps, type AssetPropValueAsset, parseAssetNewBlockRef, applyPropsChange, diffAssetPropObjects, stringifyAssetNewBlockRef, getAssetPropType } from "~ims-app-base/logic/types/Props";
 import type { AssetPropsSelectionField, AssetPropsSelectionOrder, AssetPropsSelection } from "~ims-app-base/logic/types/PropsSelection";
@@ -24,8 +24,6 @@ import { AssetRights } from "~ims-app-base/logic/types/Rights";
 import { generateNextUniqueNameNumber } from "~ims-app-base/logic/utils/stringUtils";
 import { assert } from "~ims-app-base/logic/utils/typeUtils";
 import { ASSET_BASE_ORDERING } from "../project-db-constants";
-import { set } from "date-fns";
-import { WORKSPACE_EXT } from "./FileSystemService";
 
 import { SQLITE_NOW_STM } from "./SyncService/SyncService";
    
@@ -1018,6 +1016,15 @@ export class AssetService implements IProjectDatabaseAsset{
             `, [...deletedIds]);
         }
         this._sessionChangeHistory.set(changeRecord.changeId, changeRecord)
+
+        this.db.sendProjectChange({
+            aUpsIds: [...(new Set([...createdIds, ...updatedIds]))],
+            aDelIds: [...deletedIds],
+            wUpsIds: [],
+            wDelIds: [],
+            wTchIds: [...new Set(touchedWIds)],
+            instigator: null
+        });
 
         return {
             ...updatedOrCreated,

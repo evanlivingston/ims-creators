@@ -180,11 +180,21 @@ export class ProjectDatabaseViaDesktopApi implements IProjectDatabase {
     pid: string,
     callback: (changes: ProjectContentChangeEventArg) => void,
   ): IProjectDatabaseEventHandler {
-    // TODO: implement
+    window.subscribeContentChange(
+      async (payload: ProjectContentChangeEventArg) => {
+        callback(payload);
+      },
+    );
+
     return {
       cancel: () => {},
-      isConnected: () => false,
-      listenContent: () => {}
+      isConnected() {
+        return false;
+      },
+      listenContent: (asset_ids: string[], workspace_ids: string[]) => {},
+      listenComment: () => ({
+        cancel: () => {}
+      })
     }
   }
 }

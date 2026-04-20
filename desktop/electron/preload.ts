@@ -2,6 +2,7 @@ import type { ImsHostIpcCallbackCall, ImsHostIpcCallbackResult, ImsHostIpcListen
 import type { UpdateNewVersion } from '#logic/types/AutoUpdateTypes';
 import type { ContextBridge, IpcRenderer, IpcRendererEvent, WebUtils } from 'electron';
 import type { IApiTokenStorage, TokenMainSavedData } from '~ims-app-base/logic/managers/ApiWorker';
+import type { ProjectContentChangeEventArg } from '~ims-app-base/logic/types/IProjectDatabase';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { ipcRenderer, contextBridge, webUtils } :
@@ -117,3 +118,10 @@ contextBridge.exposeInMainWorld('imsToken',{
     }
   } as IApiTokenStorage
 );
+
+contextBridge.exposeInMainWorld('subscribeContentChange', (callback: (changes: ProjectContentChangeEventArg) => void) => {
+    ipcRenderer.on('contentChange', (event, changes) => {
+      callback(changes)
+    });
+  }
+)

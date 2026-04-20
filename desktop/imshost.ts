@@ -10,6 +10,7 @@ declare global {
     loadImshost: () => Promise<void>;
     imsGetPathForFile: (file: File) => Promise<string>;
     requestNewVersionAvailable: (func: (version: UpdateNewVersion | null) => void) => void;
+    subscribeContentChange: (callback: any) => void;
     imsToken: IApiTokenStorage
   }
 }
