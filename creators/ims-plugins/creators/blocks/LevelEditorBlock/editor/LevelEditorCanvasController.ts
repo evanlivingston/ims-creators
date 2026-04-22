@@ -1068,6 +1068,7 @@ export default class LevelEditorCanvasController {
   }
 
   destroy() {
+    this.canvas.dispose();
     this.disposeEvents();
     window.removeEventListener('keydown', this._onKeyDown);
   }
