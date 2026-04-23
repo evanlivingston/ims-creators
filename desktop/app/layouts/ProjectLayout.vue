@@ -176,7 +176,7 @@ export default defineComponent({
 $header-height: 60px;
 
 .App {
-  height: 100vh;
+  height: 100dvh;
   display: flex;
 
   .App-header,

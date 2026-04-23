@@ -575,10 +575,16 @@ export class DialogBlockController
           : null) ?? 'out';
     }
     if (!toHandle) {
-      toHandle =
-        (to?.handleBounds?.target && to?.handleBounds?.target[0]
-          ? to.handleBounds.target[0].id
-          : null) ?? 'in';
+      if (fromHandle.startsWith('data-out-')) {
+        toHandle =
+          to?.handleBounds?.target?.find((t) => t?.id?.startsWith('data-in'))
+            ?.id ?? 'in';
+      } else {
+        toHandle =
+          (to?.handleBounds?.target && to?.handleBounds?.target[0]
+            ? to.handleBounds.target[0].id
+            : null) ?? 'in';
+      }
     }
 
     let is_data_match = false;
