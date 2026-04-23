@@ -110,6 +110,10 @@ import AuthManager from '~ims-app-base/logic/managers/AuthManager';
 import LoginForm from './LoginForm.vue';
 import type { Workspace } from '~ims-app-base/logic/types/Workspaces';
 import { forbiddenFilenameCharsRegexp } from '#bridge/utils/regex';
+import { debounceForThis } from '~ims-app-base/components/utils/ComponentUtils';
+import ApiManager from '~ims-app-base/logic/managers/ApiManager';
+import { HttpMethods, Service } from '~ims-app-base/logic/managers/ApiWorker';
+import type { ProjectLicense } from '~ims-app-base/logic/types/ProjectTypes';
 
 export type CreateProjectParams = {
   projectLocation?: string,
@@ -147,11 +151,16 @@ export default defineComponent({
       currentProjectTemplateId: '',
       loading: false,
       hasWarning: false,
+      checkPathDebounce: null as any,
+      userLicenses: {
+        list: [] as ProjectLicense[],
+        total: 0,
+      }
     };
   },
   watch: {
     async projectPath(new_val: string){
-      await this.checkExistsProject(new_val);
+      this.checkPathDebounce(this);
     },
     projectName(new_val: string){
       this.params.projectFolderName = new_val.trim().replace(forbiddenFilenameCharsRegexp, '_');
@@ -159,6 +168,9 @@ export default defineComponent({
   },
   async mounted(){
     this.params.projectLocation = await window.imshost.shell.getDocumentsFolder();
+    this.userLicenses = await this.$getAppManager()
+      .get(ApiManager)
+      .call(Service.CREATORS, HttpMethods.GET, 'license/user');
     this.params = {
       ...this.params,
       ...this.createProjectParams
@@ -166,13 +178,16 @@ export default defineComponent({
     if (this.$refs['inputName']) {
       (this.$refs['inputName'] as HTMLButtonElement).focus();
     }
+    this.checkPathDebounce = debounceForThis(async function (this: any) {
+      await this.checkExistsProject(this.projectPath);
+    }, 200);
   },
   computed: {
     needAuth(){
       return this.params.projectType === 'cloud' && !this.userInfo;
     },
     needLicense(){
-      return this.params.projectType === 'cloud' && !this.userInfo?.licenses.find((l: { productName: string | string[]; }) => l.productName.includes('pro'));
+      return this.params.projectType === 'cloud' && !this.userLicenses.list.find(license => license.features.desktopSync);
     },
     userInfo(){
       return this.$getAppManager().get(AuthManager).getUserInfo();

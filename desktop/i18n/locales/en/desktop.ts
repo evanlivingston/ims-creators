@@ -13,7 +13,9 @@ export default {
       menu: {
         errors: 'Errors of synchronization',
         pause: 'Pause',
+        pauseEnd: 'Synchronization was paused',
         resume: 'Resume',
+        resumeEnd: 'Synchronization was resumed',
       },
       header: 'Errors of synchronization',
       synchronization: 'Synchronization',

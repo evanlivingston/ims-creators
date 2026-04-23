@@ -65,13 +65,19 @@ export default defineComponent({
       if(this.syncInfo?.inProcess) {
         list.push({
           title: this.$t('desktop.fsSync.menu.pause'),
-          action: async () => await this.$getAppManager().get(DesktopSyncManager).pauseSyncProject(),
+          action: async () => {
+            await this.$getAppManager().get(DesktopSyncManager).pauseSyncProject();
+            this.$getAppManager().get(UiManager).showSuccess(this.$t('desktop.fsSync.menu.pauseEnd'));
+          }
         });
       }
       else if(this.projectInfo?.id){
         list.push({
           title: this.$t('desktop.fsSync.menu.resume'),
-          action: async () => await this.$getAppManager().get(DesktopSyncManager).resumeSyncProject(),
+          action: async () => {
+            await this.$getAppManager().get(DesktopSyncManager).resumeSyncProject()
+            this.$getAppManager().get(UiManager).showSuccess(this.$t('desktop.fsSync.menu.resumeEnd'));
+          }
         });
       }
       return list;
@@ -90,8 +96,7 @@ export default defineComponent({
             .ensureLoggedInDialog(this.$t('auth.needLoginForAction'));
         }
         else {
-          if(project_info && this.userInfo?.licenses.find(
-            (l: { productName: string | string[]; }) => l.productName.includes('pro'))){
+          if(project_info && project_info.license?.features.desktopSync){
               try {
                 const new_project_info = await this.$getAppManager()
                 .get(DesktopProjectManager)
@@ -107,17 +112,7 @@ export default defineComponent({
                 if(!project_info.localPath) {
                   throw Error('localPath is not set') ;
                 }
-                let rootWorkspaceId = null
-                if (new_project_info){
-                  rootWorkspaceId = new_project_info.rootWorkspaces.find((w: Workspace) => w.name === 'gdd')?.id;
-                }
-                await this.$getAppManager().get(DesktopProjectManager).initializeLocalProject(project_info.localPath, {
-                  id: new_project_info.id ?? null,
-                  title: project_info.title,
-                  rootWorkspaceId: rootWorkspaceId ?? null,
-                  recreate: true,
-                });
-                await this.$getAppManager().get(DesktopCreatorManager).appReload();
+                await this.$getAppManager().get(DesktopCreatorManager).connectToCloudProject(new_project_info);
                 await this.$getAppManager().get(DesktopSyncManager).runSync();
               }
               catch(err: any) {

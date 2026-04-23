@@ -613,10 +613,8 @@ export class SyncService {
         }
         return changes;
     }
-    
-    async copyAssetToServer(localAssetId: string): Promise<AssetsFullResult> {
-        const full = this.db.asset.assets.byId.get(localAssetId);
-        if (!full) throw new Error('Asset not found');
+
+    prepareAssetToServer(full: ProjectFileDbAsset) {
         let blocks:
             | {
                 [blockKey: string]: AssetBlockParamsDTO;
@@ -633,15 +631,24 @@ export class SyncService {
                 type: r.type,
             };
         }
+        return {
+            icon: full.ownIcon ?? undefined,
+            title: full.title,
+            isAbstract: full.isAbstract,
+            parentIds: full.parentIds,
+            workspaceId: full.workspaceId ?? undefined,
+            blocks,
+        }
+    }
+    
+    async copyAssetToServer(localAssetId: string): Promise<AssetsFullResult> {
+        const full = this.db.asset.assets.byId.get(localAssetId);
+        if (!full) throw new Error('Asset not found');
+        const asset = this.prepareAssetToServer(full);
         return await this.db.api.call(Service.CREATORS, HttpMethods.POST, `assets/create`, {
             id: localAssetId,
             set: {
-                icon: full.ownIcon ?? undefined,
-                title: full.title,
-                isAbstract: full.isAbstract,
-                parentIds: full.parentIds,
-                workspaceId: full.workspaceId ?? undefined,
-                blocks,
+                ...asset,
             },
         });
     }

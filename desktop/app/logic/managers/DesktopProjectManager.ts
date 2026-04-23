@@ -18,7 +18,7 @@ function prepareFileBasenameByEntityTitle(title: string){
 export default class DesktopProjectManager extends ProjectManager{
     private _projectLocalPath: string | null = null;
 
-    getCurrentAccountValueInProject() {
+    override getCurrentAccountValueInProject() {
         const user_info = this.appManager.get(AuthManager).getUserInfo();
         if (!user_info) return null;
         return {
