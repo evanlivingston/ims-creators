@@ -3,14 +3,22 @@
       <menu-button class="AboutGameConfigurePage-manage-languages">
         <template #button="{ toggle }">
           <button
-            :class="{ loading: syncIsRunning }"
             class="is-button is-button-icon AppSyncMenu-button"
             :title="$t('desktop.fsSync.synchronization')"
             @click="toggle"
           >
-              <i class="ri-loop-right-line"></i>
+              <i 
+                :class="{ 'spinning-icon': syncIsRunning && !syncInfo?.onPause }"
+                class="ri-loop-right-line"
+              ></i>
           </button>
-          <i v-if="hasSyncError" class="AppSyncMenu-hasError ri-error-warning-line"></i>
+          <i v-if="hasSyncError" 
+            class="ri-error-warning-line AppSyncMenu-additionalIcon AppSyncMenu-hasError"
+            :title="'Error: ' + hasSyncError"
+          ></i>
+          <i v-else-if="syncInfo?.onPause" class="ri-pause-circle-line AppSyncMenu-additionalIcon"></i>
+          <i v-else-if="syncInfo && (syncInfo.assets.length > 0 || syncInfo.workspaces.length > 0)" 
+            class="AppSyncMenu-additionalIcon AppSyncMenu-hasNotSyncedFiles ri-circle-line"></i>
         </template>
         <menu-list :menu-list="syncMenuList"></menu-list>
       </menu-button>
@@ -28,11 +36,11 @@ import ProjectManager from '~ims-app-base/logic/managers/ProjectManager';
 import BuyLicenseDialog from './BuyLicenseDialog.vue';
 import type { MenuListItem } from '~ims-app-base/logic/types/MenuList';
 import DesktopProjectManager from '#logic/managers/DesktopProjectManager';
-import type { Workspace } from '~ims-app-base/logic/types/Workspaces';
 import UiManager from '~ims-app-base/logic/managers/UiManager';
 import MenuButton from '~ims-app-base/components/Common/MenuButton.vue';
 import MenuList from '~ims-app-base/components/Common/MenuList.vue';
 import DesktopCreatorManager from '#logic/managers/DesktopCreatorManager';
+import type DesktopAuthManager from '#logic/managers/DesktopAuthManager';
 
 export default defineComponent({
   name: 'AppSyncMenu',
@@ -58,11 +66,25 @@ export default defineComponent({
     },
     syncMenuList() {
       const list: MenuListItem[] = [];
-      list.push({
-        title: this.$t('desktop.fsSync.menu.errors'),
-        action: async () => await this.openSyncManageDialog(),
-      });
-      if(this.syncInfo?.inProcess) {
+      if(!this.projectInfo?.id){
+        list.push({
+          title: this.$t('desktop.fsSync.menu.syncWithCloud'),
+          action: async () => {
+              await this.syncWithCloud();
+              this.$getAppManager().get(UiManager).showSuccess(this.$t('desktop.fsSync.menu.syncWithCloudEnd'));
+            }
+        });
+      }
+      if(this.projectInfo?.id && !this.syncInfo?.inProcess && !this.syncInfo?.onPause){
+        list.push({
+          title: this.$t('desktop.fsSync.menu.syncNow'),
+          action: async () => {
+              await this.$getAppManager().get(DesktopSyncManager).resumeSyncProject()
+              this.$getAppManager().get(UiManager).showSuccess(this.$t('desktop.fsSync.menu.syncNowEnd'));
+            }
+        });
+      }
+      if(this.syncInfo?.inProcess && !this.syncInfo?.onPause) {
         list.push({
           title: this.$t('desktop.fsSync.menu.pause'),
           action: async () => {
@@ -71,7 +93,7 @@ export default defineComponent({
           }
         });
       }
-      else if(this.projectInfo?.id){
+      else if(this.projectInfo?.id && this.syncInfo?.onPause){
         list.push({
           title: this.$t('desktop.fsSync.menu.resume'),
           action: async () => {
@@ -80,49 +102,60 @@ export default defineComponent({
           }
         });
       }
+      list.push({
+        title: this.$t('desktop.fsSync.menu.errors'),
+        action: async () => await this.openSyncManageDialog(),
+      });
       return list;
     },
   },
   methods: {
+    async syncWithCloud(){
+      if(!this.userInfo){
+        await this.$getAppManager()
+          .get(AuthManager)
+          .ensureLoggedInDialog(this.$t('auth.needLoginForAction'));
+      }
+      else {
+        const user_licenses = await this.$getAppManager()
+          .get<DesktopAuthManager>(AuthManager)
+          .getUserLicense();
+        const has_license = user_licenses.list.find(license => license.features.desktopSync);
+        const project_info = this.projectInfo;
+        if(project_info && (project_info.license?.features.desktopSync || has_license)){
+            try {
+              const new_project_info = await this.$getAppManager()
+              .get(DesktopProjectManager)
+              .createProject({
+                title: project_info.title,
+                template_ids: [],
+                menu_settings: {
+                  'menu-about': false,
+                  'menu-gamedesign': true,
+                  'menu-team': true,
+                },
+              })
+              if(!project_info.localPath) {
+                throw Error('localPath is not set') ;
+              }
+              await this.$getAppManager().get(DesktopCreatorManager).connectToCloudProject(new_project_info);
+              await this.$getAppManager().get(DesktopSyncManager).runSync();
+            }
+            catch(err: any) {
+              this.$getAppManager().get(UiManager).showError(err.message);
+            }
+        }
+        else {
+          await this.$getAppManager().get(DialogManager).show(BuyLicenseDialog, {});
+        }
+      }
+    },
     async openSyncManageDialog() {
-      const project_info = this.projectInfo;
-      if(project_info?.id) {
+      if(this.projectInfo?.id) {
         await this.$getAppManager().get(DialogManager).show(SyncManageDialog, {});
       }
       else {
-        if(!this.userInfo){
-          await this.$getAppManager()
-            .get(AuthManager)
-            .ensureLoggedInDialog(this.$t('auth.needLoginForAction'));
-        }
-        else {
-          if(project_info && project_info.license?.features.desktopSync){
-              try {
-                const new_project_info = await this.$getAppManager()
-                .get(DesktopProjectManager)
-                .createProject({
-                  title: project_info.title,
-                  template_ids: [],
-                  menu_settings: {
-                    'menu-about': false,
-                    'menu-gamedesign': true,
-                    'menu-team': true,
-                  },
-                })
-                if(!project_info.localPath) {
-                  throw Error('localPath is not set') ;
-                }
-                await this.$getAppManager().get(DesktopCreatorManager).connectToCloudProject(new_project_info);
-                await this.$getAppManager().get(DesktopSyncManager).runSync();
-              }
-              catch(err: any) {
-                this.$getAppManager().get(UiManager).showError(err.message);
-              }
-          }
-          else {
-            await this.$getAppManager().get(DialogManager).show(BuyLicenseDialog, {});
-          }
-        }
+        await this.syncWithCloud();
       }
     }
   }
@@ -138,10 +171,27 @@ export default defineComponent({
 .AppSyncMenu-button {
   --button-font-size: 24px;
 }
-.AppSyncMenu-hasError{
+.AppSyncMenu-additionalIcon{
   position: absolute;
   bottom: -4px;
   right: -3px;
+}
+.AppSyncMenu-hasError{
   color: var(--color-main-error);
+}
+.AppSyncMenu-hasNotSyncedFiles{
+  color: var(--color-main-yellow);
+}
+.spinning-icon {
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

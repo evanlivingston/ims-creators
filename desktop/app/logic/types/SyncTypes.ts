@@ -8,6 +8,7 @@ export type SyncItem = {
 }
 export type SyncInfo = {
     inProcess: boolean,
+    onPause: boolean,
     syncEnd: string | null,
     syncState: string | null,
     error: string | null,

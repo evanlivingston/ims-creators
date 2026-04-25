@@ -114,6 +114,7 @@ import { debounceForThis } from '~ims-app-base/components/utils/ComponentUtils';
 import ApiManager from '~ims-app-base/logic/managers/ApiManager';
 import { HttpMethods, Service } from '~ims-app-base/logic/managers/ApiWorker';
 import type { ProjectLicense } from '~ims-app-base/logic/types/ProjectTypes';
+import type DesktopAuthManager from '#logic/managers/DesktopAuthManager';
 
 export type CreateProjectParams = {
   projectLocation?: string,
@@ -169,8 +170,8 @@ export default defineComponent({
   async mounted(){
     this.params.projectLocation = await window.imshost.shell.getDocumentsFolder();
     this.userLicenses = await this.$getAppManager()
-      .get(ApiManager)
-      .call(Service.CREATORS, HttpMethods.GET, 'license/user');
+        .get<DesktopAuthManager>(AuthManager)
+        .getUserLicense();
     this.params = {
       ...this.params,
       ...this.createProjectParams

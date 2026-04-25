@@ -93,6 +93,9 @@ export default class DesktopProjectManager extends ProjectManager{
     async initializeLocalProject(localPath: string, initParams?: ProjectFileDbInitParams): Promise<LocalProjectInitInfo> {
         const res = await window.imshost.project.initProject(localPath, initParams);
         this._projectLocalPath = localPath;
+        if(initParams?.id){
+            await window.imshost.sync.syncProject(this._projectLocalPath);
+        }
         return res;
     }
 

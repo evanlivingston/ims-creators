@@ -70,6 +70,8 @@ import { forbiddenFilenameCharsRegexp } from '#bridge/utils/regex';
 import DesktopProjectManager from '#logic/managers/DesktopProjectManager';
 import ApiManager from '~ims-app-base/logic/managers/ApiManager';
 import { HttpMethods, Service } from '~ims-app-base/logic/managers/ApiWorker';
+import AuthManager from '~ims-app-base/logic/managers/AuthManager';
+import type DesktopAuthManager from '#logic/managers/DesktopAuthManager';
 
 export default defineComponent({
   name: 'WelcomeFormContentSelectProject',
@@ -105,8 +107,8 @@ export default defineComponent({
               .get(ApiManager)
               .call(Service.CREATORS, HttpMethods.GET, 'app/projects', {});
       this.userLicenses = await this.$getAppManager()
-        .get(ApiManager)
-        .call(Service.CREATORS, HttpMethods.GET, 'license/user');
+        .get<DesktopAuthManager>(AuthManager)
+        .getUserLicense();
       this.errorMessage = null;
     }
     catch(err: any){
@@ -144,7 +146,8 @@ export default defineComponent({
           .call(Service.CREATORS, HttpMethods.GET, 'project/info', {
             pid: this.project?.id,
           });
-        if(projectInfo.license?.features.desktopSync) {
+        const has_license = this.userLicenses.list.find(license => license.features.desktopSync)
+        if(projectInfo.license?.features.desktopSync || has_license) {
           this.errorMessage = null;
         }
         else {
@@ -169,7 +172,7 @@ export default defineComponent({
           title: this.project.title,
           rootWorkspaceId,
         });
-        await this.$getAppManager().get(DesktopCreatorManager).openProjectWindow(path.join(this.projectLocation, this.projectFolderName), false);
+        await this.$getAppManager().get(DesktopCreatorManager).openProjectWindow(path.join(this.projectLocation, this.projectFolderName));
       }
       else {
         this.$getAppManager()

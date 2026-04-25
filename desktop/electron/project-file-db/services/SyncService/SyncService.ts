@@ -63,6 +63,7 @@ export class SyncService {
     async getSyncStatus(): Promise<SyncInfo> {
         let sync_info: SyncInfo = {
             inProcess: this._syncProcessRunning,
+            onPause: !this._synchronizationTimer,
             syncEnd: null,
             syncState: null,
             assets: [],
