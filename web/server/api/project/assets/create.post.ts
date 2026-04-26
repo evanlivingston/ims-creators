@@ -61,5 +61,16 @@ export default defineEventHandler(async (event) => {
   }
   const db = await getProjectDb();
   await autoAssignType(params, db);
-  return db.asset.assetsCreate(params);
+
+  // Try creating with blocks, fall back to without if blocks cause errors
+  try {
+    return await db.asset.assetsCreate(params);
+  } catch (err: any) {
+    if (err.message?.includes('Type is not set') && params.set?.blocks) {
+      // Drop malformed blocks - let the asset inherit from parent type
+      delete params.set.blocks;
+      return await db.asset.assetsCreate(params);
+    }
+    throw err;
+  }
 });
