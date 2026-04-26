@@ -16,6 +16,66 @@ servers:
     description: Production server
 
 paths:
+  /api/project/context:
+    get:
+      operationId: getProjectContext
+      summary: Get full project context
+      description: |
+        Returns everything needed to work with this project: all workspace IDs,
+        all type definitions with their block structures, and one example asset
+        from each workspace showing the exact format. CALL THIS FIRST in every
+        conversation to understand the project structure and data formats.
+      responses:
+        '200':
+          description: Project context
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  project:
+                    type: string
+                  workspaces:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        title:
+                          type: string
+                  types:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        title:
+                          type: string
+                        icon:
+                          type: string
+                        blocks:
+                          type: array
+                          items:
+                            type: string
+                  examples:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        workspace:
+                          type: string
+                        workspaceId:
+                          type: string
+                        example:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            title:
+                              type: string
+
   /api/project/info:
     get:
       operationId: getProjectInfo
