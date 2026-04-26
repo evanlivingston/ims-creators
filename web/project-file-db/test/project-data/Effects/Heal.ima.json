@@ -1,0 +1,196 @@
+{
+ "id": "9809f24a-a9d7-4249-890d-525f18ebf6c8",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-000000000100",
+   "name": "__meta",
+   "title": null,
+   "own": false,
+   "type": "props",
+   "props": {},
+   "computed": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "inherited": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "index": 0,
+   "createdAt": "2025-06-24T12:55:34.293Z",
+   "updatedAt": "2025-06-24T12:55:34.293Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000001",
+   "name": "gallery",
+   "title": "[[t:Gallery]]",
+   "own": true,
+   "type": "gallery",
+   "props": {
+    "main": {
+     "type": "file",
+     "index": 1.1755696709777,
+     "value": {
+      "Dir": null,
+      "Size": 2252175,
+      "Store": "p-EWvDFxqn",
+      "Title": "image-eec73616-7ff8-4b4b-9535-0ee68a748692.png",
+      "FileId": "e67dbfdb-90d8-4205-a51d-ae94bceaedf7"
+     }
+    }
+   },
+   "computed": {
+    "main": {
+     "type": "file",
+     "index": 1.1755696709777,
+     "value": {
+      "Dir": null,
+      "Size": 2252175,
+      "Store": "p-EWvDFxqn",
+      "Title": "image-eec73616-7ff8-4b4b-9535-0ee68a748692.png",
+      "FileId": "e67dbfdb-90d8-4205-a51d-ae94bceaedf7"
+     }
+    }
+   },
+   "inherited": {},
+   "index": 1,
+   "createdAt": "2025-08-20T13:31:57.133Z",
+   "updatedAt": "2025-08-20T13:31:57.133Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000002",
+   "name": "description",
+   "title": "[[t:Description]]",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Add "
+      },
+      {
+       "insert": "value",
+       "attributes": {
+        "underline": true
+       }
+      },
+      {
+       "insert": " health\n"
+      }
+     ],
+     "Str": "Add value health\n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Add "
+      },
+      {
+       "insert": "value",
+       "attributes": {
+        "underline": true
+       }
+      },
+      {
+       "insert": " health\n"
+      }
+     ],
+     "Str": "Add value health\n"
+    }
+   },
+   "inherited": {},
+   "index": 2,
+   "createdAt": "2025-08-20T13:31:57.133Z",
+   "updatedAt": "2025-08-20T13:31:57.133Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000003",
+   "name": "props",
+   "title": "[[t:Properties]]",
+   "own": false,
+   "type": "props",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-08-20T13:06:03.803Z",
+   "updatedAt": "2025-08-20T13:17:35.462Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000004",
+   "name": "locale",
+   "title": null,
+   "own": false,
+   "type": "locale",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-06-24T12:55:34.293Z",
+   "updatedAt": "2025-06-24T12:55:34.293Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "sparkling-2-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Heal",
+ "parentIds": [
+  "4ce7b352-31ee-4e48-ab25-ef619d223862"
+ ],
+ "title": "Heal",
+ "typeIds": [
+  "4ce7b352-31ee-4e48-ab25-ef619d223862",
+  "00000000-0000-0000-0000-000000000035"
+ ],
+ "workspaceId": "ccdb4470-6602-472a-9d32-ae352f71fac2",
+ "values": {
+  "__meta": {},
+  "gallery": {
+   "main": {
+    "type": "file",
+    "index": 1.1755696709777,
+    "value": {
+     "Dir": null,
+     "Size": 2252175,
+     "Store": "p-EWvDFxqn",
+     "Title": "image-eec73616-7ff8-4b4b-9535-0ee68a748692.png",
+     "FileId": "e67dbfdb-90d8-4205-a51d-ae94bceaedf7"
+    }
+   }
+  },
+  "description": {
+   "value": {
+    "Ops": [
+     {
+      "insert": "Add "
+     },
+     {
+      "insert": "value",
+      "attributes": {
+       "underline": true
+      }
+     },
+     {
+      "insert": " health\n"
+     }
+    ],
+    "Str": "Add value health\n"
+   }
+  },
+  "props": {},
+  "locale": {}
+ }
+}

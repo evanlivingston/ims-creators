@@ -1,0 +1,192 @@
+{
+ "id": "a0ef46ce-8292-42ae-b520-7f7da9d70545",
+ "blocks": [
+  {
+   "id": "10c1c030-bfd7-4a5b-8c5e-678937608f19",
+   "name": null,
+   "title": "Goal",
+   "own": true,
+   "type": "text",
+   "props": {},
+   "computed": {},
+   "inherited": null,
+   "index": 1.175526,
+   "createdAt": "2025-08-15T12:25:12.408Z",
+   "updatedAt": "2025-08-15T12:25:20.735Z"
+  },
+  {
+   "id": "e8dddcb3-9d3d-4706-b85d-6b48a3d4fc44",
+   "name": "__meta",
+   "title": null,
+   "own": true,
+   "type": "props",
+   "props": {
+    "complete_track": true
+   },
+   "computed": {
+    "complete_track": true
+   },
+   "inherited": null,
+   "index": 1.1755695,
+   "createdAt": "2025-08-20T13:05:01.466Z",
+   "updatedAt": "2025-08-20T13:05:01.466Z"
+  },
+  {
+   "id": "515e5631-4cd7-4751-8cec-4862495e9e6c",
+   "name": null,
+   "title": "Tasks",
+   "own": true,
+   "type": "text",
+   "props": {},
+   "computed": {},
+   "inherited": null,
+   "index": 3.1755261,
+   "createdAt": "2025-08-15T12:25:21.594Z",
+   "updatedAt": "2025-08-15T12:25:56.480Z"
+  },
+  {
+   "id": "7c2893ce-c36c-4815-a5d3-4bf8a6722d1b",
+   "name": null,
+   "title": "Reward",
+   "own": true,
+   "type": "text",
+   "props": {},
+   "computed": {},
+   "inherited": null,
+   "index": 5.175526,
+   "createdAt": "2025-08-15T12:25:32.643Z",
+   "updatedAt": "2025-08-15T12:26:00.660Z"
+  },
+  {
+   "id": "1d6b313a-daea-4b3b-910b-4e0c792a77b2",
+   "name": null,
+   "title": "Scene",
+   "own": true,
+   "type": "text",
+   "props": {},
+   "computed": {},
+   "inherited": null,
+   "index": 7.175526,
+   "createdAt": "2025-08-15T12:25:39.292Z",
+   "updatedAt": "2025-08-15T12:26:05.402Z"
+  },
+  {
+   "id": "58e705ba-5468-4d9f-959e-a0ae81f83c4c",
+   "name": null,
+   "title": null,
+   "own": true,
+   "type": "script",
+   "props": {
+    "start": null,
+    "__settings": {
+     "speech": {
+      "main": {
+       "text": {
+        "name": "text",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Text]]",
+        "default": {
+         "Type": "text"
+        },
+        "description": null
+       },
+       "character": {
+        "name": "character",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Character]]",
+        "default": {
+         "Type": "text"
+        },
+        "autoFill": true,
+        "description": null
+       }
+      },
+      "option": {
+       "text": {
+        "name": "text",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Text]]",
+        "default": {
+         "Type": "text"
+        },
+        "description": null
+       }
+      }
+     }
+    }
+   },
+   "computed": {
+    "start": null,
+    "__settings": {
+     "speech": {
+      "main": {
+       "text": {
+        "name": "text",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Text]]",
+        "default": {
+         "Type": "text"
+        },
+        "description": null
+       },
+       "character": {
+        "name": "character",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Character]]",
+        "default": {
+         "Type": "text"
+        },
+        "autoFill": true,
+        "description": null
+       }
+      },
+      "option": {
+       "text": {
+        "name": "text",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Text]]",
+        "default": {
+         "Type": "text"
+        },
+        "description": null
+       }
+      }
+     }
+    }
+   },
+   "inherited": null,
+   "index": 9.175526,
+   "createdAt": "2025-08-15T12:25:47.536Z",
+   "updatedAt": "2025-08-15T12:25:48.470Z"
+  }
+ ],
+ "isAbstract": true,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "bar-chart-2-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": "bar-chart-2-fill",
+ "ownTitle": "Quest",
+ "parentIds": [],
+ "title": "Quest",
+ "typeIds": [],
+ "workspaceId": "ae2b3260-4448-4f89-9d6d-aac56479a7b5",
+ "values": {
+  "__meta": {
+   "complete_track": true
+  }
+ }
+}

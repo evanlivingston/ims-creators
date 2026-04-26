@@ -1,0 +1,407 @@
+{
+ "id": "cce844b8-71b6-4005-a698-aed88568950d",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-000000000100",
+   "name": "__meta",
+   "title": null,
+   "own": true,
+   "type": "props",
+   "props": {},
+   "computed": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "inherited": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "index": 0,
+   "createdAt": "2025-08-08T14:43:30.222Z",
+   "updatedAt": "2025-08-08T14:43:30.222Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000001",
+   "name": "gallery",
+   "title": "[[t:Gallery]]",
+   "own": true,
+   "type": "gallery",
+   "props": {
+    "main": {
+     "type": "file",
+     "index": 1.1755523703234,
+     "value": {
+      "Dir": null,
+      "Size": 1146820,
+      "Store": "p-EWvDFxqn",
+      "Title": "Ледяная броня.jpg",
+      "FileId": "aee4aad5-45df-48f5-baf3-37ab987ba577"
+     }
+    }
+   },
+   "computed": {
+    "main": {
+     "type": "file",
+     "index": 1.1755523703234,
+     "value": {
+      "Dir": null,
+      "Size": 1146820,
+      "Store": "p-EWvDFxqn",
+      "Title": "Ледяная броня.jpg",
+      "FileId": "aee4aad5-45df-48f5-baf3-37ab987ba577"
+     }
+    }
+   },
+   "inherited": {},
+   "index": 1,
+   "createdAt": "2025-08-08T14:43:30.222Z",
+   "updatedAt": "2025-08-18T13:28:36.959Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000002",
+   "name": "description",
+   "title": "[[t:Description]]",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": "It covers itself with ice, reducing damage by 50% for 8 seconds."
+   },
+   "computed": {
+    "value": "It covers itself with ice, reducing damage by 50% for 8 seconds."
+   },
+   "inherited": {},
+   "index": 2,
+   "createdAt": "2025-08-08T14:43:30.222Z",
+   "updatedAt": "2025-08-08T14:43:30.222Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000004",
+   "name": "locale",
+   "title": null,
+   "own": true,
+   "type": "locale",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-08-08T14:43:30.222Z",
+   "updatedAt": "2025-08-08T14:43:30.222Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000003",
+   "name": "props",
+   "title": "[[t:Properties]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "~id": null,
+    "type": {
+     "Enum": "912acbe0-262f-4c3d-8d3f-197048f9c868",
+     "Name": "active",
+     "Title": "Active"
+    },
+    "range": 25,
+    "~icon": null,
+    "~name": null,
+    "~type": null,
+    "damage": null,
+    "effect": {
+     "Title": "Ice Armor",
+     "AssetId": "c2d225b0-bc31-48a6-8362-77eaadfd30f5"
+    },
+    "~range": null,
+    "~damage": null,
+    "cooldown": 400,
+    "animation": "cast_magic",
+    "mana_cost": 20,
+    "~cooldown": null,
+    "~manacost": null,
+    "~animation": null,
+    "~mana_cost": null,
+    "target_type": {
+     "Enum": "572014b9-a589-4619-bd79-a979700ac6bc",
+     "Name": "self",
+     "Title": "Self"
+    },
+    "~damagetype": null,
+    "~targettype": null,
+    "effect_value": 50,
+    "~damage_type": null,
+    "~description": null,
+    "~effectvalue": null,
+    "~target_type": null,
+    "~effect_value": null,
+    "effect_duration": 8,
+    "~effectduration": null,
+    "~effect_duration": null
+   },
+   "computed": {
+    "effect": {
+     "Title": "Ice Armor",
+     "AssetId": "c2d225b0-bc31-48a6-8362-77eaadfd30f5"
+    },
+    "type": {
+     "Enum": "912acbe0-262f-4c3d-8d3f-197048f9c868",
+     "Name": "active",
+     "Title": "Active"
+    },
+    "range": 25,
+    "damage": null,
+    "cooldown": 400,
+    "animation": "cast_magic",
+    "mana_cost": 20,
+    "target_type": {
+     "Enum": "572014b9-a589-4619-bd79-a979700ac6bc",
+     "Name": "self",
+     "Title": "Self"
+    },
+    "effect_value": 50,
+    "effect_duration": 8,
+    "__props": {
+     "type": {
+      "type": "enumRadio",
+      "index": 5.701724412505399,
+      "title": "Type",
+      "params": {
+       "type": {
+        "Title": "Ability type",
+        "AssetId": "912acbe0-262f-4c3d-8d3f-197048f9c868"
+       }
+      }
+     },
+     "range": {
+      "type": "integer",
+      "index": 13.929742143530497,
+      "title": "Range"
+     },
+     "damage": {
+      "type": "integer",
+      "index": 10.403448828970397,
+      "title": "Damage"
+     },
+     "effect": {
+      "type": "gddElementSelector",
+      "index": 17.456450949171497,
+      "title": "Effect",
+      "params": {
+       "type": {
+        "Title": "Effect",
+        "AssetId": "4ce7b352-31ee-4e48-ab25-ef619d223862"
+       }
+      }
+     },
+     "cooldown": {
+      "type": "integer",
+      "index": 6.8771555162653994,
+      "title": "Cooldown"
+     },
+     "mana_cost": {
+      "type": "integer",
+      "index": 9.228017724522298,
+      "title": "Mana Cost"
+     },
+     "animation": {
+      "index": 16.280881195496196,
+      "title": "Animation"
+     },
+     "damage_type": {
+      "type": "enum",
+      "index": 12.754311038465296,
+      "title": "Damage Type",
+      "params": {
+       "type": {
+        "Title": "Damage type",
+        "AssetId": "b5747ca1-5683-4b24-a51e-4814a2cc7b8a"
+       }
+      }
+     },
+     "target_type": {
+      "type": "enumRadio",
+      "index": 15.796293524959843,
+      "title": "Target Type",
+      "params": {
+       "type": {
+        "Title": "Target type",
+        "AssetId": "572014b9-a589-4619-bd79-a979700ac6bc"
+       }
+      }
+     },
+     "effect_value": {
+      "type": "number",
+      "index": 22.158729973974502,
+      "title": "Effect Value"
+     },
+     "effect_duration": {
+      "type": "number",
+      "index": 19.807590459855,
+      "title": "Effect Duration",
+      "multiple": false
+     }
+    }
+   },
+   "inherited": {
+    "type": null,
+    "range": null,
+    "damage": null,
+    "effect": null,
+    "cooldown": null,
+    "animation": null,
+    "mana_cost": null,
+    "damage_type": null,
+    "target_type": null,
+    "effect_value": null,
+    "effect_duration": null,
+    "__props": {
+     "type": {
+      "type": "enumRadio",
+      "index": 5.701724412505399,
+      "title": "Type",
+      "params": {
+       "type": {
+        "Title": "Ability type",
+        "AssetId": "912acbe0-262f-4c3d-8d3f-197048f9c868"
+       }
+      }
+     },
+     "range": {
+      "type": "integer",
+      "index": 13.929742143530497,
+      "title": "Range"
+     },
+     "damage": {
+      "type": "integer",
+      "index": 10.403448828970397,
+      "title": "Damage"
+     },
+     "effect": {
+      "type": "gddElementSelector",
+      "index": 17.456450949171497,
+      "title": "Effect",
+      "params": {
+       "type": {
+        "Title": "Effect",
+        "AssetId": "4ce7b352-31ee-4e48-ab25-ef619d223862"
+       }
+      }
+     },
+     "cooldown": {
+      "type": "integer",
+      "index": 6.8771555162653994,
+      "title": "Cooldown"
+     },
+     "mana_cost": {
+      "type": "integer",
+      "index": 9.228017724522298,
+      "title": "Mana Cost"
+     },
+     "animation": {
+      "index": 16.280881195496196,
+      "title": "Animation"
+     },
+     "damage_type": {
+      "type": "enum",
+      "index": 12.754311038465296,
+      "title": "Damage Type",
+      "params": {
+       "type": {
+        "Title": "Damage type",
+        "AssetId": "b5747ca1-5683-4b24-a51e-4814a2cc7b8a"
+       }
+      }
+     },
+     "target_type": {
+      "type": "enumRadio",
+      "index": 15.796293524959843,
+      "title": "Target Type",
+      "params": {
+       "type": {
+        "Title": "Target type",
+        "AssetId": "572014b9-a589-4619-bd79-a979700ac6bc"
+       }
+      }
+     },
+     "effect_value": {
+      "type": "number",
+      "index": 22.158729973974502,
+      "title": "Effect Value"
+     },
+     "effect_duration": {
+      "type": "number",
+      "index": 19.807590459855,
+      "title": "Effect Duration",
+      "multiple": false
+     }
+    }
+   },
+   "index": 3,
+   "createdAt": "2025-08-08T14:43:30.222Z",
+   "updatedAt": "2025-08-20T17:40:59.477Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "magic-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Ice Armor",
+ "parentIds": [
+  "7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445"
+ ],
+ "title": "Ice Armor",
+ "typeIds": [
+  "7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445",
+  "00000000-0000-0000-0000-000000000035"
+ ],
+ "workspaceId": "fc054243-5903-4830-ad07-95e72094656a",
+ "values": {
+  "__meta": {},
+  "gallery": {
+   "main": {
+    "type": "file",
+    "index": 1.1755523703234,
+    "value": {
+     "Dir": null,
+     "Size": 1146820,
+     "Store": "p-EWvDFxqn",
+     "Title": "Ледяная броня.jpg",
+     "FileId": "aee4aad5-45df-48f5-baf3-37ab987ba577"
+    }
+   }
+  },
+  "description": {
+   "value": "It covers itself with ice, reducing damage by 50% for 8 seconds."
+  },
+  "locale": {},
+  "props": {
+   "type": {
+    "Enum": "912acbe0-262f-4c3d-8d3f-197048f9c868",
+    "Name": "active",
+    "Title": "Active"
+   },
+   "range": 25,
+   "damage": null,
+   "effect": {
+    "Title": "Ice Armor",
+    "AssetId": "c2d225b0-bc31-48a6-8362-77eaadfd30f5"
+   },
+   "cooldown": 400,
+   "animation": "cast_magic",
+   "mana_cost": 20,
+   "target_type": {
+    "Enum": "572014b9-a589-4619-bd79-a979700ac6bc",
+    "Name": "self",
+    "Title": "Self"
+   },
+   "effect_value": 50,
+   "effect_duration": 8
+  }
+ }
+}

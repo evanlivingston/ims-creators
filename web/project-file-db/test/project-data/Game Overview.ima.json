@@ -1,0 +1,1675 @@
+{
+ "id": "fb010b0c-6dac-4090-9055-4406f0123ba7",
+ "blocks": [
+  {
+   "id": "3af20b85-19d9-4878-83fc-63a4e89cdc37",
+   "name": null,
+   "title": null,
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "This section is the most critical part of your GDD. It's the first thing anyone will read, and its purpose is to provide a clear, concise, and inspiring vision for the entire project. It aligns the team and gets stakeholders excited.",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "\n"
+      }
+     ],
+     "Str": "This section is the most critical part of your GDD. It's the first thing anyone will read, and its purpose is to provide a clear, concise, and inspiring vision for the entire project. It aligns the team and gets stakeholders excited.\n\n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "This section is the most critical part of your GDD. It's the first thing anyone will read, and its purpose is to provide a clear, concise, and inspiring vision for the entire project. It aligns the team and gets stakeholders excited.",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "\n"
+      }
+     ],
+     "Str": "This section is the most critical part of your GDD. It's the first thing anyone will read, and its purpose is to provide a clear, concise, and inspiring vision for the entire project. It aligns the team and gets stakeholders excited.\n\n"
+    }
+   },
+   "inherited": null,
+   "index": 4.1755266,
+   "createdAt": "2025-08-20T09:41:51.620Z",
+   "updatedAt": "2025-08-20T18:28:52.015Z"
+  },
+  {
+   "id": "4b7d88e8-87b1-4597-9e28-877b27f9f149",
+   "name": null,
+   "title": "1. Executive Summary (The \"Elevator Pitch\")",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "A single, powerful paragraph that summarizes the entire game. Imagine you have 30 seconds to explain your game to a busy executive in an elevator.",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Dragon Age",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " meets "
+      },
+      {
+       "insert": "Shadow of the Colossus",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " in a poignant narrative RPG. You are the last free dragon in a world where humanity hunts your kind to the brink of extinction. To save your species from slavery, you must master your ancient powers and outsmart the Order of Conquerors and their mechanical traps, making gut-wrenching choices where every victory for your freedom comes at a terrible personal cost\n"
+      }
+     ],
+     "Str": "A single, powerful paragraph that summarizes the entire game. Imagine you have 30 seconds to explain your game to a busy executive in an elevator.\n\nDragon Age meets Shadow of the Colossus in a poignant narrative RPG. You are the last free dragon in a world where humanity hunts your kind to the brink of extinction. To save your species from slavery, you must master your ancient powers and outsmart the Order of Conquerors and their mechanical traps, making gut-wrenching choices where every victory for your freedom comes at a terrible personal cost\n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "A single, powerful paragraph that summarizes the entire game. Imagine you have 30 seconds to explain your game to a busy executive in an elevator.",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Dragon Age",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " meets "
+      },
+      {
+       "insert": "Shadow of the Colossus",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " in a poignant narrative RPG. You are the last free dragon in a world where humanity hunts your kind to the brink of extinction. To save your species from slavery, you must master your ancient powers and outsmart the Order of Conquerors and their mechanical traps, making gut-wrenching choices where every victory for your freedom comes at a terrible personal cost\n"
+      }
+     ],
+     "Str": "A single, powerful paragraph that summarizes the entire game. Imagine you have 30 seconds to explain your game to a busy executive in an elevator.\n\nDragon Age meets Shadow of the Colossus in a poignant narrative RPG. You are the last free dragon in a world where humanity hunts your kind to the brink of extinction. To save your species from slavery, you must master your ancient powers and outsmart the Order of Conquerors and their mechanical traps, making gut-wrenching choices where every victory for your freedom comes at a terrible personal cost\n"
+    }
+   },
+   "inherited": null,
+   "index": 6.1755266,
+   "createdAt": "2025-08-15T13:13:03.902Z",
+   "updatedAt": "2025-08-20T09:53:02.938Z"
+  },
+  {
+   "id": "a1141beb-1510-4e4f-9d4d-eab2c2256d71",
+   "name": null,
+   "title": "2. Core Gameplay Pillars",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "3 to 5 bullet-pointed statements that define the fundamental philosophies of your game. These are the non-negotiable principles that every design decision must support",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Predator and Prey:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Feel the power of a dragon and the vulnerability of being the last of your kind. Shift between overwhelming force and desperate survival."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      },
+      {
+       "insert": "Cost of Freedom:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Every victory has a consequence. Narrative and gameplay choices force meaningful, often painful, sacrifices with lasting impact."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      },
+      {
+       "insert": "Aerial Dominance:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Master a fluid and tactical flight system. The sky is your main domain for combat, exploration, and evasion."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      },
+      {
+       "insert": "Asymmetric Combat:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Fight unlike any human. Use primal abilities and the environment to break enemy formations, traps, and hunting strategies."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      },
+      {
+       "insert": "Living Hunt:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " The world actively reacts to you. Your actions change how the Order pursues you, creating a dynamic and relentless threat."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      }
+     ],
+     "Str": "3 to 5 bullet-pointed statements that define the fundamental philosophies of your game. These are the non-negotiable principles that every design decision must support\n\nPredator and Prey: Feel the power of a dragon and the vulnerability of being the last of your kind. Shift between overwhelming force and desperate survival.\nCost of Freedom: Every victory has a consequence. Narrative and gameplay choices force meaningful, often painful, sacrifices with lasting impact.\nAerial Dominance: Master a fluid and tactical flight system. The sky is your main domain for combat, exploration, and evasion.\nAsymmetric Combat: Fight unlike any human. Use primal abilities and the environment to break enemy formations, traps, and hunting strategies.\nLiving Hunt: The world actively reacts to you. Your actions change how the Order pursues you, creating a dynamic and relentless threat.\n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "3 to 5 bullet-pointed statements that define the fundamental philosophies of your game. These are the non-negotiable principles that every design decision must support",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Predator and Prey:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Feel the power of a dragon and the vulnerability of being the last of your kind. Shift between overwhelming force and desperate survival."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      },
+      {
+       "insert": "Cost of Freedom:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Every victory has a consequence. Narrative and gameplay choices force meaningful, often painful, sacrifices with lasting impact."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      },
+      {
+       "insert": "Aerial Dominance:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Master a fluid and tactical flight system. The sky is your main domain for combat, exploration, and evasion."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      },
+      {
+       "insert": "Asymmetric Combat:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Fight unlike any human. Use primal abilities and the environment to break enemy formations, traps, and hunting strategies."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      },
+      {
+       "insert": "Living Hunt:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " The world actively reacts to you. Your actions change how the Order pursues you, creating a dynamic and relentless threat."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      }
+     ],
+     "Str": "3 to 5 bullet-pointed statements that define the fundamental philosophies of your game. These are the non-negotiable principles that every design decision must support\n\nPredator and Prey: Feel the power of a dragon and the vulnerability of being the last of your kind. Shift between overwhelming force and desperate survival.\nCost of Freedom: Every victory has a consequence. Narrative and gameplay choices force meaningful, often painful, sacrifices with lasting impact.\nAerial Dominance: Master a fluid and tactical flight system. The sky is your main domain for combat, exploration, and evasion.\nAsymmetric Combat: Fight unlike any human. Use primal abilities and the environment to break enemy formations, traps, and hunting strategies.\nLiving Hunt: The world actively reacts to you. Your actions change how the Order pursues you, creating a dynamic and relentless threat.\n"
+    }
+   },
+   "inherited": null,
+   "index": 7.35112,
+   "createdAt": "2025-08-20T09:48:22.671Z",
+   "updatedAt": "2025-08-20T18:37:10.830Z"
+  },
+  {
+   "id": "0fdca6e5-890c-4b1e-8fce-c8bbd5e1f991",
+   "name": null,
+   "title": "3. Target Audience",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "A clear description of who you are making this game for. This helps with marketing and ensures design decisions are made for a specific type of player",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Primary Audience:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Narrative-driven action-RPG fans (aged 20-35) who enjoy powerful fantasy protagonists, morally complex choices, and games with strong, emotional stakes like "
+      },
+      {
+       "insert": "The Witcher 3",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": ", "
+      },
+      {
+       "insert": "God of War,",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": " and "
+      },
+      {
+       "insert": "Horizon Zero Dawn",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": ".\n\n"
+      },
+      {
+       "insert": "Secondary Audience:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Players who enjoy open-world exploration and unique movement mechanics, such as fans of "
+      },
+      {
+       "insert": "The Legend of Zelda: Tears of the Kingdom",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": " or "
+      },
+      {
+       "insert": "Monster Hunter: World",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": ", who are drawn to the fantasy of mastering aerial mobility and combat\n"
+      }
+     ],
+     "Str": "A clear description of who you are making this game for. This helps with marketing and ensures design decisions are made for a specific type of player\n\nPrimary Audience: Narrative-driven action-RPG fans (aged 20-35) who enjoy powerful fantasy protagonists, morally complex choices, and games with strong, emotional stakes like The Witcher 3, God of War, and Horizon Zero Dawn.\n\nSecondary Audience: Players who enjoy open-world exploration and unique movement mechanics, such as fans of The Legend of Zelda: Tears of the Kingdom or Monster Hunter: World, who are drawn to the fantasy of mastering aerial mobility and combat\n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "A clear description of who you are making this game for. This helps with marketing and ensures design decisions are made for a specific type of player",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Primary Audience:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Narrative-driven action-RPG fans (aged 20-35) who enjoy powerful fantasy protagonists, morally complex choices, and games with strong, emotional stakes like "
+      },
+      {
+       "insert": "The Witcher 3",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": ", "
+      },
+      {
+       "insert": "God of War,",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": " and "
+      },
+      {
+       "insert": "Horizon Zero Dawn",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": ".\n\n"
+      },
+      {
+       "insert": "Secondary Audience:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Players who enjoy open-world exploration and unique movement mechanics, such as fans of "
+      },
+      {
+       "insert": "The Legend of Zelda: Tears of the Kingdom",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": " or "
+      },
+      {
+       "insert": "Monster Hunter: World",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": ", who are drawn to the fantasy of mastering aerial mobility and combat\n"
+      }
+     ],
+     "Str": "A clear description of who you are making this game for. This helps with marketing and ensures design decisions are made for a specific type of player\n\nPrimary Audience: Narrative-driven action-RPG fans (aged 20-35) who enjoy powerful fantasy protagonists, morally complex choices, and games with strong, emotional stakes like The Witcher 3, God of War, and Horizon Zero Dawn.\n\nSecondary Audience: Players who enjoy open-world exploration and unique movement mechanics, such as fans of The Legend of Zelda: Tears of the Kingdom or Monster Hunter: World, who are drawn to the fantasy of mastering aerial mobility and combat\n"
+    }
+   },
+   "inherited": null,
+   "index": 8.175569,
+   "createdAt": "2025-08-20T09:48:19.550Z",
+   "updatedAt": "2025-08-20T18:42:48.571Z"
+  },
+  {
+   "id": "b8b36b6d-65bd-4201-8582-e8a08d8ca24a",
+   "name": null,
+   "title": "4. Platform(s) & Technical Specification",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "The practical realities of where the game will be played and what that means for its development.",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Platforms:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " PC (Steam, Epic Games Store), PlayStation 5, Xbox Series X/S.\n\n"
+      },
+      {
+       "insert": "Target Specifications:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Key Tech:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Heavy use of CPU for advanced enemy AI routines and physics-based interactions (destructible environments, cloth, smoke). Physics-based audio for immersive wing sounds and echoing roars in mountain valleys."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Input:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Deeply integrated adaptive trigger support for feeling the strain of wingbeats and the release of a breath attack."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "\n"
+      }
+     ],
+     "Str": "The practical realities of where the game will be played and what that means for its development.\n\nPlatforms: PC (Steam, Epic Games Store), PlayStation 5, Xbox Series X/S.\n\nTarget Specifications:\nKey Tech: Heavy use of CPU for advanced enemy AI routines and physics-based interactions (destructible environments, cloth, smoke). Physics-based audio for immersive wing sounds and echoing roars in mountain valleys.\nInput: Deeply integrated adaptive trigger support for feeling the strain of wingbeats and the release of a breath attack.\n\n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "The practical realities of where the game will be played and what that means for its development.",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Platforms:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " PC (Steam, Epic Games Store), PlayStation 5, Xbox Series X/S.\n\n"
+      },
+      {
+       "insert": "Target Specifications:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Key Tech:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Heavy use of CPU for advanced enemy AI routines and physics-based interactions (destructible environments, cloth, smoke). Physics-based audio for immersive wing sounds and echoing roars in mountain valleys."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Input:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Deeply integrated adaptive trigger support for feeling the strain of wingbeats and the release of a breath attack."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "\n"
+      }
+     ],
+     "Str": "The practical realities of where the game will be played and what that means for its development.\n\nPlatforms: PC (Steam, Epic Games Store), PlayStation 5, Xbox Series X/S.\n\nTarget Specifications:\nKey Tech: Heavy use of CPU for advanced enemy AI routines and physics-based interactions (destructible environments, cloth, smoke). Physics-based audio for immersive wing sounds and echoing roars in mountain valleys.\nInput: Deeply integrated adaptive trigger support for feeling the strain of wingbeats and the release of a breath attack.\n\n"
+    }
+   },
+   "inherited": null,
+   "index": 10.175569,
+   "createdAt": "2025-08-20T09:57:07.103Z",
+   "updatedAt": "2025-08-20T10:24:37.178Z"
+  },
+  {
+   "id": "4e41c7b7-8117-4234-8605-e270b9b8d3f2",
+   "name": null,
+   "title": "5. Project Scope & Key Features List",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "A concrete list of what the game will and will not include. This manages expectations and prevents \"feature creep.\"",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "World:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " One vast, contiguous open world (approx. 50km"
+      },
+      {
+       "insert": "2",
+       "attributes": {
+        "script": "super"
+       }
+      },
+      {
+       "insert": ") spanning diverse biomes (mountains, forests, human farmlands, coastal cliffs) designed specifically for aerial navigation.\n\n"
+      },
+      {
+       "insert": "Key Features:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Primal Dragon Abilities:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Upgradeable breath weapons (fire, frost, lightning), physical attacks (claw, tail, roar), and ultimate abilities."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Dynamic Flight System:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Physics-based flight affected by weather, wind currents, and player stamina. Includes diving, soaring, and advanced aerial maneuvers."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "The Order of Conquerors:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " A persistent enemy faction with patrols, hunting parties, convoy raids, and fortified outposts that can be attacked and weakened."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "The Nest System:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " A small number of hidden, upgradable lairs used for healing, storing hoards, and housing rescued dragon allies."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Narrative of Sacrifice:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " A main story campaign (~25 hours) with branching choices that determine which dragons are saved, which allies live or die, and the final fate of the Order."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "NOT in Scope:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " \nMultiplayer"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "Playable human characters"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "Underwater exploration."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "\n"
+      }
+     ],
+     "Str": "A concrete list of what the game will and will not include. This manages expectations and prevents \"feature creep.\"\n\nWorld: One vast, contiguous open world (approx. 50km2) spanning diverse biomes (mountains, forests, human farmlands, coastal cliffs) designed specifically for aerial navigation.\n\nKey Features:\nPrimal Dragon Abilities: Upgradeable breath weapons (fire, frost, lightning), physical attacks (claw, tail, roar), and ultimate abilities.\nDynamic Flight System: Physics-based flight affected by weather, wind currents, and player stamina. Includes diving, soaring, and advanced aerial maneuvers.\nThe Order of Conquerors: A persistent enemy faction with patrols, hunting parties, convoy raids, and fortified outposts that can be attacked and weakened.\nThe Nest System: A small number of hidden, upgradable lairs used for healing, storing hoards, and housing rescued dragon allies.\nNarrative of Sacrifice: A main story campaign (~25 hours) with branching choices that determine which dragons are saved, which allies live or die, and the final fate of the Order.\n\nNOT in Scope: \nMultiplayer\nPlayable human characters\nUnderwater exploration.\n\n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "A concrete list of what the game will and will not include. This manages expectations and prevents \"feature creep.\"",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "World:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " One vast, contiguous open world (approx. 50km"
+      },
+      {
+       "insert": "2",
+       "attributes": {
+        "script": "super"
+       }
+      },
+      {
+       "insert": ") spanning diverse biomes (mountains, forests, human farmlands, coastal cliffs) designed specifically for aerial navigation.\n\n"
+      },
+      {
+       "insert": "Key Features:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Primal Dragon Abilities:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Upgradeable breath weapons (fire, frost, lightning), physical attacks (claw, tail, roar), and ultimate abilities."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Dynamic Flight System:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Physics-based flight affected by weather, wind currents, and player stamina. Includes diving, soaring, and advanced aerial maneuvers."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "The Order of Conquerors:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " A persistent enemy faction with patrols, hunting parties, convoy raids, and fortified outposts that can be attacked and weakened."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "The Nest System:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " A small number of hidden, upgradable lairs used for healing, storing hoards, and housing rescued dragon allies."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Narrative of Sacrifice:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " A main story campaign (~25 hours) with branching choices that determine which dragons are saved, which allies live or die, and the final fate of the Order."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "NOT in Scope:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " \nMultiplayer"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "Playable human characters"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "Underwater exploration."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      },
+      {
+       "insert": "\n"
+      }
+     ],
+     "Str": "A concrete list of what the game will and will not include. This manages expectations and prevents \"feature creep.\"\n\nWorld: One vast, contiguous open world (approx. 50km2) spanning diverse biomes (mountains, forests, human farmlands, coastal cliffs) designed specifically for aerial navigation.\n\nKey Features:\nPrimal Dragon Abilities: Upgradeable breath weapons (fire, frost, lightning), physical attacks (claw, tail, roar), and ultimate abilities.\nDynamic Flight System: Physics-based flight affected by weather, wind currents, and player stamina. Includes diving, soaring, and advanced aerial maneuvers.\nThe Order of Conquerors: A persistent enemy faction with patrols, hunting parties, convoy raids, and fortified outposts that can be attacked and weakened.\nThe Nest System: A small number of hidden, upgradable lairs used for healing, storing hoards, and housing rescued dragon allies.\nNarrative of Sacrifice: A main story campaign (~25 hours) with branching choices that determine which dragons are saved, which allies live or die, and the final fate of the Order.\n\nNOT in Scope: \nMultiplayer\nPlayable human characters\nUnderwater exploration.\n\n"
+    }
+   },
+   "inherited": null,
+   "index": 12.175569,
+   "createdAt": "2025-08-20T09:57:49.435Z",
+   "updatedAt": "2025-08-20T18:51:28.808Z"
+  },
+  {
+   "id": "63fbd968-0c6e-4f22-b6b0-bc77c66a7250",
+   "name": null,
+   "title": "6. Art Style & Direction",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "A visual definition of the game's look and feel. This is more than just \"realistic\" or \"stylized.\"",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Style:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": "Semi-Realistic with a Mythic Edge.",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Grounded textures and physics are combined with slightly exaggerated scales and glowing, magical runes on the dragon's body. The world feels ancient and tangible, but the magic and the creature designs feel legendary and awe-inspiring.\n\n"
+      },
+      {
+       "insert": "Mood Boards & References:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Environment & Lighting:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " The gritty, lived-in realism of "
+      },
+      {
+       "insert": "The Witcher 3 ",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "meets the majestic, untouched natural beauty of "
+      },
+      {
+       "insert": "Monster Hunter World's Ancient Forest",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Character & Creature Design:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " The biological plausibility and weight of the dragons from "
+      },
+      {
+       "insert": "Game of Thrones",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": ", combined with the ancient, magical glow and intelligence of the dragons from "
+      },
+      {
+       "insert": "The Elder Scrolls V: Skyrim",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "The Order's Aesthetic:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " A blend of gritty Renaissance-era engineering (think Leonardo da Vinci's war machines) and dark, oppressive religious iconography. Their technology is wood, iron, and glowing magic crystals."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      }
+     ],
+     "Str": "A visual definition of the game's look and feel. This is more than just \"realistic\" or \"stylized.\"\n\nStyle: Semi-Realistic with a Mythic Edge. Grounded textures and physics are combined with slightly exaggerated scales and glowing, magical runes on the dragon's body. The world feels ancient and tangible, but the magic and the creature designs feel legendary and awe-inspiring.\n\nMood Boards & References:\nEnvironment & Lighting: The gritty, lived-in realism of The Witcher 3 meets the majestic, untouched natural beauty of Monster Hunter World's Ancient Forest.\nCharacter & Creature Design: The biological plausibility and weight of the dragons from Game of Thrones, combined with the ancient, magical glow and intelligence of the dragons from The Elder Scrolls V: Skyrim.\nThe Order's Aesthetic: A blend of gritty Renaissance-era engineering (think Leonardo da Vinci's war machines) and dark, oppressive religious iconography. Their technology is wood, iron, and glowing magic crystals.\n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "A visual definition of the game's look and feel. This is more than just \"realistic\" or \"stylized.\"",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Style:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": "Semi-Realistic with a Mythic Edge.",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Grounded textures and physics are combined with slightly exaggerated scales and glowing, magical runes on the dragon's body. The world feels ancient and tangible, but the magic and the creature designs feel legendary and awe-inspiring.\n\n"
+      },
+      {
+       "insert": "Mood Boards & References:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Environment & Lighting:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " The gritty, lived-in realism of "
+      },
+      {
+       "insert": "The Witcher 3 ",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "meets the majestic, untouched natural beauty of "
+      },
+      {
+       "insert": "Monster Hunter World's Ancient Forest",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Character & Creature Design:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " The biological plausibility and weight of the dragons from "
+      },
+      {
+       "insert": "Game of Thrones",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": ", combined with the ancient, magical glow and intelligence of the dragons from "
+      },
+      {
+       "insert": "The Elder Scrolls V: Skyrim",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "The Order's Aesthetic:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " A blend of gritty Renaissance-era engineering (think Leonardo da Vinci's war machines) and dark, oppressive religious iconography. Their technology is wood, iron, and glowing magic crystals."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      }
+     ],
+     "Str": "A visual definition of the game's look and feel. This is more than just \"realistic\" or \"stylized.\"\n\nStyle: Semi-Realistic with a Mythic Edge. Grounded textures and physics are combined with slightly exaggerated scales and glowing, magical runes on the dragon's body. The world feels ancient and tangible, but the magic and the creature designs feel legendary and awe-inspiring.\n\nMood Boards & References:\nEnvironment & Lighting: The gritty, lived-in realism of The Witcher 3 meets the majestic, untouched natural beauty of Monster Hunter World's Ancient Forest.\nCharacter & Creature Design: The biological plausibility and weight of the dragons from Game of Thrones, combined with the ancient, magical glow and intelligence of the dragons from The Elder Scrolls V: Skyrim.\nThe Order's Aesthetic: A blend of gritty Renaissance-era engineering (think Leonardo da Vinci's war machines) and dark, oppressive religious iconography. Their technology is wood, iron, and glowing magic crystals.\n"
+    }
+   },
+   "inherited": null,
+   "index": 14.175569,
+   "createdAt": "2025-08-20T09:59:13.588Z",
+   "updatedAt": "2025-08-20T19:47:47.298Z"
+  },
+  {
+   "id": "baa84d35-10f5-4ff5-b369-c852dda2b8e9",
+   "name": null,
+   "title": null,
+   "own": true,
+   "type": "gallery",
+   "props": {
+    "0ea20137-f111-472e-9b20-1de17be40e2c": {
+     "type": "file",
+     "index": 3,
+     "value": {
+      "Dir": null,
+      "Size": 415128,
+      "Store": "p-EWvDFxqn",
+      "Title": "hunters_camp.jpg",
+      "FileId": "0ea20137-f111-472e-9b20-1de17be40e2c"
+     }
+    },
+    "279a3f49-2830-469b-b06d-c830ff57a882": {
+     "type": "file",
+     "index": 1,
+     "value": {
+      "Dir": null,
+      "Size": 963211,
+      "Store": "p-EWvDFxqn",
+      "Title": "Flux_Dev_A_majestic_wounded_dragon_with_scales_that_shimmer_in_0.jpg",
+      "FileId": "279a3f49-2830-469b-b06d-c830ff57a882"
+     }
+    },
+    "616fc604-94fc-4087-ae03-afe7e495583e": {
+     "type": "file",
+     "index": 2,
+     "value": {
+      "Dir": null,
+      "Size": 817718,
+      "Store": "p-EWvDFxqn",
+      "Title": "Flux_Dev_A_majestic_yet_wounded_dragon_with_scales_glistening__1.jpg",
+      "FileId": "616fc604-94fc-4087-ae03-afe7e495583e"
+     }
+    },
+    "70aff0c4-1575-47ff-a24a-4e75f5e0adf2": {
+     "type": "file",
+     "index": 0,
+     "value": {
+      "Dir": null,
+      "Size": 544946,
+      "Store": "p-EWvDFxqn",
+      "Title": "big_dragon.jpg",
+      "FileId": "70aff0c4-1575-47ff-a24a-4e75f5e0adf2"
+     }
+    }
+   },
+   "computed": {
+    "0ea20137-f111-472e-9b20-1de17be40e2c": {
+     "type": "file",
+     "index": 3,
+     "value": {
+      "Dir": null,
+      "Size": 415128,
+      "Store": "p-EWvDFxqn",
+      "Title": "hunters_camp.jpg",
+      "FileId": "0ea20137-f111-472e-9b20-1de17be40e2c"
+     }
+    },
+    "279a3f49-2830-469b-b06d-c830ff57a882": {
+     "type": "file",
+     "index": 1,
+     "value": {
+      "Dir": null,
+      "Size": 963211,
+      "Store": "p-EWvDFxqn",
+      "Title": "Flux_Dev_A_majestic_wounded_dragon_with_scales_that_shimmer_in_0.jpg",
+      "FileId": "279a3f49-2830-469b-b06d-c830ff57a882"
+     }
+    },
+    "616fc604-94fc-4087-ae03-afe7e495583e": {
+     "type": "file",
+     "index": 2,
+     "value": {
+      "Dir": null,
+      "Size": 817718,
+      "Store": "p-EWvDFxqn",
+      "Title": "Flux_Dev_A_majestic_yet_wounded_dragon_with_scales_glistening__1.jpg",
+      "FileId": "616fc604-94fc-4087-ae03-afe7e495583e"
+     }
+    },
+    "70aff0c4-1575-47ff-a24a-4e75f5e0adf2": {
+     "type": "file",
+     "index": 0,
+     "value": {
+      "Dir": null,
+      "Size": 544946,
+      "Store": "p-EWvDFxqn",
+      "Title": "big_dragon.jpg",
+      "FileId": "70aff0c4-1575-47ff-a24a-4e75f5e0adf2"
+     }
+    }
+   },
+   "inherited": null,
+   "index": 15.351137,
+   "createdAt": "2025-08-20T10:26:26.509Z",
+   "updatedAt": "2025-08-20T10:26:26.509Z"
+  },
+  {
+   "id": "7ef9d091-b94c-40ca-b334-26aeccad0439",
+   "name": null,
+   "title": "7.  Tone & Narrative Themes",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "The emotional and intellectual core of your story. This guides the writers and ensures the narrative and gameplay are thematically aligned.",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Tone:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": "Gritty, Epic, and Tragically Hopeful.",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " The world is dark and desperate, filled with loss and the brutal reality of extinction. However, the core tone is defined by a sliver of defiant hope - the belief that one last act of courage and sacrifice can change the world, even if it comes at a tremendous personal cost. The mood balances moments of breathtaking aerial freedom with the claustrophobic tension of being hunted.\n\n"
+      },
+      {
+       "insert": "Narrative Themes:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "The Price of Survival:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " What are you willing to sacrifice for your kind's freedom? Your power? Your allies? Your own life?"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Nature vs. Industry:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " The primal, ancient power of the dragons versus the ruthless, mechanical \"progress\" of humanity."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Perspective and Propaganda:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Exploring the idea that one side's \"monster\" is another side's \"savior.\" The game challenges the player to see the conflict from both angles, even as they fight for one."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Legacy and Responsibility:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " As the \"last free\" dragon, you carry the weight of your entire species' future. Your actions will define their fate forever."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      }
+     ],
+     "Str": "The emotional and intellectual core of your story. This guides the writers and ensures the narrative and gameplay are thematically aligned.\n\nTone: Gritty, Epic, and Tragically Hopeful. The world is dark and desperate, filled with loss and the brutal reality of extinction. However, the core tone is defined by a sliver of defiant hope - the belief that one last act of courage and sacrifice can change the world, even if it comes at a tremendous personal cost. The mood balances moments of breathtaking aerial freedom with the claustrophobic tension of being hunted.\n\nNarrative Themes:\nThe Price of Survival: What are you willing to sacrifice for your kind's freedom? Your power? Your allies? Your own life?\nNature vs. Industry: The primal, ancient power of the dragons versus the ruthless, mechanical \"progress\" of humanity.\nPerspective and Propaganda: Exploring the idea that one side's \"monster\" is another side's \"savior.\" The game challenges the player to see the conflict from both angles, even as they fight for one.\nLegacy and Responsibility: As the \"last free\" dragon, you carry the weight of your entire species' future. Your actions will define their fate forever.\n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "The emotional and intellectual core of your story. This guides the writers and ensures the narrative and gameplay are thematically aligned.",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "Tone:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " "
+      },
+      {
+       "insert": "Gritty, Epic, and Tragically Hopeful.",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " The world is dark and desperate, filled with loss and the brutal reality of extinction. However, the core tone is defined by a sliver of defiant hope - the belief that one last act of courage and sacrifice can change the world, even if it comes at a tremendous personal cost. The mood balances moments of breathtaking aerial freedom with the claustrophobic tension of being hunted.\n\n"
+      },
+      {
+       "insert": "Narrative Themes:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": "\n"
+      },
+      {
+       "insert": "The Price of Survival:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " What are you willing to sacrifice for your kind's freedom? Your power? Your allies? Your own life?"
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Nature vs. Industry:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " The primal, ancient power of the dragons versus the ruthless, mechanical \"progress\" of humanity."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Perspective and Propaganda:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " Exploring the idea that one side's \"monster\" is another side's \"savior.\" The game challenges the player to see the conflict from both angles, even as they fight for one."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      },
+      {
+       "insert": "Legacy and Responsibility:",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " As the \"last free\" dragon, you carry the weight of your entire species' future. Your actions will define their fate forever."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet",
+        "indent": 1
+       }
+      }
+     ],
+     "Str": "The emotional and intellectual core of your story. This guides the writers and ensures the narrative and gameplay are thematically aligned.\n\nTone: Gritty, Epic, and Tragically Hopeful. The world is dark and desperate, filled with loss and the brutal reality of extinction. However, the core tone is defined by a sliver of defiant hope - the belief that one last act of courage and sacrifice can change the world, even if it comes at a tremendous personal cost. The mood balances moments of breathtaking aerial freedom with the claustrophobic tension of being hunted.\n\nNarrative Themes:\nThe Price of Survival: What are you willing to sacrifice for your kind's freedom? Your power? Your allies? Your own life?\nNature vs. Industry: The primal, ancient power of the dragons versus the ruthless, mechanical \"progress\" of humanity.\nPerspective and Propaganda: Exploring the idea that one side's \"monster\" is another side's \"savior.\" The game challenges the player to see the conflict from both angles, even as they fight for one.\nLegacy and Responsibility: As the \"last free\" dragon, you carry the weight of your entire species' future. Your actions will define their fate forever.\n"
+    }
+   },
+   "inherited": null,
+   "index": 16.175568,
+   "createdAt": "2025-08-20T09:59:28.247Z",
+   "updatedAt": "2025-08-20T10:23:00.753Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "information-fill",
+ "index": 2,
+ "name": null,
+ "ownIcon": "information-fill",
+ "ownTitle": "Game Overview",
+ "parentIds": [],
+ "title": "Game Overview",
+ "typeIds": [],
+ "workspaceId": null,
+ "values": {}
+}

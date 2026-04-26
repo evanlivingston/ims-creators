@@ -1,0 +1,122 @@
+{
+ "id": "572014b9-a589-4619-bd79-a979700ac6bc",
+ "blocks": [
+  {
+   "id": "6524aa77-424d-4810-b004-6e55c89a22a9",
+   "name": "info",
+   "title": "[[t:Info]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "items": [
+     {
+      "name": "enemy",
+      "title": "Enemy"
+     },
+     {
+      "name": "ally",
+      "title": "Ally"
+     },
+     {
+      "name": "self",
+      "title": "Self"
+     },
+     {
+      "name": "ground",
+      "title": "Ground"
+     }
+    ]
+   },
+   "computed": {
+    "items": [
+     {
+      "name": "enemy",
+      "title": "Enemy"
+     },
+     {
+      "name": "ally",
+      "title": "Ally"
+     },
+     {
+      "name": "self",
+      "title": "Self"
+     },
+     {
+      "name": "ground",
+      "title": "Ground"
+     }
+    ],
+    "__props": {
+     "items": {
+      "type": "struct",
+      "index": 1,
+      "title": "[[t:Items]]",
+      "multiple": true,
+      "params": {
+       "type": {
+        "AssetId": "00000000-0000-0000-0000-000000000022"
+       }
+      }
+     }
+    }
+   },
+   "inherited": {
+    "items": null,
+    "__props": {
+     "items": {
+      "type": "struct",
+      "index": 1,
+      "title": "[[t:Items]]",
+      "multiple": true,
+      "params": {
+       "type": {
+        "AssetId": "00000000-0000-0000-0000-000000000022"
+       }
+      }
+     }
+    }
+   },
+   "index": 1,
+   "createdAt": "2025-08-18T12:04:53.618Z",
+   "updatedAt": "2025-08-20T17:36:33.108Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "stack-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Target type",
+ "parentIds": [
+  "00000000-0000-0000-0000-000000000023"
+ ],
+ "title": "Target type",
+ "typeIds": [
+  "00000000-0000-0000-0000-000000000023"
+ ],
+ "workspaceId": "ae2b3260-4448-4f89-9d6d-aac56479a7b5",
+ "values": {
+  "info": {
+   "items": [
+    {
+     "name": "enemy",
+     "title": "Enemy"
+    },
+    {
+     "name": "ally",
+     "title": "Ally"
+    },
+    {
+     "name": "self",
+     "title": "Self"
+    },
+    {
+     "name": "ground",
+     "title": "Ground"
+    }
+   ]
+  }
+ }
+}

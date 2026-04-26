@@ -1,0 +1,65 @@
+{
+ "id": "00000000-0000-0000-0000-000000000020",
+ "blocks": [
+  {
+   "id": "0ee54172-c00e-48a5-8750-448be887997b",
+   "name": "info",
+   "title": "[[t:Info]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "fields": null,
+    "__props": {
+     "fields": {
+      "type": "struct",
+      "index": 1,
+      "title": "[[t:Fields]]",
+      "multiple": true,
+      "params": {
+       "type": {
+        "AssetId": "00000000-0000-0000-0000-000000000021"
+       }
+      }
+     }
+    }
+   },
+   "computed": {
+    "fields": null,
+    "__props": {
+     "fields": {
+      "type": "struct",
+      "index": 1,
+      "title": "[[t:Fields]]",
+      "multiple": true,
+      "params": {
+       "type": {
+        "AssetId": "00000000-0000-0000-0000-000000000021"
+       }
+      }
+     }
+    }
+   },
+   "inherited": null,
+   "index": 1,
+   "createdAt": "2023-12-03T18:45:48.740Z",
+   "updatedAt": "2023-12-03T19:12:03.793Z"
+  }
+ ],
+ "isAbstract": true,
+ "projectId": "111112",
+ "references": [],
+ "icon": "box-1-fill",
+ "index": null,
+ "name": "structure",
+ "ownIcon": "box-1-fill",
+ "ownTitle": "[[t:Structure]]",
+ "parentIds": [],
+ "title": "[[t:Structure]]",
+ "typeIds": [],
+ "workspaceId": "00000000-0000-0000-0000-000000000004",
+ "values": {
+  "info": {
+   "fields": null
+  }
+ }
+}

@@ -1,0 +1,782 @@
+openapi: 3.1.0
+info:
+  title: IMS Creators - Game Design Data API
+  description: |
+    API for reading and editing game design data (characters, dialogues, items, quests, etc.)
+    stored as IMS Creators assets. Assets are organized in workspaces (folders).
+
+    Common workflow:
+    1. List workspaces to see project structure
+    2. List assets in a workspace to find what you need
+    3. Get full asset details to read/edit content
+    4. Change asset to update content
+  version: 1.0.0
+servers:
+  - url: https://your-domain.com
+    description: Production server
+
+paths:
+  /api/project/info:
+    get:
+      operationId: getProjectInfo
+      summary: Get project info
+      description: Returns project metadata including title, settings, and root workspaces.
+      responses:
+        '200':
+          description: Project info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectInfo'
+
+  /api/project/workspaces/get:
+    post:
+      operationId: getWorkspaces
+      summary: List workspaces (folders)
+      description: |
+        List workspaces with optional filtering. Workspaces are folders that contain assets.
+        Use `where.parentId` to list children of a specific workspace.
+        Use `where.isSystem: false` to exclude system workspaces.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                where:
+                  type: object
+                  description: Filter conditions
+                  properties:
+                    parentId:
+                      type: string
+                      nullable: true
+                      description: Parent workspace ID. Use null for root workspaces.
+                    isSystem:
+                      type: boolean
+                      description: Filter system vs user workspaces
+                    ids:
+                      oneOf:
+                        - type: string
+                        - type: array
+                          items:
+                            type: string
+                      description: Filter by workspace ID(s)
+                    names:
+                      type: array
+                      items:
+                        type: string
+                      description: Filter by workspace name(s)
+                count:
+                  type: integer
+                  description: Max results to return
+                offset:
+                  type: integer
+                  description: Skip this many results
+      responses:
+        '200':
+          description: List of workspaces
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Workspace'
+                  total:
+                    type: integer
+
+  /api/project/assets/get-short:
+    post:
+      operationId: getAssetsShort
+      summary: List assets (brief info)
+      description: |
+        List assets with brief info (id, title, type). Use for browsing.
+        Filter by workspace with `where.workspaceId`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                where:
+                  $ref: '#/components/schemas/AssetWhere'
+                count:
+                  type: integer
+                offset:
+                  type: integer
+                order:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: List of assets (short form)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AssetShort'
+                  total:
+                    type: integer
+
+  /api/project/assets/get-full:
+    post:
+      operationId: getAssetsFull
+      summary: Get full asset details
+      description: |
+        Get complete asset data including all blocks (properties, text content, scripts, etc.).
+        Use this to read an asset's full content before editing.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                where:
+                  $ref: '#/components/schemas/AssetWhere'
+                count:
+                  type: integer
+                offset:
+                  type: integer
+      responses:
+        '200':
+          description: List of full assets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AssetFull'
+                  total:
+                    type: integer
+
+  /api/project/assets/get-view:
+    post:
+      operationId: getAssetsView
+      summary: Get assets with selected properties
+      description: Get assets with specific property columns. Useful for table views.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: object
+                  description: Property selection query
+                  properties:
+                    select:
+                      type: array
+                      items:
+                        type: string
+                      description: Property names to include
+                    where:
+                      $ref: '#/components/schemas/AssetWhere'
+                    count:
+                      type: integer
+                    offset:
+                      type: integer
+                options:
+                  type: object
+                  properties:
+                    folded:
+                      type: boolean
+      responses:
+        '200':
+          description: Assets with selected properties
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  list:
+                    type: array
+                    items:
+                      type: object
+                  total:
+                    type: integer
+
+  /api/project/assets/graph:
+    post:
+      operationId: getAssetsGraph
+      summary: Get asset dependency graph
+      description: Get assets with their references and relationships.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                where:
+                  $ref: '#/components/schemas/AssetWhere'
+      responses:
+        '200':
+          description: Asset graph
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/project/assets/create:
+    post:
+      operationId: createAsset
+      summary: Create a new asset
+      description: |
+        Create a new asset in a workspace. Specify the workspace, title, type, and initial blocks/values.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetCreateDTO'
+      responses:
+        '200':
+          description: Created asset
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetsChangeResult'
+
+  /api/project/assets/change:
+    post:
+      operationId: changeAsset
+      summary: Edit an existing asset
+      description: |
+        Modify an asset's title, blocks, properties, or values.
+        Specify which asset to change with `params.where` and what to change with `params.set`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                params:
+                  type: object
+                  properties:
+                    where:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Asset ID to change
+                    set:
+                      type: object
+                      description: Fields to update (title, blocks, values, etc.)
+                options:
+                  type: object
+                  properties:
+                    pid:
+                      type: string
+      responses:
+        '200':
+          description: Changed asset
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetsChangeResult'
+
+  /api/project/assets/change-batch:
+    post:
+      operationId: changeAssetsBatch
+      summary: Batch edit multiple assets
+      description: Apply multiple change operations in one request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                params:
+                  type: object
+                  properties:
+                    ops:
+                      type: array
+                      items:
+                        type: object
+                options:
+                  type: object
+      responses:
+        '200':
+          description: Batch change results
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/project/assets/change-undo:
+    post:
+      operationId: undoAssetChange
+      summary: Undo a change
+      description: Revert a previous asset change by its change ID.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                params:
+                  type: object
+                  properties:
+                    changeId:
+                      type: string
+                options:
+                  type: object
+      responses:
+        '200':
+          description: Undo result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetsChangeResult'
+
+  /api/project/assets/delete:
+    post:
+      operationId: deleteAsset
+      summary: Delete an asset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                where:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                options:
+                  type: object
+      responses:
+        '200':
+          description: Delete result
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/project/assets/restore:
+    post:
+      operationId: restoreAsset
+      summary: Restore a deleted asset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                where:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                options:
+                  type: object
+      responses:
+        '200':
+          description: Restore result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetsChangeResult'
+
+  /api/project/assets/move:
+    post:
+      operationId: moveAsset
+      summary: Move assets between workspaces
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+                parentId:
+                  type: string
+                  description: Target workspace ID
+      responses:
+        '200':
+          description: Move result
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/project/assets/create-ref:
+    post:
+      operationId: createAssetRef
+      summary: Create a reference between assets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fromAssetId:
+                  type: string
+                toAssetId:
+                  type: string
+      responses:
+        '200':
+          description: Reference created
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/project/assets/delete-ref:
+    post:
+      operationId: deleteAssetRef
+      summary: Remove a reference between assets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fromAssetId:
+                  type: string
+                toAssetId:
+                  type: string
+      responses:
+        '200':
+          description: Reference removed
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/project/assets/get-history:
+    post:
+      operationId: getAssetHistory
+      summary: Get change history for an asset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - assetId
+              properties:
+                assetId:
+                  type: string
+      responses:
+        '200':
+          description: Asset change history
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/project/workspaces/create:
+    post:
+      operationId: createWorkspace
+      summary: Create a new workspace (folder)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                parentId:
+                  type: string
+                  nullable: true
+                name:
+                  type: string
+                  nullable: true
+                index:
+                  type: integer
+                  nullable: true
+      responses:
+        '200':
+          description: Created workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+
+  /api/project/workspaces/change:
+    post:
+      operationId: changeWorkspace
+      summary: Edit a workspace
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - workspaceId
+                - params
+              properties:
+                workspaceId:
+                  type: string
+                params:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    parentId:
+                      type: string
+                      nullable: true
+      responses:
+        '200':
+          description: Updated workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+
+  /api/project/workspaces/delete:
+    post:
+      operationId: deleteWorkspace
+      summary: Delete a workspace and its contents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - workspaceId
+              properties:
+                workspaceId:
+                  type: string
+      responses:
+        '200':
+          description: Workspace deleted
+
+  /api/project/workspaces/move:
+    post:
+      operationId: moveWorkspaces
+      summary: Move workspaces
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+                parentId:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Move result
+          content:
+            application/json:
+              schema:
+                type: object
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+
+  schemas:
+    ProjectInfo:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        rootWorkspaces:
+          type: array
+          items:
+            $ref: '#/components/schemas/Workspace'
+        settings:
+          type: object
+
+    Workspace:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        name:
+          type: string
+          nullable: true
+        parentId:
+          type: string
+          nullable: true
+        projectId:
+          type: string
+        index:
+          type: integer
+          nullable: true
+        props:
+          type: object
+
+    AssetWhere:
+      type: object
+      description: Filter conditions for querying assets
+      properties:
+        id:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+          description: Filter by asset ID(s)
+        workspaceId:
+          type: string
+          description: Filter by parent workspace
+        issystem:
+          type: boolean
+          description: Filter system vs user assets
+        query:
+          type: string
+          description: Full-text search
+
+    AssetShort:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        name:
+          type: string
+          nullable: true
+        icon:
+          type: string
+          nullable: true
+        workspaceId:
+          type: string
+        typeIds:
+          type: array
+          items:
+            type: string
+        isAbstract:
+          type: boolean
+
+    AssetFull:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        name:
+          type: string
+          nullable: true
+        icon:
+          type: string
+          nullable: true
+        workspaceId:
+          type: string
+        typeIds:
+          type: array
+          items:
+            type: string
+        parentIds:
+          type: array
+          items:
+            type: string
+        isAbstract:
+          type: boolean
+        blocks:
+          type: array
+          description: Content blocks (properties, text, scripts, galleries, etc.)
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+                description: "Block type: props, text, script, gallery, locale, checklist, markdown"
+              name:
+                type: string
+                nullable: true
+              title:
+                type: string
+                nullable: true
+              own:
+                type: boolean
+              props:
+                type: object
+                description: Block content/properties
+              computed:
+                type: object
+              inherited:
+                type: object
+                nullable: true
+        values:
+          type: object
+          description: Asset values keyed by block name
+        references:
+          type: array
+          items:
+            type: object
+
+    AssetCreateDTO:
+      type: object
+      properties:
+        workspaceId:
+          type: string
+          description: Workspace to create the asset in
+        title:
+          type: string
+        parentId:
+          type: string
+          nullable: true
+          description: Parent type ID for inheritance
+        blocks:
+          type: array
+          items:
+            type: object
+
+    AssetsChangeResult:
+      type: object
+      properties:
+        upsert:
+          type: object
+          properties:
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/AssetFull'
+            total:
+              type: integer
+        changeId:
+          type: string
+
+security:
+  - ApiKeyAuth: []

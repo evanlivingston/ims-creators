@@ -1,0 +1,47 @@
+{
+ "id": "604bd733-4080-4ed9-b8cf-54e4c7678c48",
+ "index": null,
+ "title": "Allies",
+ "name": null,
+ "parentId": "0312ebc4-bf36-452a-ac0d-a67023c7ed9f",
+ "projectId": "EWvDFxqn",
+ "props": {
+  "type": "collection",
+  "asset": {
+   "Title": "Character",
+   "AssetId": "dcb5d0aa-b55a-4a63-9d85-7cdb6b53e984"
+  },
+  "views": {
+   "table": {
+    "key": "table",
+    "sort": [],
+    "type": "table",
+    "index": 1,
+    "props": [
+     {
+      "prop": "title",
+      "width": 200
+     },
+     {
+      "prop": "description|value",
+      "width": null
+     },
+     {
+      "prop": "props|health",
+      "width": null
+     },
+     {
+      "prop": "props|damage",
+      "width": null
+     },
+     {
+      "prop": "props|abilities",
+      "width": null
+     }
+    ],
+    "title": "Table",
+    "filter": []
+   }
+  }
+ }
+}

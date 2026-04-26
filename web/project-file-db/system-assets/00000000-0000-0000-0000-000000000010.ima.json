@@ -1,0 +1,354 @@
+{
+ "id": "00000000-0000-0000-0000-000000000010",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-000000000100",
+   "name": "__meta",
+   "title": null,
+   "own": true,
+   "type": "props",
+   "props": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": false,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "computed": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": false,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "inherited": null,
+   "index": 0,
+   "createdAt": "2025-07-31T12:55:34.293Z",
+   "updatedAt": "2025-07-31T12:55:34.293Z"
+  },
+  {
+   "id": "521aa2e2-9299-4984-9c38-a3ee57c9f27c",
+   "name": "basic",
+   "title": "[[t:BasicInfo]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "num": null,
+    "__props": {
+     "num": {
+      "index": 1,
+      "title": "[[t:Num]]"
+     }
+    }
+   },
+   "computed": {
+    "num": null,
+    "__props": {
+     "num": {
+      "index": 1,
+      "title": "[[t:Num]]"
+     }
+    }
+   },
+   "inherited": null,
+   "index": 1,
+   "createdAt": "2023-10-07T06:43:53.766Z",
+   "updatedAt": "2023-10-07T06:46:25.476Z"
+  },
+  {
+   "id": "74c83f4e-8989-45e0-a3b3-4f70457d41ee",
+   "name": "info",
+   "title": "[[t:Info]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "color": null,
+    "cover": null,
+    "index": null,
+    "result": null,
+    "category": null,
+    "priority": null,
+    "timelogs": [],
+    "watchers": [],
+    "blockedby": [],
+    "actualtime": null,
+    "archivedat": null,
+    "assignedto": null,
+    "taskcolumn": null,
+    "completedat": null,
+    "estimatedsp": null,
+    "scheduledat": null,
+    "estimatedtime": null,
+    "__props": {
+     "color": {
+      "type": "string",
+      "index": 10,
+      "title": "[[t:Color]]"
+     },
+     "cover": {
+      "type": "attachment",
+      "index": 16,
+      "title": "[[t:Cover]]",
+      "params": {
+       "accept": ".jpg, .jpeg, .png"
+      }
+     },
+     "index": {
+      "index": 8,
+      "title": "[[t:Index]]"
+     },
+     "result": {
+      "index": 9,
+      "title": "[[t:Result]]"
+     },
+     "timelogs": {
+      "type": "struct",
+      "index": 1,
+      "title": "[[t:TimeLog]]",
+      "multiple": true,
+      "params": {
+       "type": {
+        "Name": "",
+        "Title": "[[t:TaskTimeLog]]",
+        "AssetId": "00000000-0000-0000-0000-000000000012"
+       }
+      }
+     },
+     "watchers": {
+      "type": "projectUser",
+      "index": 14,
+      "title": "[[t:Watchers]]",
+      "multiple": true
+     },
+     "category": {
+      "index": 12,
+      "title": "[[t:Category]]"
+     },
+     "priority": {
+      "index": 15,
+      "title": "[[t:Priority]]"
+     },
+     "archivedat": {
+      "type": "buttonDateTime",
+      "index": 7,
+      "title": "[[t:ArchivedAt]]"
+     },
+     "assignedto": {
+      "type": "projectUser",
+      "index": 5,
+      "title": "[[t:AssignedTo]]"
+     },
+     "blockedby": {
+      "index": 18,
+      "title": "[[t:BlockedByTasks]]"
+     },
+     "taskcolumn": {
+      "type": "taskColumn",
+      "index": 3,
+      "title": "[[t:TaskColumn]]"
+     },
+     "actualtime": {
+      "index": 14,
+      "title": "[[t:ActualTime]]"
+     },
+     "completedat": {
+      "type": "buttonDateTime",
+      "index": 6,
+      "title": "[[t:CompletedAt]]"
+     },
+     "scheduledat": {
+      "type": "dateTime",
+      "index": 11,
+      "title": "[[t:ScheduledAt]]"
+     },
+     "estimatedsp": {
+      "index": 17,
+      "title": "[[t:EstimatedSp]]"
+     },
+     "estimatedtime": {
+      "index": 13,
+      "title": "[[t:EstimatedTime]]"
+     }
+    }
+   },
+   "computed": {
+    "color": null,
+    "cover": null,
+    "index": null,
+    "result": null,
+    "category": null,
+    "priority": null,
+    "timelogs": [],
+    "watchers": [],
+    "blockedby": [],
+    "actualtime": null,
+    "archivedat": null,
+    "assignedto": null,
+    "taskcolumn": null,
+    "completedat": null,
+    "estimatedsp": null,
+    "scheduledat": null,
+    "estimatedtime": null,
+    "__props": {
+     "color": {
+      "type": "string",
+      "index": 10,
+      "title": "[[t:Color]]"
+     },
+     "cover": {
+      "type": "attachment",
+      "index": 16,
+      "title": "[[t:Cover]]",
+      "params": {
+       "accept": ".jpg, .jpeg, .png"
+      }
+     },
+     "index": {
+      "index": 8,
+      "title": "[[t:Index]]"
+     },
+     "result": {
+      "index": 9,
+      "title": "[[t:Result]]"
+     },
+     "timelogs": {
+      "type": "struct",
+      "index": 1,
+      "title": "[[t:TimeLog]]",
+      "multiple": true,
+      "params": {
+       "type": {
+        "Name": "",
+        "Title": "[[t:TaskTimeLog]]",
+        "AssetId": "00000000-0000-0000-0000-000000000012"
+       }
+      }
+     },
+     "watchers": {
+      "type": "projectUser",
+      "index": 14,
+      "title": "[[t:Watchers]]",
+      "multiple": true
+     },
+     "category": {
+      "index": 12,
+      "title": "[[t:Category]]"
+     },
+     "priority": {
+      "index": 15,
+      "title": "[[t:Priority]]"
+     },
+     "archivedat": {
+      "type": "buttonDateTime",
+      "index": 7,
+      "title": "[[t:ArchivedAt]]"
+     },
+     "assignedto": {
+      "type": "projectUser",
+      "index": 5,
+      "title": "[[t:AssignedTo]]"
+     },
+     "blockedby": {
+      "index": 18,
+      "title": "[[t:BlockedByTasks]]"
+     },
+     "taskcolumn": {
+      "type": "taskColumn",
+      "index": 3,
+      "title": "[[t:TaskColumn]]"
+     },
+     "actualtime": {
+      "index": 14,
+      "title": "[[t:ActualTime]]"
+     },
+     "completedat": {
+      "type": "buttonDateTime",
+      "index": 6,
+      "title": "[[t:CompletedAt]]"
+     },
+     "scheduledat": {
+      "type": "dateTime",
+      "index": 11,
+      "title": "[[t:ScheduledAt]]"
+     },
+     "estimatedsp": {
+      "index": 17,
+      "title": "[[t:EstimatedSp]]"
+     },
+     "estimatedtime": {
+      "index": 13,
+      "title": "[[t:EstimatedTime]]"
+     }
+    }
+   },
+   "inherited": null,
+   "index": 2,
+   "createdAt": "2023-10-03T05:45:39.528Z",
+   "updatedAt": "2023-10-06T12:56:01.689Z"
+  },
+  {
+   "id": "3d5f09b5-af58-46f0-9c71-313eca730f80",
+   "name": "description",
+   "title": "[[t:Description]]",
+   "own": true,
+   "type": "text",
+   "props": {},
+   "computed": {},
+   "inherited": null,
+   "index": 3,
+   "createdAt": "2023-10-03T05:49:21.280Z",
+   "updatedAt": "2023-10-03T05:50:45.591Z"
+  },
+  {
+   "id": "ebc8e4f5-6436-4048-8bd6-de3f42983942",
+   "name": "comments",
+   "title": "[[t:Comments]]",
+   "own": true,
+   "type": "chat",
+   "props": {},
+   "computed": {},
+   "inherited": null,
+   "index": 4,
+   "createdAt": "2024-07-05T20:20:26.758Z",
+   "updatedAt": "2024-07-05T20:20:26.758Z"
+  }
+ ],
+ "isAbstract": true,
+ "projectId": "111112",
+ "references": [],
+ "icon": "settings-fill",
+ "index": null,
+ "name": "task",
+ "ownIcon": "settings-fill",
+ "ownTitle": "[[t:Task]]",
+ "parentIds": [],
+ "title": "[[t:Task]]",
+ "typeIds": [],
+ "workspaceId": "00000000-0000-0000-0000-000000000004",
+ "values": {
+  "basic": {
+   "num": null
+  },
+  "info": {
+   "color": null,
+   "cover": null,
+   "index": null,
+   "result": null,
+   "category": null,
+   "priority": null,
+   "timelogs": [],
+   "watchers": [],
+   "blockedby": [],
+   "actualtime": null,
+   "archivedat": null,
+   "assignedto": null,
+   "taskcolumn": null,
+   "completedat": null,
+   "estimatedsp": null,
+   "scheduledat": null,
+   "estimatedtime": null
+  },
+  "description": {},
+  "comments": {}
+ }
+}

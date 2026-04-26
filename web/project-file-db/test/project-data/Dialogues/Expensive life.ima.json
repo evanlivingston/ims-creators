@@ -1,0 +1,2076 @@
+{
+ "id": "7cf24619-9339-48f2-a688-ed6c050f502c",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-000000000100",
+   "name": "__meta",
+   "title": null,
+   "own": true,
+   "type": "props",
+   "props": {},
+   "computed": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "inherited": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "index": 0,
+   "createdAt": "2025-08-08T14:43:27.906Z",
+   "updatedAt": "2025-08-08T14:43:27.906Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-330000000001",
+   "name": "content",
+   "title": "[[t:Content]]",
+   "own": true,
+   "type": "script",
+   "props": {
+    "start": "a766bb24-bef9-46ea-965a-0bb88fe5985a",
+    "variables": {
+     "own": {
+      "rage": {
+       "name": "rage",
+       "type": {
+        "Type": "integer"
+       },
+       "title": "Rage",
+       "autoFill": null,
+       "description": "In order to engage in battle, you need a sufficient amount of rage"
+      },
+      "inspected": {
+       "name": "inspected",
+       "type": {
+        "Type": "boolean"
+       },
+       "title": "Inspected",
+       "autoFill": null,
+       "description": null
+      }
+     }
+    },
+    "__settings": {
+     "speech": {
+      "main": {
+       "text": {
+        "name": "text",
+        "type": {
+         "Type": "text"
+        },
+        "index": 2,
+        "title": "[[t:Text]]",
+        "default": {
+         "Type": "text"
+        },
+        "description": null
+       },
+       "character": {
+        "name": "character",
+        "type": {
+         "Kind": "dcb5d0aa-b55a-4a63-9d85-7cdb6b53e984",
+         "Type": "asset"
+        },
+        "index": 1,
+        "title": "[[t:Character]]",
+        "default": {
+         "Type": "text"
+        },
+        "autoFill": true,
+        "description": null
+       },
+       "description": {
+        "name": "description",
+        "type": {
+         "Type": "text"
+        },
+        "index": 0,
+        "title": "Description",
+        "autoFill": null,
+        "description": "What happens behind the scenes?"
+       }
+      },
+      "option": {
+       "text": {
+        "name": "text",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Text]]",
+        "default": {
+         "Type": "text"
+        },
+        "description": null
+       }
+      }
+     }
+    },
+    "nodes": {
+     "0c32ef69-ad39-414d-a93e-8829a61b22e7": {
+      "next": "8530b11d-266e-42f1-8d31-f52b1e1eb8e2",
+      "type": "setVar",
+      "pos": {
+       "x": 590,
+       "y": 1400
+      },
+      "values": {
+       "value": 50,
+       "variable": "rage"
+      }
+     },
+     "0cecb4b1-6ec4-4109-af04-8fa23e846491": {
+      "next": "816917ea-7b9d-4b5e-b73c-555ffe2f8902",
+      "type": "speech",
+      "pos": {
+       "x": 2370,
+       "y": -390
+      },
+      "values": {
+       "text": "No! I can give you maps of their camps!..",
+       "character": {
+        "Name": null,
+        "Title": "Hunter",
+        "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+       },
+       "description": {
+        "Ops": [
+         {
+          "insert": "Hunter",
+          "attributes": {
+           "asset": {
+            "icon": "walk-fill",
+            "value": {
+             "Name": null,
+             "Title": "Hunter",
+             "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+            }
+           }
+          }
+         },
+         {
+          "insert": " is terrified\n"
+         }
+        ],
+        "Str": "[Hunter](#asset:bbb048b7-2460-43a8-b6b3-fe50544b9a64) is terrified\n"
+       }
+      }
+     },
+     "2589db17-a898-42ae-a088-a4188e4653d5": {
+      "next": null,
+      "type": "getVar",
+      "pos": {
+       "x": 1230,
+       "y": 2190
+      },
+      "values": {
+       "variable": "rage"
+      }
+     },
+     "43f1325a-d949-4489-9c6a-c3112ae33ee8": {
+      "next": null,
+      "type": "end",
+      "pos": {
+       "x": 3580,
+       "y": 30
+      }
+     },
+     "49ef00f5-0263-4a4b-9dc4-a0e2e771440e": {
+      "next": null,
+      "type": "opNot",
+      "pos": {
+       "x": -430,
+       "y": 750
+      },
+      "values": {
+       "arg1": {
+        "get": "fb72e1f8-fc79-4f80-8a1d-f0aca6e5da1b",
+        "param": "result"
+       }
+      }
+     },
+     "4d1cd23f-590f-413e-8867-454a5a0d5be8": {
+      "next": null,
+      "type": "opLess",
+      "pos": {
+       "x": -430,
+       "y": 570
+      },
+      "values": {
+       "arg2": 100,
+       "arg1": {
+        "get": "617d6ad2-dd6b-4b93-b558-4067d5c7bd45",
+        "param": "result"
+       }
+      }
+     },
+     "4dbdca8d-024c-4119-ad84-9d6c8b9158d2": {
+      "next": null,
+      "type": "opPlus",
+      "pos": {
+       "x": 1590,
+       "y": 2280
+      },
+      "values": {
+       "arg2": 100,
+       "arg1": {
+        "get": "2589db17-a898-42ae-a088-a4188e4653d5",
+        "param": "result"
+       }
+      }
+     },
+     "617d6ad2-dd6b-4b93-b558-4067d5c7bd45": {
+      "next": null,
+      "type": "getVar",
+      "pos": {
+       "x": -700,
+       "y": 520
+      },
+      "values": {
+       "variable": "rage"
+      }
+     },
+     "665ce3d3-8b15-4dd4-ae18-4217b947622a": {
+      "next": "b1752ca8-318b-41e1-92d2-e9c5cf5a046a",
+      "type": "setVar",
+      "pos": {
+       "x": 1870,
+       "y": 1960
+      },
+      "values": {
+       "variable": "rage",
+       "value": {
+        "get": "4dbdca8d-024c-4119-ad84-9d6c8b9158d2",
+        "param": "result"
+       }
+      }
+     },
+     "6aff4f7c-4ccd-44f2-abf1-1633ad35e7a8": {
+      "next": "c66949ec-77a9-4749-a056-640637b65692",
+      "type": "trigger",
+      "subject": "AddGold",
+      "pos": {
+       "x": 2850,
+       "y": 600
+      },
+      "params": {
+       "in": [
+        {
+         "name": "quantity",
+         "type": {
+          "Type": "integer"
+         },
+         "title": "Quantity",
+         "autoFill": null,
+         "description": null
+        }
+       ],
+       "out": []
+      },
+      "values": {
+       "quantity": 1000
+      }
+     },
+     "6cec17dd-70f8-487d-a251-9da5bc897246": {
+      "next": "6aff4f7c-4ccd-44f2-abf1-1633ad35e7a8",
+      "type": "speech",
+      "pos": {
+       "x": 2190,
+       "y": 520
+      },
+      "values": {
+       "text": "This... my entire fortune! Okey, take it!",
+       "character": {
+        "Name": null,
+        "Title": "Hunter",
+        "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+       },
+       "description": {
+        "Ops": [
+         {
+          "insert": "Hunter",
+          "attributes": {
+           "asset": {
+            "icon": "walk-fill",
+            "value": {
+             "Name": null,
+             "Title": "Hunter",
+             "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+            }
+           }
+          }
+         },
+         {
+          "insert": " is not happy with such an overpriced price\n"
+         }
+        ],
+        "Str": "[Hunter](#asset:bbb048b7-2460-43a8-b6b3-fe50544b9a64) is not happy with such an overpriced price\n"
+       }
+      }
+     },
+     "6fd23b28-909d-4792-ad65-d928d5ee0ca6": {
+      "next": "c0a0aafb-c8f0-4fe9-b8d5-872730837a46",
+      "type": "trigger",
+      "subject": "Trade",
+      "pos": {
+       "x": 870,
+       "y": 160
+      }
+     },
+     "816917ea-7b9d-4b5e-b73c-555ffe2f8902": {
+      "next": "43f1325a-d949-4489-9c6a-c3112ae33ee8",
+      "type": "trigger",
+      "subject": "StartBattle",
+      "pos": {
+       "x": 3090,
+       "y": -60
+      }
+     },
+     "81bc0688-e661-4aa4-a380-ca59f94821ac": {
+      "next": null,
+      "type": "speech",
+      "options": [
+       {
+        "next": "bb19fe21-1b7d-412f-b7b8-99fe71bf7e0f",
+        "values": {
+         "text": "Your gold is paid for by the death of my kin. Burn!"
+        }
+       },
+       {
+        "next": "6cec17dd-70f8-487d-a251-9da5bc897246",
+        "values": {
+         "text": "Your life is worth 1000 coins... And cages with prisoners."
+        }
+       },
+       {
+        "next": "fde775bd-fd02-4aa5-b06e-3fcd3fb00c30",
+        "values": {
+         "text": "Get out! And if i see you again, you won't collect the ashes."
+        }
+       }
+      ],
+      "pos": {
+       "x": 1260,
+       "y": 170
+      },
+      "values": {
+       "text": "There are only sick individuals ib those cages. But you dont't need them, i see... you need the gold?",
+       "character": {
+        "Name": null,
+        "Title": "Hunter",
+        "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+       },
+       "description": {
+        "Ops": [
+         {
+          "insert": "Hunter",
+          "attributes": {
+           "asset": {
+            "icon": "walk-fill",
+            "value": {
+             "Name": null,
+             "Title": "Hunter",
+             "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+            }
+           }
+          }
+         },
+         {
+          "insert": " points to the cells\n"
+         }
+        ],
+        "Str": "[Hunter](#asset:bbb048b7-2460-43a8-b6b3-fe50544b9a64) points to the cells\n"
+       }
+      }
+     },
+     "82a82566-d298-40bf-9f68-56c7e8c350b7": {
+      "next": "816917ea-7b9d-4b5e-b73c-555ffe2f8902",
+      "type": "speech",
+      "pos": {
+       "x": 2370,
+       "y": -10
+      },
+      "values": {
+       "text": "You're going to pay for this!",
+       "character": {
+        "Title": "Hunter",
+        "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+       },
+       "description": null
+      }
+     },
+     "8530b11d-266e-42f1-8d31-f52b1e1eb8e2": {
+      "next": "9c644390-8980-435e-9109-9e95423c5347",
+      "type": "setVar",
+      "pos": {
+       "x": 860,
+       "y": 1420
+      },
+      "values": {
+       "value": true,
+       "variable": "inspected"
+      }
+     },
+     "89dfaf94-57fb-44d9-81f8-1cdf85f224c5": {
+      "next": null,
+      "type": "end",
+      "pos": {
+       "x": 2680,
+       "y": 980
+      }
+     },
+     "9c644390-8980-435e-9109-9e95423c5347": {
+      "next": null,
+      "type": "speech",
+      "options": [
+       {
+        "next": "665ce3d3-8b15-4dd4-ae18-4217b947622a",
+        "values": {
+         "text": {
+          "Ops": [
+           {
+            "insert": "Continue inspection",
+            "attributes": {
+             "italic": true
+            }
+           },
+           {
+            "insert": "\n"
+           }
+          ],
+          "Str": "Continue inspection\n"
+         }
+        }
+       },
+       {
+        "next": null,
+        "values": {
+         "text": {
+          "Ops": [
+           {
+            "insert": "You've seen enough",
+            "attributes": {
+             "italic": true
+            }
+           },
+           {
+            "insert": "\n"
+           }
+          ],
+          "Str": "You've seen enough\n"
+         }
+        }
+       }
+      ],
+      "pos": {
+       "x": 1230,
+       "y": 1450
+      },
+      "values": {
+       "cover": {
+        "Dir": null,
+        "Size": 873748,
+        "Store": "p-EWvDFxqn",
+        "Title": "image-cf07fbbd-897b-4930-b2a2-8230d89bdd00.png",
+        "FileId": "0250e6c2-db77-4a1d-86e6-ec8533fa9bf9"
+       },
+       "description": "You notice narrow dragon cages inside the carts"
+      }
+     },
+     "a766bb24-bef9-46ea-965a-0bb88fe5985a": {
+      "next": "c0a0aafb-c8f0-4fe9-b8d5-872730837a46",
+      "type": "start",
+      "pos": {
+       "x": -270,
+       "y": 140
+      }
+     },
+     "b1752ca8-318b-41e1-92d2-e9c5cf5a046a": {
+      "next": "c0a0aafb-c8f0-4fe9-b8d5-872730837a46",
+      "type": "speech",
+      "pos": {
+       "x": 2100,
+       "y": 2030
+      },
+      "values": {
+       "description": "In one of the cells you notice a very young dragon bleeding."
+      }
+     },
+     "bb19fe21-1b7d-412f-b7b8-99fe71bf7e0f": {
+      "next": null,
+      "type": "branch",
+      "options": [
+       {
+        "next": "0cecb4b1-6ec4-4109-af04-8fa23e846491",
+        "values": {
+         "value": true
+        }
+       },
+       {
+        "next": "82a82566-d298-40bf-9f68-56c7e8c350b7",
+        "values": {
+         "value": false
+        }
+       }
+      ],
+      "pos": {
+       "x": 2090,
+       "y": -140
+      },
+      "values": {
+       "condition": {
+        "get": "c58297fc-d71e-46df-886b-0bdb36f4707d",
+        "param": "result"
+       }
+      }
+     },
+     "c0a0aafb-c8f0-4fe9-b8d5-872730837a46": {
+      "next": null,
+      "type": "speech",
+      "options": [
+       {
+        "next": "6fd23b28-909d-4792-ad65-d928d5ee0ca6",
+        "values": {
+         "text": {
+          "Ops": [
+           {
+            "insert": "Trade",
+            "attributes": {
+             "italic": true
+            }
+           },
+           {
+            "insert": "\n"
+           }
+          ],
+          "Str": "Trade\n"
+         },
+         "condition": {
+          "get": "4d1cd23f-590f-413e-8867-454a5a0d5be8",
+          "param": "result"
+         }
+        }
+       },
+       {
+        "next": "81bc0688-e661-4aa4-a380-ca59f94821ac",
+        "values": {
+         "text": "Your wagons smell of gunpowder and dragon blood. Where's the loot?"
+        }
+       },
+       {
+        "next": "0c32ef69-ad39-414d-a93e-8829a61b22e7",
+        "values": {
+         "text": {
+          "Ops": [
+           {
+            "insert": "Take a close look at the carts",
+            "attributes": {
+             "italic": true
+            }
+           },
+           {
+            "insert": "\n"
+           }
+          ],
+          "Str": "Take a close look at the carts\n"
+         },
+         "condition": {
+          "get": "49ef00f5-0263-4a4b-9dc4-a0e2e771440e",
+          "param": "result"
+         }
+        }
+       },
+       {
+        "next": "ffc14f99-c30f-4934-a440-52dae5e93ffe",
+        "values": {
+         "text": {
+          "Ops": [
+           {
+            "insert": "Leave them alone",
+            "attributes": {
+             "italic": true
+            }
+           },
+           {
+            "insert": "\n"
+           }
+          ],
+          "Str": "Leave them alone\n"
+         }
+        }
+       }
+      ],
+      "pos": {
+       "x": 90,
+       "y": 140
+      },
+      "values": {
+       "text": null,
+       "cover": {
+        "Dir": null,
+        "Size": 950794,
+        "Store": "p-EWvDFxqn",
+        "Title": "image-d8dc7456-bb6e-4a57-b477-fac80cd2e72a.png",
+        "FileId": "4aa7ab82-9792-4835-8fcc-ca98b7834fc7"
+       },
+       "description": "You encounter a caravan of hunters. As you approach, you immediately smell the pungent scent of dragon blood."
+      }
+     },
+     "c2e413b4-4697-4a03-8aa3-dabf808b95d5": {
+      "next": null,
+      "type": "getVar",
+      "pos": {
+       "x": 1520,
+       "y": -110
+      },
+      "values": {
+       "variable": "rage"
+      }
+     },
+     "c58297fc-d71e-46df-886b-0bdb36f4707d": {
+      "next": null,
+      "type": "opMore",
+      "pos": {
+       "x": 1780,
+       "y": -110
+      },
+      "values": {
+       "arg2": 100,
+       "arg1": {
+        "get": "c2e413b4-4697-4a03-8aa3-dabf808b95d5",
+        "param": "result"
+       }
+      }
+     },
+     "c66949ec-77a9-4749-a056-640637b65692": {
+      "next": null,
+      "type": "end",
+      "pos": {
+       "x": 3130,
+       "y": 640
+      }
+     },
+     "fb72e1f8-fc79-4f80-8a1d-f0aca6e5da1b": {
+      "next": null,
+      "type": "getVar",
+      "pos": {
+       "x": -720,
+       "y": 750
+      },
+      "values": {
+       "variable": "inspected"
+      }
+     },
+     "fde775bd-fd02-4aa5-b06e-3fcd3fb00c30": {
+      "next": "89dfaf94-57fb-44d9-81f8-1cdf85f224c5",
+      "type": "speech",
+      "pos": {
+       "x": 2200,
+       "y": 890
+      },
+      "values": {
+       "text": "You... seriously? Damn, I'm going to regret this...",
+       "character": {
+        "Name": null,
+        "Title": "Hunter",
+        "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+       },
+       "description": {
+        "Ops": [
+         {
+          "insert": "Hunter",
+          "attributes": {
+           "asset": {
+            "icon": "walk-fill",
+            "value": {
+             "Name": null,
+             "Title": "Hunter",
+             "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+            }
+           }
+          }
+         },
+         {
+          "insert": " is confused\n"
+         }
+        ],
+        "Str": "[Hunter](#asset:bbb048b7-2460-43a8-b6b3-fe50544b9a64) is confused\n"
+       }
+      }
+     },
+     "ffc14f99-c30f-4934-a440-52dae5e93ffe": {
+      "next": null,
+      "type": "end",
+      "pos": {
+       "x": 1000,
+       "y": 1200
+      }
+     }
+    }
+   },
+   "computed": {
+    "start": "a766bb24-bef9-46ea-965a-0bb88fe5985a",
+    "variables": {
+     "own": {
+      "rage": {
+       "name": "rage",
+       "type": {
+        "Type": "integer"
+       },
+       "title": "Rage",
+       "autoFill": null,
+       "description": "In order to engage in battle, you need a sufficient amount of rage"
+      },
+      "inspected": {
+       "name": "inspected",
+       "type": {
+        "Type": "boolean"
+       },
+       "title": "Inspected",
+       "autoFill": null,
+       "description": null
+      }
+     }
+    },
+    "__settings": {
+     "speech": {
+      "main": {
+       "text": {
+        "name": "text",
+        "type": {
+         "Type": "text"
+        },
+        "index": 2,
+        "title": "[[t:Text]]",
+        "default": {
+         "Type": "text"
+        },
+        "description": null
+       },
+       "character": {
+        "name": "character",
+        "type": {
+         "Kind": "dcb5d0aa-b55a-4a63-9d85-7cdb6b53e984",
+         "Type": "asset"
+        },
+        "index": 1,
+        "title": "[[t:Character]]",
+        "default": {
+         "Type": "text"
+        },
+        "autoFill": true,
+        "description": null
+       },
+       "description": {
+        "name": "description",
+        "type": {
+         "Type": "text"
+        },
+        "index": 0,
+        "title": "Description",
+        "autoFill": null,
+        "description": "What happens behind the scenes?"
+       }
+      },
+      "option": {
+       "text": {
+        "name": "text",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Text]]",
+        "default": {
+         "Type": "text"
+        },
+        "description": null
+       }
+      }
+     }
+    },
+    "nodes": {
+     "0c32ef69-ad39-414d-a93e-8829a61b22e7": {
+      "next": "8530b11d-266e-42f1-8d31-f52b1e1eb8e2",
+      "type": "setVar",
+      "pos": {
+       "x": 590,
+       "y": 1400
+      },
+      "values": {
+       "value": 50,
+       "variable": "rage"
+      }
+     },
+     "0cecb4b1-6ec4-4109-af04-8fa23e846491": {
+      "next": "816917ea-7b9d-4b5e-b73c-555ffe2f8902",
+      "type": "speech",
+      "pos": {
+       "x": 2370,
+       "y": -390
+      },
+      "values": {
+       "text": "No! I can give you maps of their camps!..",
+       "character": {
+        "Name": null,
+        "Title": "Hunter",
+        "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+       },
+       "description": {
+        "Ops": [
+         {
+          "insert": "Hunter",
+          "attributes": {
+           "asset": {
+            "icon": "walk-fill",
+            "value": {
+             "Name": null,
+             "Title": "Hunter",
+             "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+            }
+           }
+          }
+         },
+         {
+          "insert": " is terrified\n"
+         }
+        ],
+        "Str": "[Hunter](#asset:bbb048b7-2460-43a8-b6b3-fe50544b9a64) is terrified\n"
+       }
+      }
+     },
+     "2589db17-a898-42ae-a088-a4188e4653d5": {
+      "next": null,
+      "type": "getVar",
+      "pos": {
+       "x": 1230,
+       "y": 2190
+      },
+      "values": {
+       "variable": "rage"
+      }
+     },
+     "43f1325a-d949-4489-9c6a-c3112ae33ee8": {
+      "next": null,
+      "type": "end",
+      "pos": {
+       "x": 3580,
+       "y": 30
+      }
+     },
+     "49ef00f5-0263-4a4b-9dc4-a0e2e771440e": {
+      "next": null,
+      "type": "opNot",
+      "pos": {
+       "x": -430,
+       "y": 750
+      },
+      "values": {
+       "arg1": {
+        "get": "fb72e1f8-fc79-4f80-8a1d-f0aca6e5da1b",
+        "param": "result"
+       }
+      }
+     },
+     "4d1cd23f-590f-413e-8867-454a5a0d5be8": {
+      "next": null,
+      "type": "opLess",
+      "pos": {
+       "x": -430,
+       "y": 570
+      },
+      "values": {
+       "arg2": 100,
+       "arg1": {
+        "get": "617d6ad2-dd6b-4b93-b558-4067d5c7bd45",
+        "param": "result"
+       }
+      }
+     },
+     "4dbdca8d-024c-4119-ad84-9d6c8b9158d2": {
+      "next": null,
+      "type": "opPlus",
+      "pos": {
+       "x": 1590,
+       "y": 2280
+      },
+      "values": {
+       "arg2": 100,
+       "arg1": {
+        "get": "2589db17-a898-42ae-a088-a4188e4653d5",
+        "param": "result"
+       }
+      }
+     },
+     "617d6ad2-dd6b-4b93-b558-4067d5c7bd45": {
+      "next": null,
+      "type": "getVar",
+      "pos": {
+       "x": -700,
+       "y": 520
+      },
+      "values": {
+       "variable": "rage"
+      }
+     },
+     "665ce3d3-8b15-4dd4-ae18-4217b947622a": {
+      "next": "b1752ca8-318b-41e1-92d2-e9c5cf5a046a",
+      "type": "setVar",
+      "pos": {
+       "x": 1870,
+       "y": 1960
+      },
+      "values": {
+       "variable": "rage",
+       "value": {
+        "get": "4dbdca8d-024c-4119-ad84-9d6c8b9158d2",
+        "param": "result"
+       }
+      }
+     },
+     "6aff4f7c-4ccd-44f2-abf1-1633ad35e7a8": {
+      "next": "c66949ec-77a9-4749-a056-640637b65692",
+      "type": "trigger",
+      "subject": "AddGold",
+      "pos": {
+       "x": 2850,
+       "y": 600
+      },
+      "params": {
+       "in": [
+        {
+         "name": "quantity",
+         "type": {
+          "Type": "integer"
+         },
+         "title": "Quantity",
+         "autoFill": null,
+         "description": null
+        }
+       ],
+       "out": []
+      },
+      "values": {
+       "quantity": 1000
+      }
+     },
+     "6cec17dd-70f8-487d-a251-9da5bc897246": {
+      "next": "6aff4f7c-4ccd-44f2-abf1-1633ad35e7a8",
+      "type": "speech",
+      "pos": {
+       "x": 2190,
+       "y": 520
+      },
+      "values": {
+       "text": "This... my entire fortune! Okey, take it!",
+       "character": {
+        "Name": null,
+        "Title": "Hunter",
+        "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+       },
+       "description": {
+        "Ops": [
+         {
+          "insert": "Hunter",
+          "attributes": {
+           "asset": {
+            "icon": "walk-fill",
+            "value": {
+             "Name": null,
+             "Title": "Hunter",
+             "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+            }
+           }
+          }
+         },
+         {
+          "insert": " is not happy with such an overpriced price\n"
+         }
+        ],
+        "Str": "[Hunter](#asset:bbb048b7-2460-43a8-b6b3-fe50544b9a64) is not happy with such an overpriced price\n"
+       }
+      }
+     },
+     "6fd23b28-909d-4792-ad65-d928d5ee0ca6": {
+      "next": "c0a0aafb-c8f0-4fe9-b8d5-872730837a46",
+      "type": "trigger",
+      "subject": "Trade",
+      "pos": {
+       "x": 870,
+       "y": 160
+      }
+     },
+     "816917ea-7b9d-4b5e-b73c-555ffe2f8902": {
+      "next": "43f1325a-d949-4489-9c6a-c3112ae33ee8",
+      "type": "trigger",
+      "subject": "StartBattle",
+      "pos": {
+       "x": 3090,
+       "y": -60
+      }
+     },
+     "81bc0688-e661-4aa4-a380-ca59f94821ac": {
+      "next": null,
+      "type": "speech",
+      "options": [
+       {
+        "next": "bb19fe21-1b7d-412f-b7b8-99fe71bf7e0f",
+        "values": {
+         "text": "Your gold is paid for by the death of my kin. Burn!"
+        }
+       },
+       {
+        "next": "6cec17dd-70f8-487d-a251-9da5bc897246",
+        "values": {
+         "text": "Your life is worth 1000 coins... And cages with prisoners."
+        }
+       },
+       {
+        "next": "fde775bd-fd02-4aa5-b06e-3fcd3fb00c30",
+        "values": {
+         "text": "Get out! And if i see you again, you won't collect the ashes."
+        }
+       }
+      ],
+      "pos": {
+       "x": 1260,
+       "y": 170
+      },
+      "values": {
+       "text": "There are only sick individuals ib those cages. But you dont't need them, i see... you need the gold?",
+       "character": {
+        "Name": null,
+        "Title": "Hunter",
+        "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+       },
+       "description": {
+        "Ops": [
+         {
+          "insert": "Hunter",
+          "attributes": {
+           "asset": {
+            "icon": "walk-fill",
+            "value": {
+             "Name": null,
+             "Title": "Hunter",
+             "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+            }
+           }
+          }
+         },
+         {
+          "insert": " points to the cells\n"
+         }
+        ],
+        "Str": "[Hunter](#asset:bbb048b7-2460-43a8-b6b3-fe50544b9a64) points to the cells\n"
+       }
+      }
+     },
+     "82a82566-d298-40bf-9f68-56c7e8c350b7": {
+      "next": "816917ea-7b9d-4b5e-b73c-555ffe2f8902",
+      "type": "speech",
+      "pos": {
+       "x": 2370,
+       "y": -10
+      },
+      "values": {
+       "text": "You're going to pay for this!",
+       "character": {
+        "Title": "Hunter",
+        "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+       },
+       "description": null
+      }
+     },
+     "8530b11d-266e-42f1-8d31-f52b1e1eb8e2": {
+      "next": "9c644390-8980-435e-9109-9e95423c5347",
+      "type": "setVar",
+      "pos": {
+       "x": 860,
+       "y": 1420
+      },
+      "values": {
+       "value": true,
+       "variable": "inspected"
+      }
+     },
+     "89dfaf94-57fb-44d9-81f8-1cdf85f224c5": {
+      "next": null,
+      "type": "end",
+      "pos": {
+       "x": 2680,
+       "y": 980
+      }
+     },
+     "9c644390-8980-435e-9109-9e95423c5347": {
+      "next": null,
+      "type": "speech",
+      "options": [
+       {
+        "next": "665ce3d3-8b15-4dd4-ae18-4217b947622a",
+        "values": {
+         "text": {
+          "Ops": [
+           {
+            "insert": "Continue inspection",
+            "attributes": {
+             "italic": true
+            }
+           },
+           {
+            "insert": "\n"
+           }
+          ],
+          "Str": "Continue inspection\n"
+         }
+        }
+       },
+       {
+        "next": null,
+        "values": {
+         "text": {
+          "Ops": [
+           {
+            "insert": "You've seen enough",
+            "attributes": {
+             "italic": true
+            }
+           },
+           {
+            "insert": "\n"
+           }
+          ],
+          "Str": "You've seen enough\n"
+         }
+        }
+       }
+      ],
+      "pos": {
+       "x": 1230,
+       "y": 1450
+      },
+      "values": {
+       "cover": {
+        "Dir": null,
+        "Size": 873748,
+        "Store": "p-EWvDFxqn",
+        "Title": "image-cf07fbbd-897b-4930-b2a2-8230d89bdd00.png",
+        "FileId": "0250e6c2-db77-4a1d-86e6-ec8533fa9bf9"
+       },
+       "description": "You notice narrow dragon cages inside the carts"
+      }
+     },
+     "a766bb24-bef9-46ea-965a-0bb88fe5985a": {
+      "next": "c0a0aafb-c8f0-4fe9-b8d5-872730837a46",
+      "type": "start",
+      "pos": {
+       "x": -270,
+       "y": 140
+      }
+     },
+     "b1752ca8-318b-41e1-92d2-e9c5cf5a046a": {
+      "next": "c0a0aafb-c8f0-4fe9-b8d5-872730837a46",
+      "type": "speech",
+      "pos": {
+       "x": 2100,
+       "y": 2030
+      },
+      "values": {
+       "description": "In one of the cells you notice a very young dragon bleeding."
+      }
+     },
+     "bb19fe21-1b7d-412f-b7b8-99fe71bf7e0f": {
+      "next": null,
+      "type": "branch",
+      "options": [
+       {
+        "next": "0cecb4b1-6ec4-4109-af04-8fa23e846491",
+        "values": {
+         "value": true
+        }
+       },
+       {
+        "next": "82a82566-d298-40bf-9f68-56c7e8c350b7",
+        "values": {
+         "value": false
+        }
+       }
+      ],
+      "pos": {
+       "x": 2090,
+       "y": -140
+      },
+      "values": {
+       "condition": {
+        "get": "c58297fc-d71e-46df-886b-0bdb36f4707d",
+        "param": "result"
+       }
+      }
+     },
+     "c0a0aafb-c8f0-4fe9-b8d5-872730837a46": {
+      "next": null,
+      "type": "speech",
+      "options": [
+       {
+        "next": "6fd23b28-909d-4792-ad65-d928d5ee0ca6",
+        "values": {
+         "text": {
+          "Ops": [
+           {
+            "insert": "Trade",
+            "attributes": {
+             "italic": true
+            }
+           },
+           {
+            "insert": "\n"
+           }
+          ],
+          "Str": "Trade\n"
+         },
+         "condition": {
+          "get": "4d1cd23f-590f-413e-8867-454a5a0d5be8",
+          "param": "result"
+         }
+        }
+       },
+       {
+        "next": "81bc0688-e661-4aa4-a380-ca59f94821ac",
+        "values": {
+         "text": "Your wagons smell of gunpowder and dragon blood. Where's the loot?"
+        }
+       },
+       {
+        "next": "0c32ef69-ad39-414d-a93e-8829a61b22e7",
+        "values": {
+         "text": {
+          "Ops": [
+           {
+            "insert": "Take a close look at the carts",
+            "attributes": {
+             "italic": true
+            }
+           },
+           {
+            "insert": "\n"
+           }
+          ],
+          "Str": "Take a close look at the carts\n"
+         },
+         "condition": {
+          "get": "49ef00f5-0263-4a4b-9dc4-a0e2e771440e",
+          "param": "result"
+         }
+        }
+       },
+       {
+        "next": "ffc14f99-c30f-4934-a440-52dae5e93ffe",
+        "values": {
+         "text": {
+          "Ops": [
+           {
+            "insert": "Leave them alone",
+            "attributes": {
+             "italic": true
+            }
+           },
+           {
+            "insert": "\n"
+           }
+          ],
+          "Str": "Leave them alone\n"
+         }
+        }
+       }
+      ],
+      "pos": {
+       "x": 90,
+       "y": 140
+      },
+      "values": {
+       "text": null,
+       "cover": {
+        "Dir": null,
+        "Size": 950794,
+        "Store": "p-EWvDFxqn",
+        "Title": "image-d8dc7456-bb6e-4a57-b477-fac80cd2e72a.png",
+        "FileId": "4aa7ab82-9792-4835-8fcc-ca98b7834fc7"
+       },
+       "description": "You encounter a caravan of hunters. As you approach, you immediately smell the pungent scent of dragon blood."
+      }
+     },
+     "c2e413b4-4697-4a03-8aa3-dabf808b95d5": {
+      "next": null,
+      "type": "getVar",
+      "pos": {
+       "x": 1520,
+       "y": -110
+      },
+      "values": {
+       "variable": "rage"
+      }
+     },
+     "c58297fc-d71e-46df-886b-0bdb36f4707d": {
+      "next": null,
+      "type": "opMore",
+      "pos": {
+       "x": 1780,
+       "y": -110
+      },
+      "values": {
+       "arg2": 100,
+       "arg1": {
+        "get": "c2e413b4-4697-4a03-8aa3-dabf808b95d5",
+        "param": "result"
+       }
+      }
+     },
+     "c66949ec-77a9-4749-a056-640637b65692": {
+      "next": null,
+      "type": "end",
+      "pos": {
+       "x": 3130,
+       "y": 640
+      }
+     },
+     "fb72e1f8-fc79-4f80-8a1d-f0aca6e5da1b": {
+      "next": null,
+      "type": "getVar",
+      "pos": {
+       "x": -720,
+       "y": 750
+      },
+      "values": {
+       "variable": "inspected"
+      }
+     },
+     "fde775bd-fd02-4aa5-b06e-3fcd3fb00c30": {
+      "next": "89dfaf94-57fb-44d9-81f8-1cdf85f224c5",
+      "type": "speech",
+      "pos": {
+       "x": 2200,
+       "y": 890
+      },
+      "values": {
+       "text": "You... seriously? Damn, I'm going to regret this...",
+       "character": {
+        "Name": null,
+        "Title": "Hunter",
+        "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+       },
+       "description": {
+        "Ops": [
+         {
+          "insert": "Hunter",
+          "attributes": {
+           "asset": {
+            "icon": "walk-fill",
+            "value": {
+             "Name": null,
+             "Title": "Hunter",
+             "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+            }
+           }
+          }
+         },
+         {
+          "insert": " is confused\n"
+         }
+        ],
+        "Str": "[Hunter](#asset:bbb048b7-2460-43a8-b6b3-fe50544b9a64) is confused\n"
+       }
+      }
+     },
+     "ffc14f99-c30f-4934-a440-52dae5e93ffe": {
+      "next": null,
+      "type": "end",
+      "pos": {
+       "x": 1000,
+       "y": 1200
+      }
+     }
+    }
+   },
+   "inherited": {},
+   "index": 1,
+   "createdAt": "2025-08-08T14:43:27.906Z",
+   "updatedAt": "2025-12-03T06:37:50.944Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-330000000005",
+   "name": "locale",
+   "title": null,
+   "own": true,
+   "type": "locale",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 2,
+   "createdAt": "2025-08-08T14:43:27.906Z",
+   "updatedAt": "2025-08-08T14:43:27.906Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-330000000100",
+   "name": "props",
+   "title": "[[t:Properties]]",
+   "own": false,
+   "type": "props",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-07-31T12:55:34.293Z",
+   "updatedAt": "2025-07-31T12:55:34.293Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "file-paper-2-fill",
+ "index": 3,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Expensive life",
+ "parentIds": [
+  "00000000-0000-0000-0000-000000000033"
+ ],
+ "title": "Expensive life",
+ "typeIds": [
+  "00000000-0000-0000-0000-000000000033"
+ ],
+ "workspaceId": "106688fe-f06c-4a8d-b791-f85e5deb3090",
+ "values": {
+  "__meta": {},
+  "content": {
+   "start": "a766bb24-bef9-46ea-965a-0bb88fe5985a",
+   "variables": {
+    "own": {
+     "rage": {
+      "name": "rage",
+      "type": {
+       "Type": "integer"
+      },
+      "title": "Rage",
+      "autoFill": null,
+      "description": "In order to engage in battle, you need a sufficient amount of rage"
+     },
+     "inspected": {
+      "name": "inspected",
+      "type": {
+       "Type": "boolean"
+      },
+      "title": "Inspected",
+      "autoFill": null,
+      "description": null
+     }
+    }
+   },
+   "nodes": {
+    "0c32ef69-ad39-414d-a93e-8829a61b22e7": {
+     "next": "8530b11d-266e-42f1-8d31-f52b1e1eb8e2",
+     "type": "setVar",
+     "pos": {
+      "x": 590,
+      "y": 1400
+     },
+     "values": {
+      "value": 50,
+      "variable": "rage"
+     }
+    },
+    "0cecb4b1-6ec4-4109-af04-8fa23e846491": {
+     "next": "816917ea-7b9d-4b5e-b73c-555ffe2f8902",
+     "type": "speech",
+     "pos": {
+      "x": 2370,
+      "y": -390
+     },
+     "values": {
+      "text": "No! I can give you maps of their camps!..",
+      "character": {
+       "Name": null,
+       "Title": "Hunter",
+       "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+      },
+      "description": {
+       "Ops": [
+        {
+         "insert": "Hunter",
+         "attributes": {
+          "asset": {
+           "icon": "walk-fill",
+           "value": {
+            "Name": null,
+            "Title": "Hunter",
+            "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+           }
+          }
+         }
+        },
+        {
+         "insert": " is terrified\n"
+        }
+       ],
+       "Str": "[Hunter](#asset:bbb048b7-2460-43a8-b6b3-fe50544b9a64) is terrified\n"
+      }
+     }
+    },
+    "2589db17-a898-42ae-a088-a4188e4653d5": {
+     "next": null,
+     "type": "getVar",
+     "pos": {
+      "x": 1230,
+      "y": 2190
+     },
+     "values": {
+      "variable": "rage"
+     }
+    },
+    "43f1325a-d949-4489-9c6a-c3112ae33ee8": {
+     "next": null,
+     "type": "end",
+     "pos": {
+      "x": 3580,
+      "y": 30
+     }
+    },
+    "49ef00f5-0263-4a4b-9dc4-a0e2e771440e": {
+     "next": null,
+     "type": "opNot",
+     "pos": {
+      "x": -430,
+      "y": 750
+     },
+     "values": {
+      "arg1": {
+       "get": "fb72e1f8-fc79-4f80-8a1d-f0aca6e5da1b",
+       "param": "result"
+      }
+     }
+    },
+    "4d1cd23f-590f-413e-8867-454a5a0d5be8": {
+     "next": null,
+     "type": "opLess",
+     "pos": {
+      "x": -430,
+      "y": 570
+     },
+     "values": {
+      "arg2": 100,
+      "arg1": {
+       "get": "617d6ad2-dd6b-4b93-b558-4067d5c7bd45",
+       "param": "result"
+      }
+     }
+    },
+    "4dbdca8d-024c-4119-ad84-9d6c8b9158d2": {
+     "next": null,
+     "type": "opPlus",
+     "pos": {
+      "x": 1590,
+      "y": 2280
+     },
+     "values": {
+      "arg2": 100,
+      "arg1": {
+       "get": "2589db17-a898-42ae-a088-a4188e4653d5",
+       "param": "result"
+      }
+     }
+    },
+    "617d6ad2-dd6b-4b93-b558-4067d5c7bd45": {
+     "next": null,
+     "type": "getVar",
+     "pos": {
+      "x": -700,
+      "y": 520
+     },
+     "values": {
+      "variable": "rage"
+     }
+    },
+    "665ce3d3-8b15-4dd4-ae18-4217b947622a": {
+     "next": "b1752ca8-318b-41e1-92d2-e9c5cf5a046a",
+     "type": "setVar",
+     "pos": {
+      "x": 1870,
+      "y": 1960
+     },
+     "values": {
+      "variable": "rage",
+      "value": {
+       "get": "4dbdca8d-024c-4119-ad84-9d6c8b9158d2",
+       "param": "result"
+      }
+     }
+    },
+    "6aff4f7c-4ccd-44f2-abf1-1633ad35e7a8": {
+     "next": "c66949ec-77a9-4749-a056-640637b65692",
+     "type": "trigger",
+     "subject": "AddGold",
+     "pos": {
+      "x": 2850,
+      "y": 600
+     },
+     "params": {
+      "in": [
+       {
+        "name": "quantity",
+        "type": {
+         "Type": "integer"
+        },
+        "title": "Quantity",
+        "autoFill": null,
+        "description": null
+       }
+      ],
+      "out": []
+     },
+     "values": {
+      "quantity": 1000
+     }
+    },
+    "6cec17dd-70f8-487d-a251-9da5bc897246": {
+     "next": "6aff4f7c-4ccd-44f2-abf1-1633ad35e7a8",
+     "type": "speech",
+     "pos": {
+      "x": 2190,
+      "y": 520
+     },
+     "values": {
+      "text": "This... my entire fortune! Okey, take it!",
+      "character": {
+       "Name": null,
+       "Title": "Hunter",
+       "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+      },
+      "description": {
+       "Ops": [
+        {
+         "insert": "Hunter",
+         "attributes": {
+          "asset": {
+           "icon": "walk-fill",
+           "value": {
+            "Name": null,
+            "Title": "Hunter",
+            "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+           }
+          }
+         }
+        },
+        {
+         "insert": " is not happy with such an overpriced price\n"
+        }
+       ],
+       "Str": "[Hunter](#asset:bbb048b7-2460-43a8-b6b3-fe50544b9a64) is not happy with such an overpriced price\n"
+      }
+     }
+    },
+    "6fd23b28-909d-4792-ad65-d928d5ee0ca6": {
+     "next": "c0a0aafb-c8f0-4fe9-b8d5-872730837a46",
+     "type": "trigger",
+     "subject": "Trade",
+     "pos": {
+      "x": 870,
+      "y": 160
+     }
+    },
+    "816917ea-7b9d-4b5e-b73c-555ffe2f8902": {
+     "next": "43f1325a-d949-4489-9c6a-c3112ae33ee8",
+     "type": "trigger",
+     "subject": "StartBattle",
+     "pos": {
+      "x": 3090,
+      "y": -60
+     }
+    },
+    "81bc0688-e661-4aa4-a380-ca59f94821ac": {
+     "next": null,
+     "type": "speech",
+     "options": [
+      {
+       "next": "bb19fe21-1b7d-412f-b7b8-99fe71bf7e0f",
+       "values": {
+        "text": "Your gold is paid for by the death of my kin. Burn!"
+       }
+      },
+      {
+       "next": "6cec17dd-70f8-487d-a251-9da5bc897246",
+       "values": {
+        "text": "Your life is worth 1000 coins... And cages with prisoners."
+       }
+      },
+      {
+       "next": "fde775bd-fd02-4aa5-b06e-3fcd3fb00c30",
+       "values": {
+        "text": "Get out! And if i see you again, you won't collect the ashes."
+       }
+      }
+     ],
+     "pos": {
+      "x": 1260,
+      "y": 170
+     },
+     "values": {
+      "text": "There are only sick individuals ib those cages. But you dont't need them, i see... you need the gold?",
+      "character": {
+       "Name": null,
+       "Title": "Hunter",
+       "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+      },
+      "description": {
+       "Ops": [
+        {
+         "insert": "Hunter",
+         "attributes": {
+          "asset": {
+           "icon": "walk-fill",
+           "value": {
+            "Name": null,
+            "Title": "Hunter",
+            "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+           }
+          }
+         }
+        },
+        {
+         "insert": " points to the cells\n"
+        }
+       ],
+       "Str": "[Hunter](#asset:bbb048b7-2460-43a8-b6b3-fe50544b9a64) points to the cells\n"
+      }
+     }
+    },
+    "82a82566-d298-40bf-9f68-56c7e8c350b7": {
+     "next": "816917ea-7b9d-4b5e-b73c-555ffe2f8902",
+     "type": "speech",
+     "pos": {
+      "x": 2370,
+      "y": -10
+     },
+     "values": {
+      "text": "You're going to pay for this!",
+      "character": {
+       "Title": "Hunter",
+       "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+      },
+      "description": null
+     }
+    },
+    "8530b11d-266e-42f1-8d31-f52b1e1eb8e2": {
+     "next": "9c644390-8980-435e-9109-9e95423c5347",
+     "type": "setVar",
+     "pos": {
+      "x": 860,
+      "y": 1420
+     },
+     "values": {
+      "value": true,
+      "variable": "inspected"
+     }
+    },
+    "89dfaf94-57fb-44d9-81f8-1cdf85f224c5": {
+     "next": null,
+     "type": "end",
+     "pos": {
+      "x": 2680,
+      "y": 980
+     }
+    },
+    "9c644390-8980-435e-9109-9e95423c5347": {
+     "next": null,
+     "type": "speech",
+     "options": [
+      {
+       "next": "665ce3d3-8b15-4dd4-ae18-4217b947622a",
+       "values": {
+        "text": {
+         "Ops": [
+          {
+           "insert": "Continue inspection",
+           "attributes": {
+            "italic": true
+           }
+          },
+          {
+           "insert": "\n"
+          }
+         ],
+         "Str": "Continue inspection\n"
+        }
+       }
+      },
+      {
+       "next": null,
+       "values": {
+        "text": {
+         "Ops": [
+          {
+           "insert": "You've seen enough",
+           "attributes": {
+            "italic": true
+           }
+          },
+          {
+           "insert": "\n"
+          }
+         ],
+         "Str": "You've seen enough\n"
+        }
+       }
+      }
+     ],
+     "pos": {
+      "x": 1230,
+      "y": 1450
+     },
+     "values": {
+      "cover": {
+       "Dir": null,
+       "Size": 873748,
+       "Store": "p-EWvDFxqn",
+       "Title": "image-cf07fbbd-897b-4930-b2a2-8230d89bdd00.png",
+       "FileId": "0250e6c2-db77-4a1d-86e6-ec8533fa9bf9"
+      },
+      "description": "You notice narrow dragon cages inside the carts"
+     }
+    },
+    "a766bb24-bef9-46ea-965a-0bb88fe5985a": {
+     "next": "c0a0aafb-c8f0-4fe9-b8d5-872730837a46",
+     "type": "start",
+     "pos": {
+      "x": -270,
+      "y": 140
+     }
+    },
+    "b1752ca8-318b-41e1-92d2-e9c5cf5a046a": {
+     "next": "c0a0aafb-c8f0-4fe9-b8d5-872730837a46",
+     "type": "speech",
+     "pos": {
+      "x": 2100,
+      "y": 2030
+     },
+     "values": {
+      "description": "In one of the cells you notice a very young dragon bleeding."
+     }
+    },
+    "bb19fe21-1b7d-412f-b7b8-99fe71bf7e0f": {
+     "next": null,
+     "type": "branch",
+     "options": [
+      {
+       "next": "0cecb4b1-6ec4-4109-af04-8fa23e846491",
+       "values": {
+        "value": true
+       }
+      },
+      {
+       "next": "82a82566-d298-40bf-9f68-56c7e8c350b7",
+       "values": {
+        "value": false
+       }
+      }
+     ],
+     "pos": {
+      "x": 2090,
+      "y": -140
+     },
+     "values": {
+      "condition": {
+       "get": "c58297fc-d71e-46df-886b-0bdb36f4707d",
+       "param": "result"
+      }
+     }
+    },
+    "c0a0aafb-c8f0-4fe9-b8d5-872730837a46": {
+     "next": null,
+     "type": "speech",
+     "options": [
+      {
+       "next": "6fd23b28-909d-4792-ad65-d928d5ee0ca6",
+       "values": {
+        "text": {
+         "Ops": [
+          {
+           "insert": "Trade",
+           "attributes": {
+            "italic": true
+           }
+          },
+          {
+           "insert": "\n"
+          }
+         ],
+         "Str": "Trade\n"
+        },
+        "condition": {
+         "get": "4d1cd23f-590f-413e-8867-454a5a0d5be8",
+         "param": "result"
+        }
+       }
+      },
+      {
+       "next": "81bc0688-e661-4aa4-a380-ca59f94821ac",
+       "values": {
+        "text": "Your wagons smell of gunpowder and dragon blood. Where's the loot?"
+       }
+      },
+      {
+       "next": "0c32ef69-ad39-414d-a93e-8829a61b22e7",
+       "values": {
+        "text": {
+         "Ops": [
+          {
+           "insert": "Take a close look at the carts",
+           "attributes": {
+            "italic": true
+           }
+          },
+          {
+           "insert": "\n"
+          }
+         ],
+         "Str": "Take a close look at the carts\n"
+        },
+        "condition": {
+         "get": "49ef00f5-0263-4a4b-9dc4-a0e2e771440e",
+         "param": "result"
+        }
+       }
+      },
+      {
+       "next": "ffc14f99-c30f-4934-a440-52dae5e93ffe",
+       "values": {
+        "text": {
+         "Ops": [
+          {
+           "insert": "Leave them alone",
+           "attributes": {
+            "italic": true
+           }
+          },
+          {
+           "insert": "\n"
+          }
+         ],
+         "Str": "Leave them alone\n"
+        }
+       }
+      }
+     ],
+     "pos": {
+      "x": 90,
+      "y": 140
+     },
+     "values": {
+      "text": null,
+      "cover": {
+       "Dir": null,
+       "Size": 950794,
+       "Store": "p-EWvDFxqn",
+       "Title": "image-d8dc7456-bb6e-4a57-b477-fac80cd2e72a.png",
+       "FileId": "4aa7ab82-9792-4835-8fcc-ca98b7834fc7"
+      },
+      "description": "You encounter a caravan of hunters. As you approach, you immediately smell the pungent scent of dragon blood."
+     }
+    },
+    "c2e413b4-4697-4a03-8aa3-dabf808b95d5": {
+     "next": null,
+     "type": "getVar",
+     "pos": {
+      "x": 1520,
+      "y": -110
+     },
+     "values": {
+      "variable": "rage"
+     }
+    },
+    "c58297fc-d71e-46df-886b-0bdb36f4707d": {
+     "next": null,
+     "type": "opMore",
+     "pos": {
+      "x": 1780,
+      "y": -110
+     },
+     "values": {
+      "arg2": 100,
+      "arg1": {
+       "get": "c2e413b4-4697-4a03-8aa3-dabf808b95d5",
+       "param": "result"
+      }
+     }
+    },
+    "c66949ec-77a9-4749-a056-640637b65692": {
+     "next": null,
+     "type": "end",
+     "pos": {
+      "x": 3130,
+      "y": 640
+     }
+    },
+    "fb72e1f8-fc79-4f80-8a1d-f0aca6e5da1b": {
+     "next": null,
+     "type": "getVar",
+     "pos": {
+      "x": -720,
+      "y": 750
+     },
+     "values": {
+      "variable": "inspected"
+     }
+    },
+    "fde775bd-fd02-4aa5-b06e-3fcd3fb00c30": {
+     "next": "89dfaf94-57fb-44d9-81f8-1cdf85f224c5",
+     "type": "speech",
+     "pos": {
+      "x": 2200,
+      "y": 890
+     },
+     "values": {
+      "text": "You... seriously? Damn, I'm going to regret this...",
+      "character": {
+       "Name": null,
+       "Title": "Hunter",
+       "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+      },
+      "description": {
+       "Ops": [
+        {
+         "insert": "Hunter",
+         "attributes": {
+          "asset": {
+           "icon": "walk-fill",
+           "value": {
+            "Name": null,
+            "Title": "Hunter",
+            "AssetId": "bbb048b7-2460-43a8-b6b3-fe50544b9a64"
+           }
+          }
+         }
+        },
+        {
+         "insert": " is confused\n"
+        }
+       ],
+       "Str": "[Hunter](#asset:bbb048b7-2460-43a8-b6b3-fe50544b9a64) is confused\n"
+      }
+     }
+    },
+    "ffc14f99-c30f-4934-a440-52dae5e93ffe": {
+     "next": null,
+     "type": "end",
+     "pos": {
+      "x": 1000,
+      "y": 1200
+     }
+    }
+   }
+  },
+  "locale": {},
+  "props": {}
+ }
+}

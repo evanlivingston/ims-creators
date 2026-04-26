@@ -1,0 +1,134 @@
+{
+ "id": "00000000-0000-0000-0000-000000000012",
+ "blocks": [
+  {
+   "id": "f3ddfbd9-3ca1-4710-80ee-1f4b74548f10",
+   "name": "info",
+   "title": "[[t:Info]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "fields": [
+     {
+      "name": "value",
+      "type": "number",
+      "title": "[[t:TaskTimeLogValue]]"
+     },
+     {
+      "name": "comment",
+      "type": "text",
+      "title": "[[t:TaskTimeLogComment]]"
+     },
+     {
+      "name": "user",
+      "type": "projectUser",
+      "title": "[[t:TaskTimeLogUser]]"
+     },
+     {
+      "name": "date",
+      "type": "dateTime",
+      "title": "[[t:TaskTimeLogDate]]"
+     }
+    ]
+   },
+   "computed": {
+    "fields": [
+     {
+      "name": "value",
+      "type": "number",
+      "title": "[[t:TaskTimeLogValue]]"
+     },
+     {
+      "name": "comment",
+      "type": "text",
+      "title": "[[t:TaskTimeLogComment]]"
+     },
+     {
+      "name": "user",
+      "type": "projectUser",
+      "title": "[[t:TaskTimeLogUser]]"
+     },
+     {
+      "name": "date",
+      "type": "dateTime",
+      "title": "[[t:TaskTimeLogDate]]"
+     }
+    ],
+    "__props": {
+     "fields": {
+      "type": "struct",
+      "index": 1,
+      "title": "[[t:Fields]]",
+      "multiple": true,
+      "params": {
+       "type": {
+        "AssetId": "00000000-0000-0000-0000-000000000021"
+       }
+      }
+     }
+    }
+   },
+   "inherited": {
+    "fields": null,
+    "__props": {
+     "fields": {
+      "type": "struct",
+      "index": 1,
+      "title": "[[t:Fields]]",
+      "multiple": true,
+      "params": {
+       "type": {
+        "AssetId": "00000000-0000-0000-0000-000000000021"
+       }
+      }
+     }
+    }
+   },
+   "index": 1,
+   "createdAt": "2024-10-18T05:45:02.963Z",
+   "updatedAt": "2024-10-18T05:59:16.284Z"
+  }
+ ],
+ "isAbstract": true,
+ "projectId": "111112",
+ "references": [],
+ "icon": "box-1-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "[[t:TaskTimeLog]]",
+ "parentIds": [
+  "00000000-0000-0000-0000-000000000020"
+ ],
+ "title": "[[t:TaskTimeLog]]",
+ "typeIds": [
+  "00000000-0000-0000-0000-000000000020"
+ ],
+ "workspaceId": "00000000-0000-0000-0000-000000000004",
+ "values": {
+  "info": {
+   "fields": [
+    {
+     "name": "value",
+     "type": "number",
+     "title": "[[t:TaskTimeLogValue]]"
+    },
+    {
+     "name": "comment",
+     "type": "text",
+     "title": "[[t:TaskTimeLogComment]]"
+    },
+    {
+     "name": "user",
+     "type": "projectUser",
+     "title": "[[t:TaskTimeLogUser]]"
+    },
+    {
+     "name": "date",
+     "type": "dateTime",
+     "title": "[[t:TaskTimeLogDate]]"
+    }
+   ]
+  }
+ }
+}

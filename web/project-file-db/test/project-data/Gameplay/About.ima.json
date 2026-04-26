@@ -1,0 +1,259 @@
+{
+ "id": "97d52f51-6203-44e3-8dfc-279be7fe598b",
+ "blocks": [
+  {
+   "id": "33228ccc-ac44-41d7-9ca0-bb10c98b32d8",
+   "name": null,
+   "title": null,
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "This section describes actual gameplay of your game:",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "- Core loop",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "- Character system",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "- Combat system",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "- Exploration & Movement",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "- Inventory & Economy",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "- Crafting & Enchanting",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "- and etc",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "TIP: Use \"Game mechanics\" base element for describing your gamplay to track it's completion",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      }
+     ],
+     "Str": "This section describes actual gameplay of your game:\n- Core loop\n- Character system\n- Combat system\n- Exploration & Movement\n- Inventory & Economy\n- Crafting & Enchanting\n- and etc\n\nTIP: Use \"Game mechanics\" base element for describing your gamplay to track it's completion\n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "This section describes actual gameplay of your game:",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "- Core loop",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "- Character system",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "- Combat system",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "- Exploration & Movement",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "- Inventory & Economy",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "- Crafting & Enchanting",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "- and etc",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n\n",
+       "attributes": {
+        "blockquote": true
+       }
+      },
+      {
+       "insert": "TIP: Use \"Game mechanics\" base element for describing your gamplay to track it's completion",
+       "attributes": {
+        "italic": true
+       }
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "blockquote": true
+       }
+      }
+     ],
+     "Str": "This section describes actual gameplay of your game:\n- Core loop\n- Character system\n- Combat system\n- Exploration & Movement\n- Inventory & Economy\n- Crafting & Enchanting\n- and etc\n\nTIP: Use \"Game mechanics\" base element for describing your gamplay to track it's completion\n"
+    }
+   },
+   "inherited": null,
+   "index": 1.1755682,
+   "createdAt": "2025-08-20T09:32:25.290Z",
+   "updatedAt": "2025-08-20T09:44:22.643Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "question-fill",
+ "index": 4.175568,
+ "name": null,
+ "ownIcon": "question-fill",
+ "ownTitle": "About",
+ "parentIds": [],
+ "title": "About",
+ "typeIds": [],
+ "workspaceId": "44acbca6-5473-4ded-92be-b8389648d9db",
+ "values": {}
+}

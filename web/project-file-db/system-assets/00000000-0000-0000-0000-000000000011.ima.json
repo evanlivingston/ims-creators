@@ -1,0 +1,170 @@
+{
+ "id": "00000000-0000-0000-0000-000000000011",
+ "blocks": [
+  {
+   "id": "0f8f7679-3ad8-42e8-b59c-1bba62f232a8",
+   "name": "info",
+   "title": "[[t:Info]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "items": [
+     {
+      "name": "programming",
+      "title": "[[t:ProgrammingTaskCategory]]"
+     },
+     {
+      "name": "art",
+      "title": "[[t:ArtTaskCategory]]"
+     },
+     {
+      "name": "gamedesign",
+      "title": "[[t:GameDesignTaskCategory]]"
+     },
+     {
+      "name": "writing",
+      "title": "[[t:WritingTaskCategory]]"
+     },
+     {
+      "name": "sound",
+      "title": "[[t:SoundTaskCategory]]"
+     },
+     {
+      "name": "marketing",
+      "title": "[[t:MarketingTaskCategory]]"
+     },
+     {
+      "name": "idea",
+      "title": "[[t:IdeaTaskCategory]]"
+     },
+     {
+      "name": "bug",
+      "title": "[[t:BugTaskCategory]]"
+     }
+    ]
+   },
+   "computed": {
+    "items": [
+     {
+      "name": "programming",
+      "title": "[[t:ProgrammingTaskCategory]]"
+     },
+     {
+      "name": "art",
+      "title": "[[t:ArtTaskCategory]]"
+     },
+     {
+      "name": "gamedesign",
+      "title": "[[t:GameDesignTaskCategory]]"
+     },
+     {
+      "name": "writing",
+      "title": "[[t:WritingTaskCategory]]"
+     },
+     {
+      "name": "sound",
+      "title": "[[t:SoundTaskCategory]]"
+     },
+     {
+      "name": "marketing",
+      "title": "[[t:MarketingTaskCategory]]"
+     },
+     {
+      "name": "idea",
+      "title": "[[t:IdeaTaskCategory]]"
+     },
+     {
+      "name": "bug",
+      "title": "[[t:BugTaskCategory]]"
+     }
+    ],
+    "__props": {
+     "items": {
+      "type": "struct",
+      "index": 1,
+      "title": "[[t:Items]]",
+      "multiple": true,
+      "params": {
+       "type": {
+        "AssetId": "00000000-0000-0000-0000-000000000022"
+       }
+      }
+     }
+    }
+   },
+   "inherited": {
+    "items": null,
+    "__props": {
+     "items": {
+      "type": "struct",
+      "index": 1,
+      "title": "[[t:Items]]",
+      "multiple": true,
+      "params": {
+       "type": {
+        "AssetId": "00000000-0000-0000-0000-000000000022"
+       }
+      }
+     }
+    }
+   },
+   "index": 1,
+   "createdAt": "2024-09-22T20:35:14.021Z",
+   "updatedAt": "2024-09-22T20:36:50.114Z"
+  }
+ ],
+ "isAbstract": true,
+ "projectId": "111112",
+ "references": [],
+ "icon": "stack-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": "stack-fill",
+ "ownTitle": "[[t:TaskCategory]]",
+ "parentIds": [
+  "00000000-0000-0000-0000-000000000023"
+ ],
+ "title": "[[t:TaskCategory]]",
+ "typeIds": [
+  "00000000-0000-0000-0000-000000000023"
+ ],
+ "workspaceId": "00000000-0000-0000-0000-000000000004",
+ "values": {
+  "info": {
+   "items": [
+    {
+     "name": "programming",
+     "title": "[[t:ProgrammingTaskCategory]]"
+    },
+    {
+     "name": "art",
+     "title": "[[t:ArtTaskCategory]]"
+    },
+    {
+     "name": "gamedesign",
+     "title": "[[t:GameDesignTaskCategory]]"
+    },
+    {
+     "name": "writing",
+     "title": "[[t:WritingTaskCategory]]"
+    },
+    {
+     "name": "sound",
+     "title": "[[t:SoundTaskCategory]]"
+    },
+    {
+     "name": "marketing",
+     "title": "[[t:MarketingTaskCategory]]"
+    },
+    {
+     "name": "idea",
+     "title": "[[t:IdeaTaskCategory]]"
+    },
+    {
+     "name": "bug",
+     "title": "[[t:BugTaskCategory]]"
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,35 @@
+{
+ "id": "ccdb4470-6602-472a-9d32-ae352f71fac2",
+ "index": 8.17557,
+ "title": "Effects",
+ "name": null,
+ "parentId": null,
+ "projectId": "EWvDFxqn",
+ "props": {
+  "type": "collection",
+  "asset": {
+   "Title": "Effect",
+   "AssetId": "4ce7b352-31ee-4e48-ab25-ef619d223862"
+  },
+  "views": {
+   "table": {
+    "key": "table",
+    "sort": [],
+    "type": "table",
+    "index": 1,
+    "props": [
+     {
+      "prop": "title",
+      "width": 200
+     },
+     {
+      "prop": "description|value",
+      "width": null
+     }
+    ],
+    "title": "Table",
+    "filter": []
+   }
+  }
+ }
+}

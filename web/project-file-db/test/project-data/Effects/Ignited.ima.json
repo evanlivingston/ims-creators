@@ -1,0 +1,202 @@
+{
+ "id": "6e6fb1fb-715b-41a4-83ce-de6bbde5f014",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-000000000100",
+   "name": "__meta",
+   "title": null,
+   "own": false,
+   "type": "props",
+   "props": {},
+   "computed": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "inherited": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "index": 0,
+   "createdAt": "2025-06-24T12:55:34.293Z",
+   "updatedAt": "2025-06-24T12:55:34.293Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000001",
+   "name": "gallery",
+   "title": "[[t:Gallery]]",
+   "own": true,
+   "type": "gallery",
+   "props": {
+    "main": {
+     "type": "file",
+     "index": 1.1755695653008,
+     "value": {
+      "Dir": null,
+      "Size": 1067819,
+      "Store": "p-EWvDFxqn",
+      "Title": "image-90980cf4-4059-41b2-a6a7-7aa5944c0893.png",
+      "FileId": "1c667a2e-6e14-44dd-95c3-1b4882735408"
+     }
+    }
+   },
+   "computed": {
+    "main": {
+     "type": "file",
+     "index": 1.1755695653008,
+     "value": {
+      "Dir": null,
+      "Size": 1067819,
+      "Store": "p-EWvDFxqn",
+      "Title": "image-90980cf4-4059-41b2-a6a7-7aa5944c0893.png",
+      "FileId": "1c667a2e-6e14-44dd-95c3-1b4882735408"
+     }
+    }
+   },
+   "inherited": {},
+   "index": 1,
+   "createdAt": "2025-08-20T13:14:24.666Z",
+   "updatedAt": "2025-08-20T13:14:24.666Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000002",
+   "name": "description",
+   "title": "[[t:Description]]",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Deals "
+      },
+      {
+       "insert": "value",
+       "attributes": {
+        "underline": true
+       }
+      },
+      {
+       "insert": " fire damage every second\n"
+      }
+     ],
+     "Str": "Deals value fire damage every second\n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Deals "
+      },
+      {
+       "insert": "value",
+       "attributes": {
+        "underline": true
+       }
+      },
+      {
+       "insert": " fire damage every second\n"
+      }
+     ],
+     "Str": "Deals value fire damage every second\n"
+    }
+   },
+   "inherited": {},
+   "index": 2,
+   "createdAt": "2025-08-20T13:14:24.666Z",
+   "updatedAt": "2025-08-20T13:14:39.743Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000003",
+   "name": "props",
+   "title": "[[t:Properties]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "id": "ignited"
+   },
+   "computed": {
+    "id": "ignited"
+   },
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-08-20T13:13:39.426Z",
+   "updatedAt": "2025-08-20T13:13:39.426Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000004",
+   "name": "locale",
+   "title": null,
+   "own": false,
+   "type": "locale",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-06-24T12:55:34.293Z",
+   "updatedAt": "2025-06-24T12:55:34.293Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "sparkling-2-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Ignited",
+ "parentIds": [
+  "4ce7b352-31ee-4e48-ab25-ef619d223862"
+ ],
+ "title": "Ignited",
+ "typeIds": [
+  "4ce7b352-31ee-4e48-ab25-ef619d223862",
+  "00000000-0000-0000-0000-000000000035"
+ ],
+ "workspaceId": "ccdb4470-6602-472a-9d32-ae352f71fac2",
+ "values": {
+  "__meta": {},
+  "gallery": {
+   "main": {
+    "type": "file",
+    "index": 1.1755695653008,
+    "value": {
+     "Dir": null,
+     "Size": 1067819,
+     "Store": "p-EWvDFxqn",
+     "Title": "image-90980cf4-4059-41b2-a6a7-7aa5944c0893.png",
+     "FileId": "1c667a2e-6e14-44dd-95c3-1b4882735408"
+    }
+   }
+  },
+  "description": {
+   "value": {
+    "Ops": [
+     {
+      "insert": "Deals "
+     },
+     {
+      "insert": "value",
+      "attributes": {
+       "underline": true
+      }
+     },
+     {
+      "insert": " fire damage every second\n"
+     }
+    ],
+    "Str": "Deals value fire damage every second\n"
+   }
+  },
+  "props": {
+   "id": "ignited"
+  },
+  "locale": {}
+ }
+}

@@ -1,0 +1,148 @@
+{
+ "id": "362e6481-5adc-453a-af3b-00267849a8f0",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-000000000100",
+   "name": "__meta",
+   "title": null,
+   "own": false,
+   "type": "props",
+   "props": {},
+   "computed": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "inherited": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "index": 0,
+   "createdAt": "2025-06-24T12:55:34.293Z",
+   "updatedAt": "2025-06-24T12:55:34.293Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000001",
+   "name": "gallery",
+   "title": "[[t:Gallery]]",
+   "own": true,
+   "type": "gallery",
+   "props": {
+    "main": {
+     "type": "file",
+     "index": 1.1755696081154001,
+     "value": {
+      "Dir": null,
+      "Size": 897120,
+      "Store": "p-EWvDFxqn",
+      "Title": "image-2c71e252-c737-4f23-9893-47ac5e12604c.png",
+      "FileId": "caef2873-7174-47b1-b888-4a5867a97775"
+     }
+    }
+   },
+   "computed": {
+    "main": {
+     "type": "file",
+     "index": 1.1755696081154001,
+     "value": {
+      "Dir": null,
+      "Size": 897120,
+      "Store": "p-EWvDFxqn",
+      "Title": "image-2c71e252-c737-4f23-9893-47ac5e12604c.png",
+      "FileId": "caef2873-7174-47b1-b888-4a5867a97775"
+     }
+    }
+   },
+   "inherited": {},
+   "index": 1,
+   "createdAt": "2025-08-20T13:21:31.230Z",
+   "updatedAt": "2025-08-20T13:21:31.230Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000002",
+   "name": "description",
+   "title": "[[t:Description]]",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": "Cannot do actions"
+   },
+   "computed": {
+    "value": "Cannot do actions"
+   },
+   "inherited": {},
+   "index": 2,
+   "createdAt": "2025-08-20T13:21:31.230Z",
+   "updatedAt": "2025-08-20T13:21:31.230Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000003",
+   "name": "props",
+   "title": "[[t:Properties]]",
+   "own": false,
+   "type": "props",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-08-20T13:06:03.803Z",
+   "updatedAt": "2025-08-20T13:17:35.462Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000004",
+   "name": "locale",
+   "title": null,
+   "own": false,
+   "type": "locale",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-06-24T12:55:34.293Z",
+   "updatedAt": "2025-06-24T12:55:34.293Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "sparkling-2-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Stun",
+ "parentIds": [
+  "4ce7b352-31ee-4e48-ab25-ef619d223862"
+ ],
+ "title": "Stun",
+ "typeIds": [
+  "4ce7b352-31ee-4e48-ab25-ef619d223862",
+  "00000000-0000-0000-0000-000000000035"
+ ],
+ "workspaceId": "ccdb4470-6602-472a-9d32-ae352f71fac2",
+ "values": {
+  "__meta": {},
+  "gallery": {
+   "main": {
+    "type": "file",
+    "index": 1.1755696081154001,
+    "value": {
+     "Dir": null,
+     "Size": 897120,
+     "Store": "p-EWvDFxqn",
+     "Title": "image-2c71e252-c737-4f23-9893-47ac5e12604c.png",
+     "FileId": "caef2873-7174-47b1-b888-4a5867a97775"
+    }
+   }
+  },
+  "description": {
+   "value": "Cannot do actions"
+  },
+  "props": {},
+  "locale": {}
+ }
+}

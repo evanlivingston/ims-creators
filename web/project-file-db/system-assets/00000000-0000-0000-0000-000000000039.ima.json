@@ -1,0 +1,53 @@
+{
+  "id": "00000000-0000-0000-0000-000000000039",
+  "blocks": [
+      {
+          "id": "00000000-0000-0000-0000-390000000001",
+          "type": "props",
+          "name": "__meta",
+          "title": null,
+          "index": 0,
+          "createdAt": "2026-01-20T20:35:14.021Z",
+          "updatedAt": "2026-01-20T20:36:50.114Z",
+          "ownTitle": null,
+          "own": false,
+          "props": {
+              "format": "md"
+          },
+          "computed": {
+              "format": "md"
+          },
+          "inherited": {}
+      },
+      {
+          "id": "00000000-0000-0000-0000-390000000002",
+          "type": "markdown",
+          "name": null,
+          "title": null,
+          "index": 1,
+          "createdAt": "2026-01-20T20:35:14.021Z",
+          "updatedAt": "2026-01-20T20:36:50.114Z",
+          "ownTitle": null,
+          "own": false,
+          "props": {
+              "value": ""
+          },
+          "computed": {
+              "value": ""
+          },
+          "inherited": {}
+      }
+  ],
+  "isAbstract": true,
+  "projectId": "111112",
+  "references": [],
+  "icon": "markdown-fill",
+  "index": null,
+  "name": "markdown",
+  "ownIcon": "markdown-fill",
+  "ownTitle": "[[t:Markdown]]",
+  "parentIds": [],
+  "title": "[[t:Markdown]]",
+  "typeIds": [],
+  "workspaceId": "00000000-0000-0000-0000-000000000002"
+}

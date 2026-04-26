@@ -1,0 +1,134 @@
+{
+ "id": "b1885d69-e01f-40db-a6ef-a4a4b75ef300",
+ "blocks": [
+  {
+   "id": "6524aa77-424d-4810-b004-6e55c89a22a9",
+   "name": "info",
+   "title": "[[t:Info]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "items": [
+     {
+      "name": "weapon",
+      "title": "Weapon"
+     },
+     {
+      "name": "armor",
+      "title": "Armor"
+     },
+     {
+      "name": "potion",
+      "title": "Potion"
+     },
+     {
+      "name": "quest",
+      "title": "Quest"
+     },
+     {
+      "name": "ingredient",
+      "title": "Ingredient"
+     }
+    ]
+   },
+   "computed": {
+    "items": [
+     {
+      "name": "weapon",
+      "title": "Weapon"
+     },
+     {
+      "name": "armor",
+      "title": "Armor"
+     },
+     {
+      "name": "potion",
+      "title": "Potion"
+     },
+     {
+      "name": "quest",
+      "title": "Quest"
+     },
+     {
+      "name": "ingredient",
+      "title": "Ingredient"
+     }
+    ],
+    "__props": {
+     "items": {
+      "type": "struct",
+      "index": 1,
+      "title": "[[t:Items]]",
+      "multiple": true,
+      "params": {
+       "type": {
+        "AssetId": "00000000-0000-0000-0000-000000000022"
+       }
+      }
+     }
+    }
+   },
+   "inherited": {
+    "items": null,
+    "__props": {
+     "items": {
+      "type": "struct",
+      "index": 1,
+      "title": "[[t:Items]]",
+      "multiple": true,
+      "params": {
+       "type": {
+        "AssetId": "00000000-0000-0000-0000-000000000022"
+       }
+      }
+     }
+    }
+   },
+   "index": 1,
+   "createdAt": "2025-08-18T17:20:52.216Z",
+   "updatedAt": "2025-08-20T07:50:06.297Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "stack-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Item type",
+ "parentIds": [
+  "00000000-0000-0000-0000-000000000023"
+ ],
+ "title": "Item type",
+ "typeIds": [
+  "00000000-0000-0000-0000-000000000023"
+ ],
+ "workspaceId": "ae2b3260-4448-4f89-9d6d-aac56479a7b5",
+ "values": {
+  "info": {
+   "items": [
+    {
+     "name": "weapon",
+     "title": "Weapon"
+    },
+    {
+     "name": "armor",
+     "title": "Armor"
+    },
+    {
+     "name": "potion",
+     "title": "Potion"
+    },
+    {
+     "name": "quest",
+     "title": "Quest"
+    },
+    {
+     "name": "ingredient",
+     "title": "Ingredient"
+    }
+   ]
+  }
+ }
+}

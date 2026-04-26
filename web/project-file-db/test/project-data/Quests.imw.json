@@ -1,0 +1,43 @@
+{
+ "id": "5b2f62aa-0d5a-444b-bf9d-3fb87bcb9327",
+ "index": 3,
+ "title": "Quests",
+ "name": null,
+ "parentId": null,
+ "projectId": "EWvDFxqn",
+ "props": {
+  "type": "collection",
+  "asset": {
+   "Title": "Quest",
+   "AssetId": "a0ef46ce-8292-42ae-b520-7f7da9d70545"
+  },
+  "views": {
+   "table": {
+    "key": "table",
+    "sort": [],
+    "type": "table",
+    "index": 1,
+    "props": [
+     {
+      "prop": "title",
+      "width": 200
+     },
+     {
+      "prop": "@1d6b313a-daea-4b3b-910b-4e0c792a77b2|value",
+      "width": null
+     },
+     {
+      "prop": "@10c1c030-bfd7-4a5b-8c5e-678937608f19|value",
+      "width": null
+     },
+     {
+      "prop": "@7c2893ce-c36c-4815-a5d3-4bf8a6722d1b|value",
+      "width": null
+     }
+    ],
+    "title": "Table",
+    "filter": []
+   }
+  }
+ }
+}

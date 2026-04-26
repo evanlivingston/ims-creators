@@ -1,0 +1,134 @@
+{
+ "id": "00000000-0000-0000-0000-000000000038",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-380000000001",
+   "name": "info",
+   "title": "[[t:Info]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "items": [
+     {
+      "name": "plan",
+      "index": 1,
+      "title": "[[t:TaskColumnPlan]]"
+     },
+     {
+      "name": "in_work",
+      "index": 2,
+      "title": "[[t:TaskColumnInWork]]"
+     },
+     {
+      "name": "test",
+      "index": 3,
+      "title": "[[t:TaskColumnTest]]"
+     },
+     {
+      "name": "done",
+      "index": 4,
+      "title": "[[t:TaskColumnDone]]"
+     }
+    ]
+   },
+   "computed": {
+    "items": [
+     {
+      "name": "plan",
+      "index": 1,
+      "title": "[[t:TaskColumnPlan]]"
+     },
+     {
+      "name": "in_work",
+      "index": 2,
+      "title": "[[t:TaskColumnInWork]]"
+     },
+     {
+      "name": "test",
+      "index": 3,
+      "title": "[[t:TaskColumnTest]]"
+     },
+     {
+      "name": "done",
+      "index": 4,
+      "title": "[[t:TaskColumnDone]]"
+     }
+    ],
+    "__props": {
+     "items": {
+      "type": "struct",
+      "index": 1,
+      "title": "[[t:Items]]",
+      "multiple": true,
+      "params": {
+       "type": {
+        "AssetId": "00000000-0000-0000-0000-000000000022"
+       }
+      }
+     }
+    }
+   },
+   "inherited": {
+    "items": null,
+    "__props": {
+     "items": {
+      "type": "struct",
+      "index": 1,
+      "title": "[[t:Items]]",
+      "multiple": true,
+      "params": {
+       "type": {
+        "AssetId": "00000000-0000-0000-0000-000000000022"
+       }
+      }
+     }
+    }
+   },
+   "index": 1,
+   "createdAt": "2025-07-29T20:35:14.021Z",
+   "updatedAt": "2025-07-29T20:36:50.114Z"
+  }
+ ],
+ "isAbstract": true,
+ "projectId": "111112",
+ "references": [],
+ "icon": "layout-column-fill",
+ "index": null,
+ "name": "task-column",
+ "ownIcon": "layout-column-fill",
+ "ownTitle": "[[t:TaskColumnBaseElement]]",
+ "parentIds": [
+  "00000000-0000-0000-0000-000000000023"
+ ],
+ "title": "[[t:TaskColumnBaseElement]]",
+ "typeIds": [
+  "00000000-0000-0000-0000-000000000023"
+ ],
+ "workspaceId": "00000000-0000-0000-0000-000000000004",
+ "values": {
+  "info": {
+   "items": [
+    {
+     "name": "plan",
+     "index": 1,
+     "title": "[[t:TaskColumnPlan]]"
+    },
+    {
+     "name": "in_work",
+     "index": 2,
+     "title": "[[t:TaskColumnInWork]]"
+    },
+    {
+     "name": "test",
+     "index": 3,
+     "title": "[[t:TaskColumnTest]]"
+    },
+    {
+     "name": "done",
+     "index": 4,
+     "title": "[[t:TaskColumnDone]]"
+    }
+   ]
+  }
+ }
+}

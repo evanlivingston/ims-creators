@@ -1,0 +1,190 @@
+{
+ "id": "00000000-0000-0000-0000-100000000000",
+ "blocks": [
+  {
+   "id": "1e97b052-1367-478b-aa7e-4abc2568a9d6",
+   "name": "info",
+   "title": "[[t:Info]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "genre": [],
+    "developer": null,
+    "coverimage": null,
+    "description": null,
+    "releasedate": null,
+    "background_image": null,
+    "__props": {
+     "genre": {
+      "type": "enum",
+      "index": 1,
+      "title": "[[t:Genre]]",
+      "multiple": true,
+      "params": {
+       "type": {
+        "Name": null,
+        "Title": "Genres",
+        "AssetId": "00000000-0000-0000-0000-100000000004"
+       }
+      }
+     },
+     "coverimage": {
+      "hint": "[[t:AttributeCoverImageHint]]",
+      "type": "attachment",
+      "index": 4,
+      "title": "[[t:CoverImage]]",
+      "params": {
+       "accept": ".jpg, .jpeg, .png, .webp, .gif"
+      }
+     },
+     "developer": {
+      "index": 2,
+      "title": "[[t:Developer]]"
+     },
+     "description": {
+      "type": "string",
+      "index": 5,
+      "title": "[[t:Description]]"
+     },
+     "releasedate": {
+      "type": "date",
+      "index": 3,
+      "title": "[[t:ReleaseDate]]"
+     },
+     "background_image": {
+      "hint": "[[t:AttributeBackgroundHint]]",
+      "type": "attachment",
+      "index": 6,
+      "title": "[[t:AttributeBackground]]",
+      "params": {
+       "accept": ".jpg, .jpeg, .png, .webp, .gif"
+      }
+     }
+    }
+   },
+   "computed": {
+    "genre": [],
+    "developer": null,
+    "coverimage": null,
+    "description": null,
+    "releasedate": null,
+    "background_image": null,
+    "__props": {
+     "genre": {
+      "type": "enum",
+      "index": 1,
+      "title": "[[t:Genre]]",
+      "multiple": true,
+      "params": {
+       "type": {
+        "Name": null,
+        "Title": "Genres",
+        "AssetId": "00000000-0000-0000-0000-100000000004"
+       }
+      }
+     },
+     "coverimage": {
+      "hint": "[[t:AttributeCoverImageHint]]",
+      "type": "attachment",
+      "index": 4,
+      "title": "[[t:CoverImage]]",
+      "params": {
+       "accept": ".jpg, .jpeg, .png, .webp, .gif"
+      }
+     },
+     "developer": {
+      "index": 2,
+      "title": "[[t:Developer]]"
+     },
+     "description": {
+      "type": "string",
+      "index": 5,
+      "title": "[[t:Description]]"
+     },
+     "releasedate": {
+      "type": "date",
+      "index": 3,
+      "title": "[[t:ReleaseDate]]"
+     },
+     "background_image": {
+      "hint": "[[t:AttributeBackgroundHint]]",
+      "type": "attachment",
+      "index": 6,
+      "title": "[[t:AttributeBackground]]",
+      "params": {
+       "accept": ".jpg, .jpeg, .png, .webp, .gif"
+      }
+     }
+    }
+   },
+   "inherited": null,
+   "index": 1,
+   "createdAt": "2023-10-06T06:00:22.936Z",
+   "updatedAt": "2023-10-15T22:22:24.342Z"
+  },
+  {
+   "id": "12bdd82a-ae11-4f17-939a-08f2d26767f8",
+   "name": "slider",
+   "title": "[[t:Gallery]]",
+   "own": true,
+   "type": "gallery",
+   "props": {},
+   "computed": {},
+   "inherited": null,
+   "index": 2,
+   "createdAt": "2023-10-15T22:21:37.818Z",
+   "updatedAt": "2023-10-15T22:22:24.629Z"
+  },
+  {
+   "id": "627ea830-7c7e-47b0-8e10-24d918f62644",
+   "name": "links",
+   "title": "[[t:Links]]",
+   "own": true,
+   "type": "linklist",
+   "props": {},
+   "computed": {},
+   "inherited": null,
+   "index": 3,
+   "createdAt": "2023-04-05T22:21:37.818Z",
+   "updatedAt": "2023-04-05T22:22:24.629Z"
+  },
+  {
+   "id": "3a39429a-9745-45c0-92c2-294b873fb9a7",
+   "name": "description",
+   "title": "[[t:Description]]",
+   "own": true,
+   "type": "text",
+   "props": {},
+   "computed": {},
+   "inherited": null,
+   "index": 4,
+   "createdAt": "2023-10-15T22:14:48.898Z",
+   "updatedAt": "2023-10-15T22:22:24.898Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "111112",
+ "references": [],
+ "icon": "information-fill",
+ "index": null,
+ "name": "game_info_base",
+ "ownIcon": "information-fill",
+ "ownTitle": "[[t:GameInfo]]",
+ "parentIds": [],
+ "title": "[[t:GameInfo]]",
+ "typeIds": [],
+ "workspaceId": "00000000-0000-0000-0000-000000000006",
+ "values": {
+  "info": {
+   "genre": [],
+   "developer": null,
+   "coverimage": null,
+   "description": null,
+   "releasedate": null,
+   "background_image": null
+  },
+  "slider": {},
+  "links": {},
+  "description": {}
+ }
+}

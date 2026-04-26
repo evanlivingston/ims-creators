@@ -1,0 +1,33 @@
+{
+ "id": "00000000-0000-0000-0000-000000000040",
+ "blocks": [
+  {
+   "id": "74198420-c3f9-4624-89d1-1fa993616a3b",
+   "name": "basic",
+   "title": "[[t:Chat]]",
+   "own": true,
+   "type": "chat",
+   "props": {},
+   "computed": {},
+   "inherited": null,
+   "index": 0,
+   "createdAt": "2023-12-03T19:32:52.452Z",
+   "updatedAt": "2023-12-03T19:32:52.452Z"
+  }
+ ],
+ "isAbstract": true,
+ "projectId": "111112",
+ "references": [],
+ "icon": null,
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "[[t:Chat]]",
+ "parentIds": [],
+ "title": null,
+ "typeIds": [],
+ "workspaceId": "00000000-0000-0000-0000-000000000005",
+ "values": {
+  "basic": {}
+ }
+}

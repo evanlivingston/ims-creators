@@ -1,0 +1,59 @@
+{
+ "id": "5e92daa6-4653-46fe-b5c2-e315759c2db0",
+ "index": 2,
+ "title": "Items",
+ "name": null,
+ "parentId": null,
+ "projectId": "EWvDFxqn",
+ "props": {
+  "type": "collection",
+  "asset": {
+   "Title": "Artifact",
+   "AssetId": "2615e9a4-7799-4343-9e64-9516b75c8b9a"
+  },
+  "views": {
+   "table": {
+    "key": "table",
+    "sort": [],
+    "type": "table",
+    "index": 1,
+    "props": [
+     {
+      "prop": "title",
+      "width": 200
+     },
+     {
+      "prop": "description|value",
+      "width": null
+     },
+     {
+      "prop": "props|type",
+      "width": null
+     },
+     {
+      "prop": "props|price",
+      "width": null
+     },
+     {
+      "prop": "props|effect",
+      "width": null
+     },
+     {
+      "prop": "props|effect_duration",
+      "width": null
+     },
+     {
+      "prop": "props|effect_value",
+      "width": null
+     },
+     {
+      "prop": "craft|recipe",
+      "width": null
+     }
+    ],
+    "title": "Table",
+    "filter": []
+   }
+  }
+ }
+}

@@ -1,0 +1,389 @@
+{
+ "id": "b62ccaa2-07ac-4d38-8ba0-67588aeb47f9",
+ "blocks": [
+  {
+   "id": "10c1c030-bfd7-4a5b-8c5e-678937608f19",
+   "name": null,
+   "title": "Goal",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": "Learn to control the dragon (flight, attacks, evasion)"
+   },
+   "computed": {
+    "value": "Learn to control the dragon (flight, attacks, evasion)"
+   },
+   "inherited": {},
+   "index": 1.175526,
+   "createdAt": "2025-08-18T13:12:48.321Z",
+   "updatedAt": "2025-08-18T13:12:49.825Z"
+  },
+  {
+   "id": "e8dddcb3-9d3d-4706-b85d-6b48a3d4fc44",
+   "name": "__meta",
+   "title": null,
+   "own": true,
+   "type": "props",
+   "props": {
+    "complete_comp": 0,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "computed": {
+    "complete_track": true,
+    "complete_comp": 0,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "inherited": {
+    "complete_track": true
+   },
+   "index": 1.1755695,
+   "createdAt": "2025-10-07T05:48:51.266Z",
+   "updatedAt": "2025-10-07T05:49:09.096Z"
+  },
+  {
+   "id": "515e5631-4cd7-4751-8cec-4862495e9e6c",
+   "name": null,
+   "title": "Tasks",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Fly through the rings",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " - Test your precision in the storm."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      },
+      {
+       "insert": "Incinerate the training dummies",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " - Unleash the dragon’s fury."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      },
+      {
+       "insert": "Dodge crossbow bolts",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " - Evade the hunters’ deadly volleys."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      }
+     ],
+     "Str": "Fly through the rings - Test your precision in the storm.\nIncinerate the training dummies - Unleash the dragon’s fury.\nDodge crossbow bolts - Evade the hunters’ deadly volleys.\n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Fly through the rings",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " - Test your precision in the storm."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      },
+      {
+       "insert": "Incinerate the training dummies",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " - Unleash the dragon’s fury."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      },
+      {
+       "insert": "Dodge crossbow bolts",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " - Evade the hunters’ deadly volleys."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "ordered"
+       }
+      }
+     ],
+     "Str": "Fly through the rings - Test your precision in the storm.\nIncinerate the training dummies - Unleash the dragon’s fury.\nDodge crossbow bolts - Evade the hunters’ deadly volleys.\n"
+    }
+   },
+   "inherited": {},
+   "index": 3.1755261,
+   "createdAt": "2025-08-18T13:12:58.646Z",
+   "updatedAt": "2025-08-20T07:55:48.959Z"
+  },
+  {
+   "id": "7c2893ce-c36c-4815-a5d3-4bf8a6722d1b",
+   "name": null,
+   "title": "Reward",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Access to main missions",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " - The skies are now yours to conquer."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      }
+     ],
+     "Str": "Access to main missions - The skies are now yours to conquer.\n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Access to main missions",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " - The skies are now yours to conquer."
+      },
+      {
+       "insert": "\n",
+       "attributes": {
+        "list": "bullet"
+       }
+      }
+     ],
+     "Str": "Access to main missions - The skies are now yours to conquer.\n"
+    }
+   },
+   "inherited": {},
+   "index": 5.175526,
+   "createdAt": "2025-08-18T13:13:35.786Z",
+   "updatedAt": "2025-08-20T07:55:48.959Z"
+  },
+  {
+   "id": "1d6b313a-daea-4b3b-910b-4e0c792a77b2",
+   "name": null,
+   "title": "Scene",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "A shattered nest, ruins barely visible through the raging storm. Just as all seems lost, the "
+      },
+      {
+       "insert": "Alpha Dragon",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " swoops in - saving you mid-fall. Now, it’s time to prove yourself worthy of its trust.\n"
+      }
+     ],
+     "Str": "A shattered nest, ruins barely visible through the raging storm. Just as all seems lost, the Alpha Dragon swoops in - saving you mid-fall. Now, it’s time to prove yourself worthy of its trust.\n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "A shattered nest, ruins barely visible through the raging storm. Just as all seems lost, the "
+      },
+      {
+       "insert": "Alpha Dragon",
+       "attributes": {
+        "bold": true
+       }
+      },
+      {
+       "insert": " swoops in - saving you mid-fall. Now, it’s time to prove yourself worthy of its trust.\n"
+      }
+     ],
+     "Str": "A shattered nest, ruins barely visible through the raging storm. Just as all seems lost, the Alpha Dragon swoops in - saving you mid-fall. Now, it’s time to prove yourself worthy of its trust.\n"
+    }
+   },
+   "inherited": {},
+   "index": 7.175526,
+   "createdAt": "2025-08-18T13:13:38.413Z",
+   "updatedAt": "2025-08-20T07:55:37.081Z"
+  },
+  {
+   "id": "58e705ba-5468-4d9f-959e-a0ae81f83c4c",
+   "name": null,
+   "title": null,
+   "own": false,
+   "type": "script",
+   "props": {},
+   "computed": {
+    "start": null,
+    "__settings": {
+     "speech": {
+      "main": {
+       "text": {
+        "name": "text",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Text]]",
+        "default": {
+         "Type": "text"
+        },
+        "description": null
+       },
+       "character": {
+        "name": "character",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Character]]",
+        "default": {
+         "Type": "text"
+        },
+        "autoFill": true,
+        "description": null
+       }
+      },
+      "option": {
+       "text": {
+        "name": "text",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Text]]",
+        "default": {
+         "Type": "text"
+        },
+        "description": null
+       }
+      }
+     }
+    }
+   },
+   "inherited": {
+    "start": null,
+    "__settings": {
+     "speech": {
+      "main": {
+       "text": {
+        "name": "text",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Text]]",
+        "default": {
+         "Type": "text"
+        },
+        "description": null
+       },
+       "character": {
+        "name": "character",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Character]]",
+        "default": {
+         "Type": "text"
+        },
+        "autoFill": true,
+        "description": null
+       }
+      },
+      "option": {
+       "text": {
+        "name": "text",
+        "type": {
+         "Type": "text"
+        },
+        "title": "[[t:Text]]",
+        "default": {
+         "Type": "text"
+        },
+        "description": null
+       }
+      }
+     }
+    }
+   },
+   "index": 9.175526,
+   "createdAt": "2025-08-15T12:25:47.536Z",
+   "updatedAt": "2025-08-15T12:25:48.470Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "bar-chart-2-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Dragon Mastery",
+ "parentIds": [
+  "a0ef46ce-8292-42ae-b520-7f7da9d70545"
+ ],
+ "title": "Dragon Mastery",
+ "typeIds": [
+  "a0ef46ce-8292-42ae-b520-7f7da9d70545"
+ ],
+ "workspaceId": "5b2f62aa-0d5a-444b-bf9d-3fb87bcb9327",
+ "values": {
+  "__meta": {
+   "complete_comp": 0,
+   "plan_milestone": null,
+   "complete_progress": null
+  }
+ }
+}

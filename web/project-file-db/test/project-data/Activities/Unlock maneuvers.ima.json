@@ -1,0 +1,113 @@
+{
+ "id": "6a00aa97-827b-486b-a145-3a7ef7b82d75",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-000000000100",
+   "name": "__meta",
+   "title": null,
+   "own": false,
+   "type": "props",
+   "props": {},
+   "computed": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "inherited": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "index": 0,
+   "createdAt": "2025-07-31T12:55:34.293Z",
+   "updatedAt": "2025-07-31T12:55:34.293Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-370000000001",
+   "name": null,
+   "title": "[[t:Description]]",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Get new  "
+      },
+      {
+       "insert": "Ability",
+       "attributes": {
+        "asset": {
+         "icon": "shapes-fill",
+         "value": {
+          "Name": null,
+          "Title": "Ability",
+          "AssetId": "7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445"
+         }
+        }
+       }
+      },
+      {
+       "insert": " \n"
+      }
+     ],
+     "Str": "Get new  [Ability](#asset:7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445) \n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Get new  "
+      },
+      {
+       "insert": "Ability",
+       "attributes": {
+        "asset": {
+         "icon": "shapes-fill",
+         "value": {
+          "Name": null,
+          "Title": "Ability",
+          "AssetId": "7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445"
+         }
+        }
+       }
+      },
+      {
+       "insert": " \n"
+      }
+     ],
+     "Str": "Get new  [Ability](#asset:7928dbeb-2ad5-4e0f-b10c-2d98c5dc1445) \n"
+    }
+   },
+   "inherited": {},
+   "index": 1,
+   "createdAt": "2025-08-20T07:51:38.583Z",
+   "updatedAt": "2025-08-20T07:51:52.426Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "lifebuoy-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Unlock maneuvers",
+ "parentIds": [
+  "cda8f145-c0fb-4b68-b85e-be8c1931eb9a"
+ ],
+ "title": "Unlock maneuvers",
+ "typeIds": [
+  "cda8f145-c0fb-4b68-b85e-be8c1931eb9a",
+  "00000000-0000-0000-0000-000000000037"
+ ],
+ "workspaceId": "16b0ef2e-f782-4d80-89d2-f9a2c22de0a2",
+ "values": {
+  "__meta": {}
+ }
+}

@@ -1,0 +1,15 @@
+{
+ "id": "16b0ef2e-f782-4d80-89d2-f9a2c22de0a2",
+ "index": 8.990188,
+ "title": "Activities",
+ "name": null,
+ "parentId": null,
+ "projectId": "EWvDFxqn",
+ "props": {
+  "type": "collection",
+  "asset": {
+   "Title": "Activity",
+   "AssetId": "cda8f145-c0fb-4b68-b85e-be8c1931eb9a"
+  }
+ }
+}

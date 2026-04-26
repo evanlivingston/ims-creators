@@ -1,0 +1,31 @@
+{
+ "id": "ad6ab2ed-1548-4907-907a-2925a6cd3350",
+ "index": 8.942254,
+ "title": "Locations",
+ "name": null,
+ "parentId": null,
+ "projectId": "EWvDFxqn",
+ "props": {
+  "type": "collection",
+  "asset": {
+   "Title": "Location",
+   "AssetId": "26752f1d-20c1-4d53-9c56-9d867bd0f875"
+  },
+  "views": {
+   "cards": {
+    "key": "cards",
+    "sort": [],
+    "type": "cards",
+    "index": 0,
+    "props": [
+     {
+      "prop": "title",
+      "width": 200
+     }
+    ],
+    "title": "Cards",
+    "filter": []
+   }
+  }
+ }
+}

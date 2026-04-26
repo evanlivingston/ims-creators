@@ -1,0 +1,202 @@
+{
+ "id": "0ab6b267-54d8-4009-8f85-b9e0d605bfff",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-000000000100",
+   "name": "__meta",
+   "title": null,
+   "own": false,
+   "type": "props",
+   "props": {},
+   "computed": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "inherited": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "index": 0,
+   "createdAt": "2025-06-24T12:55:34.293Z",
+   "updatedAt": "2025-06-24T12:55:34.293Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000001",
+   "name": "gallery",
+   "title": "[[t:Gallery]]",
+   "own": true,
+   "type": "gallery",
+   "props": {
+    "main": {
+     "type": "file",
+     "index": 1.1755695445962,
+     "value": {
+      "Dir": null,
+      "Size": 1033705,
+      "Store": "p-EWvDFxqn",
+      "Title": "image-e03197c6-50f3-41b0-836a-d2a976f62b7a.png",
+      "FileId": "fc9f8be1-b1d6-440b-ac74-5d27bce00544"
+     }
+    }
+   },
+   "computed": {
+    "main": {
+     "type": "file",
+     "index": 1.1755695445962,
+     "value": {
+      "Dir": null,
+      "Size": 1033705,
+      "Store": "p-EWvDFxqn",
+      "Title": "image-e03197c6-50f3-41b0-836a-d2a976f62b7a.png",
+      "FileId": "fc9f8be1-b1d6-440b-ac74-5d27bce00544"
+     }
+    }
+   },
+   "inherited": {},
+   "index": 1,
+   "createdAt": "2025-08-20T13:11:54.756Z",
+   "updatedAt": "2025-08-20T13:11:54.756Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000002",
+   "name": "description",
+   "title": "[[t:Description]]",
+   "own": true,
+   "type": "text",
+   "props": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Reduces character speed by "
+      },
+      {
+       "insert": "value",
+       "attributes": {
+        "underline": true
+       }
+      },
+      {
+       "insert": "%\n"
+      }
+     ],
+     "Str": "Reduces character speed by value%\n"
+    }
+   },
+   "computed": {
+    "value": {
+     "Ops": [
+      {
+       "insert": "Reduces character speed by "
+      },
+      {
+       "insert": "value",
+       "attributes": {
+        "underline": true
+       }
+      },
+      {
+       "insert": "%\n"
+      }
+     ],
+     "Str": "Reduces character speed by value%\n"
+    }
+   },
+   "inherited": {},
+   "index": 2,
+   "createdAt": "2025-08-20T13:11:54.756Z",
+   "updatedAt": "2025-08-20T13:12:36.163Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000003",
+   "name": "props",
+   "title": "[[t:Properties]]",
+   "own": true,
+   "type": "props",
+   "props": {
+    "id": "frozen"
+   },
+   "computed": {
+    "id": "frozen"
+   },
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-08-20T13:11:54.756Z",
+   "updatedAt": "2025-08-20T13:11:54.756Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-350000000004",
+   "name": "locale",
+   "title": null,
+   "own": false,
+   "type": "locale",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 3,
+   "createdAt": "2025-06-24T12:55:34.293Z",
+   "updatedAt": "2025-06-24T12:55:34.293Z"
+  }
+ ],
+ "isAbstract": false,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "sparkling-2-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": null,
+ "ownTitle": "Frozen",
+ "parentIds": [
+  "4ce7b352-31ee-4e48-ab25-ef619d223862"
+ ],
+ "title": "Frozen",
+ "typeIds": [
+  "4ce7b352-31ee-4e48-ab25-ef619d223862",
+  "00000000-0000-0000-0000-000000000035"
+ ],
+ "workspaceId": "ccdb4470-6602-472a-9d32-ae352f71fac2",
+ "values": {
+  "__meta": {},
+  "gallery": {
+   "main": {
+    "type": "file",
+    "index": 1.1755695445962,
+    "value": {
+     "Dir": null,
+     "Size": 1033705,
+     "Store": "p-EWvDFxqn",
+     "Title": "image-e03197c6-50f3-41b0-836a-d2a976f62b7a.png",
+     "FileId": "fc9f8be1-b1d6-440b-ac74-5d27bce00544"
+    }
+   }
+  },
+  "description": {
+   "value": {
+    "Ops": [
+     {
+      "insert": "Reduces character speed by "
+     },
+     {
+      "insert": "value",
+      "attributes": {
+       "underline": true
+      }
+     },
+     {
+      "insert": "%\n"
+     }
+    ],
+    "Str": "Reduces character speed by value%\n"
+   }
+  },
+  "props": {
+   "id": "frozen"
+  },
+  "locale": {}
+ }
+}

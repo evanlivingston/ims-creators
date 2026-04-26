@@ -1,0 +1,62 @@
+{
+ "id": "cda8f145-c0fb-4b68-b85e-be8c1931eb9a",
+ "blocks": [
+  {
+   "id": "00000000-0000-0000-0000-000000000100",
+   "name": "__meta",
+   "title": null,
+   "own": false,
+   "type": "props",
+   "props": {},
+   "computed": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "inherited": {
+    "complete_set": null,
+    "complete_comp": 0,
+    "complete_track": true,
+    "plan_milestone": null,
+    "complete_progress": null
+   },
+   "index": 0,
+   "createdAt": "2025-07-31T12:55:34.293Z",
+   "updatedAt": "2025-07-31T12:55:34.293Z"
+  },
+  {
+   "id": "00000000-0000-0000-0000-370000000001",
+   "name": null,
+   "title": "[[t:Description]]",
+   "own": false,
+   "type": "text",
+   "props": {},
+   "computed": {},
+   "inherited": {},
+   "index": 1,
+   "createdAt": "2025-07-31T12:55:34.293Z",
+   "updatedAt": "2025-07-31T12:55:34.293Z"
+  }
+ ],
+ "isAbstract": true,
+ "projectId": "EWvDFxqn",
+ "references": [],
+ "icon": "lifebuoy-fill",
+ "index": null,
+ "name": null,
+ "ownIcon": "lifebuoy-fill",
+ "ownTitle": "Activity",
+ "parentIds": [
+  "00000000-0000-0000-0000-000000000037"
+ ],
+ "title": "Activity",
+ "typeIds": [
+  "00000000-0000-0000-0000-000000000037"
+ ],
+ "workspaceId": "ae2b3260-4448-4f89-9d6d-aac56479a7b5",
+ "values": {
+  "__meta": {}
+ }
+}
