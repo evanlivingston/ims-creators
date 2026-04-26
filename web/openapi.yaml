@@ -205,7 +205,7 @@ paths:
                   list:
                     type: array
                     items:
-                      type: object
+                      type: string
                   total:
                     type: integer
 
@@ -230,6 +230,13 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ids:
+                    type: array
+                    items:
+                      type: string
+                  total:
+                    type: integer
 
   /api/project/assets/create:
     post:
@@ -276,7 +283,13 @@ paths:
                           description: Asset ID to change
                     set:
                       type: object
-                      description: Fields to update (title, blocks, values, etc.)
+                      properties:
+                        title:
+                          type: string
+                        blocks:
+                          type: array
+                          items:
+                            type: string
                 options:
                   type: object
                   properties:
@@ -308,16 +321,19 @@ paths:
                     ops:
                       type: array
                       items:
-                        type: object
+                        type: string
                 options:
                   type: object
+                  properties:
+                    pid:
+                      type: string
       responses:
         '200':
           description: Batch change results
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/AssetsChangeResult'
 
   /api/project/assets/change-undo:
     post:
@@ -338,6 +354,9 @@ paths:
                       type: string
                 options:
                   type: object
+                  properties:
+                    pid:
+                      type: string
       responses:
         '200':
           description: Undo result
@@ -364,6 +383,9 @@ paths:
                       type: string
                 options:
                   type: object
+                  properties:
+                    pid:
+                      type: string
       responses:
         '200':
           description: Delete result
@@ -371,6 +393,13 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ids:
+                    type: array
+                    items:
+                      type: string
+                  changeId:
+                    type: string
 
   /api/project/assets/restore:
     post:
@@ -390,6 +419,9 @@ paths:
                       type: string
                 options:
                   type: object
+                  properties:
+                    pid:
+                      type: string
       responses:
         '200':
           description: Restore result
@@ -423,6 +455,11 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  list:
+                    type: array
+                    items:
+                      type: string
 
   /api/project/assets/create-ref:
     post:
@@ -446,6 +483,11 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ids:
+                    type: array
+                    items:
+                      type: string
 
   /api/project/assets/delete-ref:
     post:
@@ -469,6 +511,11 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ids:
+                    type: array
+                    items:
+                      type: string
 
   /api/project/assets/get-history:
     post:
@@ -492,6 +539,13 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  list:
+                    type: array
+                    items:
+                      type: string
+                  total:
+                    type: integer
 
   /api/project/workspaces/create:
     post:
@@ -599,6 +653,11 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  list:
+                    type: array
+                    items:
+                      type: string
 
 components:
   securitySchemes:
@@ -621,6 +680,11 @@ components:
             $ref: '#/components/schemas/Workspace'
         settings:
           type: object
+          properties:
+            id:
+              type: string
+            rights:
+              type: integer
 
     Workspace:
       type: object
@@ -642,6 +706,9 @@ components:
           nullable: true
         props:
           type: object
+          properties:
+            _placeholder:
+              type: string
 
     AssetWhere:
       type: object
@@ -732,19 +799,35 @@ components:
                 type: boolean
               props:
                 type: object
-                description: Block content/properties
+                properties:
+                  value:
+                    type: string
               computed:
                 type: object
+                properties:
+                  value:
+                    type: string
               inherited:
                 type: object
                 nullable: true
+                properties:
+                  value:
+                    type: string
         values:
           type: object
-          description: Asset values keyed by block name
+          properties:
+            description:
+              type: object
+              properties:
+                value:
+                  type: string
         references:
           type: array
           items:
             type: object
+            properties:
+              id:
+                type: string
 
     AssetCreateDTO:
       type: object
@@ -762,19 +845,19 @@ components:
           type: array
           items:
             type: object
+            properties:
+              id:
+                type: string
 
     AssetsChangeResult:
       type: object
       properties:
-        upsert:
-          type: object
-          properties:
-            list:
-              type: array
-              items:
-                $ref: '#/components/schemas/AssetFull'
-            total:
-              type: integer
+        ids:
+          type: array
+          items:
+            type: string
+        total:
+          type: integer
         changeId:
           type: string
 
