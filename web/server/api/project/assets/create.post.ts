@@ -3,9 +3,7 @@ import { getProjectDb } from '../../../utils/project-db';
 
 // Normalize create params - ChatGPT may send flat or nested format
 function normalizeCreateParams(body: any): any {
-  // Already in correct format with set wrapper
   if (body.set) return body;
-  // Flat format from ChatGPT - wrap in set
   const { id, ...rest } = body;
   return { id, set: rest };
 }
@@ -24,6 +22,37 @@ function normalizeBlocks(blocks: any): any {
   return result;
 }
 
+// Auto-assign parentIds based on workspace if not provided
+async function autoAssignType(params: any, db: any) {
+  const set = params.set;
+  if (!set?.workspaceId) return;
+  if (set.parentIds && set.parentIds.length > 0) return;
+
+  // Find type assets in the Types workspace
+  const workspaces = await db.workspace.workspacesGet({ where: { isSystem: false } });
+  const typesWorkspace = workspaces.list.find((w: any) => w.title === 'Types');
+  if (!typesWorkspace) return;
+
+  const targetWorkspace = workspaces.list.find((w: any) => w.id === set.workspaceId);
+  if (!targetWorkspace) return;
+
+  const typeAssets = await db.asset.assetsGetShort({ where: { workspaceId: typesWorkspace.id } });
+
+  // Match workspace name to type name (Characters -> Character, Items -> Item, etc.)
+  const wsTitle = (targetWorkspace as any).title || '';
+  const singular = wsTitle.replace(/ies$/, 'y').replace(/s$/, '');
+
+  const matchedType = (typeAssets.list || []).find((t: any) =>
+    t.title === singular ||
+    t.title === wsTitle ||
+    t.title?.toLowerCase() === singular.toLowerCase()
+  );
+
+  if (matchedType) {
+    set.parentIds = [matchedType.id];
+  }
+}
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const params = normalizeCreateParams(body);
@@ -31,5 +60,6 @@ export default defineEventHandler(async (event) => {
     params.set.blocks = normalizeBlocks(params.set.blocks);
   }
   const db = await getProjectDb();
+  await autoAssignType(params, db);
   return db.asset.assetsCreate(params);
 });
