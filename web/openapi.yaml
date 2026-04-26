@@ -12,7 +12,7 @@ info:
     4. Change asset to update content
   version: 1.0.0
 servers:
-  - url: https://your-domain.com
+  - url: https://ims.sieisst.com
     description: Production server
 
 paths:

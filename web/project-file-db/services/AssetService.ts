@@ -652,6 +652,7 @@ export class AssetService implements IProjectDatabaseAsset{
             ids: change.ids,
             objects: change.objects,
             total: change.total,
+            touchedWIds: change.touchedWIds ?? [],
             changeId: change.changeId
         }
     }
@@ -831,6 +832,7 @@ export class AssetService implements IProjectDatabaseAsset{
             ids: change.ids,
             objects: change.objects,
             total: change.total,
+            touchedWIds: change.touchedWIds ?? [],
             changeId: change.changeId
         }
     }
@@ -1030,6 +1032,7 @@ export class AssetService implements IProjectDatabaseAsset{
             ids: change.ids,
             objects: change.objects,
             total: change.total,
+            touchedWIds: change.touchedWIds ?? [],
             changeId: change.changeId
         }    
     }
