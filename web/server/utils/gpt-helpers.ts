@@ -235,23 +235,22 @@ async function resolveEnumValue(value: string, propSchema: any): Promise<any> {
   const enumAsset = extractFullAsset(full, enumAssetId);
   if (!enumAsset?.blocks) return value;
 
-  // Find the info block with items array
-  for (const block of enumAsset.blocks) {
-    const items = (block.computed || block.props)?.items;
-    if (!Array.isArray(items)) continue;
-    const match = items.find((item: any) =>
-      item.name?.toLowerCase() === value.toLowerCase() ||
-      item.title?.toLowerCase() === value.toLowerCase()
-    );
-    if (match) {
-      return { Enum: enumAssetId, Name: match.name, Title: match.title };
-    }
+  // Use getEnumValues which handles the flattened format
+  const enumItems = await getEnumValues(enumAssetId);
+  const match = enumItems.find((item: any) =>
+    item.name?.toLowerCase() === value.toLowerCase() ||
+    item.title?.toLowerCase() === value.toLowerCase()
+  );
+  if (match) {
+    return { Enum: enumAssetId, Name: match.name, Title: match.title };
   }
   return value;
 }
 
 /**
  * List valid enum values for an enum type asset.
+ * Handles both raw format (array of {name, title}) and flattened format
+ * (where assetsGetFull turns the array into indices + \\-delimited keys).
  */
 export async function getEnumValues(enumAssetId: string): Promise<Array<{ name: string; title: string }>> {
   const db = await getProjectDb();
@@ -259,8 +258,21 @@ export async function getEnumValues(enumAssetId: string): Promise<Array<{ name: 
   const enumAsset = extractFullAsset(full, enumAssetId);
   if (!enumAsset?.blocks) return [];
   for (const block of enumAsset.blocks) {
-    const items = (block.computed || block.props)?.items;
-    if (Array.isArray(items)) return items;
+    const props = block.computed || block.props || {};
+    const items = props.items;
+    if (!Array.isArray(items)) continue;
+
+    // Raw format: array of {name, title} objects
+    if (items.length > 0 && typeof items[0] === 'object') return items;
+
+    // Flattened format: items = [0,1,2,...] with items\\0\\name, items\\0\\title etc.
+    const result: Array<{ name: string; title: string }> = [];
+    for (const idx of items) {
+      const name = props[`items\\${idx}\\name`];
+      const title = props[`items\\${idx}\\title`];
+      if (name || title) result.push({ name: name || '', title: title || '' });
+    }
+    if (result.length > 0) return result;
   }
   return [];
 }
