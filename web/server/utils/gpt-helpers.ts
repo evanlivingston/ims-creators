@@ -18,6 +18,36 @@ function extractFullAsset(result: any, id?: string): any {
   return assetId ? result.objects?.assetFulls?.[assetId] : null;
 }
 
+/**
+ * Extract __props metadata from flattened block props.
+ * assetsGetFull flattens nested objects using \\ delimiters, so
+ * `__props.damage.type` becomes `__props\\damage\\type`.
+ * This reconstructs the nested object.
+ */
+function extractPropsMetadata(flatProps: any): Record<string, any> {
+  if (!flatProps || typeof flatProps !== 'object') return {};
+
+  // Fast path: if __props exists as a nested object (raw file format), use it directly
+  if (flatProps.__props && typeof flatProps.__props === 'object') return flatProps.__props;
+
+  // Slow path: reconstruct from flattened \\-delimited keys
+  const schema: Record<string, any> = {};
+  for (const [key, value] of Object.entries(flatProps)) {
+    if (!key.startsWith('__props\\')) continue;
+    const parts = key.split('\\');
+    if (parts.length < 3) continue;
+    const propName = parts[1];
+    if (!schema[propName]) schema[propName] = {};
+    let current = schema[propName];
+    for (let i = 2; i < parts.length - 1; i++) {
+      if (!current[parts[i]]) current[parts[i]] = {};
+      current = current[parts[i]];
+    }
+    current[parts[parts.length - 1]] = value;
+  }
+  return schema;
+}
+
 // ── Workspace resolution ──────────────────────────────────────────────
 
 export async function getAllWorkspaces() {
@@ -79,8 +109,9 @@ export async function getPropertySchema(workspaceId: string): Promise<Record<str
           type: 'string', title: block.title?.replace(/\[\[t:|\]\]/g, '') || name,
           blockType: 'text', blockId: block.id, blockName: block.name,
         };
-      } else if (block.type === 'props' && block.props?.__props) {
-        for (const [key, meta] of Object.entries(block.props.__props as Record<string, any>)) {
+      } else if (block.type === 'props') {
+        const propsMetadata = extractPropsMetadata(block.computed || block.props);
+        for (const [key, meta] of Object.entries(propsMetadata)) {
           schema[key] = { ...meta, blockType: 'props', blockId: block.id, blockName: block.name };
         }
       }
@@ -103,8 +134,8 @@ export async function getPropertySchema(workspaceId: string): Promise<Record<str
           blockType: 'text', blockId: block.id, blockName: block.name,
         };
       } else if (block.type === 'props') {
-        const propsMetadata = (block.computed || block.props)?.__props || {};
-        for (const [key, meta] of Object.entries(propsMetadata as Record<string, any>)) {
+        const propsMetadata = extractPropsMetadata(block.computed || block.props);
+        for (const [key, meta] of Object.entries(propsMetadata)) {
           if (!schema[key]) {
             schema[key] = { ...meta, blockType: 'props', blockId: block.id, blockName: block.name };
           }
