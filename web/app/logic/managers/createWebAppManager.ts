@@ -98,8 +98,8 @@ export default function createWebAppManager(
   });
 
   app_manager.addInitRoutine(async () => {
-    await app_manager.get(PluginManager).activatePlugin(pluginBase());
-    await app_manager.get(PluginManager).activatePlugin(pluginCreators());
+    await app_manager.get(PluginManager).activateInternalPlugin(pluginBase());
+    await app_manager.get(PluginManager).activateInternalPlugin(pluginCreators());
   });
 
   app_manager.addStateRoutine({
