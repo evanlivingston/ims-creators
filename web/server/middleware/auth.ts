@@ -3,7 +3,7 @@ import { defineEventHandler, getHeader, createError } from 'h3';
 export default defineEventHandler((event) => {
   const path = event.path || '';
 
-  // Only protect /api/ routes - let the web UI through
+  // Only protect /api/ routes
   if (!path.startsWith('/api/')) {
     return;
   }
@@ -12,6 +12,14 @@ export default defineEventHandler((event) => {
 
   // If no API_KEY is set, skip auth (local development)
   if (!apiKey) {
+    return;
+  }
+
+  // Allow requests from the web UI (same origin - browser sends Referer/Origin)
+  const origin = getHeader(event, 'origin');
+  const referer = getHeader(event, 'referer');
+  if (origin || referer) {
+    // Request came from a browser on the same site - allow it
     return;
   }
 
