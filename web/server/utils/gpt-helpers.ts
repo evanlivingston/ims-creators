@@ -10,6 +10,14 @@ const PROPERTY_DISPLAY_NAMES: Record<string, string> = {
   'lanuge': 'language',
 };
 
+// ── Helpers ───────────────────────────────────────────────────────────
+
+/** Extract a single asset from assetsGetFull result (which uses ids + objects.assetFulls, NOT .list) */
+function extractFullAsset(result: any, id?: string): any {
+  const assetId = id || result.ids?.[0];
+  return assetId ? result.objects?.assetFulls?.[assetId] : null;
+}
+
 // ── Workspace resolution ──────────────────────────────────────────────
 
 export async function getAllWorkspaces() {
@@ -50,7 +58,7 @@ export async function getTypeForWorkspace(workspaceId: string) {
   if (!match) return null;
 
   const full = await db.asset.assetsGetFull({ where: { id: match.id } });
-  return (full.list || [])[0] || null;
+  return extractFullAsset(full, match.id);
 }
 
 /**
@@ -84,7 +92,7 @@ export async function getPropertySchema(workspaceId: string): Promise<Record<str
   const { list } = await db.asset.assetsGetShort({ where: { workspaceId } });
   for (const shortAsset of (list || []).slice(0, 5)) {
     const full = await db.asset.assetsGetFull({ where: { id: shortAsset.id } });
-    const asset = (full.list || [])[0];
+    const asset = extractFullAsset(full, shortAsset.id);
     if (!asset?.blocks) continue;
     for (const block of asset.blocks) {
       if (!block || block.name === '__meta') continue;
@@ -193,7 +201,7 @@ async function resolveEnumValue(value: string, propSchema: any): Promise<any> {
 
   const db = await getProjectDb();
   const full = await db.asset.assetsGetFull({ where: { id: enumAssetId } });
-  const enumAsset = (full.list || [])[0];
+  const enumAsset = extractFullAsset(full, enumAssetId);
   if (!enumAsset?.blocks) return value;
 
   // Find the info block with items array
@@ -217,7 +225,7 @@ async function resolveEnumValue(value: string, propSchema: any): Promise<any> {
 export async function getEnumValues(enumAssetId: string): Promise<Array<{ name: string; title: string }>> {
   const db = await getProjectDb();
   const full = await db.asset.assetsGetFull({ where: { id: enumAssetId } });
-  const enumAsset = (full.list || [])[0];
+  const enumAsset = extractFullAsset(full, enumAssetId);
   if (!enumAsset?.blocks) return [];
   for (const block of enumAsset.blocks) {
     const items = (block.computed || block.props)?.items;
@@ -286,7 +294,7 @@ export async function listAssetsFlat(workspaceId: string) {
 export async function getAssetFlat(id: string): Promise<Record<string, any> | null> {
   const db = await getProjectDb();
   const full = await db.asset.assetsGetFull({ where: { id } });
-  const asset = (full.list || [])[0];
+  const asset = extractFullAsset(full, id);
   if (!asset) return null;
   return flattenAsset(asset);
 }
@@ -325,7 +333,7 @@ export async function updateAssetFromFlat(id: string, flat: Record<string, any>)
 
   // Get existing asset to find its workspace
   const existing = await db.asset.assetsGetFull({ where: { id } });
-  const asset = (existing.list || [])[0];
+  const asset = extractFullAsset(existing, id);
   if (!asset) return null;
 
   const workspaceId = asset.workspaceId;
