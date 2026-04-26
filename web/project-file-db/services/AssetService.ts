@@ -953,6 +953,7 @@ export class AssetService implements IProjectDatabaseAsset{
 
         return {
             ...affected_res,
+            touchedWIds: [],
             changeId: changeRecord.changeId,
             createdIds: [...createdIds],
             deletedIds:  [...deletedIds],
