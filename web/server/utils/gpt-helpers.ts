@@ -1,0 +1,416 @@
+import { getProjectDb } from './project-db';
+
+// Property name aliases: maps clean names to actual IMS property names (handles typos in data)
+const PROPERTY_ALIASES: Record<string, string> = {
+  'language': 'lanuge',  // typo in original IMS data
+};
+
+// Reverse map for flattening output
+const PROPERTY_DISPLAY_NAMES: Record<string, string> = {
+  'lanuge': 'language',
+};
+
+// ── Workspace resolution ──────────────────────────────────────────────
+
+export async function getAllWorkspaces() {
+  const db = await getProjectDb();
+  const { list } = await db.workspace.workspacesGet({ where: { isSystem: false } });
+  return list as any[];
+}
+
+export async function resolveWorkspace(slug: string) {
+  const workspaces = await getAllWorkspaces();
+  const normalized = slug.toLowerCase().replace(/[-_\s]+/g, '');
+  return workspaces.find((w: any) => {
+    const wNorm = (w.title || '').toLowerCase().replace(/[-_\s]+/g, '');
+    return wNorm === normalized;
+  }) || null;
+}
+
+// ── Type definition helpers ───────────────────────────────────────────
+
+export async function getTypeForWorkspace(workspaceId: string) {
+  const db = await getProjectDb();
+  const workspaces = await getAllWorkspaces();
+
+  const targetWs = workspaces.find((w: any) => w.id === workspaceId);
+  if (!targetWs) return null;
+
+  const typesWs = workspaces.find((w: any) => w.title === 'Types');
+  if (!typesWs) return null;
+
+  const { list: typeAssets } = await db.asset.assetsGetShort({ where: { workspaceId: typesWs.id } });
+  const wsTitle = targetWs.title || '';
+  const singular = wsTitle.replace(/ies$/, 'y').replace(/s$/, '');
+
+  const match = (typeAssets || []).find((t: any) =>
+    t.title === singular || t.title === wsTitle ||
+    t.title?.toLowerCase() === singular.toLowerCase()
+  );
+  if (!match) return null;
+
+  const full = await db.asset.assetsGetFull({ where: { id: match.id } });
+  return (full.list || [])[0] || null;
+}
+
+/**
+ * Extract property schema from a type definition AND from existing assets.
+ * Merges both sources so we catch ad-hoc properties added per-instance.
+ */
+export async function getPropertySchema(workspaceId: string): Promise<Record<string, any>> {
+  const schema: Record<string, any> = {};
+
+  // 1. From type definition
+  const typeAsset = await getTypeForWorkspace(workspaceId);
+  if (typeAsset?.blocks) {
+    for (const block of typeAsset.blocks) {
+      if (!block || block.name === '__meta') continue;
+      if (block.type === 'text') {
+        const name = block.name || cleanTitle(block.title) || 'text';
+        schema[name] = {
+          type: 'string', title: block.title?.replace(/\[\[t:|\]\]/g, '') || name,
+          blockType: 'text', blockId: block.id, blockName: block.name,
+        };
+      } else if (block.type === 'props' && block.props?.__props) {
+        for (const [key, meta] of Object.entries(block.props.__props as Record<string, any>)) {
+          schema[key] = { ...meta, blockType: 'props', blockId: block.id, blockName: block.name };
+        }
+      }
+    }
+  }
+
+  // 2. From first few existing assets (catches ad-hoc properties)
+  const db = await getProjectDb();
+  const { list } = await db.asset.assetsGetShort({ where: { workspaceId } });
+  for (const shortAsset of (list || []).slice(0, 5)) {
+    const full = await db.asset.assetsGetFull({ where: { id: shortAsset.id } });
+    const asset = (full.list || [])[0];
+    if (!asset?.blocks) continue;
+    for (const block of asset.blocks) {
+      if (!block || block.name === '__meta') continue;
+      if (block.type === 'text' && !schema[block.name || cleanTitle(block.title) || 'text']) {
+        const name = block.name || cleanTitle(block.title) || 'text';
+        schema[name] = {
+          type: 'string', title: block.title?.replace(/\[\[t:|\]\]/g, '') || name,
+          blockType: 'text', blockId: block.id, blockName: block.name,
+        };
+      } else if (block.type === 'props') {
+        const propsMetadata = (block.computed || block.props)?.__props || {};
+        for (const [key, meta] of Object.entries(propsMetadata as Record<string, any>)) {
+          if (!schema[key]) {
+            schema[key] = { ...meta, blockType: 'props', blockId: block.id, blockName: block.name };
+          }
+        }
+      }
+    }
+  }
+
+  return schema;
+}
+
+function cleanTitle(title: string | null | undefined): string {
+  if (!title) return '';
+  return title.replace(/\[\[t:|\]\]/g, '').toLowerCase().replace(/\s+/g, '_');
+}
+
+// ── Asset flattening (IMS format -> simple key-value) ─────────────────
+
+export function flattenAsset(asset: any): Record<string, any> {
+  const result: Record<string, any> = {
+    id: asset.id,
+    title: asset.title || asset.ownTitle || '',
+  };
+  if (!asset.blocks) return result;
+
+  for (const block of asset.blocks) {
+    if (!block || block.name === '__meta') continue;
+
+    if (block.type === 'text') {
+      const name = block.name || cleanTitle(block.title) || 'text';
+      const val = block.computed?.value ?? block.props?.value;
+      if (val == null) continue;
+      if (typeof val === 'string') result[name] = val;
+      else if (val.Str != null) result[name] = val.Str;
+      else if (val.Ops) result[name] = val.Ops.map((op: any) => typeof op.insert === 'string' ? op.insert : '').join('').trim();
+    } else if (block.type === 'props') {
+      const props = block.computed || block.props || {};
+      for (const [key, value] of Object.entries(props)) {
+        if (key.startsWith('__') || key.startsWith('~') || value == null) continue;
+        const displayKey = PROPERTY_DISPLAY_NAMES[key] || key;
+        result[displayKey] = simplifyValue(value);
+      }
+    }
+  }
+  return result;
+}
+
+function simplifyValue(value: any): any {
+  if (value == null || typeof value !== 'object') return value;
+  if ('AssetId' in value && 'Title' in value) return value.Title;
+  if ('Enum' in value) return value.Name || value.Title;
+  if (Array.isArray(value)) return value.map(simplifyValue);
+  return value;
+}
+
+// ── Value resolution (simple value -> IMS internal format) ────────────
+
+export async function resolveValue(key: string, value: any, propSchema: any): Promise<any> {
+  if (value == null) return value;
+  const propType = propSchema?.type;
+
+  if (propType === 'gddElementSelector' && typeof value === 'string') {
+    return await findAssetByName(value);
+  }
+  if ((propType === 'enum' || propType === 'enumRadio') && typeof value === 'string') {
+    return await resolveEnumValue(value, propSchema);
+  }
+  if (propType === 'integer' && typeof value === 'string') return parseInt(value, 10);
+  if (propType === 'number' && typeof value === 'string') return parseFloat(value);
+  return value;
+}
+
+async function findAssetByName(name: string): Promise<any> {
+  const db = await getProjectDb();
+  const workspaces = await getAllWorkspaces();
+  for (const ws of workspaces) {
+    const { list } = await db.asset.assetsGetShort({ where: { workspaceId: ws.id } });
+    for (const asset of (list || [])) {
+      if (asset.title?.toLowerCase() === name.toLowerCase()) {
+        return { Title: asset.title, AssetId: asset.id };
+      }
+    }
+  }
+  return name;
+}
+
+/**
+ * Resolve an enum value by reading the enum definition asset directly.
+ * Enum definitions have an `info` block with `items: [{name, title}, ...]`.
+ */
+async function resolveEnumValue(value: string, propSchema: any): Promise<any> {
+  const enumAssetId = propSchema?.params?.type?.AssetId;
+  if (!enumAssetId) return value;
+
+  const db = await getProjectDb();
+  const full = await db.asset.assetsGetFull({ where: { id: enumAssetId } });
+  const enumAsset = (full.list || [])[0];
+  if (!enumAsset?.blocks) return value;
+
+  // Find the info block with items array
+  for (const block of enumAsset.blocks) {
+    const items = (block.computed || block.props)?.items;
+    if (!Array.isArray(items)) continue;
+    const match = items.find((item: any) =>
+      item.name?.toLowerCase() === value.toLowerCase() ||
+      item.title?.toLowerCase() === value.toLowerCase()
+    );
+    if (match) {
+      return { Enum: enumAssetId, Name: match.name, Title: match.title };
+    }
+  }
+  return value;
+}
+
+/**
+ * List valid enum values for an enum type asset.
+ */
+export async function getEnumValues(enumAssetId: string): Promise<Array<{ name: string; title: string }>> {
+  const db = await getProjectDb();
+  const full = await db.asset.assetsGetFull({ where: { id: enumAssetId } });
+  const enumAsset = (full.list || [])[0];
+  if (!enumAsset?.blocks) return [];
+  for (const block of enumAsset.blocks) {
+    const items = (block.computed || block.props)?.items;
+    if (Array.isArray(items)) return items;
+  }
+  return [];
+}
+
+// ── Block building (flat key-value -> IMS block format) ───────────────
+
+export async function buildBlocksFromFlat(
+  flat: Record<string, any>,
+  workspaceId: string
+): Promise<Record<string, any>> {
+  const schema = await getPropertySchema(workspaceId);
+  const blockMap: Record<string, any> = {};
+
+  // Find the default props block ID (for unknown properties)
+  let defaultPropsBlockId: string | null = null;
+  for (const meta of Object.values(schema)) {
+    if (meta.blockType === 'props' && meta.blockId) {
+      defaultPropsBlockId = meta.blockId;
+      break;
+    }
+  }
+
+  for (const [inputKey, value] of Object.entries(flat)) {
+    if (inputKey === 'title' || inputKey === 'id') continue;
+    if (value == null) continue;
+
+    // Apply alias mapping (e.g. "language" -> "lanuge")
+    const key = PROPERTY_ALIASES[inputKey] || inputKey;
+
+    const propSchema = schema[key];
+
+    if (propSchema) {
+      // Known property - resolve value and place in correct block
+      const resolved = await resolveValue(key, value, propSchema);
+      const blockKey = propSchema.blockId ? `@${propSchema.blockId}` : (propSchema.blockName || key);
+
+      if (propSchema.blockType === 'text') {
+        blockMap[blockKey] = { type: 'text', props: { value: resolved } };
+      } else if (propSchema.blockType === 'props') {
+        if (!blockMap[blockKey]) blockMap[blockKey] = { type: 'props', props: {} };
+        blockMap[blockKey].props[key] = resolved;
+      }
+    } else if (defaultPropsBlockId) {
+      // Unknown property - pass through to default props block as-is
+      const blockKey = `@${defaultPropsBlockId}`;
+      if (!blockMap[blockKey]) blockMap[blockKey] = { type: 'props', props: {} };
+      blockMap[blockKey].props[key] = value;
+    }
+  }
+
+  return blockMap;
+}
+
+// ── Asset CRUD helpers ────────────────────────────────────────────────
+
+export async function listAssetsFlat(workspaceId: string) {
+  const db = await getProjectDb();
+  const { list } = await db.asset.assetsGetShort({ where: { workspaceId } });
+  return (list || []).map((a: any) => ({ id: a.id, title: a.title, icon: a.icon }));
+}
+
+export async function getAssetFlat(id: string): Promise<Record<string, any> | null> {
+  const db = await getProjectDb();
+  const full = await db.asset.assetsGetFull({ where: { id } });
+  const asset = (full.list || [])[0];
+  if (!asset) return null;
+  return flattenAsset(asset);
+}
+
+export async function createAssetFromFlat(workspaceId: string, flat: Record<string, any>) {
+  const db = await getProjectDb();
+  const blocks = await buildBlocksFromFlat(flat, workspaceId);
+
+  // Find parent type
+  const typeAsset = await getTypeForWorkspace(workspaceId);
+  const parentIds = typeAsset ? [typeAsset.id] : [];
+
+  const params: any = {
+    set: {
+      workspaceId,
+      title: flat.title,
+      parentIds,
+      blocks: Object.keys(blocks).length > 0 ? blocks : undefined,
+    },
+  };
+
+  const result = await db.asset.assetsCreate(params);
+  // assetsCreate returns { ids: string[], objects: { assetFulls: {...} }, ... }
+  const createdId = result.ids?.[0];
+  if (createdId) {
+    // Try to get the full asset from the result objects first, then fall back to a fresh read
+    const fullAsset = result.objects?.assetFulls?.[createdId];
+    if (fullAsset) return flattenAsset(fullAsset);
+    return await getAssetFlat(createdId);
+  }
+  return { success: true, ...result };
+}
+
+export async function updateAssetFromFlat(id: string, flat: Record<string, any>) {
+  const db = await getProjectDb();
+
+  // Get existing asset to find its workspace
+  const existing = await db.asset.assetsGetFull({ where: { id } });
+  const asset = (existing.list || [])[0];
+  if (!asset) return null;
+
+  const workspaceId = asset.workspaceId;
+  const blocks = await buildBlocksFromFlat(flat, workspaceId);
+
+  const setData: any = {};
+  if (flat.title) setData.title = flat.title;
+  if (Object.keys(blocks).length > 0) setData.blocks = blocks;
+
+  if (Object.keys(setData).length === 0) return flattenAsset(asset);
+
+  await db.asset.assetsChange({ where: { id }, set: setData });
+
+  // Return updated asset
+  return await getAssetFlat(id);
+}
+
+export async function deleteAsset(id: string) {
+  const db = await getProjectDb();
+  return await db.asset.assetsDelete({ where: { id } });
+}
+
+// ── Context building ──────────────────────────────────────────────────
+
+export async function buildGptContext() {
+  const db = await getProjectDb();
+  const workspaces = await getAllWorkspaces();
+
+  const entityTypes: Record<string, any> = {};
+
+  for (const ws of workspaces) {
+    if (ws.title === 'Types') continue;
+    const slug = ws.title.toLowerCase().replace(/\s+/g, '-');
+
+    // Get property schema
+    const schema = await getPropertySchema(ws.id);
+    const properties: Record<string, any> = {};
+
+    for (const [key, meta] of Object.entries(schema)) {
+      const displayKey = PROPERTY_DISPLAY_NAMES[key] || key;
+      const prop: any = { type: meta.type || 'string' };
+      if (meta.title) prop.description = meta.title;
+
+      // For enums, list valid values
+      if ((meta.type === 'enum' || meta.type === 'enumRadio') && meta.params?.type?.AssetId) {
+        const enumValues = await getEnumValues(meta.params.type.AssetId);
+        prop.validValues = enumValues.map((v: any) => v.title || v.name);
+      }
+
+      // For references, note what they point to
+      if (meta.type === 'gddElementSelector' && meta.params?.type?.Title) {
+        prop.referencesType = meta.params.type.Title;
+        prop.description = `${meta.title || key}. Use the name (e.g. "Emorian"), not a UUID.`;
+      }
+
+      properties[displayKey] = prop;
+    }
+
+    // Count assets
+    const { list } = await db.asset.assetsGetShort({ where: { workspaceId: ws.id } });
+    const assetCount = (list || []).length;
+
+    entityTypes[slug] = {
+      workspaceId: ws.id,
+      title: ws.title,
+      properties,
+      assetCount,
+    };
+  }
+
+  // Collect reference data (languages, countries, etc.)
+  const referenceData: Record<string, string[]> = {};
+  for (const ws of workspaces) {
+    if (['Types', 'Gameplay'].includes(ws.title)) continue;
+    const { list } = await db.asset.assetsGetShort({ where: { workspaceId: ws.id } });
+    if ((list || []).length > 0 && (list || []).length <= 30) {
+      referenceData[ws.title.toLowerCase()] = (list || []).map((a: any) => a.title).filter(Boolean);
+    }
+  }
+
+  return {
+    game: 'If This',
+    description: 'Game set in a fictional concentration camp. Isometric 3D. Fictional countries, languages, religions.',
+    instructions: 'Always call getContext first. Use entity names (not UUIDs) for references. All properties are flat key-value pairs.',
+    entityTypes,
+    referenceData,
+  };
+}
