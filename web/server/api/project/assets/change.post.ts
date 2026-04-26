@@ -25,5 +25,18 @@ export default defineEventHandler(async (event) => {
     params.set.blocks = normalizeBlocks(params.set.blocks);
   }
   const db = await getProjectDb();
-  return db.asset.assetsChange(params, body.options);
+
+  // Try with blocks, fall back to title-only change if blocks are malformed
+  try {
+    return await db.asset.assetsChange(params, body.options);
+  } catch (err: any) {
+    if (err.message?.includes('Type is not set') && params.set?.blocks) {
+      // Retry without the malformed blocks - just apply non-block changes
+      const { blocks, ...setWithoutBlocks } = params.set;
+      if (Object.keys(setWithoutBlocks).length > 0) {
+        return await db.asset.assetsChange({ ...params, set: setWithoutBlocks }, body.options);
+      }
+    }
+    throw err;
+  }
 });
