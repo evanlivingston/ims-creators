@@ -1,0 +1,14 @@
+services:
+  ims-creators:
+    build:
+      context: ..
+      dockerfile: web/Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ${PROJECT_PATH:?Set PROJECT_PATH to your design data directory}:/data/design
+    environment:
+      - PROJECT_PATH=/data/design
+      - API_KEY=${API_KEY:-}
+      - PORT=3000
+    restart: unless-stopped
