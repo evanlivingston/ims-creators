@@ -94,7 +94,7 @@ paths:
   /api/gpt/set-image:
     post:
       operationId: setImage
-      summary: "Set an image on an entity. Send either a public URL or base64-encoded image data. NEVER send /mnt/data/ sandbox paths."
+      summary: "Set an image on an entity using a public URL."
       requestBody:
         required: true
         content:
@@ -103,22 +103,54 @@ paths:
               type: object
               required:
                 - id
+                - url
               properties:
                 id:
                   type: string
                   description: Entity UUID to set the image on
                 url:
                   type: string
-                  description: "A public image URL the server can download. Use the DALL-E generation URL if available. NEVER pass /mnt/data/ or other sandbox file paths."
-                base64:
-                  type: string
-                  description: "Base64-encoded image data. Use this when the image is in your sandbox - read the file and encode it with base64. Can include data URI prefix (data:image/png;base64,...) or raw base64 string."
+                  description: "A public image URL the server can download."
                 filename:
                   type: string
                   description: Optional filename for the image
       responses:
         "200":
           description: Image set
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /api/gpt/upload-image:
+    post:
+      operationId: uploadImage
+      summary: "Upload an image file directly to attach to an entity. Use this instead of setImage when you have the file in your sandbox."
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - id
+                - file
+              properties:
+                id:
+                  type: string
+                  description: Entity UUID to set the image on
+                file:
+                  type: string
+                  format: binary
+                  description: The image file to upload (PNG, JPEG, or WebP)
+                filename:
+                  type: string
+                  description: Optional filename for the image
+      responses:
+        "200":
+          description: Image uploaded and attached
           content:
             application/json:
               schema:

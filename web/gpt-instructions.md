@@ -51,15 +51,9 @@ Lines flow top-to-bottom unless redirected by goto or choices.
 When generating images for entities:
 1. Generate the image with DALL-E
 2. The image will be saved to /mnt/data/ in your sandbox
-3. Upload the file to a public hosting service using Python:
-   ```python
-   import requests
-   resp = requests.post('https://0x0.st', files={'file': open('/mnt/data/your_image.png', 'rb')})
-   public_url = resp.text.strip()
-   ```
-4. Call setImage with `id` (entity UUID) and `url` (the public URL from step 3)
+3. Call uploadImage with `id` (entity UUID) and `file` (the image file) as multipart form data
 
-IMPORTANT: Do NOT send base64 data - tool call payloads are too small for images. Do NOT send /mnt/data/ paths as the url. Always upload to a public URL first.
+This is a multipart/form-data upload - send the actual file bytes, not base64 or a URL.
 
 Entities with images show an `image` field in their details.
 
