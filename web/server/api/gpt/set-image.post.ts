@@ -38,6 +38,16 @@ export default defineEventHandler(async (event) => {
     }
   }
 
+  // Validate image data
+  const PNG_MAGIC = Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]);
+  const JPEG_MAGIC = Buffer.from([0xFF, 0xD8, 0xFF]);
+  const WEBP_MAGIC = Buffer.from('RIFF');
+  if (!imageData.subarray(0, 8).equals(PNG_MAGIC) &&
+      !imageData.subarray(0, 3).equals(JPEG_MAGIC) &&
+      !imageData.subarray(0, 4).equals(WEBP_MAGIC)) {
+    throw createError({ statusCode: 400, statusMessage: 'Invalid image data - not a recognized image format (PNG, JPEG, or WebP)' });
+  }
+
   // Generate file metadata
   const hash = createHash('md5').update(imageData).digest('hex');
   const fileId = [hash.slice(0, 8), hash.slice(8, 12), hash.slice(12, 16), hash.slice(16, 20), hash.slice(20)].join('-');
