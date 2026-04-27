@@ -782,6 +782,67 @@ paths:
                     title:
                       type: string
 
+  /api/gpt/search:
+    get:
+      operationId: searchAssets
+      summary: Search for assets by name across all workspaces. Use to find IDs for linking.
+      x-openai-isConsequential: false
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Search term (partial match on title)
+      responses:
+        "200":
+          description: Array of matching assets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    title:
+                      type: string
+                    workspace:
+                      type: string
+
+  /api/gpt/link:
+    post:
+      operationId: linkAssets
+      summary: Create a bidirectional link between two assets. Use to connect related entities (character to dialogue, quest to item, etc.)
+      x-openai-isConsequential: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - from
+                - to
+              properties:
+                from:
+                  type: string
+                  description: Source asset ID
+                to:
+                  type: string
+                  description: Target asset ID
+      responses:
+        "200":
+          description: Link created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+
   /api/gpt/countries/{id}:
     get:
       operationId: getCountry

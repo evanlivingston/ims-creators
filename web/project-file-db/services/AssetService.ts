@@ -1053,11 +1053,51 @@ export class AssetService implements IProjectDatabaseAsset{
             ids: restoring_assets.map(a => a.id)
         }
     }
-    assetsCreateRef(params: CreateRefDTO): Promise<AssetReferencesResult> {
-        throw new Error("Method not implemented.");
+    async assetsCreateRef(params: CreateRefDTO): Promise<AssetReferencesResult> {
+        const sourceId = typeof params.where === 'string' ? params.where : params.where.id;
+        if (!sourceId || typeof sourceId !== 'string') throw new Error('Source asset ID required');
+        const source = await this._getAssetFullById(sourceId);
+        if (!source) throw new Error('Source asset not found');
+
+        const target = await this._getAssetFullById(params.targetAssetId);
+        if (!target) throw new Error('Target asset not found');
+
+        const ref = {
+            assetId: sourceId,
+            blockId: params.blockId || null,
+            targetAssetId: params.targetAssetId,
+            targetBlockId: params.targetBlockId || null,
+        };
+
+        // Avoid duplicates
+        const exists = source.references.some(r =>
+            r.targetAssetId === ref.targetAssetId && r.blockId === ref.blockId && r.targetBlockId === ref.targetBlockId
+        );
+        if (!exists) {
+            source.references.push(ref);
+            await this.saveAssetFile(source);
+        }
+
+        return {
+            ids: [sourceId],
+            refs: { [sourceId]: source.references },
+            total: source.references.length,
+        };
     }
-    assetsDeleteRef(params: CreateRefDTO): Promise<AssetDeleteRefResultDTO> {
-        throw new Error("Method not implemented.");
+    async assetsDeleteRef(params: CreateRefDTO): Promise<AssetDeleteRefResultDTO> {
+        const sourceId = typeof params.where === 'string' ? params.where : params.where.id;
+        if (!sourceId || typeof sourceId !== 'string') throw new Error('Source asset ID required');
+        const source = await this._getAssetFullById(sourceId);
+        if (!source) throw new Error('Source asset not found');
+
+        source.references = source.references.filter(r =>
+            !(r.targetAssetId === params.targetAssetId &&
+              (params.blockId === undefined || r.blockId === params.blockId) &&
+              (params.targetBlockId === undefined || r.targetBlockId === params.targetBlockId))
+        );
+        await this.saveAssetFile(source);
+
+        return { ids: [sourceId] };
     }
     async assetsMove(params: AssetMoveParams): Promise<AssetMoveResult> {
         const avail_assets = await this.assetsGetShort({

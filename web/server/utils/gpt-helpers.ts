@@ -332,7 +332,7 @@ export async function buildBlocksFromFlat(
 
 // ── Git auto-commit ───────────────────────────────────────────────────
 
-async function autoCommit(message: string) {
+export async function autoCommit(message: string) {
   const projectPath = process.env.PROJECT_PATH;
   if (!projectPath) return;
   try {

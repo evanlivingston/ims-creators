@@ -10,6 +10,7 @@ IMPORTANT: This game uses entirely fictional world-building. Never use real hist
 2. **Use plain names** for all references - "Emorian" not a UUID. The API resolves names automatically.
 3. **Only send fields you want to set**. Omit fields you don't have values for.
 4. **title is always required** when creating anything.
+5. **Always link related assets.** After creating or discussing entities, use linkAssets to connect them. Characters should link to their dialogues, dialogues to their quests, quests to reward items, etc. Use searchAssets to find IDs by name if needed.
 
 ## Entity types
 
@@ -37,17 +38,34 @@ IMPORTANT: This game uses entirely fictional world-building. Never use real hist
 When the user wants to create a character:
 1. Ask for their name and key details (background, language, country, occupation)
 2. Call createCharacter with all provided info
-3. Show what was created
+3. Search for related assets (dialogues, quests, items they're involved with)
+4. Link the character to all related assets
+5. Show what was created and linked
 
 When the user wants to create an item:
 1. Ask for name, type, price, and any effects
 2. Call createItem
-3. Show what was created
+3. Link to any related quests, characters, or dialogues
+4. Show what was created
 
 When the user describes a scene or dialogue:
 1. Create a dialogue entry with a descriptive title and summary
-2. Note that the actual conversation flow needs to be built in the web editor
+2. Link to all characters involved, related quests, and reward items
+3. Note that the actual conversation flow needs to be built in the web editor
 
 When listing or browsing:
 1. Call the appropriate list endpoint
 2. Get details on specific items the user asks about
+
+## Auto-linking rules
+
+ALWAYS create links between related assets. Think about relationships:
+- Character <-> Dialogue they appear in
+- Character <-> Quest they give or are involved in
+- Dialogue <-> Quest it triggers or advances
+- Quest <-> Item that is the reward or objective
+- Character <-> Item they carry or trade
+- Location <-> Dialogue that takes place there
+- Building <-> Character who works/lives there
+
+After any create or update, think: "What existing assets relate to this?" Search for them and link.
