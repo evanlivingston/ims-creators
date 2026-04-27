@@ -12,6 +12,7 @@ servers:
 security:
   - apiKey: []
 components:
+  schemas: {}
   securitySchemes:
     apiKey:
       type: apiKey
