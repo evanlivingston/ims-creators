@@ -1,35 +1,18 @@
 openapi: 3.1.0
 info:
   title: If This - Game Design API
-  description: >
-    Game design data API. Call getContext first to discover all entity types
-    (characters, items, quests, etc.), their properties, and valid values.
-    The workspace parameter maps to entity types returned by getContext.
-    Use plain names for references (e.g. "Emorian" not a UUID).
+  description: "Game design data API. Call getContext first to discover entity types, properties, and valid values. Use plain names for references."
   version: 3.0.0
 servers:
   - url: https://ims.sieisst.com
-security:
-  - apiKey: []
-components:
-  schemas:
-    Empty:
-      type: object
-  securitySchemes:
-    apiKey:
-      type: apiKey
-      in: header
-      name: x-api-key
-
 paths:
   /api/gpt/context:
     get:
       operationId: getContext
-      summary: Get all entity types, their properties, valid enum values, and reference data. Call this first.
-      x-openai-isConsequential: false
+      summary: Get all entity types, properties, valid values, and reference data. Call this first.
       responses:
         "200":
-          description: Project structure and valid values
+          description: Project structure
           content:
             application/json:
               schema:
@@ -39,28 +22,25 @@ paths:
                     type: string
                   description:
                     type: string
+                  instructions:
+                    type: string
                   entityTypes:
                     type: object
-                    description: "Keys are workspace slugs. Each has title, properties, assetCount."
                   referenceData:
                     type: object
-                    description: "Lists of existing entity names per workspace."
-
   /api/gpt/search:
     get:
       operationId: searchAssets
-      summary: Search for entities by name across all types. Use to find IDs for linking.
-      x-openai-isConsequential: false
+      summary: Search entities by name across all types. Returns id, title, workspace.
       parameters:
         - name: q
           in: query
           required: true
           schema:
             type: string
-          description: Search term (partial match on title)
       responses:
         "200":
-          description: Matching entities
+          description: Matches
           content:
             application/json:
               schema:
@@ -74,12 +54,10 @@ paths:
                       type: string
                     workspace:
                       type: string
-
   /api/gpt/link:
     post:
       operationId: linkAssets
-      summary: Create a bidirectional link between two entities. Use after creating related entities.
-      x-openai-isConsequential: true
+      summary: Bidirectional link between two entities.
       requestBody:
         required: true
         content:
@@ -92,13 +70,11 @@ paths:
               properties:
                 from:
                   type: string
-                  description: First entity ID
                 to:
                   type: string
-                  description: Second entity ID
       responses:
         "200":
-          description: Link created
+          description: Done
           content:
             application/json:
               schema:
@@ -106,26 +82,19 @@ paths:
                 properties:
                   success:
                     type: boolean
-                  linked:
-                    type: array
-                    items:
-                      type: string
-
   /api/gpt/{workspace}:
     get:
       operationId: listEntities
-      summary: "List all entities in a workspace (e.g. characters, items, quests, dialogues, locations, buildings, languages, countries)."
-      x-openai-isConsequential: false
+      summary: "List entities in a workspace slug from getContext (characters, items, quests, dialogues, locations, buildings, languages, countries)."
       parameters:
         - name: workspace
           in: path
           required: true
           schema:
             type: string
-          description: "Entity type slug from getContext (e.g. characters, items, quests)"
       responses:
         "200":
-          description: Array of entities
+          description: Entities
           content:
             application/json:
               schema:
@@ -141,15 +110,13 @@ paths:
                       type: string
     post:
       operationId: createEntity
-      summary: "Create an entity. Send title (required) plus any properties discovered from getContext. Use plain names for references."
-      x-openai-isConsequential: true
+      summary: "Create entity. title required. Add any properties from getContext. Use plain names for references."
       parameters:
         - name: workspace
           in: path
           required: true
           schema:
             type: string
-          description: "Entity type slug (e.g. characters, items, quests)"
       requestBody:
         required: true
         content:
@@ -161,21 +128,16 @@ paths:
               properties:
                 title:
                   type: string
-                  description: Entity name (required)
                 description:
                   type: string
-                  description: Description or backstory
                 name:
                   type: string
-                  description: Display name (if different from title)
                 age:
                   type: string
                 language:
                   type: string
-                  description: "Use language name, not UUID"
                 country:
                   type: string
-                  description: "Use country name, not UUID"
                 occupation:
                   type: string
                 personality:
@@ -188,7 +150,6 @@ paths:
                   type: number
                 type:
                   type: string
-                  description: "For items: category from getContext validValues"
                 price:
                   type: integer
                 effect:
@@ -199,7 +160,7 @@ paths:
                   type: number
       responses:
         "200":
-          description: Created entity
+          description: Created
           content:
             application/json:
               schema:
@@ -209,12 +170,10 @@ paths:
                     type: string
                   title:
                     type: string
-
   /api/gpt/{workspace}/{id}:
     get:
       operationId: getEntity
-      summary: Get an entity's full details as flat key-value pairs.
-      x-openai-isConsequential: false
+      summary: Get entity details as flat key-value pairs.
       parameters:
         - name: workspace
           in: path
@@ -226,10 +185,9 @@ paths:
           required: true
           schema:
             type: string
-          description: Entity ID (UUID)
       responses:
         "200":
-          description: Entity details
+          description: Entity
           content:
             application/json:
               schema:
@@ -243,8 +201,7 @@ paths:
                     type: string
     put:
       operationId: updateEntity
-      summary: Update an entity. Only send the fields you want to change. Use plain names for references.
-      x-openai-isConsequential: true
+      summary: Update entity. Only send fields to change. Use plain names for references.
       parameters:
         - name: workspace
           in: path
@@ -297,7 +254,7 @@ paths:
                   type: number
       responses:
         "200":
-          description: Updated entity
+          description: Updated
           content:
             application/json:
               schema:
