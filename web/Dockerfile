@@ -31,4 +31,4 @@ ENV GIT_AUTHOR_EMAIL="ims@sieisst.com"
 ENV GIT_COMMITTER_NAME="IMS Creators"
 ENV GIT_COMMITTER_EMAIL="ims@sieisst.com"
 
-CMD ["node", ".output/server/index.mjs"]
+CMD ["sh", "-c", "git config --global --add safe.directory /data/design && node .output/server/index.mjs"]

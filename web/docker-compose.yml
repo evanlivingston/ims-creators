@@ -13,4 +13,5 @@ services:
       - PROJECT_PATH=/data/design
       - API_KEY=${API_KEY:-}
       - PORT=3000
+      - GIT_DISCOVERY_ACROSS_FILESYSTEM=1
     restart: unless-stopped
