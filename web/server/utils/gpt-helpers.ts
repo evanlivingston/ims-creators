@@ -1,4 +1,8 @@
 import { getProjectDb } from './project-db';
+import { execFile } from 'child_process';
+import { promisify } from 'util';
+
+const execFileAsync = promisify(execFile);
 
 // Property name aliases: maps clean names to actual IMS property names (handles typos in data)
 const PROPERTY_ALIASES: Record<string, string> = {
@@ -326,6 +330,22 @@ export async function buildBlocksFromFlat(
   return blockMap;
 }
 
+// ── Git auto-commit ───────────────────────────────────────────────────
+
+async function autoCommit(message: string) {
+  const projectPath = process.env.PROJECT_PATH;
+  if (!projectPath) return;
+  try {
+    await execFileAsync('git', ['add', '-A'], { cwd: projectPath });
+    await execFileAsync('git', ['diff', '--cached', '--quiet'], { cwd: projectPath }).catch(async () => {
+      // diff --quiet exits 1 when there are staged changes
+      await execFileAsync('git', ['commit', '-m', message], { cwd: projectPath });
+    });
+  } catch {
+    // Git not initialized or other error - silently skip
+  }
+}
+
 // ── Asset CRUD helpers ────────────────────────────────────────────────
 
 export async function listAssetsFlat(workspaceId: string) {
@@ -363,7 +383,7 @@ export async function createAssetFromFlat(workspaceId: string, flat: Record<stri
   // assetsCreate returns { ids: string[], objects: { assetFulls: {...} }, ... }
   const createdId = result.ids?.[0];
   if (createdId) {
-    // Try to get the full asset from the result objects first, then fall back to a fresh read
+    await autoCommit(`Create ${flat.title || 'asset'}`);
     const fullAsset = result.objects?.assetFulls?.[createdId];
     if (fullAsset) return flattenAsset(fullAsset);
     return await getAssetFlat(createdId);
@@ -389,6 +409,7 @@ export async function updateAssetFromFlat(id: string, flat: Record<string, any>)
   if (Object.keys(setData).length === 0) return flattenAsset(asset);
 
   await db.asset.assetsChange({ where: { id }, set: setData });
+  await autoCommit(`Update ${flat.title || asset.title || id}`);
 
   // Return updated asset
   return await getAssetFlat(id);
@@ -396,7 +417,9 @@ export async function updateAssetFromFlat(id: string, flat: Record<string, any>)
 
 export async function deleteAsset(id: string) {
   const db = await getProjectDb();
-  return await db.asset.assetsDelete({ where: { id } });
+  const result = await db.asset.assetsDelete({ where: { id } });
+  await autoCommit(`Delete ${id}`);
+  return result;
 }
 
 // ── Context building ──────────────────────────────────────────────────
