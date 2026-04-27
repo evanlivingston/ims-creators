@@ -136,17 +136,14 @@ paths:
               type: object
               required:
                 - title
-              description: "title required. Put entity-specific properties in the data field. Use plain names for references."
+              description: "title required. Put all entity-specific properties in the properties JSON string."
               properties:
                 title:
                   type: string
                   description: Entity name (required)
-                description:
+                properties:
                   type: string
-                  description: Description or backstory
-                data:
-                  type: object
-                  description: "All entity properties as key-value pairs. Property names come from getContext. Examples: {\"description\": \"A guard\", \"language\": \"Emorian\", \"health\": 100} for characters, {\"goal\": \"Find the letter\", \"tasks\": \"Talk to Lena\"} for quests, {\"type\": \"food\", \"price\": 10} for items."
+                  description: "JSON string of entity properties. Keys come from getContext. Use plain names for references. Example: '{\"description\": \"A guard\", \"language\": \"Emorian\", \"health\": 100}' for characters, '{\"goal\": \"Find the letter\", \"tasks\": \"Talk to Lena\"}' for quests."
                 script:
                   type: array
                   description: "Dialogue script (for dialogues/quests). Each item is a line with: character (name), text, description (stage direction), choices (array of {text, goto}), chance (array of {weight, goto}), trigger (event name), setVar ({variable, value}), goto (label name), label (for goto targets)."
@@ -256,15 +253,13 @@ paths:
           application/json:
             schema:
               type: object
-              description: "Only include fields to change. Entity-specific properties go in the data field."
+              description: "Only include fields to change. Entity-specific properties go in the properties JSON string."
               properties:
                 title:
                   type: string
-                description:
+                properties:
                   type: string
-                data:
-                  type: object
-                  description: "Properties to update as key-value pairs. Only include fields you want to change. Use plain names for references."
+                  description: "JSON string of properties to update. Only include fields to change. Use plain names for references. Example: '{\"age\": \"35\", \"occupation\": \"doctor\", \"personality\": \"stern\"}'"
                 script:
                   type: array
                   description: "Replacement dialogue script (same format as createEntity)"

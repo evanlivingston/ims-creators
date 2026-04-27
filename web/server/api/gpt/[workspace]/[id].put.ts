@@ -4,8 +4,16 @@ import { updateAssetFromFlat } from '../../../utils/gpt-helpers';
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id') || '';
   const body = await readBody(event);
-  // Merge data field into top level (ChatGPT sends properties inside data:{})
-  const flat = { ...body.data, ...body };
+  // Parse properties from JSON string, data object, or top-level fields
+  let props = {};
+  if (typeof body.properties === 'string') {
+    try { props = JSON.parse(body.properties); } catch {}
+  } else if (typeof body.properties === 'object') {
+    props = body.properties;
+  }
+  if (typeof body.data === 'object') Object.assign(props, body.data);
+  const flat = { ...props, ...body };
+  delete flat.properties;
   delete flat.data;
 
   try {
