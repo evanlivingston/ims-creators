@@ -1,18 +1,18 @@
 openapi: 3.1.0
 info:
   title: If This - Game Design API
-  description: "Game design data API. Call getContext first to discover entity types, properties, and valid values. Use plain names for references."
-  version: 3.0.0
+  description: "Flexible game design data API. Call getContext first to discover entity types, properties, and valid values. Use plain names for references."
+  version: 3.1.0
 servers:
   - url: https://ims.sieisst.com
 paths:
   /api/gpt/context:
     get:
       operationId: getContext
-      summary: Get all entity types, properties, valid values, and reference data. Call this first.
+      summary: "Get all entity types, their properties, valid values, and reference data. ALWAYS call this first before any other operation."
       responses:
         "200":
-          description: Project structure
+          description: Project structure with entity types, property schemas, valid enum values, and lists of existing entities per workspace
           content:
             application/json:
               schema:
@@ -26,21 +26,24 @@ paths:
                     type: string
                   entityTypes:
                     type: object
+                    description: "Keyed by workspace slug. Each entry has title, properties (with types and valid values), and assetCount. Use these property names when creating/updating entities."
                   referenceData:
                     type: object
+                    description: "Lists of existing entity names per workspace for reference."
   /api/gpt/search:
     get:
       operationId: searchAssets
-      summary: Search entities by name across all types. Returns id, title, workspace.
+      summary: Search entities by name across all types. Returns IDs needed for linking.
       parameters:
         - name: q
           in: query
           required: true
           schema:
             type: string
+          description: Search term (partial match on title)
       responses:
         "200":
-          description: Matches
+          description: Matching entities with IDs
           content:
             application/json:
               schema:
@@ -57,7 +60,7 @@ paths:
   /api/gpt/link:
     post:
       operationId: linkAssets
-      summary: Bidirectional link between two entities.
+      summary: Create a bidirectional link between two entities. Use searchAssets first to get the UUIDs.
       requestBody:
         required: true
         content:
@@ -70,11 +73,13 @@ paths:
               properties:
                 from:
                   type: string
+                  description: "Source entity UUID (from searchAssets or a create/list response)"
                 to:
                   type: string
+                  description: "Target entity UUID (from searchAssets or a create/list response)"
       responses:
         "200":
-          description: Done
+          description: Link created
           content:
             application/json:
               schema:
@@ -82,19 +87,24 @@ paths:
                 properties:
                   success:
                     type: boolean
+                  linked:
+                    type: array
+                    items:
+                      type: string
   /api/gpt/{workspace}:
     get:
       operationId: listEntities
-      summary: "List entities in a workspace slug from getContext (characters, items, quests, dialogues, locations, buildings, languages, countries)."
+      summary: "List all entities in a workspace. Workspace slugs come from getContext entityTypes keys."
       parameters:
         - name: workspace
           in: path
           required: true
           schema:
             type: string
+          description: "Workspace slug from getContext (e.g. characters, items, quests, dialogues, locations, buildings, languages, countries, abilities, effects)"
       responses:
         "200":
-          description: Entities
+          description: Array of entities
           content:
             application/json:
               schema:
@@ -110,13 +120,14 @@ paths:
                       type: string
     post:
       operationId: createEntity
-      summary: "Create entity. title required. Add any properties from getContext. Use plain names for references."
+      summary: "Create an entity. Properties are workspace-specific - check getContext to see what each workspace accepts. For dialogues, include a script array to define the conversation flow."
       parameters:
         - name: workspace
           in: path
           required: true
           schema:
             type: string
+          description: "Workspace slug from getContext"
       requestBody:
         required: true
         content:
@@ -125,42 +136,66 @@ paths:
               type: object
               required:
                 - title
+              description: "Send title (required) plus any properties from getContext for this workspace. For dialogues/quests, include a script array. Use plain entity names for reference fields (language, country, effect, etc.) - the server resolves them to IDs automatically."
               properties:
                 title:
                   type: string
+                  description: Entity name (required)
                 description:
                   type: string
-                name:
-                  type: string
-                age:
-                  type: string
-                language:
-                  type: string
-                country:
-                  type: string
-                occupation:
-                  type: string
-                personality:
-                  type: string
-                health:
-                  type: integer
-                damage:
-                  type: integer
-                weight:
-                  type: number
-                type:
-                  type: string
-                price:
-                  type: integer
-                effect:
-                  type: string
-                effect_value:
-                  type: number
-                effect_duration:
-                  type: number
+                  description: Description or backstory
+                script:
+                  type: array
+                  description: "Dialogue script (for dialogues/quests). Each item is a line with: character (name), text, description (stage direction), choices (array of {text, goto}), chance (array of {weight, goto}), trigger (event name), setVar ({variable, value}), goto (label name), label (for goto targets)."
+                  items:
+                    type: object
+                    properties:
+                      character:
+                        type: string
+                        description: "Character name (resolved to asset reference automatically)"
+                      text:
+                        type: string
+                      description:
+                        type: string
+                        description: Stage direction or context
+                      label:
+                        type: string
+                        description: Target label for goto references
+                      goto:
+                        type: string
+                        description: Jump to this label after this line
+                      trigger:
+                        type: string
+                        description: Fire a game event
+                      choices:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            text:
+                              type: string
+                            goto:
+                              type: string
+                      chance:
+                        type: array
+                        description: "Weighted random branch"
+                        items:
+                          type: object
+                          properties:
+                            weight:
+                              type: number
+                            goto:
+                              type: string
+                      setVar:
+                        type: object
+                        properties:
+                          variable:
+                            type: string
+                          value:
+                            type: string
       responses:
         "200":
-          description: Created
+          description: Created entity with all resolved properties
           content:
             application/json:
               schema:
@@ -173,7 +208,7 @@ paths:
   /api/gpt/{workspace}/{id}:
     get:
       operationId: getEntity
-      summary: Get entity details as flat key-value pairs.
+      summary: "Get full entity details as flat key-value pairs. Dialogues include a script array."
       parameters:
         - name: workspace
           in: path
@@ -185,9 +220,10 @@ paths:
           required: true
           schema:
             type: string
+          description: Entity UUID
       responses:
         "200":
-          description: Entity
+          description: "All entity properties as flat key-value pairs. Reference fields show display names. Dialogues include script array."
           content:
             application/json:
               schema:
@@ -197,7 +233,68 @@ paths:
                     type: string
                   title:
                     type: string
-                  description:
+    put:
+      operationId: updateEntity
+      summary: "Update an entity. Only send fields to change. For dialogues, sending script replaces the entire dialogue flow."
+      parameters:
+        - name: workspace
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: "Send only the fields you want to change. Property names come from getContext. Use plain names for references."
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                script:
+                  type: array
+                  description: "Replacement dialogue script (same format as createEntity)"
+                  items:
+                    type: object
+                    properties:
+                      character:
+                        type: string
+                      text:
+                        type: string
+                      label:
+                        type: string
+                      goto:
+                        type: string
+                      trigger:
+                        type: string
+                      choices:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            text:
+                              type: string
+                            goto:
+                              type: string
+      responses:
+        "200":
+          description: Updated entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
                     type: string
     delete:
       operationId: deleteEntity
@@ -223,68 +320,3 @@ paths:
                 properties:
                   success:
                     type: boolean
-    put:
-      operationId: updateEntity
-      summary: Update entity. Only send fields to change. Use plain names for references.
-      parameters:
-        - name: workspace
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                title:
-                  type: string
-                description:
-                  type: string
-                name:
-                  type: string
-                age:
-                  type: string
-                language:
-                  type: string
-                country:
-                  type: string
-                occupation:
-                  type: string
-                personality:
-                  type: string
-                health:
-                  type: integer
-                damage:
-                  type: integer
-                weight:
-                  type: number
-                type:
-                  type: string
-                price:
-                  type: integer
-                effect:
-                  type: string
-                effect_value:
-                  type: number
-                effect_duration:
-                  type: number
-      responses:
-        "200":
-          description: Updated
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  title:
-                    type: string

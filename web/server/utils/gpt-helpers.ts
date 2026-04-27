@@ -89,7 +89,16 @@ export async function getTypeForWorkspace(workspaceId: string) {
     t.title === singular || t.title === wsTitle ||
     t.title?.toLowerCase() === singular.toLowerCase()
   );
-  if (!match) return null;
+  if (!match) {
+    // Fallback: check workspace .imw.json for linked type asset ID
+    // Dialogues use system ScriptElement type (00000000-0000-0000-0000-000000000033)
+    if (wsTitle === 'Dialogues' || wsTitle === 'Quests') {
+      const systemId = '00000000-0000-0000-0000-000000000033';
+      const full = await db.asset.assetsGetFull({ where: { id: systemId } });
+      return extractFullAsset(full, systemId);
+    }
+    return null;
+  }
 
   const full = await db.asset.assetsGetFull({ where: { id: match.id } });
   return extractFullAsset(full, match.id);
@@ -151,6 +160,13 @@ export async function getPropertySchema(workspaceId: string): Promise<Record<str
             schema[key] = { ...meta, blockType: 'props', blockId: block.id, blockName: block.name };
           }
         }
+      } else if (block.type === 'script' && !schema['script']) {
+        schema['script'] = {
+          type: 'array',
+          title: 'Dialogue script',
+          description: 'Array of dialogue lines with character, text, choices, chance, triggers',
+          blockType: 'script', blockId: block.id, blockName: block.name,
+        };
       }
     }
   }
@@ -201,7 +217,7 @@ export function flattenAsset(asset: any): Record<string, any> {
 function simplifyValue(value: any): any {
   if (value == null || typeof value !== 'object') return value;
   if ('AssetId' in value && 'Title' in value) return value.Title;
-  if ('Enum' in value) return value.Name || value.Title;
+  if ('Enum' in value) return value.Title || value.Name;
   if (Array.isArray(value)) return value.map(simplifyValue);
   return value;
 }
@@ -490,20 +506,84 @@ export async function buildScriptFromSimple(lines: SimpleDialogueLine[]): Promis
     }
   }
 
-  return { start: startId, nodes };
+  // Build variable declarations from setVar nodes
+  const ownVars: Record<string, any> = {};
+  for (const line of lines) {
+    if (line.setVar) {
+      const varName = line.setVar.variable;
+      const varValue = line.setVar.value;
+      const varType = typeof varValue === 'number' ? 'integer'
+        : typeof varValue === 'boolean' ? 'boolean' : 'string';
+      ownVars[varName] = {
+        name: varName,
+        type: { Type: varType },
+        title: varName.charAt(0).toUpperCase() + varName.slice(1),
+        autoFill: null,
+        description: null,
+      };
+    }
+  }
+
+  // Standard speech field settings (IMS editor needs these to render nodes)
+  const __settings = {
+    speech: {
+      main: {
+        text: { name: 'text', type: { Type: 'text' }, index: 2, title: '[[t:Text]]', default: { Type: 'text' }, description: null },
+        character: { name: 'character', type: { Type: 'asset' }, index: 1, title: '[[t:Character]]', autoFill: true, description: null },
+        description: { name: 'description', type: { Type: 'text' }, index: 0, title: 'Description', autoFill: null, description: 'What happens behind the scenes?' },
+      },
+      option: {
+        text: { name: 'text', type: { Type: 'text' }, title: '[[t:Text]]', default: { Type: 'text' }, description: null },
+      },
+    },
+  };
+
+  return {
+    start: startId,
+    variables: { own: ownVars },
+    __settings,
+    nodes,
+  };
+}
+
+/**
+ * Unflatten \\-delimited AssetProps back into nested objects.
+ * assetsGetFull flattens { nodes: { uuid: { type: "speech" } } } into
+ * { "nodes\\uuid\\type": "speech" }. This reverses that.
+ */
+function unflattenProps(flat: Record<string, any>): Record<string, any> {
+  const result: Record<string, any> = {};
+  for (const [key, value] of Object.entries(flat)) {
+    const parts = key.split('\\');
+    if (parts.length === 1) {
+      result[key] = value;
+      continue;
+    }
+    let current = result;
+    for (let i = 0; i < parts.length - 1; i++) {
+      if (!current[parts[i]] || typeof current[parts[i]] !== 'object' || Array.isArray(current[parts[i]])) {
+        current[parts[i]] = {};
+      }
+      current = current[parts[i]];
+    }
+    current[parts[parts.length - 1]] = value;
+  }
+  return result;
 }
 
 /**
  * Flatten a script block's nodes into simplified dialogue lines for API output.
  */
 export function flattenScript(scriptProps: any): SimpleDialogueLine[] {
-  if (!scriptProps?.nodes || !scriptProps?.start) return [];
-  const nodes = scriptProps.nodes;
+  // Unflatten \\-delimited props from assetsGetFull
+  const props = scriptProps?.nodes ? scriptProps : unflattenProps(scriptProps || {});
+  if (!props?.nodes || !props?.start) return [];
+  const nodes = props.nodes;
   const lines: SimpleDialogueLine[] = [];
   const visited = new Set<string>();
 
   // Walk the graph from start
-  let currentId = nodes[scriptProps.start]?.next;
+  let currentId = nodes[props.start]?.next;
   while (currentId && !visited.has(currentId)) {
     visited.add(currentId);
     const node = nodes[currentId];
@@ -548,15 +628,19 @@ export function flattenScript(scriptProps: any): SimpleDialogueLine[] {
 
 export async function autoCommit(message: string) {
   const projectPath = process.env.PROJECT_PATH;
-  if (!projectPath) return;
+  if (!projectPath) {
+    console.warn('[auto-commit] PROJECT_PATH not set, skipping');
+    return;
+  }
   try {
     await execFileAsync('git', ['add', '-A'], { cwd: projectPath });
     await execFileAsync('git', ['diff', '--cached', '--quiet'], { cwd: projectPath }).catch(async () => {
       // diff --quiet exits 1 when there are staged changes
       await execFileAsync('git', ['commit', '-m', message], { cwd: projectPath });
+      console.log(`[auto-commit] ${message}`);
     });
-  } catch {
-    // Git not initialized or other error - silently skip
+  } catch (err) {
+    console.error('[auto-commit] failed:', err);
   }
 }
 
@@ -631,7 +715,8 @@ export async function updateAssetFromFlat(id: string, flat: Record<string, any>)
 
 export async function deleteAsset(id: string) {
   const db = await getProjectDb();
-  const result = await db.asset.assetsDelete({ where: { id } });
+  // assetsDelete takes the where clause directly, NOT wrapped in { where: ... }
+  const result = await db.asset.assetsDelete({ id });
   await autoCommit(`Delete ${id}`);
   return result;
 }
