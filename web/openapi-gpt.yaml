@@ -2,11 +2,11 @@ openapi: 3.1.0
 info:
   title: If This - Game Design API
   description: >
-    Simplified API for managing game design data for "If This",
-    a game set in a fictional concentration camp.
-    IMPORTANT: Always call getContext first to learn the project structure.
+    Game design data API. Call getContext first to discover all entity types
+    (characters, items, quests, etc.), their properties, and valid values.
+    The workspace parameter maps to entity types returned by getContext.
     Use plain names for references (e.g. "Emorian" not a UUID).
-  version: 2.0.0
+  version: 3.0.0
 servers:
   - url: https://ims.sieisst.com
 security:
@@ -22,11 +22,11 @@ paths:
   /api/gpt/context:
     get:
       operationId: getContext
-      summary: Get project overview, entity types, valid values. Call this first.
+      summary: Get all entity types, their properties, valid enum values, and reference data. Call this first.
       x-openai-isConsequential: false
       responses:
         "200":
-          description: Project context with all entity types and reference data
+          description: Project structure and valid values
           content:
             application/json:
               schema:
@@ -34,15 +34,19 @@ paths:
                 properties:
                   game:
                     type: string
+                  description:
+                    type: string
                   entityTypes:
                     type: object
+                    description: "Keys are workspace slugs (characters, items, quests, etc.). Each has title, properties, assetCount."
                   referenceData:
                     type: object
+                    description: "Lists of existing entity names per workspace (languages, countries, items, etc.)"
 
   /api/gpt/search:
     get:
       operationId: searchAssets
-      summary: Search for assets by name across all workspaces. Use to find IDs for linking.
+      summary: Search for entities by name across all types. Returns id, title, workspace. Use to find IDs for linking.
       x-openai-isConsequential: false
       parameters:
         - name: q
@@ -53,7 +57,7 @@ paths:
           description: Search term (partial match on title)
       responses:
         "200":
-          description: Array of matching assets
+          description: Matching entities
           content:
             application/json:
               schema:
@@ -71,7 +75,7 @@ paths:
   /api/gpt/link:
     post:
       operationId: linkAssets
-      summary: Create a bidirectional link between two related assets (character to dialogue, quest to item, etc.)
+      summary: Create a bidirectional link between two entities. Use after creating related entities.
       x-openai-isConsequential: true
       requestBody:
         required: true
@@ -85,10 +89,10 @@ paths:
               properties:
                 from:
                   type: string
-                  description: Source asset ID
+                  description: First entity ID
                 to:
                   type: string
-                  description: Target asset ID
+                  description: Second entity ID
       responses:
         "200":
           description: Link created
@@ -100,14 +104,21 @@ paths:
                   success:
                     type: boolean
 
-  /api/gpt/characters:
+  /api/gpt/{workspace}:
     get:
-      operationId: listCharacters
-      summary: List all characters
+      operationId: listEntities
+      summary: "List all entities in a workspace. Workspace is an entity type slug from getContext (e.g. characters, items, quests, dialogues, locations, buildings, languages, countries)."
       x-openai-isConsequential: false
+      parameters:
+        - name: workspace
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "Entity type slug from getContext (e.g. characters, items, quests)"
       responses:
         "200":
-          description: Array of characters
+          description: Array of entities with id, title, icon
           content:
             application/json:
               schema:
@@ -120,9 +131,16 @@ paths:
                     title:
                       type: string
     post:
-      operationId: createCharacter
-      summary: Create a new character
+      operationId: createEntity
+      summary: "Create an entity in a workspace. Send title (required) plus any properties from getContext. Use plain names for references."
       x-openai-isConsequential: true
+      parameters:
+        - name: workspace
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "Entity type slug (e.g. characters, items, quests)"
       requestBody:
         required: true
         content:
@@ -134,63 +152,50 @@ paths:
               properties:
                 title:
                   type: string
-                  description: Character name
-                description:
-                  type: string
-                  description: Character backstory or bio
-                name:
-                  type: string
-                  description: In-game display name
-                age:
-                  type: string
-                  description: "Age (e.g. '25' or '30 years old')"
-                health:
-                  type: integer
-                damage:
-                  type: integer
-                language:
-                  type: string
-                  description: "Primary language by name (from getContext referenceData)"
-                country:
-                  type: string
-                  description: "Country of origin by name (from getContext referenceData)"
-                occupation:
-                  type: string
-                personality:
-                  type: string
-                weight:
-                  type: number
+                  description: Entity name (required)
+              additionalProperties: true
       responses:
         "200":
-          description: Created character
+          description: Created entity with all properties
           content:
             application/json:
               schema:
                 type: object
 
-  /api/gpt/characters/{id}:
+  /api/gpt/{workspace}/{id}:
     get:
-      operationId: getCharacter
-      summary: Get a character's full details
+      operationId: getEntity
+      summary: Get an entity's full details as flat key-value pairs.
       x-openai-isConsequential: false
       parameters:
+        - name: workspace
+          in: path
+          required: true
+          schema:
+            type: string
         - name: id
           in: path
           required: true
           schema:
             type: string
+          description: Entity ID (UUID)
       responses:
         "200":
-          description: Character details as flat key-value pairs
+          description: Entity details as flat key-value pairs
           content:
             application/json:
               schema:
                 type: object
     put:
-      operationId: updateCharacter
-      summary: Update a character. Only send fields you want to change.
+      operationId: updateEntity
+      summary: Update an entity. Only send the fields you want to change. Use plain names for references.
       x-openai-isConsequential: true
       parameters:
+        - name: workspace
+          in: path
+          required: true
+          schema:
+            type: string
         - name: id
           in: path
           required: true
@@ -202,552 +207,11 @@ paths:
           application/json:
             schema:
               type: object
-              properties:
-                title:
-                  type: string
-                description:
-                  type: string
-                name:
-                  type: string
-                age:
-                  type: string
-                health:
-                  type: integer
-                damage:
-                  type: integer
-                language:
-                  type: string
-                country:
-                  type: string
-                occupation:
-                  type: string
-                personality:
-                  type: string
-                weight:
-                  type: number
+              additionalProperties: true
       responses:
         "200":
-          description: Updated character
+          description: Updated entity
           content:
             application/json:
               schema:
                 type: object
-
-  /api/gpt/items:
-    get:
-      operationId: listItems
-      summary: List all items
-      x-openai-isConsequential: false
-      responses:
-        "200":
-          description: Array of items
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    title:
-                      type: string
-    post:
-      operationId: createItem
-      summary: Create a new item
-      x-openai-isConsequential: true
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - title
-              properties:
-                title:
-                  type: string
-                  description: Item name
-                description:
-                  type: string
-                type:
-                  type: string
-                  description: "Item category (from getContext validValues)"
-                price:
-                  type: integer
-                  description: Trade value
-                effect:
-                  type: string
-                  description: "Effect by name (from getContext referenceData)"
-                effect_value:
-                  type: number
-                effect_duration:
-                  type: number
-      responses:
-        "200":
-          description: Created item
-          content:
-            application/json:
-              schema:
-                type: object
-
-  /api/gpt/items/{id}:
-    get:
-      operationId: getItem
-      summary: Get an item's full details
-      x-openai-isConsequential: false
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Item details
-          content:
-            application/json:
-              schema:
-                type: object
-    put:
-      operationId: updateItem
-      summary: Update an item
-      x-openai-isConsequential: true
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                title:
-                  type: string
-                description:
-                  type: string
-                type:
-                  type: string
-                price:
-                  type: integer
-                effect:
-                  type: string
-                effect_value:
-                  type: number
-                effect_duration:
-                  type: number
-      responses:
-        "200":
-          description: Updated item
-          content:
-            application/json:
-              schema:
-                type: object
-
-  /api/gpt/dialogues:
-    get:
-      operationId: listDialogues
-      summary: List all dialogues
-      x-openai-isConsequential: false
-      responses:
-        "200":
-          description: Array of dialogues
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    title:
-                      type: string
-    post:
-      operationId: createDialogue
-      summary: Create a new dialogue (title and description only - flow edited in web UI)
-      x-openai-isConsequential: true
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - title
-              properties:
-                title:
-                  type: string
-                description:
-                  type: string
-      responses:
-        "200":
-          description: Created dialogue
-          content:
-            application/json:
-              schema:
-                type: object
-
-  /api/gpt/dialogues/{id}:
-    get:
-      operationId: getDialogue
-      summary: Get a dialogue's details
-      x-openai-isConsequential: false
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Dialogue details
-          content:
-            application/json:
-              schema:
-                type: object
-    put:
-      operationId: updateDialogue
-      summary: Update a dialogue
-      x-openai-isConsequential: true
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                title:
-                  type: string
-                description:
-                  type: string
-      responses:
-        "200":
-          description: Updated dialogue
-          content:
-            application/json:
-              schema:
-                type: object
-
-  /api/gpt/quests:
-    get:
-      operationId: listQuests
-      summary: List all quests
-      x-openai-isConsequential: false
-      responses:
-        "200":
-          description: Array of quests
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    title:
-                      type: string
-    post:
-      operationId: createQuest
-      summary: Create a new quest
-      x-openai-isConsequential: true
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - title
-              properties:
-                title:
-                  type: string
-                description:
-                  type: string
-      responses:
-        "200":
-          description: Created quest
-          content:
-            application/json:
-              schema:
-                type: object
-
-  /api/gpt/quests/{id}:
-    get:
-      operationId: getQuest
-      summary: Get quest details
-      x-openai-isConsequential: false
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Quest details
-          content:
-            application/json:
-              schema:
-                type: object
-    put:
-      operationId: updateQuest
-      summary: Update a quest
-      x-openai-isConsequential: true
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                title:
-                  type: string
-                description:
-                  type: string
-      responses:
-        "200":
-          description: Updated quest
-          content:
-            application/json:
-              schema:
-                type: object
-
-  /api/gpt/locations:
-    get:
-      operationId: listLocations
-      summary: List all locations
-      x-openai-isConsequential: false
-      responses:
-        "200":
-          description: Array of locations
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    title:
-                      type: string
-    post:
-      operationId: createLocation
-      summary: Create a new location
-      x-openai-isConsequential: true
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - title
-              properties:
-                title:
-                  type: string
-                description:
-                  type: string
-      responses:
-        "200":
-          description: Created location
-          content:
-            application/json:
-              schema:
-                type: object
-
-  /api/gpt/locations/{id}:
-    get:
-      operationId: getLocation
-      summary: Get location details
-      x-openai-isConsequential: false
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Location details
-          content:
-            application/json:
-              schema:
-                type: object
-    put:
-      operationId: updateLocation
-      summary: Update a location
-      x-openai-isConsequential: true
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                title:
-                  type: string
-                description:
-                  type: string
-      responses:
-        "200":
-          description: Updated location
-          content:
-            application/json:
-              schema:
-                type: object
-
-  /api/gpt/buildings:
-    get:
-      operationId: listBuildings
-      summary: List all buildings
-      x-openai-isConsequential: false
-      responses:
-        "200":
-          description: Array of buildings
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    title:
-                      type: string
-    post:
-      operationId: createBuilding
-      summary: Create a new building
-      x-openai-isConsequential: true
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - title
-              properties:
-                title:
-                  type: string
-                description:
-                  type: string
-      responses:
-        "200":
-          description: Created building
-          content:
-            application/json:
-              schema:
-                type: object
-
-  /api/gpt/buildings/{id}:
-    get:
-      operationId: getBuilding
-      summary: Get building details
-      x-openai-isConsequential: false
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Building details
-          content:
-            application/json:
-              schema:
-                type: object
-    put:
-      operationId: updateBuilding
-      summary: Update a building
-      x-openai-isConsequential: true
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                title:
-                  type: string
-                description:
-                  type: string
-      responses:
-        "200":
-          description: Updated building
-          content:
-            application/json:
-              schema:
-                type: object
-
-  /api/gpt/languages:
-    get:
-      operationId: listLanguages
-      summary: List all languages in the game world
-      x-openai-isConsequential: false
-      responses:
-        "200":
-          description: Array of languages
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    title:
-                      type: string
-
-  /api/gpt/countries:
-    get:
-      operationId: listCountries
-      summary: List all countries in the game world
-      x-openai-isConsequential: false
-      responses:
-        "200":
-          description: Array of countries
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    title:
-                      type: string
