@@ -17,24 +17,6 @@ components:
       type: apiKey
       in: header
       name: x-api-key
-  schemas:
-    Entity:
-      type: object
-      properties:
-        id:
-          type: string
-        title:
-          type: string
-      additionalProperties: true
-    EntityList:
-      type: array
-      items:
-        type: object
-        properties:
-          id:
-            type: string
-          title:
-            type: string
 
 paths:
   /api/gpt/context:
@@ -56,15 +38,15 @@ paths:
                     type: string
                   entityTypes:
                     type: object
-                    description: "Keys are workspace slugs (characters, items, quests, etc.). Each has title, properties, assetCount."
+                    description: "Keys are workspace slugs. Each has title, properties, assetCount."
                   referenceData:
                     type: object
-                    description: "Lists of existing entity names per workspace (languages, countries, items, etc.)"
+                    description: "Lists of existing entity names per workspace."
 
   /api/gpt/search:
     get:
       operationId: searchAssets
-      summary: Search for entities by name across all types. Returns id, title, workspace. Use to find IDs for linking.
+      summary: Search for entities by name across all types. Use to find IDs for linking.
       x-openai-isConsequential: false
       parameters:
         - name: q
@@ -121,11 +103,15 @@ paths:
                 properties:
                   success:
                     type: boolean
+                  linked:
+                    type: array
+                    items:
+                      type: string
 
   /api/gpt/{workspace}:
     get:
       operationId: listEntities
-      summary: "List all entities in a workspace. Workspace is an entity type slug from getContext (e.g. characters, items, quests, dialogues, locations, buildings, languages, countries)."
+      summary: "List all entities in a workspace (e.g. characters, items, quests, dialogues, locations, buildings, languages, countries)."
       x-openai-isConsequential: false
       parameters:
         - name: workspace
@@ -136,7 +122,7 @@ paths:
           description: "Entity type slug from getContext (e.g. characters, items, quests)"
       responses:
         "200":
-          description: Array of entities with id, title, icon
+          description: Array of entities
           content:
             application/json:
               schema:
@@ -148,9 +134,11 @@ paths:
                       type: string
                     title:
                       type: string
+                    icon:
+                      type: string
     post:
       operationId: createEntity
-      summary: "Create an entity in a workspace. Send title (required) plus any properties from getContext. Use plain names for references."
+      summary: "Create an entity. Send title (required) plus any properties discovered from getContext. Use plain names for references."
       x-openai-isConsequential: true
       parameters:
         - name: workspace
@@ -173,15 +161,51 @@ paths:
                   description: Entity name (required)
                 description:
                   type: string
-                  description: Optional description or backstory
-              additionalProperties: true
+                  description: Description or backstory
+                name:
+                  type: string
+                  description: Display name (if different from title)
+                age:
+                  type: string
+                language:
+                  type: string
+                  description: "Use language name, not UUID"
+                country:
+                  type: string
+                  description: "Use country name, not UUID"
+                occupation:
+                  type: string
+                personality:
+                  type: string
+                health:
+                  type: integer
+                damage:
+                  type: integer
+                weight:
+                  type: number
+                type:
+                  type: string
+                  description: "For items: category from getContext validValues"
+                price:
+                  type: integer
+                effect:
+                  type: string
+                effect_value:
+                  type: number
+                effect_duration:
+                  type: number
       responses:
         "200":
-          description: Created entity with all properties
+          description: Created entity
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Entity"
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
 
   /api/gpt/{workspace}/{id}:
     get:
@@ -202,11 +226,18 @@ paths:
           description: Entity ID (UUID)
       responses:
         "200":
-          description: Entity details as flat key-value pairs
+          description: Entity details
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Entity"
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  description:
+                    type: string
     put:
       operationId: updateEntity
       summary: Update an entity. Only send the fields you want to change. Use plain names for references.
@@ -233,11 +264,43 @@ paths:
                   type: string
                 description:
                   type: string
-              additionalProperties: true
+                name:
+                  type: string
+                age:
+                  type: string
+                language:
+                  type: string
+                country:
+                  type: string
+                occupation:
+                  type: string
+                personality:
+                  type: string
+                health:
+                  type: integer
+                damage:
+                  type: integer
+                weight:
+                  type: number
+                type:
+                  type: string
+                price:
+                  type: integer
+                effect:
+                  type: string
+                effect_value:
+                  type: number
+                effect_duration:
+                  type: number
       responses:
         "200":
           description: Updated entity
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Entity"
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
