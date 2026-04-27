@@ -714,6 +714,10 @@ export async function autoCommit(message: string) {
       // diff --quiet exits 1 when there are staged changes
       await execFileAsync('git', ['commit', '-m', message], { cwd: projectPath });
       console.log(`[auto-commit] ${message}`);
+      // Push in background (don't block the response)
+      execFileAsync('git', ['push'], { cwd: projectPath }).catch(
+        (err) => console.error('[auto-push] failed:', err.message)
+      );
     });
   } catch (err) {
     console.error('[auto-commit] failed:', err);
