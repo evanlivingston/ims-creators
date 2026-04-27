@@ -9,7 +9,7 @@ export default defineEventHandler((event) => {
   }
 
   // Public endpoints - no auth needed
-  if (path === '/api/gpt/openapi' || path === '/api/gpt/instructions') {
+  if (path === '/api/gpt/openapi' || path === '/api/gpt/instructions' || path.startsWith('/api/file/')) {
     return;
   }
 
