@@ -1168,8 +1168,12 @@ export class AssetService implements IProjectDatabaseAsset{
             })
         }
     }
-    assetsGetHistory(assetId: string): Promise<ApiResultListWithMore<AssetHistoryDTO>> {
-        throw new Error("Method not implemented.");
+    async assetsGetHistory(assetId: string): Promise<ApiResultListWithMore<AssetHistoryDTO>> {
+        // File-based backend does not support persistent asset history
+        return {
+            list: [],
+            more: false,
+        };
     }
 
     async exportToFile(assetId: string, target: string){

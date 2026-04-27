@@ -79,12 +79,12 @@ export class AssetSearchFilter{
 
     private async _init(){
         if (this.where.typeids){
-            this._filterTypeIds = typeof this.where.typeids === 'string' ? [this.where.typeids] : this.where.typeids        
+            this._filterTypeIds = typeof this.where.typeids === 'string' ? [this.where.typeids] : this.where.typeids
         }
-        // TODO: add intersection check with this.where.typeids
         if (this.where.type){
+            let resolvedTypeId: string | null = null;
             if (isUUID(this.where.type)){
-                this._filterTypeIds = [this.where.type]
+                resolvedTypeId = this.where.type;
             }
             else {
                 const type_asset = this.db.asset.assets.byName.get(this.where.type);
@@ -92,26 +92,48 @@ export class AssetSearchFilter{
                     this._resultNothing = true;
                 }
                 else {
-                    this._filterTypeIds = [type_asset.id];
+                    resolvedTypeId = type_asset.id;
+                }
+            }
+            if (resolvedTypeId) {
+                if (this._filterTypeIds) {
+                    // Intersect: only keep the resolved type if it's already in the list
+                    this._filterTypeIds = this._filterTypeIds.includes(resolvedTypeId) ? [resolvedTypeId] : [];
+                    if (this._filterTypeIds.length === 0) {
+                        this._resultNothing = true;
+                    }
+                } else {
+                    this._filterTypeIds = [resolvedTypeId];
                 }
             }
         }
-        
+
         if (this.where.workspaceids){
-            this._filterInsideWorkspaceIds = typeof this.where.workspaceids === 'string' ? [this.where.workspaceids] : this.where.workspaceids        
+            this._filterInsideWorkspaceIds = typeof this.where.workspaceids === 'string' ? [this.where.workspaceids] : this.where.workspaceids
         }
-        // TODO: add intersection check with this.where.workspaceids
         if (this.where.inside){
-            if (isUUID(this.where.type)){
-                this._filterInsideWorkspaceIds = [this.where.type]
+            let resolvedWorkspaceId: string | null = null;
+            if (isUUID(this.where.inside)){
+                resolvedWorkspaceId = this.where.inside;
             }
             else {
-                const inside_workspace = this.db.workspace.workspaces.byName.get(this.where.type);
+                const inside_workspace = this.db.workspace.workspaces.byName.get(this.where.inside);
                 if (!inside_workspace){
                     this._resultNothing = true;
                 }
                 else {
-                    this._filterInsideWorkspaceIds = [inside_workspace.id];
+                    resolvedWorkspaceId = inside_workspace.id;
+                }
+            }
+            if (resolvedWorkspaceId) {
+                if (this._filterInsideWorkspaceIds) {
+                    // Intersect: only keep the resolved workspace if it's already in the list
+                    this._filterInsideWorkspaceIds = this._filterInsideWorkspaceIds.includes(resolvedWorkspaceId) ? [resolvedWorkspaceId] : [];
+                    if (this._filterInsideWorkspaceIds.length === 0) {
+                        this._resultNothing = true;
+                    }
+                } else {
+                    this._filterInsideWorkspaceIds = [resolvedWorkspaceId];
                 }
             }
         }

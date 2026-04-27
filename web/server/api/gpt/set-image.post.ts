@@ -59,7 +59,8 @@ export default defineEventHandler(async (event) => {
         'gallery': {
           type: 'gallery',
           props: {
-            main: { type: 'file', index: 1, value: fileValue },
+            'main\\value': fileValue,
+            'main\\type': 'file',
           },
         },
       },

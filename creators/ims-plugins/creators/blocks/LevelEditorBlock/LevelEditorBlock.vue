@@ -162,10 +162,9 @@ export default defineComponent({
         this.levelEditorComponentLoading = false;
       }
     },
-    _levelEditorComponentMountedHandler() {
-      setTimeout(() => {
-        this.ready = true;
-      }, 1000); // TODO: await for load canvas
+    async _levelEditorComponentMountedHandler() {
+      await this.$nextTick();
+      this.ready = true;
     },
   },
 });

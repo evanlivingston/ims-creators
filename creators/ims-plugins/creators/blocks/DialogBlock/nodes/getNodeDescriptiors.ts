@@ -22,8 +22,12 @@ import {
 } from '../play/playDataComputeFunctions';
 import {
   playNodeExecuteBranch,
+  playNodeExecuteChance,
+  playNodeExecuteTimer,
   playNodeExecuteSetVar,
 } from '../play/playNodeExecuteFunctions';
+import DialogTimerNode from './DialogTimerNode.vue';
+import DialogChanceNode from './DialogChanceNode.vue';
 
 export type NodeDescriptorOpEq = 'opEqual' | 'opNotEqual';
 export type NodeDescriptorOpCompare =
@@ -105,12 +109,13 @@ export function getNodeDescriptors(): NodeDescriptor[] {
       type: NodeType.EXEC,
       playDataCompute: playDataComputeTrigger,
     },
-    /*{
+    {
       name: 'timer',
       icon: 'ri-time-line',
       node: DialogTimerNode,
       color: '#ffd56a',
       type: NodeType.EXEC,
+      playNodeExecute: playNodeExecuteTimer,
     },
     {
       name: 'chance',
@@ -118,7 +123,19 @@ export function getNodeDescriptors(): NodeDescriptor[] {
       node: DialogChanceNode,
       color: '#ea95c3',
       type: NodeType.EXEC,
-    },*/
+      initData: () => {
+        return {
+          options: [
+            { next: null, values: { weight: 1 } },
+            { next: null, values: { weight: 1 } },
+          ],
+          params: { in: [], out: [] },
+          subject: '',
+          values: {},
+        };
+      },
+      playNodeExecute: playNodeExecuteChance,
+    },
     {
       name: 'setVar',
       icon: 'ri-edit-fill',
