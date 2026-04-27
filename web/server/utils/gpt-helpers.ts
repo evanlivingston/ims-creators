@@ -207,7 +207,11 @@ export function flattenAsset(asset: any): Record<string, any> {
       }
     } else if (block.type === 'script') {
       const scriptProps = block.computed || block.props || {};
+      const keyCount = Object.keys(scriptProps).length;
+      const sampleKeys = Object.keys(scriptProps).slice(0, 3);
+      console.log(`[flattenAsset] script block: ${keyCount} keys, sample:`, sampleKeys);
       const lines = flattenScript(scriptProps);
+      console.log(`[flattenAsset] flattenScript returned ${lines.length} lines`);
       if (lines.length > 0) result.script = lines;
     }
   }
