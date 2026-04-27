@@ -209,6 +209,18 @@ export function flattenAsset(asset: any): Record<string, any> {
       const scriptProps = block.computed || block.props || {};
       const lines = flattenScript(scriptProps);
       if (lines.length > 0) result.script = lines;
+    } else if (block.type === 'gallery') {
+      const galleryProps = block.computed || block.props || {};
+      // Extract main image - handle both nested and flattened format
+      const mainValue = galleryProps['main\\value'] || galleryProps.main?.value;
+      if (mainValue?.FileId) {
+        const store = mainValue.Store || 'loc-project';
+        result.image = {
+          filename: mainValue.Title,
+          size: mainValue.Size,
+          url: `/api/file/${store}/${mainValue.FileId}`,
+        };
+      }
     }
   }
 
