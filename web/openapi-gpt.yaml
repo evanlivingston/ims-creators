@@ -199,6 +199,30 @@ paths:
                     type: string
                   description:
                     type: string
+    delete:
+      operationId: deleteEntity
+      summary: Delete an entity.
+      parameters:
+        - name: workspace
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
     put:
       operationId: updateEntity
       summary: Update entity. Only send fields to change. Use plain names for references.
