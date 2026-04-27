@@ -20,8 +20,15 @@ export default defineEventHandler(async (event) => {
 
   if (base64) {
     // Accept raw base64 or data URI (data:image/png;base64,...)
-    const raw = base64.replace(/^data:image\/\w+;base64,/, '');
+    let raw = base64.replace(/^data:image\/[^;]+;base64,/, '');
+    // Strip whitespace, newlines, and fix URL-safe base64
+    raw = raw.replace(/[\s\r\n]+/g, '').replace(/-/g, '+').replace(/_/g, '/');
+    // Add padding if needed
+    while (raw.length % 4 !== 0) raw += '=';
+
     imageData = Buffer.from(raw, 'base64');
+    console.log(`[set-image] base64 input length: ${base64.length}, decoded size: ${imageData.length}, first bytes: ${imageData.subarray(0, 8).toString('hex')}`);
+
     if (base64.includes('image/jpeg') || base64.includes('image/jpg')) ext = '.jpg';
     else if (base64.includes('image/webp')) ext = '.webp';
   } else {
