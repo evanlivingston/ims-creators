@@ -136,14 +136,14 @@ paths:
               type: object
               required:
                 - title
-              description: "Send title (required) plus any properties from getContext for this workspace. For dialogues/quests, include a script array. Use plain entity names for reference fields (language, country, effect, etc.) - the server resolves them to IDs automatically."
+              description: "Send title (required) and properties via the data field. For dialogues/quests, include a script array. Use plain entity names for reference fields - the server resolves them automatically."
               properties:
                 title:
                   type: string
                   description: Entity name (required)
-                description:
-                  type: string
-                  description: Description or backstory
+                data:
+                  type: object
+                  description: "All entity properties as key-value pairs. Property names come from getContext. Examples: {\"description\": \"A guard\", \"language\": \"Emorian\", \"health\": 100} for characters, {\"goal\": \"Find the letter\", \"tasks\": \"Talk to Lena\"} for quests, {\"type\": \"food\", \"price\": 10} for items."
                 script:
                   type: array
                   description: "Dialogue script (for dialogues/quests). Each item is a line with: character (name), text, description (stage direction), choices (array of {text, goto}), chance (array of {weight, goto}), trigger (event name), setVar ({variable, value}), goto (label name), label (for goto targets)."
@@ -253,12 +253,13 @@ paths:
           application/json:
             schema:
               type: object
-              description: "Send only the fields you want to change. Property names come from getContext. Use plain names for references."
+              description: "Send only the fields you want to change via the data field. Property names come from getContext."
               properties:
                 title:
                   type: string
-                description:
-                  type: string
+                data:
+                  type: object
+                  description: "Properties to update as key-value pairs. Only include fields you want to change. Use plain names for references."
                 script:
                   type: array
                   description: "Replacement dialogue script (same format as createEntity)"

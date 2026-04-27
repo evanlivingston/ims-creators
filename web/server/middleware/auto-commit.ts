@@ -28,7 +28,8 @@ export default defineEventHandler((event) => {
     execFileAsync('git', ['add', '-A'], { cwd: projectPath })
       .then(() => execFileAsync('git', ['diff', '--cached', '--quiet'], { cwd: projectPath }).catch(() =>
         execFileAsync('git', ['commit', '-m', `Edit via web UI: ${path}`], { cwd: projectPath })
+          .then(() => console.log(`[auto-commit] Edit via web UI: ${path}`))
       ))
-      .catch(() => {});
+      .catch((err) => console.error('[auto-commit] failed:', err));
   });
 });
