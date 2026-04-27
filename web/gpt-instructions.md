@@ -46,6 +46,15 @@ Dialogues and quests accept a `script` array that defines the conversation flow.
 
 Lines flow top-to-bottom unless redirected by goto or choices.
 
+## Images
+
+When generating images for entities, use the setImage endpoint with the `base64` field. NEVER send file paths. The correct flow:
+1. Generate the image with DALL-E
+2. Get the base64-encoded image data from the generation result
+3. Call setImage with `id` (entity UUID) and `base64` (the actual encoded image data, NOT a file path)
+
+The API returns the stored image URL. Entities with images show an `image` field in their details.
+
 ## Auto-linking rules
 
 ALWAYS create links between related assets. Use searchAssets to find UUIDs, then linkAssets.

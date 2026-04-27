@@ -112,7 +112,7 @@ paths:
                   description: Public image URL to download and attach
                 base64:
                   type: string
-                  description: "Base64-encoded image data. Can include data URI prefix (data:image/png;base64,...) or raw base64."
+                  description: "Base64-encoded image data from DALL-E generation. MUST be actual image bytes encoded as base64, NOT a file path. Can include data URI prefix (data:image/png;base64,...) or raw base64 string."
                 filename:
                   type: string
                   description: Optional filename for the image
