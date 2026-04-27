@@ -1,12 +1,31 @@
-import { defineEventHandler, readBody, createError } from 'h3';
+import { defineEventHandler, readRawBody, createError } from 'h3';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { createHash, randomUUID } from 'crypto';
 import { getProjectDb } from '../../utils/project-db';
 import { autoCommit } from '../../utils/gpt-helpers';
 
+function readLargeBody(event: any, maxSize: number): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const chunks: Buffer[] = [];
+    let size = 0;
+    const req = event.node.req;
+    req.on('data', (chunk: Buffer) => {
+      size += chunk.length;
+      if (size > maxSize) {
+        req.destroy();
+        reject(createError({ statusCode: 413, statusMessage: 'Request body too large (max 10MB)' }));
+      }
+      chunks.push(chunk);
+    });
+    req.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+    req.on('error', reject);
+  });
+}
+
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event);
+  const raw = await readLargeBody(event, 10 * 1024 * 1024);
+  const body = JSON.parse(raw);
   const { id, url, base64, filename } = body;
 
   if (!id) throw createError({ statusCode: 400, statusMessage: 'Asset id required' });
