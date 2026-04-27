@@ -549,26 +549,50 @@ export async function buildScriptFromSimple(lines: SimpleDialogueLine[]): Promis
 /**
  * Unflatten \\-delimited AssetProps back into nested objects.
  * assetsGetFull flattens { nodes: { uuid: { type: "speech" } } } into
- * { "nodes\\uuid\\type": "speech" }. This reverses that.
+ * { "nodes\\uuid\\type": "speech" }. Arrays become index placeholders
+ * like options: [0,1,2] with options\\0\\text: "..." sub-keys.
  */
 function unflattenProps(flat: Record<string, any>): Record<string, any> {
   const result: Record<string, any> = {};
   for (const [key, value] of Object.entries(flat)) {
+    // Skip array index placeholders (e.g., options: [0, 1, 2])
+    if (Array.isArray(value)) continue;
+
     const parts = key.split('\\');
     if (parts.length === 1) {
       result[key] = value;
       continue;
     }
-    let current = result;
+    let current: any = result;
     for (let i = 0; i < parts.length - 1; i++) {
-      if (!current[parts[i]] || typeof current[parts[i]] !== 'object' || Array.isArray(current[parts[i]])) {
+      if (!current[parts[i]] || typeof current[parts[i]] !== 'object') {
         current[parts[i]] = {};
       }
       current = current[parts[i]];
     }
     current[parts[parts.length - 1]] = value;
   }
+  // Convert objects with all-numeric keys back to arrays
+  numericKeysToArrays(result);
   return result;
+}
+
+function numericKeysToArrays(obj: any): void {
+  if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) return;
+  for (const key of Object.keys(obj)) {
+    const val = obj[key];
+    if (typeof val === 'object' && val !== null && !Array.isArray(val)) {
+      numericKeysToArrays(val);
+      const subKeys = Object.keys(val);
+      if (subKeys.length > 0 && subKeys.every(k => /^\d+$/.test(k))) {
+        const arr: any[] = [];
+        for (const k of subKeys.sort((a, b) => parseInt(a) - parseInt(b))) {
+          arr.push(val[k]);
+        }
+        obj[key] = arr;
+      }
+    }
+  }
 }
 
 /**
