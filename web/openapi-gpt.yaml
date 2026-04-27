@@ -34,17 +34,76 @@ paths:
                 properties:
                   game:
                     type: string
-                  description:
-                    type: string
                   entityTypes:
                     type: object
                   referenceData:
                     type: object
 
+  /api/gpt/search:
+    get:
+      operationId: searchAssets
+      summary: Search for assets by name across all workspaces. Use to find IDs for linking.
+      x-openai-isConsequential: false
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Search term (partial match on title)
+      responses:
+        "200":
+          description: Array of matching assets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    title:
+                      type: string
+                    workspace:
+                      type: string
+
+  /api/gpt/link:
+    post:
+      operationId: linkAssets
+      summary: Create a bidirectional link between two related assets (character to dialogue, quest to item, etc.)
+      x-openai-isConsequential: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - from
+                - to
+              properties:
+                from:
+                  type: string
+                  description: Source asset ID
+                to:
+                  type: string
+                  description: Target asset ID
+      responses:
+        "200":
+          description: Link created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+
   /api/gpt/characters:
     get:
       operationId: listCharacters
-      summary: List all characters (id, title, icon)
+      summary: List all characters
       x-openai-isConsequential: false
       responses:
         "200":
@@ -81,31 +140,26 @@ paths:
                   description: Character backstory or bio
                 name:
                   type: string
-                  description: Character's in-game display name
+                  description: In-game display name
                 age:
                   type: string
-                  description: "Character age (e.g. '25' or '30 years old')"
+                  description: "Age (e.g. '25' or '30 years old')"
                 health:
                   type: integer
-                  description: Hit points
                 damage:
                   type: integer
-                  description: Base damage
                 language:
                   type: string
-                  description: "Primary language by name. Valid: Emorian, Kalpin, Surrk, Gundr, Saifre, Renel, Delkam, Vákilie, Edsch, Pământi, Korsδ, Lagertongue"
+                  description: "Primary language by name (from getContext referenceData)"
                 country:
                   type: string
-                  description: "Country of origin by name. Valid: United Emor, Kingdom of Kalpand, Empire of Surrky, Holy Gundria, Saifra, Republic of Delkamy, Vákilnia, Edschterr, Northern Korsé, Mulbian"
+                  description: "Country of origin by name (from getContext referenceData)"
                 occupation:
                   type: string
-                  description: "Character occupation (e.g. doctor, laborer, teacher)"
                 personality:
                   type: string
-                  description: Personality traits
                 weight:
                   type: number
-                  description: Weight in kg
       responses:
         "200":
           description: Created character
@@ -113,11 +167,6 @@ paths:
             application/json:
               schema:
                 type: object
-                properties:
-                  id:
-                    type: string
-                  title:
-                    type: string
 
   /api/gpt/characters/{id}:
     get:
@@ -130,7 +179,6 @@ paths:
           required: true
           schema:
             type: string
-          description: Character ID (UUID)
       responses:
         "200":
           description: Character details as flat key-value pairs
@@ -138,14 +186,9 @@ paths:
             application/json:
               schema:
                 type: object
-                properties:
-                  id:
-                    type: string
-                  title:
-                    type: string
     put:
       operationId: updateCharacter
-      summary: Update a character's properties. Only send fields you want to change.
+      summary: Update a character. Only send fields you want to change.
       x-openai-isConsequential: true
       parameters:
         - name: id
@@ -174,10 +217,8 @@ paths:
                   type: integer
                 language:
                   type: string
-                  description: "Use language name, not UUID"
                 country:
                   type: string
-                  description: "Use country name, not UUID"
                 occupation:
                   type: string
                 personality:
@@ -191,26 +232,6 @@ paths:
             application/json:
               schema:
                 type: object
-    delete:
-      operationId: deleteCharacter
-      summary: Delete a character
-      x-openai-isConsequential: true
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Deletion result
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
 
   /api/gpt/items:
     get:
@@ -249,22 +270,19 @@ paths:
                   description: Item name
                 description:
                   type: string
-                  description: Item description
                 type:
                   type: string
-                  description: "Item category. Valid: food, tool, clothing, valuable, chore"
+                  description: "Item category (from getContext validValues)"
                 price:
                   type: integer
                   description: Trade value
                 effect:
                   type: string
-                  description: "Effect by name. Valid: Heal, Frozen, Ignited, Poisoned, Stun, Scared, Ice Armor, War Cry"
+                  description: "Effect by name (from getContext referenceData)"
                 effect_value:
                   type: number
-                  description: Effect strength
                 effect_duration:
                   type: number
-                  description: Effect duration in seconds
       responses:
         "200":
           description: Created item
@@ -293,7 +311,7 @@ paths:
                 type: object
     put:
       operationId: updateItem
-      summary: Update an item's properties
+      summary: Update an item
       x-openai-isConsequential: true
       parameters:
         - name: id
@@ -314,7 +332,6 @@ paths:
                   type: string
                 type:
                   type: string
-                  description: "Valid: food, tool, clothing, valuable, chore"
                 price:
                   type: integer
                 effect:
@@ -330,26 +347,6 @@ paths:
             application/json:
               schema:
                 type: object
-    delete:
-      operationId: deleteItem
-      summary: Delete an item
-      x-openai-isConsequential: true
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Deletion result
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
 
   /api/gpt/dialogues:
     get:
@@ -372,7 +369,7 @@ paths:
                       type: string
     post:
       operationId: createDialogue
-      summary: Create a new dialogue. Sets title and description only - dialogue flow is edited in the web UI.
+      summary: Create a new dialogue (title and description only - flow edited in web UI)
       x-openai-isConsequential: true
       requestBody:
         required: true
@@ -385,10 +382,8 @@ paths:
               properties:
                 title:
                   type: string
-                  description: Dialogue name (e.g. "Guard Checkpoint Conversation")
                 description:
                   type: string
-                  description: Summary of the dialogue's purpose and flow
       responses:
         "200":
           description: Created dialogue
@@ -417,7 +412,7 @@ paths:
                 type: object
     put:
       operationId: updateDialogue
-      summary: Update a dialogue's title or description
+      summary: Update a dialogue
       x-openai-isConsequential: true
       parameters:
         - name: id
@@ -478,10 +473,8 @@ paths:
               properties:
                 title:
                   type: string
-                  description: Quest name
                 description:
                   type: string
-                  description: Quest overview
       responses:
         "200":
           description: Created quest
@@ -571,10 +564,8 @@ paths:
               properties:
                 title:
                   type: string
-                  description: Location name
                 description:
                   type: string
-                  description: Location description
       responses:
         "200":
           description: Created location
@@ -664,10 +655,8 @@ paths:
               properties:
                 title:
                   type: string
-                  description: Building name
                 description:
                   type: string
-                  description: Building description
       responses:
         "200":
           description: Created building
@@ -743,25 +732,6 @@ paths:
                     title:
                       type: string
 
-  /api/gpt/languages/{id}:
-    get:
-      operationId: getLanguage
-      summary: Get language details
-      x-openai-isConsequential: false
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Language details
-          content:
-            application/json:
-              schema:
-                type: object
-
   /api/gpt/countries:
     get:
       operationId: listCountries
@@ -781,83 +751,3 @@ paths:
                       type: string
                     title:
                       type: string
-
-  /api/gpt/search:
-    get:
-      operationId: searchAssets
-      summary: Search for assets by name across all workspaces. Use to find IDs for linking.
-      x-openai-isConsequential: false
-      parameters:
-        - name: q
-          in: query
-          required: true
-          schema:
-            type: string
-          description: Search term (partial match on title)
-      responses:
-        "200":
-          description: Array of matching assets
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    title:
-                      type: string
-                    workspace:
-                      type: string
-
-  /api/gpt/link:
-    post:
-      operationId: linkAssets
-      summary: Create a bidirectional link between two assets. Use to connect related entities (character to dialogue, quest to item, etc.)
-      x-openai-isConsequential: true
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - from
-                - to
-              properties:
-                from:
-                  type: string
-                  description: Source asset ID
-                to:
-                  type: string
-                  description: Target asset ID
-      responses:
-        "200":
-          description: Link created
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-
-  /api/gpt/countries/{id}:
-    get:
-      operationId: getCountry
-      summary: Get country details
-      x-openai-isConsequential: false
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Country details
-          content:
-            application/json:
-              schema:
-                type: object
