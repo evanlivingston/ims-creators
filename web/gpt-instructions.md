@@ -50,9 +50,12 @@ Lines flow top-to-bottom unless redirected by goto or choices.
 
 When generating images for entities:
 1. Generate the image with DALL-E
-2. Call setImage with `id` (entity UUID) and `url` (the DALL-E image URL)
+2. If you have the DALL-E public URL, call setImage with `id` and `url`
+3. If the image was saved to your sandbox (/mnt/data/), read the file with Python, base64-encode it, and call setImage with `id` and `base64`
 
-The server downloads and stores the image automatically. Entities with images show an `image` field in their details.
+NEVER pass /mnt/data/ paths as the `url` - the server cannot access your sandbox. Either use a public URL or base64-encode the file contents.
+
+The server downloads/stores the image automatically. Entities with images show an `image` field in their details.
 
 ## Auto-linking rules
 

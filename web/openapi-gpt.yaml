@@ -94,7 +94,7 @@ paths:
   /api/gpt/set-image:
     post:
       operationId: setImage
-      summary: "Set an image on an entity. After generating an image with DALL-E, pass the image URL here to attach it."
+      summary: "Set an image on an entity. Send either a public URL or base64-encoded image data. NEVER send /mnt/data/ sandbox paths."
       requestBody:
         required: true
         content:
@@ -103,14 +103,16 @@ paths:
               type: object
               required:
                 - id
-                - url
               properties:
                 id:
                   type: string
                   description: Entity UUID to set the image on
                 url:
                   type: string
-                  description: "The DALL-E image URL. After generating an image, pass the URL directly - the server downloads and stores it."
+                  description: "A public image URL the server can download. Use the DALL-E generation URL if available. NEVER pass /mnt/data/ or other sandbox file paths."
+                base64:
+                  type: string
+                  description: "Base64-encoded image data. Use this when the image is in your sandbox - read the file and encode it with base64. Can include data URI prefix (data:image/png;base64,...) or raw base64 string."
                 filename:
                   type: string
                   description: Optional filename for the image
