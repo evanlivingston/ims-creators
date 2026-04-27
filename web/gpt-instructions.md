@@ -51,21 +51,21 @@ Lines flow top-to-bottom unless redirected by goto or choices.
 When generating images for entities:
 1. Generate the image with DALL-E
 2. The image will be saved to /mnt/data/ in your sandbox
-3. Use Python (code interpreter) to upload the file directly to the server:
+3. Use Python to read the file, base64-encode it, and split into chunks:
    ```python
-   import requests
+   import base64, uuid
    with open("/mnt/data/your_image.png", "rb") as f:
-       resp = requests.post(
-           "https://ims.sieisst.com/api/gpt/upload-image",
-           files={"file": f},
-           data={"id": "ENTITY_UUID_HERE"},
-           headers={"Authorization": "Bearer YOUR_API_KEY"}
-       )
-   print(resp.json())
+       b64 = base64.b64encode(f.read()).decode()
+   upload_id = str(uuid.uuid4())
+   chunk_size = 500
+   chunks = [b64[i:i+chunk_size] for i in range(0, len(b64), chunk_size)]
+   total = len(chunks)
+   # Then call sendImageChunk for each: index=0..total-1
    ```
-   Replace the entity UUID and use the API key from your authentication.
+4. Call sendImageChunk once per chunk with: id, uploadId, chunk, index, total
+5. The server reassembles the image when all chunks arrive and attaches it to the entity
 
-Do NOT use the setImage or uploadImage tool calls for this - tool call payloads are too small for image files. Always use Python code execution to POST the file directly.
+Each chunk should be ~500 characters of base64. This keeps each tool call payload small enough to transmit reliably.
 
 Entities with images show an `image` field in their details.
 

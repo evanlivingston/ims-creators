@@ -158,6 +158,54 @@ paths:
                 properties:
                   success:
                     type: boolean
+  /api/gpt/image-chunk:
+    post:
+      operationId: sendImageChunk
+      summary: "Send a chunk of base64 image data. Use Python to split the image into ~500-char chunks and send each one. The server reassembles and attaches the image when all chunks arrive."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - uploadId
+                - chunk
+                - index
+                - total
+              properties:
+                id:
+                  type: string
+                  description: Entity UUID to set the image on
+                uploadId:
+                  type: string
+                  description: "A unique ID for this upload session (use a UUID). Must be the same across all chunks."
+                chunk:
+                  type: string
+                  description: "A piece of base64-encoded image data (~500 characters). Use Python to split the full base64 string."
+                index:
+                  type: integer
+                  description: "Zero-based chunk index (0, 1, 2, ...)"
+                total:
+                  type: integer
+                  description: "Total number of chunks being sent"
+                filename:
+                  type: string
+                  description: "Optional filename (only needed on the last chunk)"
+      responses:
+        "200":
+          description: Chunk received
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: string
+                    description: "'partial' if more chunks needed, 'complete' when image is assembled and attached"
 
   /api/gpt/{workspace}:
     get:
