@@ -1,5 +1,7 @@
 FROM node:22-slim
 
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 # Copy all three layers
@@ -23,5 +25,9 @@ EXPOSE 3000
 
 ENV HOST=0.0.0.0
 ENV PORT=3000
+ENV GIT_AUTHOR_NAME="IMS Creators"
+ENV GIT_AUTHOR_EMAIL="ims@sieisst.com"
+ENV GIT_COMMITTER_NAME="IMS Creators"
+ENV GIT_COMMITTER_EMAIL="ims@sieisst.com"
 
 CMD ["node", ".output/server/index.mjs"]
