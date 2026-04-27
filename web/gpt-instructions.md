@@ -46,6 +46,47 @@ Dialogues and quests accept a `script` array that defines the conversation flow.
 
 Lines flow top-to-bottom unless redirected by goto or choices.
 
+### Critical rules
+
+This is a graph, not a screenplay. Two patterns trip up linear thinking:
+
+**1. Player responses are `choices` on the NPC's prompting line. Do not create a separate "player" speech node.**
+
+Right:
+```json
+{ "character": "Guard", "text": "What brings you here?", "choices": [
+    { "text": "I'm a doctor", "goto": "doctor" },
+    { "text": "None of your business", "goto": "defiant" }
+]}
+```
+
+Wrong (creates a redundant node, breaks the flow):
+```json
+{ "character": "Guard", "text": "What brings you here?" },
+{ "character": "Main Hero", "text": "[Responds]", "choices": [ ... ] }
+```
+
+**2. Every branch must terminate with `goto`, or it falls through into the next branch's lines.**
+
+Lines flow top-to-bottom by default. If branch A's last line has no `goto`, it runs into branch B's first line. Always terminate each branch with a `goto` to a shared label (commonly `end`).
+
+Right:
+```json
+[
+  { "character": "Guard", "text": "Skill?", "choices": [
+      { "text": "Yes",  "goto": "skill_yes" },
+      { "text": "No",   "goto": "skill_no" }
+  ]},
+  { "label": "skill_yes", "setVar": {"variable": "skill", "value": "yes"}, "text": "" },
+  { "trigger": "AssignBlock", "text": "", "goto": "end" },
+  { "label": "skill_no",  "setVar": {"variable": "skill", "value": "no"},  "text": "" },
+  { "trigger": "AssignBlock", "text": "", "goto": "end" },
+  { "label": "end", "text": "", "trigger": "EndDialogue" }
+]
+```
+
+Without those `goto: "end"` lines, choosing "Yes" runs the AssignBlock trigger and then keeps going into the "No" branch.
+
 ## Images
 
 When generating images for entities:
