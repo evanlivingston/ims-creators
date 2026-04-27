@@ -8,6 +8,11 @@ export default defineEventHandler((event) => {
     return;
   }
 
+  // Public endpoints - no auth needed
+  if (path === '/api/gpt/openapi' || path === '/api/gpt/instructions') {
+    return;
+  }
+
   const apiKey = process.env.API_KEY;
 
   // If no API_KEY is set, skip auth (local development)
