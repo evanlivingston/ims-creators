@@ -118,6 +118,13 @@ export async function getPropertySchema(workspaceId: string): Promise<Record<str
         for (const [key, meta] of Object.entries(propsMetadata)) {
           schema[key] = { ...meta, blockType: 'props', blockId: block.id, blockName: block.name };
         }
+      } else if (block.type === 'script') {
+        schema['script'] = {
+          type: 'array',
+          title: 'Dialogue script',
+          description: 'Array of dialogue lines with character, text, choices, chance, triggers',
+          blockType: 'script', blockId: block.id, blockName: block.name,
+        };
       }
     }
   }
@@ -182,6 +189,10 @@ export function flattenAsset(asset: any): Record<string, any> {
         const displayKey = PROPERTY_DISPLAY_NAMES[key] || key;
         result[displayKey] = simplifyValue(value);
       }
+    } else if (block.type === 'script') {
+      const scriptProps = block.computed || block.props || {};
+      const lines = flattenScript(scriptProps);
+      if (lines.length > 0) result.script = lines;
     }
   }
   return result;
@@ -303,6 +314,21 @@ export async function buildBlocksFromFlat(
     if (inputKey === 'title' || inputKey === 'id') continue;
     if (value == null) continue;
 
+    // Handle script/dialogue specially
+    if (inputKey === 'script' && Array.isArray(value)) {
+      const scriptData = await buildScriptFromSimple(value);
+      // Find the content/script block ID from schema, or use name
+      let scriptBlockKey = 'content';
+      for (const meta of Object.values(schema)) {
+        if (meta.blockType === 'script' || meta.blockName === 'content') {
+          scriptBlockKey = meta.blockId ? `@${meta.blockId}` : 'content';
+          break;
+        }
+      }
+      blockMap[scriptBlockKey] = { type: 'script', props: scriptData };
+      continue;
+    }
+
     // Apply alias mapping (e.g. "language" -> "lanuge")
     const key = PROPERTY_ALIASES[inputKey] || inputKey;
 
@@ -328,6 +354,194 @@ export async function buildBlocksFromFlat(
   }
 
   return blockMap;
+}
+
+// ── Script/dialogue builder ───────────────────────────────────────────
+
+interface SimpleDialogueLine {
+  label?: string;
+  character?: string;
+  text: string;
+  description?: string;
+  choices?: Array<{ text: string; goto?: string }>;
+  chance?: Array<{ weight: number; goto: string }>;
+  trigger?: string;
+  triggerParams?: Record<string, any>;
+  setVar?: { variable: string; value: any };
+  goto?: string;
+}
+
+/**
+ * Convert a simplified dialogue script to IMS node graph format.
+ * Resolves character names to asset references.
+ */
+export async function buildScriptFromSimple(lines: SimpleDialogueLine[]): Promise<any> {
+  const { v4: uuidv4 } = await import('uuid');
+  const nodes: Record<string, any> = {};
+  const labelToId: Record<string, string> = {};
+
+  // Pre-assign UUIDs and register labels
+  const lineIds: string[] = [];
+  for (const line of lines) {
+    const id = uuidv4();
+    lineIds.push(id);
+    if (line.label) labelToId[line.label] = id;
+  }
+
+  // Create start and end nodes
+  const startId = uuidv4();
+  const endId = uuidv4();
+  nodes[startId] = { type: 'start', next: lineIds[0] || endId, index: 0, pos: { x: 0, y: 0 } };
+  nodes[endId] = { type: 'end', next: null, index: 0, pos: { x: 0, y: (lines.length + 1) * 200 } };
+
+  // Build nodes
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const nodeId = lineIds[i];
+    const defaultNext = i + 1 < lineIds.length ? lineIds[i + 1] : endId;
+    const y = (i + 1) * 200;
+
+    // Resolve character reference
+    let character: any = null;
+    if (line.character) {
+      character = await findAssetByName(line.character);
+      // Ensure it's in asset reference format
+      if (typeof character === 'string') character = null;
+    }
+
+    if (line.setVar) {
+      // SetVar node
+      nodes[nodeId] = {
+        type: 'setVar',
+        next: line.goto ? (labelToId[line.goto] || defaultNext) : defaultNext,
+        index: 0,
+        pos: { x: 0, y },
+        values: { variable: line.setVar.variable, value: line.setVar.value },
+      };
+    } else if (line.trigger) {
+      // Trigger node
+      nodes[nodeId] = {
+        type: 'trigger',
+        next: line.goto ? (labelToId[line.goto] || defaultNext) : defaultNext,
+        index: 0,
+        subject: line.trigger,
+        pos: { x: 0, y },
+        values: line.triggerParams || {},
+      };
+    } else if (line.chance && line.chance.length > 0) {
+      // Chance node - weighted random branching
+      const options = line.chance.map(c => ({
+        next: c.goto ? (labelToId[c.goto] || endId) : defaultNext,
+        values: { weight: c.weight },
+      }));
+      nodes[nodeId] = {
+        type: 'chance',
+        next: null,
+        index: 0,
+        options,
+        pos: { x: 0, y },
+        values: {},
+      };
+    } else if (line.choices && line.choices.length > 0) {
+      // Speech node with player choices
+      const options = line.choices.map(choice => ({
+        next: choice.goto ? (labelToId[choice.goto] || endId) : defaultNext,
+        values: { text: choice.text },
+      }));
+      nodes[nodeId] = {
+        type: 'speech',
+        next: null,
+        index: 0,
+        options,
+        pos: { x: 0, y },
+        values: {
+          text: line.text,
+          character,
+          description: line.description || null,
+        },
+      };
+    } else {
+      // Simple speech node
+      nodes[nodeId] = {
+        type: 'speech',
+        next: line.goto ? (labelToId[line.goto] || defaultNext) : defaultNext,
+        index: 0,
+        pos: { x: 0, y },
+        values: {
+          text: line.text,
+          character,
+          description: line.description || null,
+        },
+      };
+    }
+  }
+
+  // Resolve any goto references that were forward-declared
+  for (const node of Object.values(nodes)) {
+    if (typeof node.next === 'string' && labelToId[node.next]) {
+      node.next = labelToId[node.next];
+    }
+    if (node.options) {
+      for (const opt of node.options) {
+        if (typeof opt.next === 'string' && labelToId[opt.next]) {
+          opt.next = labelToId[opt.next];
+        }
+      }
+    }
+  }
+
+  return { start: startId, nodes };
+}
+
+/**
+ * Flatten a script block's nodes into simplified dialogue lines for API output.
+ */
+export function flattenScript(scriptProps: any): SimpleDialogueLine[] {
+  if (!scriptProps?.nodes || !scriptProps?.start) return [];
+  const nodes = scriptProps.nodes;
+  const lines: SimpleDialogueLine[] = [];
+  const visited = new Set<string>();
+
+  // Walk the graph from start
+  let currentId = nodes[scriptProps.start]?.next;
+  while (currentId && !visited.has(currentId)) {
+    visited.add(currentId);
+    const node = nodes[currentId];
+    if (!node) break;
+
+    if (node.type === 'speech') {
+      const line: SimpleDialogueLine = {
+        text: node.values?.text || '',
+        character: node.values?.character?.Title || undefined,
+        description: typeof node.values?.description === 'string'
+          ? node.values.description
+          : node.values?.description?.Str || undefined,
+      };
+      if (node.options?.length) {
+        line.choices = node.options.map((opt: any) => ({
+          text: opt.values?.text || '',
+        }));
+      }
+      lines.push(line);
+      // Follow first option or next
+      currentId = node.options?.[0]?.next || node.next;
+    } else if (node.type === 'chance') {
+      const weights = (node.options || []).map((opt: any) => opt.values?.weight || 1);
+      lines.push({ text: `[chance: ${weights.join('/')}]`, chance: (node.options || []).map((opt: any) => ({ weight: opt.values?.weight || 1, goto: '' })) });
+      currentId = node.options?.[0]?.next;
+    } else if (node.type === 'trigger') {
+      lines.push({ text: `[trigger: ${node.subject}]`, trigger: node.subject });
+      currentId = node.next;
+    } else if (node.type === 'setVar') {
+      lines.push({ text: `[set ${node.values?.variable} = ${node.values?.value}]`, setVar: node.values });
+      currentId = node.next;
+    } else if (node.type === 'end') {
+      break;
+    } else {
+      currentId = node.next;
+    }
+  }
+  return lines;
 }
 
 // ── Git auto-commit ───────────────────────────────────────────────────
