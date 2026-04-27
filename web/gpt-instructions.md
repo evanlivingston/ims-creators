@@ -51,9 +51,21 @@ Lines flow top-to-bottom unless redirected by goto or choices.
 When generating images for entities:
 1. Generate the image with DALL-E
 2. The image will be saved to /mnt/data/ in your sandbox
-3. Call uploadImage with `id` (entity UUID) and `file` (the image file) as multipart form data
+3. Use Python (code interpreter) to upload the file directly to the server:
+   ```python
+   import requests
+   with open("/mnt/data/your_image.png", "rb") as f:
+       resp = requests.post(
+           "https://ims.sieisst.com/api/gpt/upload-image",
+           files={"file": f},
+           data={"id": "ENTITY_UUID_HERE"},
+           headers={"Authorization": "Bearer YOUR_API_KEY"}
+       )
+   print(resp.json())
+   ```
+   Replace the entity UUID and use the API key from your authentication.
 
-This is a multipart/form-data upload - send the actual file bytes, not base64 or a URL.
+Do NOT use the setImage or uploadImage tool calls for this - tool call payloads are too small for image files. Always use Python code execution to POST the file directly.
 
 Entities with images show an `image` field in their details.
 
