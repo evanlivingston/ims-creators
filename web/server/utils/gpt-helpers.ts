@@ -1,5 +1,7 @@
 import { getProjectDb } from './project-db';
 import { execFile } from 'child_process';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 import { promisify } from 'util';
 
 const execFileAsync = promisify(execFile);
@@ -871,10 +873,19 @@ export async function buildGptContext() {
     }
   }
 
+  let instructions = 'Always call getContext first. Use entity names (not UUIDs) for references.';
+  for (const p of [
+    resolve(process.cwd(), 'gpt-instructions.md'),
+    resolve(process.cwd(), '..', 'gpt-instructions.md'),
+    resolve(process.cwd(), 'web', 'gpt-instructions.md'),
+  ]) {
+    try { instructions = readFileSync(p, 'utf-8'); break; } catch {}
+  }
+
   return {
     game: 'If This',
     description: 'Game set in a fictional concentration camp. Isometric 3D. Fictional countries, languages, religions.',
-    instructions: 'Always call getContext first. Use entity names (not UUIDs) for references. All properties are flat key-value pairs.',
+    instructions,
     entityTypes,
     referenceData,
   };
