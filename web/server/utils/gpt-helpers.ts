@@ -399,7 +399,10 @@ export async function buildBlocksFromFlat(
           break;
         }
       }
-      blockMap[scriptBlockKey] = { type: 'script', props: scriptData };
+      // Wipe existing flat keys before overlaying new nested objects.
+      // Without `~: null`, applyPropsChange leaves stale `nodes\<uuid>\...` flat keys
+      // that overwrite the new nested values during convertAssetPropsToPlainObject.
+      blockMap[scriptBlockKey] = { type: 'script', props: [{ '~': null }, scriptData] };
       continue;
     }
 
