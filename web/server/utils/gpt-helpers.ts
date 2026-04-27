@@ -211,6 +211,26 @@ export function flattenAsset(asset: any): Record<string, any> {
       if (lines.length > 0) result.script = lines;
     }
   }
+
+  // For type definitions: expose __props as defined_properties
+  if (asset.parentIds?.includes('00000000-0000-0000-0000-000000000035') ||
+      asset.workspaceId === 'ae2b3260-4448-4f89-9d6d-aac56479a7b5') {
+    const propsBlock = asset.blocks?.find((b: any) => b.type === 'props' && b.name === 'props');
+    if (propsBlock) {
+      const metadata = extractPropsMetadata(propsBlock.computed || propsBlock.props || {});
+      if (Object.keys(metadata).length > 0) {
+        result.defined_properties = {};
+        for (const [key, meta] of Object.entries(metadata)) {
+          const prop: any = { type: meta.type || 'string' };
+          if (meta.title) prop.title = meta.title;
+          if (meta.multiple) prop.multiple = true;
+          if (meta.params?.type?.Title) prop.references = meta.params.type.Title;
+          result.defined_properties[key] = prop;
+        }
+      }
+    }
+  }
+
   return result;
 }
 
@@ -330,6 +350,30 @@ export async function buildBlocksFromFlat(
     if (inputKey === 'title' || inputKey === 'id') continue;
     if (value == null) continue;
 
+    // Handle type definition properties
+    if (inputKey === 'defined_properties' && typeof value === 'object') {
+      // Translate { propName: { type, title, references, multiple } } to __props format
+      const propsBlockKey = defaultPropsBlockId ? `@${defaultPropsBlockId}` : 'props';
+      if (!blockMap[propsBlockKey]) blockMap[propsBlockKey] = { type: 'props', props: {} };
+      const __props: Record<string, any> = {};
+      let index = 1;
+      for (const [propName, propDef] of Object.entries(value as Record<string, any>)) {
+        const meta: any = { type: propDef.type || 'string', index: index++, title: propDef.title || propName };
+        if (propDef.multiple) meta.multiple = true;
+        if (propDef.references) {
+          // Resolve reference type name to asset ID
+          const refAsset = await findAssetByName(propDef.references);
+          if (typeof refAsset === 'object' && refAsset.AssetId) {
+            meta.params = { type: { Title: propDef.references, AssetId: refAsset.AssetId } };
+          }
+        }
+        blockMap[propsBlockKey].props[propName] = null; // Default value
+        __props[propName] = meta;
+      }
+      blockMap[propsBlockKey].props.__props = __props;
+      continue;
+    }
+
     // Handle script/dialogue specially
     if (inputKey === 'script' && Array.isArray(value)) {
       const scriptData = await buildScriptFromSimple(value);
@@ -361,9 +405,9 @@ export async function buildBlocksFromFlat(
         if (!blockMap[blockKey]) blockMap[blockKey] = { type: 'props', props: {} };
         blockMap[blockKey].props[key] = resolved;
       }
-    } else if (defaultPropsBlockId) {
-      // Unknown property - pass through to default props block as-is
-      const blockKey = `@${defaultPropsBlockId}`;
+    } else {
+      // Unknown property - pass through to props block (create one if needed)
+      const blockKey = defaultPropsBlockId ? `@${defaultPropsBlockId}` : 'props';
       if (!blockMap[blockKey]) blockMap[blockKey] = { type: 'props', props: {} };
       blockMap[blockKey].props[key] = value;
     }
@@ -762,7 +806,7 @@ export async function buildGptContext() {
   const entityTypes: Record<string, any> = {};
 
   for (const ws of workspaces) {
-    if (ws.title === 'Types') continue;
+    // Include all workspaces including Types (so ChatGPT can discover and modify type definitions)
     const slug = ws.title.toLowerCase().replace(/\s+/g, '-');
 
     // Get property schema
