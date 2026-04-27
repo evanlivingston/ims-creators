@@ -207,11 +207,7 @@ export function flattenAsset(asset: any): Record<string, any> {
       }
     } else if (block.type === 'script') {
       const scriptProps = block.computed || block.props || {};
-      const keyCount = Object.keys(scriptProps).length;
-      const sampleKeys = Object.keys(scriptProps).slice(0, 3);
-      console.log(`[flattenAsset] script block: ${keyCount} keys, sample:`, sampleKeys);
       const lines = flattenScript(scriptProps);
-      console.log(`[flattenAsset] flattenScript returned ${lines.length} lines`);
       if (lines.length > 0) result.script = lines;
     }
   }
@@ -605,16 +601,6 @@ function numericKeysToArrays(obj: any): void {
 export function flattenScript(scriptProps: any): SimpleDialogueLine[] {
   // Unflatten \\-delimited props from assetsGetFull
   const props = scriptProps?.nodes ? scriptProps : unflattenProps(scriptProps || {});
-  console.log(`[flattenScript] after unflatten: hasNodes=${!!props?.nodes} hasStart=${!!props?.start} nodeCount=${props?.nodes ? Object.keys(props.nodes).length : 0}`);
-  if (props?.nodes) {
-    const firstNodeId = Object.keys(props.nodes)[0];
-    const firstNode = props.nodes[firstNodeId];
-    console.log(`[flattenScript] first node: id=${firstNodeId} type=${firstNode?.type} next=${firstNode?.next}`);
-    if (props.start) {
-      const startNode = props.nodes[props.start];
-      console.log(`[flattenScript] start node: id=${props.start} type=${startNode?.type} next=${startNode?.next}`);
-    }
-  }
   if (!props?.nodes || !props?.start) return [];
   const nodes = props.nodes;
   const lines: SimpleDialogueLine[] = [];
