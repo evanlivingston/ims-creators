@@ -70,7 +70,7 @@ export default defineNuxtConfig({
       APP_CONFIGURATION_NAME: 'creators',
       AUTH_API_HOST: '',
       CREATORS_API_HOST: '',
-      FILE_STORAGE_API_HOST: '',
+      FILE_STORAGE_API_HOST: '/api/',
       SUPERVISOR_API_HOST: '',
       GAMEMANAGER_API_HOST: '',
       SPACE_API_HOST: '',

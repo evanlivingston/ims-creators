@@ -91,6 +91,37 @@ paths:
                     type: array
                     items:
                       type: string
+  /api/gpt/set-image:
+    post:
+      operationId: setImage
+      summary: Set an image on an entity by downloading from a URL. Works with DALL-E generated image URLs.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - url
+              properties:
+                id:
+                  type: string
+                  description: Entity UUID to set the image on
+                url:
+                  type: string
+                  description: Image URL to download and attach
+      responses:
+        "200":
+          description: Image set
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+
   /api/gpt/{workspace}:
     get:
       operationId: listEntities
