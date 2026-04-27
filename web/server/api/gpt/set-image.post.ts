@@ -24,9 +24,12 @@ function readLargeBody(event: any, maxSize: number): Promise<string> {
 }
 
 export default defineEventHandler(async (event) => {
+  const contentLength = event.node.req.headers['content-length'];
   const raw = await readLargeBody(event, 10 * 1024 * 1024);
+  console.log(`[set-image] Content-Length header: ${contentLength}, raw body size: ${raw.length}`);
   const body = JSON.parse(raw);
   const { id, url, base64, filename } = body;
+  console.log(`[set-image] body.base64 length: ${base64?.length ?? 'none'}, body keys: ${Object.keys(body).join(', ')}`);
 
   if (!id) throw createError({ statusCode: 400, statusMessage: 'Asset id required' });
   if (!url && !base64) throw createError({ statusCode: 400, statusMessage: 'Either url or base64 image data required' });
