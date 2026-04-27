@@ -17,6 +17,24 @@ components:
       type: apiKey
       in: header
       name: x-api-key
+  schemas:
+    Entity:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+      additionalProperties: true
+    EntityList:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          title:
+            type: string
 
 paths:
   /api/gpt/context:
@@ -153,6 +171,9 @@ paths:
                 title:
                   type: string
                   description: Entity name (required)
+                description:
+                  type: string
+                  description: Optional description or backstory
               additionalProperties: true
       responses:
         "200":
@@ -160,7 +181,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: "#/components/schemas/Entity"
 
   /api/gpt/{workspace}/{id}:
     get:
@@ -185,7 +206,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: "#/components/schemas/Entity"
     put:
       operationId: updateEntity
       summary: Update an entity. Only send the fields you want to change. Use plain names for references.
@@ -207,6 +228,11 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
               additionalProperties: true
       responses:
         "200":
@@ -214,4 +240,4 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: "#/components/schemas/Entity"
