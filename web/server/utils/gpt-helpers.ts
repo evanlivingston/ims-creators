@@ -643,6 +643,10 @@ export function flattenScript(scriptProps: any): SimpleDialogueLine[] {
       lines.push(line);
       // Follow first option or next
       currentId = node.options?.[0]?.next || node.next;
+    } else if (node.type === 'branch') {
+      // Conditional branch - follow the first option that has a next
+      const firstOpt = (node.options || []).find((opt: any) => opt.next);
+      currentId = firstOpt?.next || node.next;
     } else if (node.type === 'chance') {
       const weights = (node.options || []).map((opt: any) => opt.values?.weight || 1);
       lines.push({ text: `[chance: ${weights.join('/')}]`, chance: (node.options || []).map((opt: any) => ({ weight: opt.values?.weight || 1, goto: '' })) });
@@ -654,6 +658,10 @@ export function flattenScript(scriptProps: any): SimpleDialogueLine[] {
       lines.push({ text: `[set ${node.values?.variable} = ${node.values?.value}]`, setVar: node.values });
       currentId = node.next;
     } else if (node.type === 'end') {
+      break;
+    } else if (node.type === 'getVar' || node.type?.startsWith('op')) {
+      // Operator/variable nodes have next: null (they feed via {get:id, param:"result"})
+      // Skip them - they don't contribute to the linear flow
       break;
     } else {
       currentId = node.next;
