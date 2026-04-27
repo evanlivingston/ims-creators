@@ -4,7 +4,7 @@ services:
       context: ..
       dockerfile: web/Dockerfile
     ports:
-      - "3000:3000"
+      - "8080:3000"
     volumes:
       - ${PROJECT_PATH:?Set PROJECT_PATH to your design data directory}:/data/design
       - ~/.gitconfig:/root/.gitconfig:ro
