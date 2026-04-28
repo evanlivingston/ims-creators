@@ -73,7 +73,7 @@ Conditions can be nested for multi-state routing:
 ]
 ```
 
-Variables set with `setVar` during dialogue are persisted to game state when a binding exists. On re-entry, `condition` reads the persisted value. Always use `setVar` to mark state before the dialogue ends (e.g. `met_guard = "true"`), and use `condition` at the start to check it.
+Variables set with `setVar` during dialogue are automatically persisted to game state. On re-entry, `condition` reads the persisted value. Always use `setVar` to mark state before the dialogue ends (e.g. `met_guard = "true"`), and use `condition` at the start to check it. No manual binding setup is needed.
 
 ### Critical rules
 
@@ -99,7 +99,6 @@ Wrong (creates a redundant node, breaks the flow):
 
 Lines flow top-to-bottom by default. If branch A's last line has no `goto`, it runs into branch B's first line. Always terminate each branch with a `goto` to a shared label (commonly `end`).
 
-Right:
 ```json
 [
   { "character": "Guard", "text": "Skill?", "choices": [
@@ -115,29 +114,6 @@ Right:
 ```
 
 Without those `goto: "end"` lines, choosing "Yes" runs the AssignBlock trigger and then keeps going into the "No" branch.
-
-## Images
-
-When generating images for entities:
-1. Generate the image with DALL-E
-2. The image will be saved to /mnt/data/ in your sandbox
-3. Use Python to read the file, base64-encode it, and split into chunks:
-   ```python
-   import base64, uuid
-   with open("/mnt/data/your_image.png", "rb") as f:
-       b64 = base64.b64encode(f.read()).decode()
-   upload_id = str(uuid.uuid4())
-   chunk_size = 500
-   chunks = [b64[i:i+chunk_size] for i in range(0, len(b64), chunk_size)]
-   total = len(chunks)
-   # Then call sendImageChunk for each: index=0..total-1
-   ```
-4. Call sendImageChunk once per chunk with: id, uploadId, chunk, index, total
-5. The server reassembles the image when all chunks arrive and attaches it to the entity
-
-Each chunk should be ~500 characters of base64. This keeps each tool call payload small enough to transmit reliably.
-
-Entities with images show an `image` field in their details.
 
 ## Trigger actions
 
@@ -163,10 +139,6 @@ Remove an item conditionally:
 ```
 
 `EndDialogue` is reserved - it signals the dialogue is ending. Don't put actions on it.
-
-### Variable persistence
-
-Variables set with `setVar` in dialogues are automatically persisted to game state. On re-entry, `condition` reads the persisted value. No manual binding setup is needed. Always use `setVar` to mark state before the dialogue ends.
 
 ## Auto-linking rules
 
