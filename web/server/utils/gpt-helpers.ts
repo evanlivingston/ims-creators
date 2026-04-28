@@ -470,6 +470,8 @@ export async function buildScriptFromSimple(lines: SimpleDialogueLine[]): Promis
   const endId = uuidv4();
   nodes[startId] = { type: 'start', next: lineIds[0] || endId, index: 0, pos: { x: 0, y: 0 } };
   nodes[endId] = { type: 'end', next: null, index: 0, pos: { x: 0, y: (lines.length + 1) * 200 } };
+  // Register "end" as a built-in label so callers can `goto: "end"` to terminate a branch.
+  if (!labelToId['end']) labelToId['end'] = endId;
 
   // Build nodes
   for (let i = 0; i < lines.length; i++) {
@@ -658,62 +660,133 @@ function numericKeysToArrays(obj: any): void {
 
 /**
  * Flatten a script block's nodes into simplified dialogue lines for API output.
+ *
+ * Round-trips with buildScriptFromSimple: every reachable speech/setVar/trigger/chance
+ * node is emitted as a line in BFS order. Lines flow sequentially; `goto` is emitted
+ * only when a node's actual next (or option's next) deviates from the next sequential
+ * line. Labels are emitted only on lines referenced as goto targets.
+ *
+ * Labels use the first 8 chars of the node UUID so they're stable within a single read.
+ * They change after every save (since save regenerates UUIDs), but that's expected —
+ * GPT should always use labels from the most recent read.
  */
 export function flattenScript(scriptProps: any): SimpleDialogueLine[] {
-  // Unflatten \\-delimited props from assetsGetFull
   const props = scriptProps?.nodes ? scriptProps : unflattenProps(scriptProps || {});
   if (!props?.nodes || !props?.start) return [];
   const nodes = props.nodes;
-  const lines: SimpleDialogueLine[] = [];
-  const visited = new Set<string>();
 
-  // Walk the graph from start
-  let currentId = nodes[props.start]?.next;
-  while (currentId && !visited.has(currentId)) {
-    visited.add(currentId);
-    const node = nodes[currentId];
-    if (!node) break;
+  // Nodes we emit as lines (one node = one line). branch/start/op*/getVar are skipped.
+  const isLineNode = (t: string) =>
+    t === 'speech' || t === 'setVar' || t === 'trigger' || t === 'chance' || t === 'end';
 
-    if (node.type === 'speech') {
-      const line: SimpleDialogueLine = {
-        text: node.values?.text || '',
-        character: node.values?.character?.Title || undefined,
-        description: typeof node.values?.description === 'string'
-          ? node.values.description
-          : node.values?.description?.Str || undefined,
-      };
-      if (node.options?.length) {
-        line.choices = node.options.map((opt: any) => ({
-          text: opt.values?.text || '',
-        }));
+  // Skip past non-line nodes (start, branch) to the next line node.
+  // Returns null if the chain dead-ends at an operator/getVar/missing node.
+  const resolveLink = (id: string | null | undefined): string | null => {
+    const seen = new Set<string>();
+    let cur: string | null | undefined = id;
+    while (cur && !seen.has(cur) && nodes[cur]) {
+      seen.add(cur);
+      const n = nodes[cur];
+      if (isLineNode(n.type)) return cur;
+      if (n.type === 'start') { cur = n.next; continue; }
+      if (n.type === 'branch') {
+        const opt = (n.options || []).find((o: any) => o.next);
+        cur = opt?.next ?? n.next ?? null;
+        continue;
       }
-      lines.push(line);
-      // Follow first option or next
-      currentId = node.options?.[0]?.next || node.next;
-    } else if (node.type === 'branch') {
-      // Conditional branch - follow the first option that has a next
-      const firstOpt = (node.options || []).find((opt: any) => opt.next);
-      currentId = firstOpt?.next || node.next;
-    } else if (node.type === 'chance') {
-      const weights = (node.options || []).map((opt: any) => opt.values?.weight || 1);
-      lines.push({ text: `[chance: ${weights.join('/')}]`, chance: (node.options || []).map((opt: any) => ({ weight: opt.values?.weight || 1, goto: '' })) });
-      currentId = node.options?.[0]?.next;
-    } else if (node.type === 'trigger') {
-      lines.push({ text: `[trigger: ${node.subject}]`, trigger: node.subject });
-      currentId = node.next;
-    } else if (node.type === 'setVar') {
-      lines.push({ text: `[set ${node.values?.variable} = ${node.values?.value}]`, setVar: node.values });
-      currentId = node.next;
-    } else if (node.type === 'end') {
-      break;
-    } else if (node.type === 'getVar' || node.type?.startsWith('op')) {
-      // Operator/variable nodes have next: null (they feed via {get:id, param:"result"})
-      // Skip them - they don't contribute to the linear flow
-      break;
-    } else {
-      currentId = node.next;
+      return null; // op*, getVar, etc.
+    }
+    return null;
+  };
+
+  // BFS from start through line nodes only.
+  const order: string[] = [];
+  const seen = new Set<string>();
+  const enqueue = (id: string | null) => {
+    if (!id || seen.has(id) || !nodes[id]) return;
+    seen.add(id);
+    order.push(id);
+    const n = nodes[id];
+    enqueue(resolveLink(n.next));
+    for (const opt of n.options || []) enqueue(resolveLink(opt.next));
+  };
+  enqueue(resolveLink(props.start));
+
+  // Find which nodes are jump targets (need a label).
+  const labelOf = (id: string) => id.slice(0, 8);
+  const targets = new Set<string>();
+  for (let i = 0; i < order.length; i++) {
+    const n = nodes[order[i]];
+    const naturalNext = order[i + 1] ?? null;
+    const actualNext = resolveLink(n.next);
+    if (actualNext && actualNext !== naturalNext) targets.add(actualNext);
+    for (const opt of n.options || []) {
+      const t = resolveLink(opt.next);
+      if (t) targets.add(t);
     }
   }
+
+  // Emit lines.
+  const lines: SimpleDialogueLine[] = [];
+  for (let i = 0; i < order.length; i++) {
+    const id = order[i];
+    const n = nodes[id];
+    const naturalNext = order[i + 1] ?? null;
+    const line: SimpleDialogueLine = { text: '' };
+    if (targets.has(id)) line.label = labelOf(id);
+
+    const emitGoto = (target: string | null) => {
+      if (!target) return undefined;
+      if (nodes[target]?.type === 'end') return 'end';
+      return labelOf(target);
+    };
+    const fallthroughGoto = () => {
+      const actualNext = resolveLink(n.next);
+      if (!actualNext || actualNext === naturalNext) return;
+      line.goto = emitGoto(actualNext);
+    };
+
+    if (n.type === 'speech') {
+      line.text = n.values?.text || '';
+      if (n.values?.character?.Title) line.character = n.values.character.Title;
+      const desc = n.values?.description;
+      if (typeof desc === 'string' && desc) line.description = desc;
+      else if (desc?.Str) line.description = desc.Str;
+      if (n.options?.length) {
+        line.choices = n.options.map((opt: any) => {
+          const optText = typeof opt.values?.text === 'string'
+            ? opt.values.text
+            : opt.values?.text?.Str || '';
+          const target = resolveLink(opt.next);
+          const choice: { text: string; goto?: string } = { text: optText };
+          const g = emitGoto(target);
+          if (g) choice.goto = g;
+          return choice;
+        });
+      } else {
+        fallthroughGoto();
+      }
+    } else if (n.type === 'setVar') {
+      line.setVar = { variable: n.values?.variable, value: n.values?.value };
+      fallthroughGoto();
+    } else if (n.type === 'trigger') {
+      line.trigger = n.subject;
+      if (n.values && Object.keys(n.values).length) line.triggerParams = n.values;
+      fallthroughGoto();
+    } else if (n.type === 'chance') {
+      line.chance = (n.options || []).map((opt: any) => ({
+        weight: opt.values?.weight || 1,
+        goto: emitGoto(resolveLink(opt.next)) || '',
+      }));
+    } else if (n.type === 'end') {
+      // Only emit end if it's a labeled jump target; otherwise it's implicit.
+      if (!targets.has(id)) continue;
+      line.text = '';
+      line.label = 'end';
+    }
+    lines.push(line);
+  }
+
   return lines;
 }
 
