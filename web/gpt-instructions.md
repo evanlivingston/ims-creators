@@ -102,6 +102,9 @@ Conditions can be nested for multi-state routing:
 ```
 
 Variables set with `setVar` during dialogue are automatically persisted to game state. On re-entry, `condition` reads the persisted value. Always use `setVar` to mark state before the dialogue ends (e.g. `met_guard = "true"`), and use `condition` at the start to check it. No manual binding setup is needed.
+### Naming convention
+
+Variable names should be prefixed with a short identifier to avoid collisions across dialogues. Use the format `charactername_variablename`. Examples: `lena_met`, `lena_accepted_letter`, `guard_met`, `guard_gave_watch`. This prevents two different dialogues from accidentally sharing the same variable name in the global dialogue_vars dictionary.
 
 ### Critical rules
 
@@ -180,3 +183,4 @@ ALWAYS create links between related assets. Use searchAssets to find UUIDs, then
 - Building <-> Character who works/lives there
 
 After any create or update, think: "What existing assets relate to this?" Search and link.
+
