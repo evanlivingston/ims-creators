@@ -724,9 +724,9 @@ export default defineComponent({
       const flow = this.$refs.flow as VueFlowStore | undefined;
       const g = new dagre.graphlib.Graph();
       g.setGraph({
-        rankdir: 'TB',
-        nodesep: 60,
-        ranksep: 100,
+        rankdir: 'LR',
+        nodesep: 40,
+        ranksep: 120,
         marginx: 40,
         marginy: 40,
       });
