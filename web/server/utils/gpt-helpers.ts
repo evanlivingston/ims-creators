@@ -1002,6 +1002,22 @@ async function refreshCharacterTitles(asset: any): Promise<void> {
 
 export async function createAssetFromFlat(workspaceId: string, flat: Record<string, any>) {
   const db = await getProjectDb();
+
+  // Validate required dialogue metadata
+  const workspaces = await getAllWorkspaces();
+  const workspace = workspaces.find((w: any) => w.id === workspaceId);
+  if (workspace?.title === 'Dialogues') {
+    const missing: string[] = [];
+    if (!flat.character) missing.push('character');
+    if (!flat.location) missing.push('location');
+    if (missing.length > 0) {
+      throw new Error(
+        `Dialogue assets require ${missing.join(' and ')} properties. ` +
+        `Set ${missing.map(p => `"${p}"`).join(' and ')} so the game engine can match this dialogue to the right character and scene.`
+      );
+    }
+  }
+
   const blocks = await buildBlocksFromFlat(flat, workspaceId);
 
   // Find parent type
@@ -1038,6 +1054,17 @@ export async function updateAssetFromFlat(id: string, flat: Record<string, any>)
   if (!asset) return null;
 
   const workspaceId = asset.workspaceId;
+
+  // Warn if updating a dialogue script without character/location metadata
+  const workspaces = await getAllWorkspaces();
+  const workspace = workspaces.find((w: any) => w.id === workspaceId);
+  if (workspace?.title === 'Dialogues' && flat.script && !flat.character && !flat.location) {
+    console.warn(
+      `[gpt-helpers] Updating dialogue "${asset.title || id}" script without character/location properties. ` +
+      `Make sure these are already set on the asset, or the game engine won't load this dialogue.`
+    );
+  }
+
   const blocks = await buildBlocksFromFlat(flat, workspaceId);
 
   const setData: any = {};

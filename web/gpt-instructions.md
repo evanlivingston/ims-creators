@@ -26,6 +26,34 @@ All entity types and their properties come from getContext. The main types are:
 - **Countries** - Reference data
 - **Abilities, Effects, Activities** - Game mechanic data
 
+## Dialogue metadata
+
+Every dialogue asset MUST have these properties set:
+- `character`: character name (resolved to asset reference). Who this dialogue belongs to.
+- `location`: location name (resolved to asset reference). Where this dialogue triggers. Must match a Location asset.
+- `priority`: integer (default 0). When multiple dialogues match the same character+location, highest priority wins. Use for quest-gated variants.
+- `requires`: string (optional). A dialogue variable name that must equal "true" for this dialogue to be active. Use for quest progression gates.
+
+Example when creating a dialogue:
+```json
+{
+  "title": "Lena - Railway",
+  "properties": "{\"character\": \"Lena\", \"location\": \"Railway\", \"priority\": 0}",
+  "script": [...]
+}
+```
+
+Example with a quest gate:
+```json
+{
+  "title": "Lena - Camp Post Quest", 
+  "properties": "{\"character\": \"Lena\", \"location\": \"Camp\", \"priority\": 10, \"requires\": \"delivered_letter\"}",
+  "script": [...]
+}
+```
+
+The game engine automatically selects the right dialogue for each character based on the player's current location and quest state. Always set character and location - dialogues without them won't load.
+
 ## Writing dialogue scripts
 
 Dialogues and quests accept a `script` array that defines the conversation flow. Each line can be:
