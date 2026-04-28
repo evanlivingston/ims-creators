@@ -17,6 +17,14 @@
           :dialog-player="dialogPlayer"
         ></dialog-play-toolbar>
       </teleport>
+      <button
+        v-if="!readonly"
+        class="DialogEditor-tidyBtn is-button is-button-icon"
+        title="Auto-layout (tidy graph)"
+        @click="autoLayout"
+      >
+        <i class="ri-layout-grid-line"></i>
+      </button>
       <VueFlow
         ref="flow"
         v-model:nodes="blockControllerMut.state.nodes"
@@ -710,6 +718,53 @@ export default defineComponent({
     onNodeClick({ node }: NodeMouseEvent) {
       this.blockControllerMut.revealBlockContentItem('node-' + node.id);
     },
+    async autoLayout() {
+      if (this.readonly) return;
+      const dagre = (await import('dagre')).default;
+      const flow = this.$refs.flow as VueFlowStore | undefined;
+      const g = new dagre.graphlib.Graph();
+      g.setGraph({
+        rankdir: 'TB',
+        nodesep: 60,
+        ranksep: 100,
+        marginx: 40,
+        marginy: 40,
+      });
+      g.setDefaultEdgeLabel(() => ({}));
+
+      const nodes = this.blockControllerMut.state.nodes;
+      const edges = this.blockControllerMut.state.edges;
+      const sizes = new Map<string, { w: number; h: number }>();
+      for (const n of nodes) {
+        // Prefer measured DOM size; fall back to Vue Flow's measured w/h, else defaults.
+        const ref = (this.$refs as any)['node-' + n.id];
+        const inst = Array.isArray(ref) ? ref[0] : ref;
+        const dom: HTMLElement | undefined = inst?.$el;
+        const w = dom?.offsetWidth || (n.width as number) || 240;
+        const h = dom?.offsetHeight || (n.height as number) || 120;
+        sizes.set(n.id, { w, h });
+        g.setNode(n.id, { width: w, height: h });
+      }
+      for (const e of edges) {
+        if (g.hasNode(e.source) && g.hasNode(e.target)) {
+          g.setEdge(e.source, e.target);
+        }
+      }
+
+      dagre.layout(g);
+
+      for (const n of nodes) {
+        const p = g.node(n.id);
+        if (!p) continue;
+        const s = sizes.get(n.id)!;
+        n.position = {
+          x: Math.round(p.x - s.w / 2),
+          y: Math.round(p.y - s.h / 2),
+        };
+      }
+      this.blockControllerMut.saveProps();
+      flow?.fitView({ padding: 0.2, duration: 400 });
+    },
     async showNode(node_id: string): Promise<boolean> {
       const node = this.blockControllerMut.state.nodes.find(
         (n) => n.id === node_id,
@@ -873,5 +928,13 @@ export default defineComponent({
   border-radius: 4px;
   background: var(--dropdown-bg-color);
   pointer-events: all;
+}
+.DialogEditor-tidyBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  background: var(--dropdown-bg-color);
+  box-shadow: var(--dropdown-box-shadow);
 }
 </style>
