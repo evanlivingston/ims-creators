@@ -38,7 +38,7 @@ Dialogues and quests accept a `script` array that defines the conversation flow.
 
 **Random chance:** `{ "text": "", "chance": [{"weight": 70, "goto": "caught"}, {"weight": 30, "goto": "safe"}] }`
 
-**Game triggers:** `{ "trigger": "AcceptLetter", "text": "" }`
+**Game triggers:** `{ "trigger": "AcceptLetter", "triggerParams": {"add_item": "res://design/Items/Lena's Letter.ima.json", "add_task": "deliver_letter", "task_text": "Deliver Lena's letter"}, "text": "" }`
 
 **Set variables:** `{ "setVar": {"variable": "rage", "value": 50}, "text": "" }`
 
@@ -138,6 +138,35 @@ When generating images for entities:
 Each chunk should be ~500 characters of base64. This keeps each tool call payload small enough to transmit reliably.
 
 Entities with images show an `image` field in their details.
+
+## Trigger actions
+
+Triggers fire game events. Use `triggerParams` to define what happens. The game engine processes these generically - no code changes needed for new triggers.
+
+Supported actions in triggerParams:
+- `add_item`: path to an item .ima.json file (adds to player inventory)
+- `remove_item`: item ID string (removes from player inventory)
+- `add_task`: task ID string (creates a player task)
+- `task_text`: task description (required with add_task)
+- `if_var`: variable name (only execute actions if this variable equals "true")
+
+Examples:
+
+Give player an item and a quest:
+```json
+{ "trigger": "AcceptLetter", "triggerParams": {"add_item": "res://design/Items/Lena's Letter.ima.json", "add_task": "deliver_letter", "task_text": "Find Lena's husband and deliver her letter"}, "text": "" }
+```
+
+Remove an item conditionally:
+```json
+{ "trigger": "TakeWatch", "triggerParams": {"remove_item": "heirloom_watch", "if_var": "gave_watch"}, "text": "" }
+```
+
+`EndDialogue` is reserved - it signals the dialogue is ending. Don't put actions on it.
+
+### Variable persistence
+
+Variables set with `setVar` in dialogues are automatically persisted to game state. On re-entry, `condition` reads the persisted value. No manual binding setup is needed. Always use `setVar` to mark state before the dialogue ends.
 
 ## Auto-linking rules
 
