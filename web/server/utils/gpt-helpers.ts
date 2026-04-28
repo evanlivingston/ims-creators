@@ -437,7 +437,7 @@ export async function buildBlocksFromFlat(
 
 interface SimpleDialogueLine {
   label?: string;
-  character?: string;
+  character?: string | { Title: string; AssetId: string };
   text: string;
   description?: string;
   choices?: Array<{ text: string; goto?: string }>;
@@ -484,9 +484,14 @@ export async function buildScriptFromSimple(lines: SimpleDialogueLine[]): Promis
     // Resolve character reference
     let character: any = null;
     if (line.character) {
-      character = await findAssetByName(line.character);
-      // Ensure it's in asset reference format
-      if (typeof character === 'string') character = null;
+      if (typeof line.character === 'object' && 'AssetId' in line.character) {
+        // Already an asset reference - use directly
+        character = line.character;
+      } else {
+        character = await findAssetByName(line.character as string);
+        // Ensure it's in asset reference format
+        if (typeof character === 'string') character = null;
+      }
     }
 
     if (line.condition) {
@@ -851,12 +856,25 @@ export function flattenScript(scriptProps: any): SimpleDialogueLine[] {
           else: emitGoto(elseTarget) || '',
         };
       } else {
-        // Unrecognized branch pattern - skip it like before
-        continue;
+        // Unrecognized branch pattern - emit as choices to preserve branching
+        line.text = '[branch]';
+        line.choices = (n.options || []).map((opt: any) => {
+          const target = resolveLink(opt.next);
+          const choice: { text: string; goto?: string } = {
+            text: opt.values?.value != null ? String(opt.values.value) : 'option',
+          };
+          const g = emitGoto(target);
+          if (g) choice.goto = g;
+          return choice;
+        });
       }
     } else if (n.type === 'speech') {
       line.text = n.values?.text || '';
-      if (n.values?.character?.Title) line.character = n.values.character.Title;
+      if (n.values?.character?.AssetId && n.values?.character?.Title) {
+        line.character = { Title: n.values.character.Title, AssetId: n.values.character.AssetId };
+      } else if (n.values?.character?.Title) {
+        line.character = n.values.character.Title;
+      }
       const desc = n.values?.description;
       if (typeof desc === 'string' && desc) line.description = desc;
       else if (desc?.Str) line.description = desc.Str;
@@ -950,7 +968,18 @@ async function refreshCharacterTitles(asset: any): Promise<void> {
 
   for (const block of asset.blocks) {
     if (block.type !== 'script') continue;
-    const nodes = block.props?.nodes || block.computed?.nodes;
+    // Handle both nested and flattened props format.
+    // assetsGetFull can return flattened keys like `nodes\\uuid\\values\\character\\Title`.
+    // Only unflatten props (mutable), not computed (read-only cache).
+    const rawProps = block.props || {};
+    const propsNeedUnflatten = !rawProps.nodes && Object.keys(rawProps).some(k => k.startsWith('nodes\\'));
+    if (propsNeedUnflatten) {
+      const unflattened = unflattenProps(rawProps);
+      // Merge unflattened structure back into block.props so downstream consumers see it
+      Object.assign(rawProps, unflattened);
+    }
+
+    const nodes = rawProps.nodes || block.computed?.nodes;
     if (!nodes) continue;
 
     for (const node of Object.values(nodes) as any[]) {
