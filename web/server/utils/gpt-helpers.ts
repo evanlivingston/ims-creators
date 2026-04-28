@@ -445,6 +445,7 @@ interface SimpleDialogueLine {
   trigger?: string;
   triggerParams?: Record<string, any>;
   setVar?: { variable: string; value: any };
+  condition?: { variable: string; equals: any; then: string; else: string };
   goto?: string;
 }
 
@@ -488,7 +489,50 @@ export async function buildScriptFromSimple(lines: SimpleDialogueLine[]): Promis
       if (typeof character === 'string') character = null;
     }
 
-    if (line.setVar) {
+    if (line.condition) {
+      // Condition node: generates getVar + opEqual + branch (3 internal nodes)
+      // The lineId becomes the branch node; getVar and opEqual are helpers.
+      const getVarId = uuidv4();
+      const opEqualId = uuidv4();
+      const branchId = nodeId; // The line's ID is the branch (flow entry point)
+
+      nodes[getVarId] = {
+        type: 'getVar',
+        next: null,
+        index: 0,
+        pos: { x: -200, y },
+        values: { variable: line.condition.variable },
+      };
+      nodes[opEqualId] = {
+        type: 'opEqual',
+        next: null,
+        index: 0,
+        pos: { x: -100, y },
+        values: {
+          arg1: { get: getVarId, param: 'result' },
+          arg2: line.condition.equals,
+        },
+      };
+      nodes[branchId] = {
+        type: 'branch',
+        next: null,
+        index: 0,
+        pos: { x: 0, y },
+        options: [
+          {
+            next: labelToId[line.condition.else] || defaultNext,
+            values: { value: false },
+          },
+          {
+            next: labelToId[line.condition.then] || defaultNext,
+            values: { value: true },
+          },
+        ],
+        values: {
+          condition: { get: opEqualId, param: 'result' },
+        },
+      };
+    } else if (line.setVar) {
       // SetVar node
       nodes[nodeId] = {
         type: 'setVar',
@@ -569,7 +613,7 @@ export async function buildScriptFromSimple(lines: SimpleDialogueLine[]): Promis
     }
   }
 
-  // Build variable declarations from setVar nodes
+  // Build variable declarations from setVar and condition nodes
   const ownVars: Record<string, any> = {};
   for (const line of lines) {
     if (line.setVar) {
@@ -577,6 +621,19 @@ export async function buildScriptFromSimple(lines: SimpleDialogueLine[]): Promis
       const varValue = line.setVar.value;
       const varType = typeof varValue === 'number' ? 'integer'
         : typeof varValue === 'boolean' ? 'boolean' : 'string';
+      ownVars[varName] = {
+        name: varName,
+        type: { Type: varType },
+        title: varName.charAt(0).toUpperCase() + varName.slice(1),
+        autoFill: null,
+        description: null,
+      };
+    }
+    if (line.condition && !ownVars[line.condition.variable]) {
+      const varName = line.condition.variable;
+      const eqVal = line.condition.equals;
+      const varType = typeof eqVal === 'number' ? 'integer'
+        : typeof eqVal === 'boolean' ? 'boolean' : 'string';
       ownVars[varName] = {
         name: varName,
         type: { Type: varType },
@@ -661,13 +718,15 @@ function numericKeysToArrays(obj: any): void {
 /**
  * Flatten a script block's nodes into simplified dialogue lines for API output.
  *
- * Round-trips with buildScriptFromSimple: every reachable speech/setVar/trigger/chance
+ * Round-trips with buildScriptFromSimple: every reachable speech/setVar/trigger/chance/condition
  * node is emitted as a line in BFS order. Lines flow sequentially; `goto` is emitted
  * only when a node's actual next (or option's next) deviates from the next sequential
  * line. Labels are emitted only on lines referenced as goto targets.
  *
+ * Branch nodes backed by getVar + opEqual are emitted as `condition` lines.
+ *
  * Labels use the first 8 chars of the node UUID so they're stable within a single read.
- * They change after every save (since save regenerates UUIDs), but that's expected —
+ * They change after every save (since save regenerates UUIDs), but that's expected -
  * GPT should always use labels from the most recent read.
  */
 export function flattenScript(scriptProps: any): SimpleDialogueLine[] {
@@ -675,12 +734,39 @@ export function flattenScript(scriptProps: any): SimpleDialogueLine[] {
   if (!props?.nodes || !props?.start) return [];
   const nodes = props.nodes;
 
-  // Nodes we emit as lines (one node = one line). branch/start/op*/getVar are skipped.
-  const isLineNode = (t: string) =>
-    t === 'speech' || t === 'setVar' || t === 'trigger' || t === 'chance' || t === 'end';
+  // Try to reconstruct a condition from a branch node.
+  // Pattern: branch.values.condition -> { get: opEqualId } -> opEqual.values.arg1 -> { get: getVarId }
+  const tryExtractCondition = (branchNode: any): { variable: string; equals: any; thenId: string | null; elseId: string | null } | null => {
+    const condRef = branchNode.values?.condition;
+    if (!condRef?.get) return null;
+    const opNode = nodes[condRef.get];
+    if (!opNode || (opNode.type !== 'opEqual' && opNode.type !== 'opEquals')) return null;
+    const arg1Ref = opNode.values?.arg1;
+    if (!arg1Ref?.get) return null;
+    const getVarNode = nodes[arg1Ref.get];
+    if (!getVarNode || getVarNode.type !== 'getVar') return null;
 
-  // Skip past non-line nodes (start, branch) to the next line node.
-  // Returns null if the chain dead-ends at an operator/getVar/missing node.
+    const options = branchNode.options || [];
+    let thenId: string | null = null;
+    let elseId: string | null = null;
+    for (const opt of options) {
+      if (opt.values?.value === true) thenId = opt.next;
+      else if (opt.values?.value === false) elseId = opt.next;
+    }
+
+    return {
+      variable: getVarNode.values?.variable,
+      equals: opNode.values?.arg2,
+      thenId,
+      elseId,
+    };
+  };
+
+  // Nodes we emit as lines. branch nodes backed by conditions are also emitted.
+  const isLineNode = (t: string) =>
+    t === 'speech' || t === 'setVar' || t === 'trigger' || t === 'chance' || t === 'end' || t === 'branch';
+
+  // Skip past non-line nodes (start, op*, getVar) to the next line node.
   const resolveLink = (id: string | null | undefined): string | null => {
     const seen = new Set<string>();
     let cur: string | null | undefined = id;
@@ -689,11 +775,6 @@ export function flattenScript(scriptProps: any): SimpleDialogueLine[] {
       const n = nodes[cur];
       if (isLineNode(n.type)) return cur;
       if (n.type === 'start') { cur = n.next; continue; }
-      if (n.type === 'branch') {
-        const opt = (n.options || []).find((o: any) => o.next);
-        cur = opt?.next ?? n.next ?? null;
-        continue;
-      }
       return null; // op*, getVar, etc.
     }
     return null;
@@ -707,8 +788,13 @@ export function flattenScript(scriptProps: any): SimpleDialogueLine[] {
     seen.add(id);
     order.push(id);
     const n = nodes[id];
-    enqueue(resolveLink(n.next));
-    for (const opt of n.options || []) enqueue(resolveLink(opt.next));
+    if (n.type === 'branch') {
+      // Enqueue both branch targets
+      for (const opt of n.options || []) enqueue(resolveLink(opt.next));
+    } else {
+      enqueue(resolveLink(n.next));
+      for (const opt of n.options || []) enqueue(resolveLink(opt.next));
+    }
   };
   enqueue(resolveLink(props.start));
 
@@ -718,11 +804,18 @@ export function flattenScript(scriptProps: any): SimpleDialogueLine[] {
   for (let i = 0; i < order.length; i++) {
     const n = nodes[order[i]];
     const naturalNext = order[i + 1] ?? null;
-    const actualNext = resolveLink(n.next);
-    if (actualNext && actualNext !== naturalNext) targets.add(actualNext);
-    for (const opt of n.options || []) {
-      const t = resolveLink(opt.next);
-      if (t) targets.add(t);
+    if (n.type === 'branch') {
+      for (const opt of n.options || []) {
+        const t = resolveLink(opt.next);
+        if (t) targets.add(t);
+      }
+    } else {
+      const actualNext = resolveLink(n.next);
+      if (actualNext && actualNext !== naturalNext) targets.add(actualNext);
+      for (const opt of n.options || []) {
+        const t = resolveLink(opt.next);
+        if (t) targets.add(t);
+      }
     }
   }
 
@@ -746,7 +839,22 @@ export function flattenScript(scriptProps: any): SimpleDialogueLine[] {
       line.goto = emitGoto(actualNext);
     };
 
-    if (n.type === 'speech') {
+    if (n.type === 'branch') {
+      const cond = tryExtractCondition(n);
+      if (cond) {
+        const thenTarget = resolveLink(cond.thenId);
+        const elseTarget = resolveLink(cond.elseId);
+        line.condition = {
+          variable: cond.variable,
+          equals: cond.equals,
+          then: emitGoto(thenTarget) || '',
+          else: emitGoto(elseTarget) || '',
+        };
+      } else {
+        // Unrecognized branch pattern - skip it like before
+        continue;
+      }
+    } else if (n.type === 'speech') {
       line.text = n.values?.text || '';
       if (n.values?.character?.Title) line.character = n.values.character.Title;
       const desc = n.values?.description;

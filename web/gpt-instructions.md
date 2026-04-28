@@ -42,9 +42,38 @@ Dialogues and quests accept a `script` array that defines the conversation flow.
 
 **Set variables:** `{ "setVar": {"variable": "rage", "value": 50}, "text": "" }`
 
+**Conditional branch:** `{ "text": "", "condition": {"variable": "met_guard", "equals": "true", "then": "return_path", "else": "first_time"} }`
+
 **Jump to label:** `{ "character": "Guard", "text": "Get out!", "goto": "end_scene" }`
 
-Lines flow top-to-bottom unless redirected by goto or choices.
+Lines flow top-to-bottom unless redirected by goto, choices, or conditions.
+
+### Conditional branching
+
+Use `condition` to check a variable and route to different branches. This is how dialogues change on repeat visits.
+
+```json
+[
+  { "text": "", "condition": {"variable": "met_guard", "equals": "true", "then": "return_visit", "else": "first_visit"} },
+  { "label": "first_visit", "character": "Guard", "text": "Hold there." },
+  { "character": "Guard", "text": "Papers.", "goto": "end" },
+  { "label": "return_visit", "character": "Guard", "text": "Move along." }
+]
+```
+
+Conditions can be nested for multi-state routing:
+
+```json
+[
+  { "text": "", "condition": {"variable": "met_guard", "equals": "true", "then": "check_gave", "else": "first_time"} },
+  { "label": "check_gave", "text": "", "condition": {"variable": "gave_watch", "equals": "true", "then": "gave_it", "else": "kept_it"} },
+  { "label": "first_time", "character": "Guard", "text": "Hold there.", "goto": "end" },
+  { "label": "gave_it", "character": "Guard", "text": "Travel lighter now.", "goto": "end" },
+  { "label": "kept_it", "character": "Guard", "text": "Still wearing it.", "goto": "end" }
+]
+```
+
+Variables set with `setVar` during dialogue are persisted to game state when a binding exists. On re-entry, `condition` reads the persisted value. Always use `setVar` to mark state before the dialogue ends (e.g. `met_guard = "true"`), and use `condition` at the start to check it.
 
 ### Critical rules
 

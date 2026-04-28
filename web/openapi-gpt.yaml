@@ -262,7 +262,7 @@ paths:
                   description: "JSON string of entity properties. Keys come from getContext. Use plain names for references. Example: '{\"description\": \"A guard\", \"language\": \"Emorian\", \"health\": 100}' for characters, '{\"goal\": \"Find the letter\", \"tasks\": \"Talk to Lena\"}' for quests."
                 script:
                   type: array
-                  description: "Dialogue script (for dialogues/quests). Each item is a line with: character (name), text, description (stage direction), choices (array of {text, goto}), chance (array of {weight, goto}), trigger (event name), setVar ({variable, value}), goto (label name), label (for goto targets)."
+                  description: "Dialogue script (for dialogues/quests). Each item is a line with: character (name), text, description (stage direction), choices (array of {text, goto}), chance (array of {weight, goto}), trigger (event name), setVar ({variable, value}), condition ({variable, equals, then, else} for branching on game state), goto (label name), label (for goto targets)."
                   items:
                     type: object
                     properties:
@@ -309,6 +309,22 @@ paths:
                             type: string
                           value:
                             type: string
+                      condition:
+                        type: object
+                        description: "Conditional branch based on a variable value. Checks if variable equals a value and routes to then/else labels. Use at dialogue start for repeat-visit routing."
+                        properties:
+                          variable:
+                            type: string
+                            description: "Variable name to check (reads from game state if bound)"
+                          equals:
+                            type: string
+                            description: "Value to compare against"
+                          then:
+                            type: string
+                            description: "Label to jump to if variable equals the value"
+                          else:
+                            type: string
+                            description: "Label to jump to if variable does not equal the value"
       responses:
         "200":
           description: Created entity with all resolved properties
@@ -378,7 +394,7 @@ paths:
                   description: "JSON string of properties to update. Only include fields to change. Use plain names for references. Example: '{\"age\": \"35\", \"occupation\": \"doctor\", \"personality\": \"stern\"}'"
                 script:
                   type: array
-                  description: "Replacement dialogue script (same format as createEntity)"
+                  description: "Replacement dialogue script (same format as createEntity, including condition support)"
                   items:
                     type: object
                     properties:
@@ -401,6 +417,17 @@ paths:
                               type: string
                             goto:
                               type: string
+                      condition:
+                        type: object
+                        properties:
+                          variable:
+                            type: string
+                          equals:
+                            type: string
+                          then:
+                            type: string
+                          else:
+                            type: string
       responses:
         "200":
           description: Updated entity
