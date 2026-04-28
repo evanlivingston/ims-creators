@@ -935,7 +935,40 @@ export async function getAssetFlat(id: string): Promise<Record<string, any> | nu
   const full = await db.asset.assetsGetFull({ where: { id } });
   const asset = extractFullAsset(full, id);
   if (!asset) return null;
+  await refreshCharacterTitles(asset);
   return flattenAsset(asset);
+}
+
+/**
+ * Refresh stale character Title fields in script blocks by resolving AssetIds
+ * against the current asset database. Mutates the asset in place.
+ */
+async function refreshCharacterTitles(asset: any): Promise<void> {
+  if (!asset?.blocks) return;
+  const db = await getProjectDb();
+  const titleCache: Record<string, string> = {};
+
+  for (const block of asset.blocks) {
+    if (block.type !== 'script') continue;
+    const nodes = block.props?.nodes || block.computed?.nodes;
+    if (!nodes) continue;
+
+    for (const node of Object.values(nodes) as any[]) {
+      const char = node.values?.character;
+      if (!char?.AssetId) continue;
+      const assetId = char.AssetId;
+
+      if (!(assetId in titleCache)) {
+        const full = await db.asset.assetsGetFull({ where: { id: assetId } });
+        const charAsset = extractFullAsset(full, assetId);
+        titleCache[assetId] = charAsset?.title || charAsset?.ownTitle || char.Title || '';
+      }
+
+      if (titleCache[assetId] && titleCache[assetId] !== char.Title) {
+        char.Title = titleCache[assetId];
+      }
+    }
+  }
 }
 
 export async function createAssetFromFlat(workspaceId: string, flat: Record<string, any>) {
