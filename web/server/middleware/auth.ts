@@ -13,8 +13,8 @@ export default defineEventHandler((event) => {
     return;
   }
 
-  // MCP endpoints handle their own auth
-  if (path.startsWith('/api/mcp/')) {
+  // MCP endpoints - no auth (Claude.ai connectors don't support auth headers)
+  if (path === '/api/mcp' || path.startsWith('/api/mcp/')) {
     return;
   }
 
