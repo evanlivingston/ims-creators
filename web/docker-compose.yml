@@ -14,3 +14,18 @@ services:
       - PORT=3000
       - GIT_DISCOVERY_ACROSS_FILESYSTEM=1
     restart: unless-stopped
+
+  mcp:
+    build:
+      context: ..
+      dockerfile: mcp/Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - IMS_URL=http://ims-creators:3000
+      - IMS_API_KEY=${API_KEY:-}
+      - MCP_PORT=8081
+      - MCP_AUTH_TOKEN=${API_KEY:-}
+    depends_on:
+      - ims-creators
+    restart: unless-stopped

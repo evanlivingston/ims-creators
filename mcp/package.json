@@ -1,0 +1,22 @@
+{
+  "name": "@ims-creators/mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for the IMS Creators game design API",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "ims-creators-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  }
+}
