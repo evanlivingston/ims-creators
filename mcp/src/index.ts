@@ -141,7 +141,7 @@ function registerTools(s: McpServer) {
 
 s.tool(
   "getContext",
-  "Get all entity types, their properties, valid values, and reference data. ALWAYS call this first before any other operation.",
+  "Get all entity types, workspace slugs, their properties, valid values, and reference data. ALWAYS call this first - workspace slugs required by listEntities and other tools come from here.",
   async () => {
     const data = await apiRequest("GET", "/api/gpt/context");
     return { content: [{ type: "text", text: formatResult(data) }] };
@@ -149,8 +149,18 @@ s.tool(
 );
 
 s.tool(
+  "listWorkspaces",
+  "List all workspace slugs. Use one of these as the workspace argument to listEntities, getEntity, createEntity, updateEntity.",
+  async () => {
+    const data = await apiRequest("GET", "/api/gpt/context") as { entityTypes?: Record<string, unknown> };
+    const slugs = Object.keys(data?.entityTypes || {}).sort();
+    return { content: [{ type: "text", text: formatResult(slugs) }] };
+  }
+);
+
+s.tool(
   "listEntities",
-  "List all entities in a workspace. Workspace slugs come from getContext entityTypes keys (e.g. characters, items, quests, dialogues, locations, buildings, languages, countries, abilities, effects).",
+  "List all entities in a workspace. Use a workspace slug returned by getContext or listWorkspaces - do not guess.",
   {
     workspace: z
       .string()

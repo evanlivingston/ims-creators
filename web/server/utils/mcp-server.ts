@@ -36,7 +36,7 @@ function formatResult(data: unknown): string {
 function registerTools(s: McpServer) {
   s.tool(
     "getContext",
-    "Get all entity types, properties, valid values, and reference data. ALWAYS call this first.",
+    "Get all entity types, workspace slugs, properties, valid values, and reference data. ALWAYS call this first - workspace slugs required by listEntities and other tools come from here.",
     async () => {
       const data = await buildGptContext();
       return { content: [{ type: "text" as const, text: formatResult(data) }] };
@@ -44,9 +44,19 @@ function registerTools(s: McpServer) {
   );
 
   s.tool(
+    "listWorkspaces",
+    "List all workspace slugs. Use one of these as the workspace argument to listEntities, getEntity, createEntity, updateEntity.",
+    async () => {
+      const data = await buildGptContext() as { entityTypes?: Record<string, unknown> };
+      const slugs = Object.keys(data?.entityTypes || {}).sort();
+      return { content: [{ type: "text" as const, text: formatResult(slugs) }] };
+    }
+  );
+
+  s.tool(
     "listEntities",
-    "List all entities in a workspace.",
-    { workspace: z.string().describe("Workspace slug from getContext") },
+    "List all entities in a workspace. Use a workspace slug returned by getContext or listWorkspaces - do not guess.",
+    { workspace: z.string().describe("Workspace slug from getContext or listWorkspaces") },
     async ({ workspace }) => {
       const ws = await resolveWorkspace(workspace);
       if (!ws) return { content: [{ type: "text" as const, text: `Workspace "${workspace}" not found` }] };
