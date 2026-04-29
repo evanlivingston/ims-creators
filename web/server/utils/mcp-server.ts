@@ -1,5 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { z } from "zod";
 import {
   buildGptContext,
@@ -14,6 +14,7 @@ import {
 import { getProjectDb } from './project-db';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
+import type { IncomingMessage, ServerResponse } from 'http';
 
 // Load instructions
 let INSTRUCTIONS = 'IMS Creators game design tools.';
@@ -25,7 +26,7 @@ for (const p of [
   try { INSTRUCTIONS = readFileSync(p, 'utf-8'); break; } catch {}
 }
 
-const sessions = new Map<string, SSEServerTransport>();
+const sessions = new Map<string, { server: McpServer; transport: StreamableHTTPServerTransport }>();
 
 function formatResult(data: unknown): string {
   if (typeof data === 'string') return data;
@@ -153,20 +154,53 @@ function registerTools(s: McpServer) {
   );
 }
 
-export function createMcpSession(): { server: McpServer; transport: SSEServerTransport | null } {
-  const mcpInstance = new McpServer(
+function createSession(): { server: McpServer; transport: StreamableHTTPServerTransport } {
+  const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
+  const mcpServer = new McpServer(
     { name: "ims-creators", version: "1.0.0" },
     { instructions: INSTRUCTIONS }
   );
-  registerTools(mcpInstance);
-  return { server: mcpInstance, transport: null };
+  registerTools(mcpServer);
+  return { server: mcpServer, transport };
 }
 
-export function getSession(sessionId: string): SSEServerTransport | undefined {
-  return sessions.get(sessionId);
-}
+export async function handleMcpRequest(req: IncomingMessage, res: ServerResponse): Promise<void> {
+  const sessionId = req.headers['mcp-session-id'] as string | undefined;
 
-export function storeSession(id: string, transport: SSEServerTransport): void {
-  sessions.set(id, transport);
-  transport.onclose = () => sessions.delete(id);
+  if (req.method === 'GET') {
+    // SSE stream - create new session or reconnect
+    const session = createSession();
+    await session.server.connect(session.transport);
+    if (session.transport.sessionId) {
+      sessions.set(session.transport.sessionId, session);
+      session.transport.onclose = () => {
+        if (session.transport.sessionId) sessions.delete(session.transport.sessionId);
+      };
+    }
+    await session.transport.handleRequest(req, res);
+  } else if (req.method === 'POST') {
+    // Message from client
+    if (sessionId && sessions.has(sessionId)) {
+      const session = sessions.get(sessionId)!;
+      await session.transport.handleRequest(req, res);
+    } else {
+      // Stateless - create a new session per request
+      const session = createSession();
+      await session.server.connect(session.transport);
+      await session.transport.handleRequest(req, res);
+      await session.transport.close();
+    }
+  } else if (req.method === 'DELETE') {
+    if (sessionId && sessions.has(sessionId)) {
+      const session = sessions.get(sessionId)!;
+      await session.transport.handleRequest(req, res);
+      sessions.delete(sessionId);
+    } else {
+      res.writeHead(404);
+      res.end('Session not found');
+    }
+  } else {
+    res.writeHead(405);
+    res.end('Method not allowed');
+  }
 }
