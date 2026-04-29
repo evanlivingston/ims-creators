@@ -18,6 +18,11 @@ export default defineEventHandler((event) => {
     return;
   }
 
+  // Webhook endpoints - authenticated via HMAC signature, not API key
+  if (path.startsWith('/api/webhook/')) {
+    return;
+  }
+
   const apiKey = process.env.API_KEY;
 
   // If no API_KEY is set, skip auth (local development)
