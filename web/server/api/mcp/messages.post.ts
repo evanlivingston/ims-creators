@@ -2,16 +2,7 @@ import { defineEventHandler, getHeader, getQuery, createError } from 'h3';
 import { getSession } from '../../utils/mcp-server';
 
 export default defineEventHandler(async (event) => {
-  // Auth check
-  const apiKey = process.env.API_KEY;
-  if (apiKey) {
-    const auth = getHeader(event, 'authorization') || '';
-    const provided = auth.replace(/^Bearer\s+/i, '');
-    const xKey = getHeader(event, 'x-api-key') || '';
-    if (provided !== apiKey && xKey !== apiKey) {
-      throw createError({ statusCode: 401, statusMessage: 'Unauthorized' });
-    }
-  }
+  // No auth - Claude.ai custom connectors don't support auth headers yet
 
   const query = getQuery(event);
   const sessionId = (query.sessionId as string) || '';

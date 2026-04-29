@@ -3,16 +3,7 @@ import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';
 import { createMcpSession, storeSession } from '../../utils/mcp-server';
 
 export default defineEventHandler(async (event) => {
-  // Auth check - same as main middleware but explicit here since SSE needs special handling
-  const apiKey = process.env.API_KEY;
-  if (apiKey) {
-    const auth = getHeader(event, 'authorization') || '';
-    const provided = auth.replace(/^Bearer\s+/i, '');
-    const xKey = getHeader(event, 'x-api-key') || '';
-    if (provided !== apiKey && xKey !== apiKey) {
-      throw createError({ statusCode: 401, statusMessage: 'Unauthorized' });
-    }
-  }
+  // No auth - Claude.ai custom connectors don't support auth headers yet
 
   // Get the raw Node response object for SSE
   const res = event.node.res;
