@@ -13,6 +13,11 @@ export default defineEventHandler((event) => {
     return;
   }
 
+  // MCP endpoints handle their own auth
+  if (path.startsWith('/api/mcp/')) {
+    return;
+  }
+
   const apiKey = process.env.API_KEY;
 
   // If no API_KEY is set, skip auth (local development)
