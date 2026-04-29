@@ -757,7 +757,16 @@ export class AssetService implements IProjectDatabaseAsset{
     }
 
     async saveAssetFile(asset_full: ProjectFileDbAsset){
-        assert(asset_full.localName)
+        if (!asset_full.localName) {
+            // Derive localName if missing (can happen when asset was created via API)
+            const parent_workspace_path = asset_full.workspaceId
+                ? getWorkspaceLocalPathById(asset_full.workspaceId, this.db)
+                : this.db.localPath;
+            asset_full.localName = this.getAssetFileSavingFilename(
+                asset_full,
+                (name) => !fs.existsSync(node_path.join(parent_workspace_path, name))
+            );
+        }
         const local_path = getAssetLocalPath(asset_full, this.db);
         await this.saveAssetFileToFile(asset_full, local_path);
     }
