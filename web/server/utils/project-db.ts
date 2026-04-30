@@ -19,3 +19,10 @@ export async function getProjectDb(): Promise<ProjectFileDb> {
   await _initPromise;
   return _db;
 }
+
+export async function reloadProjectDb(): Promise<void> {
+  _db = null;
+  _initPromise = null;
+  await getProjectDb();
+  console.log('[project-db] Reloaded from disk');
+}

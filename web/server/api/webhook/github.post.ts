@@ -2,6 +2,7 @@ import { defineEventHandler, readBody, getHeader, createError } from 'h3';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
 import { createHmac } from 'crypto';
+import { reloadProjectDb } from '../../utils/project-db';
 
 const execFileAsync = promisify(execFile);
 
@@ -43,6 +44,7 @@ export default defineEventHandler(async (event) => {
   try {
     await execFileAsync('git', ['pull', '--rebase'], { cwd: projectPath });
     console.log('[webhook] Pulled latest design data');
+    await reloadProjectDb();
     return { ok: true, action: 'pulled' };
   } catch (err: any) {
     console.error('[webhook] Pull failed:', err.message);
