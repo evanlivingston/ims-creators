@@ -798,7 +798,27 @@ export class AssetService implements IProjectDatabaseAsset{
             updatedAt: undefined,
             values: {} as {[key: string]: AssetPropsPlainObject}
         }
-        const blocks_for_values = asset_full.blocks.filter((block) => block.name && !block.name.startsWith('__'));      
+
+        // Strip inherited and computed.__props from child assets.
+        // These are recomputed from the parent chain on every load by
+        // _getAssetFullById(), so they are dead weight on disk. Removing
+        // them cuts file sizes ~40% and eliminates the triplicated schema
+        // that confuses AI agents working with the files.
+        // Type/root assets (no meaningful parent) keep theirs since there
+        // is no parent chain to rebuild from.
+        const META_TYPE_ID = '00000000-0000-0000-0000-000000000035';
+        const isChildAsset = ima_asset.parentIds?.length > 0 &&
+            !ima_asset.parentIds.every(id => id === META_TYPE_ID);
+        if (isChildAsset) {
+            ima_asset.blocks = ima_asset.blocks.map(block => {
+                const { inherited, ...rest } = block as any;
+                const computed = rest.computed ? { ...rest.computed } : {};
+                delete computed.__props;
+                return { ...rest, computed };
+            });
+        }
+
+        const blocks_for_values = asset_full.blocks.filter((block) => block.name && !block.name.startsWith('__'));
         for (const block of blocks_for_values) {
             if (!block.name){
                 continue;
