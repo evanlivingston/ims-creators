@@ -796,28 +796,43 @@ export class AssetService implements IProjectDatabaseAsset{
             hasImage: undefined,
             createdAt: undefined,
             updatedAt: undefined,
+            workspaceId: undefined,
             values: {} as {[key: string]: AssetPropsPlainObject}
         }
 
-        // Strip inherited and computed.__props from child assets.
-        // These are recomputed from the parent chain on every load by
-        // _getAssetFullById(), so they are dead weight on disk. Removing
-        // them cuts file sizes ~40% and eliminates the triplicated schema
-        // that confuses AI agents working with the files.
-        // Type/root assets (no meaningful parent) keep theirs since there
-        // is no parent chain to rebuild from.
+        // Aggressively strip child assets. Everything removed here is
+        // recomputed from the parent chain by _getAssetFullById() on load.
+        // Type/root assets keep full structure since they have no parent.
         const META_TYPE_ID = '00000000-0000-0000-0000-000000000035';
         const isChildAsset = ima_asset.parentIds?.length > 0 &&
             !ima_asset.parentIds.every(id => id === META_TYPE_ID);
         if (isChildAsset) {
-            ima_asset.blocks = ima_asset.blocks.map(block => {
-                const { inherited, ...rest } = block as any;
-                const computed = rest.computed ? { ...rest.computed } : {};
-                delete computed.__props;
-                return { ...rest, computed };
-            });
+            ima_asset.blocks = ima_asset.blocks
+                // Remove empty blocks (gallery, locale, __meta with no user data)
+                .filter(block => {
+                    const props = block.props || {};
+                    const ownKeys = Object.keys(props).filter(k => !k.startsWith('__') && !k.startsWith('~'));
+                    if (block.name === '__meta') {
+                        // Keep __meta only if user has set completion data
+                        return (props as any).complete_progress > 0 || (props as any).plan_milestone != null;
+                    }
+                    if (block.name === 'gallery' || block.name === 'locale') {
+                        return ownKeys.length > 0;
+                    }
+                    return true;
+                })
+                .map(block => {
+                    // Strip inherited, computed, and block-level boilerplate.
+                    // All are recomputed from parent chain on load.
+                    const { inherited, computed, createdAt, updatedAt, ownTitle, ...rest } = block as any;
+                    // Strip __props from own props (inherited from Type)
+                    const props = rest.props ? { ...rest.props } : {};
+                    delete props.__props;
+                    return { ...rest, props };
+                });
         }
 
+        // Build values section (game engine reads this)
         const blocks_for_values = asset_full.blocks.filter((block) => block.name && !block.name.startsWith('__'));
         for (const block of blocks_for_values) {
             if (!block.name){
@@ -830,6 +845,8 @@ export class AssetService implements IProjectDatabaseAsset{
                     delete values_block_props[block_props_key];
                 }
             }
+            // Skip empty values entries
+            if (Object.keys(values_block_props).length === 0) continue;
             ima_asset.values[block.name] = values_block_props
         }
         target.write(JSON.stringify(ima_asset, null, 1))

@@ -43,6 +43,14 @@ export class FileSystemService{
                             asset.workspaceId = workspace_id;
                             asset.createdAt = created_at;
                             asset.updatedAt = updated_at;
+                            // Ensure every block has computed/inherited defaults
+                            // so raw-access paths (AssetSearchFilter) don't crash.
+                            if (asset.blocks) {
+                                for (const block of asset.blocks) {
+                                    if (!block.computed) block.computed = {};
+                                    if (block.inherited === undefined) block.inherited = null;
+                                }
+                            }
                             assets.set(asset.localName, asset);
                         }
                         else if (/\.imw[ \d\(\)\[\]_]*\.json$/i.test(item.name)){
