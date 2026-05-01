@@ -778,14 +778,81 @@ export class AssetService implements IProjectDatabaseAsset{
         await once(writableStream, 'finish');
     }
 
+    /** Check if asset should be saved in flat JSON format (not IMS .ima.json). */
+    private _checkIsFlatFile(asset_full: ProjectFileDbAsset): boolean {
+        // Type definitions and system assets stay in .ima.json
+        const META_TYPE_ID = '00000000-0000-0000-0000-000000000035';
+        const SCRIPT_TYPE_ID = '00000000-0000-0000-0000-000000000033';
+        if (asset_full.parentIds?.some(id => id === META_TYPE_ID)) return false;
+        if (asset_full.typeIds?.some(id => id === META_TYPE_ID && !asset_full.typeIds.includes(SCRIPT_TYPE_ID))) {
+            // Has META_TYPE_ID in typeIds but not SCRIPT_TYPE_ID - it's a Type definition
+            if (asset_full.parentIds?.every(id => id === META_TYPE_ID)) return false;
+        }
+        // If loaded from a flat .json file, keep it flat
+        if (asset_full.localName?.endsWith('.json') && !asset_full.localName?.endsWith('.ima.json')) return true;
+        // If it has no parentIds (flat-loaded assets), it's flat
+        if (!asset_full.parentIds || asset_full.parentIds.length === 0) return true;
+        // Default: use flat for child assets (data files), ima.json for Type definitions
+        const isTypeDefinition = asset_full.parentIds.every(id => id === META_TYPE_ID);
+        return !isTypeDefinition;
+    }
+
+    /** Simplify IMS complex values to plain values for flat format. */
+    private _simplifyValue(value: any): any {
+        if (value == null || typeof value !== 'object') return value;
+        if ('AssetId' in value && 'Title' in value) return value.Title;
+        if ('Enum' in value) return value.Name || value.Title;
+        if ('Ops' in value && 'Str' in value) return value.Str;
+        if (Array.isArray(value)) return value.map((v: any) => this._simplifyValue(v));
+        // Recurse into plain objects (pilfer_table, language_mix, etc.)
+        const result: Record<string, any> = {};
+        for (const [k, v] of Object.entries(value)) {
+            result[k] = this._simplifyValue(v);
+        }
+        return result;
+    }
+
     saveAssetFileToStream(asset_full: ProjectFileDbAsset, target: Writable){
         if(this._checkIsMdFile(asset_full)) {
             const md_block = asset_full.blocks.find(block => block.type === 'markdown');
             target.write( md_block ? (md_block.computed.value ?? '').toString() : '')
             return;
         }
-        
-        // Save as ima.json
+
+        if (this._checkIsFlatFile(asset_full)) {
+            // Save as flat JSON
+            const flat: Record<string, any> = {};
+            flat.title = asset_full.title || asset_full.ownTitle || '';
+
+            for (const block of asset_full.blocks) {
+                if (!block || block.name === '__meta') continue;
+                const props = block.props || {};
+
+                if (block.type === 'text' && block.name) {
+                    const val = props.value;
+                    if (val == null) continue;
+                    if (typeof val === 'string') flat[block.name] = val;
+                    else flat[block.name] = this._simplifyValue(val);
+                } else if (block.type === 'script') {
+                    // Preserve the script/dialogue node graph as-is
+                    const scriptProps: Record<string, any> = {};
+                    for (const [key, value] of Object.entries(props)) {
+                        if (key.startsWith('__') || key.startsWith('~')) continue;
+                        scriptProps[key] = this._simplifyValue(value);
+                    }
+                    if (Object.keys(scriptProps).length > 0) flat.script = scriptProps;
+                } else if (block.type === 'props') {
+                    for (const [key, value] of Object.entries(props)) {
+                        if (key.startsWith('__') || key.startsWith('~') || value == null) continue;
+                        flat[key] = this._simplifyValue(value);
+                    }
+                }
+            }
+            target.write(JSON.stringify(flat, null, 2));
+            return;
+        }
+
+        // Save as ima.json (Type definitions and system assets)
         const ima_asset = {
             ...asset_full,
             localPath: undefined,
@@ -856,6 +923,8 @@ export class AssetService implements IProjectDatabaseAsset{
         let ext = '.ima.json'
         if(this._checkIsMdFile(asset_full)) {
             ext = '.md'
+        } else if (this._checkIsFlatFile(asset_full)) {
+            ext = '.json'
         }
         return generateNextUniqueNameNumber(
             prepareFileBasenameByEntityTitle(asset_full.title ?? 'untitled'),

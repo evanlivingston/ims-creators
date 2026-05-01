@@ -1,10 +1,55 @@
 import { getProjectDb } from './project-db';
 import { execFile } from 'child_process';
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
+import { readFileSync, readdirSync, existsSync } from 'fs';
+import { resolve, join } from 'path';
 import { promisify } from 'util';
 
 const execFileAsync = promisify(execFile);
+
+// ── JSON Schema cache ────────────────────────────────────────────────
+
+let _jsonSchemaCache: Map<string, any> | null = null;
+
+/** Load all JSON Schema files from design/schemas/ and index by collection name. */
+function loadJsonSchemas(): Map<string, any> {
+  if (_jsonSchemaCache) return _jsonSchemaCache;
+  _jsonSchemaCache = new Map();
+  const projectPath = process.env.PROJECT_PATH;
+  if (!projectPath) return _jsonSchemaCache;
+  const schemasDir = join(projectPath, 'schemas');
+  if (!existsSync(schemasDir)) return _jsonSchemaCache;
+  for (const file of readdirSync(schemasDir)) {
+    if (!file.endsWith('.schema.json')) continue;
+    try {
+      const schema = JSON.parse(readFileSync(join(schemasDir, file), 'utf8'));
+      const typeName = schema.title || file.replace('.schema.json', '');
+      _jsonSchemaCache.set(typeName.toLowerCase(), schema);
+    } catch { /* skip invalid files */ }
+  }
+  return _jsonSchemaCache;
+}
+
+/** Clear schema cache (call after schema files change). */
+export function clearSchemaCache() {
+  _jsonSchemaCache = null;
+}
+
+/** Find JSON Schema for a workspace by matching workspace title to type name. */
+function findSchemaForWorkspace(workspaceTitle: string): any | null {
+  const schemas = loadJsonSchemas();
+  const normalized = workspaceTitle.toLowerCase().replace(/[-_\s]+/g, '');
+  // Try: "Items" -> "item", "DetentionReasons" -> "detention reason", etc.
+  for (const [key, schema] of schemas) {
+    const keyNorm = key.replace(/[-_\s]+/g, '');
+    // Singular/plural matching
+    if (normalized === keyNorm + 's' || normalized === keyNorm + 'es' ||
+        normalized === keyNorm.replace(/y$/, 'ies') ||
+        normalized === keyNorm || keyNorm === normalized) {
+      return schema;
+    }
+  }
+  return null;
+}
 
 // Property name aliases: maps clean names to actual IMS property names (handles typos in data)
 const PROPERTY_ALIASES: Record<string, string> = {
@@ -111,69 +156,59 @@ export async function getTypeForWorkspace(workspaceId: string) {
  * Merges both sources so we catch ad-hoc properties added per-instance.
  */
 export async function getPropertySchema(workspaceId: string): Promise<Record<string, any>> {
-  const schema: Record<string, any> = {};
+  const result: Record<string, any> = {};
 
-  // 1. From type definition
-  const typeAsset = await getTypeForWorkspace(workspaceId);
-  if (typeAsset?.blocks) {
-    for (const block of typeAsset.blocks) {
-      if (!block || block.name === '__meta') continue;
-      if (block.type === 'text') {
-        const name = block.name || cleanTitle(block.title) || 'text';
-        schema[name] = {
-          type: 'string', title: block.title?.replace(/\[\[t:|\]\]/g, '') || name,
-          blockType: 'text', blockId: block.id, blockName: block.name,
-        };
-      } else if (block.type === 'props') {
-        const propsMetadata = extractPropsMetadata(block.computed || block.props);
-        for (const [key, meta] of Object.entries(propsMetadata)) {
-          schema[key] = { ...meta, blockType: 'props', blockId: block.id, blockName: block.name };
-        }
-      } else if (block.type === 'script') {
-        schema['script'] = {
-          type: 'array',
-          title: 'Dialogue script',
-          description: 'Array of dialogue lines with character, text, choices, chance, triggers',
-          blockType: 'script', blockId: block.id, blockName: block.name,
-        };
-      }
+  // Resolve workspace title to find matching JSON Schema
+  const workspaces = await getAllWorkspaces();
+  const workspace = workspaces.find((w: any) => w.id === workspaceId);
+  if (!workspace) return result;
+
+  const jsonSchema = findSchemaForWorkspace(workspace.title || '');
+  if (!jsonSchema?.properties) return result;
+
+  for (const [key, prop] of Object.entries(jsonSchema.properties as Record<string, any>)) {
+    if (key === 'title') continue;
+
+    if (key === 'description') {
+      result[key] = { type: 'string', title: 'Description', blockType: 'text', blockName: 'description' };
+      continue;
     }
+
+    if (key === 'script') {
+      result[key] = {
+        type: 'array', title: 'Dialogue script',
+        description: 'Array of dialogue lines',
+        blockType: 'script', blockName: 'content',
+      };
+      continue;
+    }
+
+    const propType = prop.type || 'string';
+    const entry: Record<string, any> = {
+      type: propType,
+      title: prop.title || key,
+      blockType: 'props',
+      blockName: 'props',
+    };
+
+    if (prop.description) entry.hint = prop.description;
+
+    // Enum values
+    if (prop.enum) {
+      entry.type = propType === 'string' ? 'enum' : propType;
+    }
+
+    // Cross-references (x-references annotation from our JSON Schema)
+    if (prop['x-references']) {
+      entry.type = 'gddElementSelector';
+      entry.params = { type: { Title: prop['x-references'] } };
+      if (prop.type === 'array') entry.multiple = true;
+    }
+
+    result[key] = entry;
   }
 
-  // 2. From first few existing assets (catches ad-hoc properties)
-  const db = await getProjectDb();
-  const { list } = await db.asset.assetsGetShort({ where: { workspaceId } });
-  for (const shortAsset of (list || []).slice(0, 5)) {
-    const full = await db.asset.assetsGetFull({ where: { id: shortAsset.id } });
-    const asset = extractFullAsset(full, shortAsset.id);
-    if (!asset?.blocks) continue;
-    for (const block of asset.blocks) {
-      if (!block || block.name === '__meta') continue;
-      if (block.type === 'text' && !schema[block.name || cleanTitle(block.title) || 'text']) {
-        const name = block.name || cleanTitle(block.title) || 'text';
-        schema[name] = {
-          type: 'string', title: block.title?.replace(/\[\[t:|\]\]/g, '') || name,
-          blockType: 'text', blockId: block.id, blockName: block.name,
-        };
-      } else if (block.type === 'props') {
-        const propsMetadata = extractPropsMetadata(block.computed || block.props);
-        for (const [key, meta] of Object.entries(propsMetadata)) {
-          if (!schema[key]) {
-            schema[key] = { ...meta, blockType: 'props', blockId: block.id, blockName: block.name };
-          }
-        }
-      } else if (block.type === 'script' && !schema['script']) {
-        schema['script'] = {
-          type: 'array',
-          title: 'Dialogue script',
-          description: 'Array of dialogue lines with character, text, choices, chance, triggers',
-          blockType: 'script', blockId: block.id, blockName: block.name,
-        };
-      }
-    }
-  }
-
-  return schema;
+  return result;
 }
 
 function cleanTitle(title: string | null | undefined): string {
@@ -1020,15 +1055,10 @@ export async function createAssetFromFlat(workspaceId: string, flat: Record<stri
 
   const blocks = await buildBlocksFromFlat(flat, workspaceId);
 
-  // Find parent type
-  const typeAsset = await getTypeForWorkspace(workspaceId);
-  const parentIds = typeAsset ? [typeAsset.id] : [];
-
   const params: any = {
     set: {
       workspaceId,
       title: flat.title,
-      parentIds,
       blocks: Object.keys(blocks).length > 0 ? blocks : undefined,
     },
   };
@@ -1100,7 +1130,7 @@ export async function buildGptContext() {
     // Include all workspaces including Types (so ChatGPT can discover and modify type definitions)
     const slug = ws.title.toLowerCase().replace(/\s+/g, '-');
 
-    // Get property schema
+    // Get property schema from JSON Schema files
     const schema = await getPropertySchema(ws.id);
     const properties: Record<string, any> = {};
 

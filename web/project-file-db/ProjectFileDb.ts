@@ -150,7 +150,7 @@ export class ProjectFileDb  {
         this.workspace.workspaces.add(this.RootGddFolder)
         this.workspace.workspaces.addMany(user_files.workspaces.map(workspace => {
             const changed_workspace =  {
-                ...workspace, 
+                ...workspace,
                 projectId: this.info.id,
                 rights: 5
             }
@@ -159,7 +159,7 @@ export class ProjectFileDb  {
             }
             return changed_workspace
         }));
-       
+
     }      
 
     async destroy(){
