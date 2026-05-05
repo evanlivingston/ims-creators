@@ -32,6 +32,7 @@ export type ScriptBlockPlainNode = {
   options?: {
     values?: ScriptBlockPlainProps;
     next: string | null;
+    dialogue?: string | null;
   }[];
   params?: {
     in: ScriptBlockPlainVariable[];

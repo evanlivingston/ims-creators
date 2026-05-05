@@ -175,6 +175,7 @@ export function extractDialogBlockData(props: AssetProps): DialogBlockState {
           const option: NodeDataOption = {
             values: {},
             next: null,
+            dialogue: plain_option.dialogue ?? null,
           };
           if (plain_option.values) {
             for (const [key, val] of Object.entries(plain_option.values)) {
@@ -220,9 +221,27 @@ export function extractDialogBlockData(props: AssetProps): DialogBlockState {
             default: null,
             autoFill: true,
           },
+          conversant: {
+            name: 'conversant',
+            title: '[[t:Conversant]]',
+            type: {
+              Type: AssetPropType.STRING,
+            },
+            description: null,
+            default: null,
+          },
           text: {
             name: 'text',
             title: '[[t:Text]]',
+            type: {
+              Type: AssetPropType.TEXT,
+            },
+            description: null,
+            default: null,
+          },
+          description: {
+            name: 'description',
+            title: '[[t:Description]]',
             type: {
               Type: AssetPropType.TEXT,
             },
@@ -279,7 +298,16 @@ export function convertNodeToPlainNode(node: Node): ScriptBlockPlainNode {
       node_plain.values = node_data.values;
     }
     if (node_data.options.length > 0) {
-      node_plain.options = node_data.options;
+      node_plain.options = node_data.options.map((opt) => {
+        const plain_opt: NodeDataOption = {
+          values: opt.values,
+          next: opt.next,
+        };
+        if (opt.dialogue) {
+          plain_opt.dialogue = opt.dialogue;
+        }
+        return plain_opt;
+      });
     }
     if (node_data.params.in.length > 0 || node_data.params.out.length > 0) {
       node_plain.params = node_data.params;

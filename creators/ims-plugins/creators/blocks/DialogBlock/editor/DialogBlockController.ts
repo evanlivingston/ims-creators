@@ -419,6 +419,18 @@ export class DialogBlockController
         node_data.options[ind].values = props;
         this.savePropsDelayed();
       },
+      setOptionDialogue: (ind, value) => {
+        if (!node) return;
+        const node_data = ensure_node_data();
+        if (!node_data.options) return;
+        if (ind >= node_data.options.length) return;
+        if (value === null) {
+          delete node_data.options[ind].dialogue;
+        } else {
+          node_data.options[ind].dialogue = value;
+        }
+        this.savePropsDelayed();
+      },
       moveOption: (ind, dir) => {
         if (ind <= 0 && dir < 0) {
           return;

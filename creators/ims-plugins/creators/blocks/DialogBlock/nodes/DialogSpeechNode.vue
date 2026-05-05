@@ -83,36 +83,51 @@
           >
             <div class="DialogSpeechNode-options-one-common">
               <div
-                v-if="isOptionConditionDisplaying(option)"
-                class="DialogSpeechNode-options-one-param type-first"
+                v-for="(field, field_idx) of getActiveExtraFields(option)"
+                :key="field.key"
+                class="DialogSpeechNode-options-one-param"
+                :class="{ 'type-first': field_idx === 0 }"
               >
                 <DataField
+                  v-if="field.key !== 'dialogue'"
                   class="DialogSpeechNode-options-one-param-input"
-                  :in-id="generateDataPinId(false, 'condition', option_index)"
-                  :option="option"
-                  :option-index="option_index"
+                  :in-id="generateDataPinId(false, field.key, option_index)"
                   :placeholder="$t('imsDialogEditor.speech.enterText')"
                   :node-data-controller="nodeDataController"
-                  caption="[[t:Condition]]"
+                  :caption="field.caption"
                   :readonly="readonly"
-                  :model-value="option.values['condition'] ?? null"
+                  :model-value="option.values[field.key] ?? null"
                   :play-value="
                     playingNodeData?.options &&
                     playingNodeData.options[option_index] &&
                     playingNodeData.options[option_index].values
-                      ? playingNodeData.options[option_index].values[
-                          'condition'
-                        ]
+                      ? playingNodeData.options[option_index].values[field.key]
                       : null
                   "
                   @update:model-value="
                     nodeDataController.setOptionValue(
                       option_index,
-                      'condition',
+                      field.key,
                       $event,
                     )
                   "
                 ></DataField>
+                <div
+                  v-else
+                  class="DialogSpeechNode-options-one-param-input DialogSpeechNode-options-one-dialogue"
+                >
+                  <span class="DialogSpeechNode-options-one-dialogue-caption">
+                    {{ field.caption }}:
+                  </span>
+                  <input
+                    type="text"
+                    class="DialogSpeechNode-options-one-dialogue-input"
+                    :placeholder="$t('imsDialogEditor.speech.dialogueJumpPlaceholder')"
+                    :value="option.dialogue ?? ''"
+                    :readonly="readonly"
+                    @input="onDialogueJumpInput(option_index, $event)"
+                  />
+                </div>
               </div>
               <div
                 v-for="(variable, var_index) of optionSpeechList"
@@ -231,6 +246,88 @@ import type { ScriptPlayNode } from '../play/ScriptPlayNode';
 import type { DialogPlayer } from '../play/DialogPlayer';
 import DialogSpeechNodeAttachCover from './DialogSpeechNodeAttachCover.vue';
 import FilePresenter from '~ims-app-base/components/File/FilePresenter.vue';
+
+// Well-known optional fields the dialogue runner reads on each option.
+// `condition` is a string expression. `priority` orders options. `falseConditionAction`
+// controls hide/disable on failed condition. `script` is an inline DSL run on select.
+// `dialogue` is special: stored on option (sibling to `next`), not in option.values.
+type ExtraOptionField = {
+  key: string;
+  caption: string;
+  pinTypes: { Type: AssetPropType }[];
+  defaultValue: ScriptBlockPlainPropValue | null;
+  // i18n keys for the add/remove menu items + icons
+  addMenu: { label: string; icon: string };
+  removeMenu: { label: string; confirmTitle: string; confirmBody: string; icon: string };
+};
+
+const EXTRA_OPTION_FIELDS: ExtraOptionField[] = [
+  {
+    key: 'condition',
+    caption: '[[t:Condition]]',
+    pinTypes: [{ Type: AssetPropType.STRING }, { Type: AssetPropType.BOOLEAN }],
+    defaultValue: '',
+    addMenu: { label: 'imsDialogEditor.speech.addOptionCondition', icon: 'ri-filter-fill' },
+    removeMenu: {
+      label: 'imsDialogEditor.speech.deleteOptionCondition',
+      confirmTitle: 'imsDialogEditor.speech.deleteOptionCondition',
+      confirmBody: 'imsDialogEditor.speech.deleteOptionConditionConfirm',
+      icon: 'ri-filter-off-fill',
+    },
+  },
+  {
+    key: 'priority',
+    caption: '[[t:Priority]]',
+    pinTypes: [{ Type: AssetPropType.INTEGER }],
+    defaultValue: 0,
+    addMenu: { label: 'imsDialogEditor.speech.addOptionPriority', icon: 'ri-sort-desc' },
+    removeMenu: {
+      label: 'imsDialogEditor.speech.deleteOptionPriority',
+      confirmTitle: 'imsDialogEditor.speech.deleteOptionPriority',
+      confirmBody: 'imsDialogEditor.speech.deleteOptionPriorityConfirm',
+      icon: 'ri-sort-asc',
+    },
+  },
+  {
+    key: 'falseConditionAction',
+    caption: '[[t:False Condition Action]]',
+    pinTypes: [{ Type: AssetPropType.STRING }],
+    defaultValue: 'hide',
+    addMenu: { label: 'imsDialogEditor.speech.addOptionFalseAction', icon: 'ri-eye-off-line' },
+    removeMenu: {
+      label: 'imsDialogEditor.speech.deleteOptionFalseAction',
+      confirmTitle: 'imsDialogEditor.speech.deleteOptionFalseAction',
+      confirmBody: 'imsDialogEditor.speech.deleteOptionFalseActionConfirm',
+      icon: 'ri-eye-line',
+    },
+  },
+  {
+    key: 'script',
+    caption: '[[t:Inline Script]]',
+    pinTypes: [{ Type: AssetPropType.TEXT }],
+    defaultValue: '',
+    addMenu: { label: 'imsDialogEditor.speech.addOptionScript', icon: 'ri-code-line' },
+    removeMenu: {
+      label: 'imsDialogEditor.speech.deleteOptionScript',
+      confirmTitle: 'imsDialogEditor.speech.deleteOptionScript',
+      confirmBody: 'imsDialogEditor.speech.deleteOptionScriptConfirm',
+      icon: 'ri-code-line',
+    },
+  },
+  {
+    key: 'dialogue',
+    caption: '[[t:Cross-Conversation Jump]]',
+    pinTypes: [],
+    defaultValue: null,
+    addMenu: { label: 'imsDialogEditor.speech.addOptionDialogueJump', icon: 'ri-share-forward-fill' },
+    removeMenu: {
+      label: 'imsDialogEditor.speech.deleteOptionDialogueJump',
+      confirmTitle: 'imsDialogEditor.speech.deleteOptionDialogueJump',
+      confirmBody: 'imsDialogEditor.speech.deleteOptionDialogueJumpConfirm',
+      icon: 'ri-share-forward-2-line',
+    },
+  },
+];
 
 export default defineComponent({
   name: 'DialogSpeechNode',
@@ -402,12 +499,13 @@ export default defineComponent({
             variable.type,
           );
         }
-        this.nodeDataController.setPinDataType(
-          generateDataPinId(false, 'condition', option_index),
-          {
-            Type: AssetPropType.BOOLEAN,
-          },
-        );
+        for (const field of EXTRA_OPTION_FIELDS) {
+          if (field.pinTypes.length === 0) continue;
+          this.nodeDataController.setPinDataType(
+            generateDataPinId(false, field.key, option_index),
+            field.pinTypes,
+          );
+        }
       }
     },
     activate() {
@@ -437,63 +535,93 @@ export default defineComponent({
     setOptionValue(option_index: number, value: ScriptBlockPlainPropValue) {
       this.nodeDataController.setOptionValue(option_index, 'text', value);
     },
-    isOptionConditionDisplaying(option: NodeDataOption) {
-      return option.values.condition !== undefined;
+    isExtraFieldActive(option: NodeDataOption, field: ExtraOptionField) {
+      if (field.key === 'dialogue') {
+        return option.dialogue !== undefined && option.dialogue !== null;
+      }
+      return option.values[field.key] !== undefined;
+    },
+    getActiveExtraFields(option: NodeDataOption) {
+      return EXTRA_OPTION_FIELDS.filter((field) =>
+        this.isExtraFieldActive(option, field),
+      ).map((field) => ({
+        ...field,
+        caption: convertTranslatedTitle(field.caption, (key: any) =>
+          this.$t(key),
+        ),
+      }));
+    },
+    onDialogueJumpInput(option_index: number, evt: Event) {
+      const target = evt.target as HTMLInputElement | null;
+      if (!target) return;
+      this.nodeDataController.setOptionDialogue(
+        option_index,
+        target.value || null,
+      );
     },
     getOptionContextMenu(option: NodeDataOption, option_index: number) {
       if (this.readonly) return [];
-      return [
-        this.isOptionConditionDisplaying(option)
-          ? {
-              title: this.$t('imsDialogEditor.speech.deleteOptionCondition'),
-              action: async () => {
-                const confirm = await this.$getAppManager()
-                  .get(DialogManager)
-                  .show(ConfirmDialog, {
-                    header: this.$t(
-                      'imsDialogEditor.speech.deleteOptionCondition',
-                    ),
-                    message: this.$t(
-                      'imsDialogEditor.speech.deleteOptionConditionConfirm',
-                    ),
-                    danger: true,
-                  });
-                if (!confirm) return;
+      const items: any[] = [];
+      for (const field of EXTRA_OPTION_FIELDS) {
+        const active = this.isExtraFieldActive(option, field);
+        if (active) {
+          items.push({
+            title: this.$t(field.removeMenu.label),
+            icon: field.removeMenu.icon,
+            action: async () => {
+              const confirm = await this.$getAppManager()
+                .get(DialogManager)
+                .show(ConfirmDialog, {
+                  header: this.$t(field.removeMenu.confirmTitle),
+                  message: this.$t(field.removeMenu.confirmBody),
+                  danger: true,
+                });
+              if (!confirm) return;
+              if (field.key === 'dialogue') {
+                this.nodeDataController.setOptionDialogue(option_index, null);
+              } else {
                 this.nodeDataController.deleteOptionValue(
                   option_index,
-                  'condition',
+                  field.key,
                 );
-              },
-              icon: 'ri-filter-off-fill',
-            }
-          : {
-              title: this.$t('imsDialogEditor.speech.addOptionCondition'),
-              action: async () => {
+              }
+            },
+          });
+        } else {
+          items.push({
+            title: this.$t(field.addMenu.label),
+            icon: field.addMenu.icon,
+            action: async () => {
+              if (field.key === 'dialogue') {
+                this.nodeDataController.setOptionDialogue(option_index, '');
+              } else {
                 this.nodeDataController.setOptionValue(
                   option_index,
-                  'condition',
-                  true,
+                  field.key,
+                  field.defaultValue,
                 );
-              },
-              icon: 'ri-filter-fill',
+              }
             },
-        {
-          title: this.$t('imsDialogEditor.speech.deleteOption'),
-          action: async () => {
-            const confirm = await this.$getAppManager()
-              .get(DialogManager)
-              .show(ConfirmDialog, {
-                header: this.$t('imsDialogEditor.speech.deleteOption'),
-                message: this.$t('imsDialogEditor.speech.deleteOptionConfirm'),
-                danger: true,
-              });
-            if (!confirm) return;
-            this.nodeDataController.deleteOption(option_index);
-          },
-          danger: true,
-          icon: 'delete',
+          });
+        }
+      }
+      items.push({
+        title: this.$t('imsDialogEditor.speech.deleteOption'),
+        icon: 'delete',
+        danger: true,
+        action: async () => {
+          const confirm = await this.$getAppManager()
+            .get(DialogManager)
+            .show(ConfirmDialog, {
+              header: this.$t('imsDialogEditor.speech.deleteOption'),
+              message: this.$t('imsDialogEditor.speech.deleteOptionConfirm'),
+              danger: true,
+            });
+          if (!confirm) return;
+          this.nodeDataController.deleteOption(option_index);
         },
-      ];
+      });
+      return items;
     },
     async openSpeechParametersDialog() {
       await this.$getAppManager()
@@ -516,7 +644,10 @@ export default defineComponent({
       if (!option.values) {
         return true;
       }
-      return option.values.condition === undefined || option.values.condition;
+      const cond = option.values.condition;
+      if (cond === undefined) return true;
+      if (typeof cond === 'string') return true;
+      return !!cond;
     },
   },
 });
@@ -612,6 +743,30 @@ export default defineComponent({
 
 .DialogSpeechNode-prop-content {
   min-width: 100px;
+}
+
+.DialogSpeechNode-options-one-dialogue {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 12px;
+}
+.DialogSpeechNode-options-one-dialogue-caption {
+  color: var(--imsde-node-content-caption-color, inherit);
+  white-space: nowrap;
+}
+.DialogSpeechNode-options-one-dialogue-input {
+  flex: 1;
+  font-size: 12px;
+  background: transparent;
+  border: 1px solid var(--imsde-node-content-inner-border-color);
+  border-radius: 2px;
+  padding: 2px 4px;
+  color: inherit;
+  &:focus {
+    outline: none;
+    border-color: var(--imsde-node-playing-color, #888);
+  }
 }
 
 .DialogSpeechNode-options-one-menu {

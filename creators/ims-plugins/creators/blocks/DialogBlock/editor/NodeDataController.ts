@@ -10,6 +10,7 @@ import type { DialogVariable } from './DialogBlockController';
 export type NodeDataOption = {
   values: ScriptBlockPlainProps;
   next: string | null;
+  dialogue?: string | null;
 };
 
 export type NodeData = {
@@ -46,6 +47,7 @@ export type NodeDataController = {
   ): void;
   setOptionValues(index: number, value: ScriptBlockPlainProps): void;
   deleteOptionValue(index: number, prop: string): void;
+  setOptionDialogue(index: number, value: string | null): void;
   isPinConnected(pin_id: string): boolean;
   getPinBind(pin_id: string): ScriptBlockPlainPropValueBind | null;
   getPinDataType(pin_id: string): AssetPropValueType[] | null;
