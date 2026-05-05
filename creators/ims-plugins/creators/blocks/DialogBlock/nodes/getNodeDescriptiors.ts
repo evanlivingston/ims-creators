@@ -6,6 +6,7 @@ import DialogSetVarNode from './DialogSetVarNode.vue';
 import DialogGetVarNode from './DialogGetVarNode.vue';
 import { NodeType, type NodeDescriptor } from './NodeDescriptor';
 import DialogEndNode from './DialogEndNode.vue';
+import DialogJumpNode from './DialogJumpNode.vue';
 import DialogOpNode from './DialogOpNode.vue';
 import { AssetPropType } from '~ims-app-base/logic/types/Props';
 import DialogConstNode from './DialogConstNode.vue';
@@ -159,6 +160,13 @@ export function getNodeDescriptors(): NodeDescriptor[] {
       icon: 'ri-stop-circle-fill',
       node: DialogEndNode,
       color: '#cccccc',
+      type: NodeType.EXEC_END,
+    },
+    {
+      name: 'jump',
+      icon: 'ri-share-forward-fill',
+      node: DialogJumpNode,
+      color: '#6a8fb8',
       type: NodeType.EXEC_END,
     },
     ...(['opEqual', 'opNotEqual'] as NodeDescriptorOpEq[]).map((op) => {

@@ -268,8 +268,9 @@ export class FileSystemService{
         const blocks: ProjectFileDbAssetBlock[] = [];
         let block_index = 0;
 
-        // Description block (if present)
-        if (flat.description != null) {
+        // Description block (if present). Skip for dialogues, which have a
+        // script block and do not need a separate text block for description.
+        if (flat.description != null && flat.script == null) {
             blocks.push({
                 id: uuidv4(),
                 type: 'text',

@@ -1,8 +1,9 @@
 <template>
   <div class="DialogSpeechNode DialogEditorNode">
-    <div
+    <ContextMenuZone
       class="DialogSpeechNode-header DialogNode-header DialogEditorNode-header"
       :title="$t(`imsDialogEditor.nodes.${nodeDescriptor.name}.description`)"
+      :menu-list="headerContextMenu"
     >
       <div class="DialogSpeechNode-header-id">
         <ExecHandle
@@ -19,24 +20,25 @@
           {{ avatarInitials }}
         </div>
         <i v-else :class="nodeDescriptor.icon"></i>
-        <span class="DialogSpeechNode-header-title">
-          {{ $t(`imsDialogEditor.nodes.${nodeDescriptor.name}.title`) }}
-        </span>
+        <DataField
+          ref="main-character"
+          class="DialogSpeechNode-header-character"
+          :model-value="nodeDataController.values['character'] ?? null"
+          :in-id="generateDataPinId(false, 'character')"
+          :node-data-controller="nodeDataController"
+          :readonly="readonly"
+          caption=""
+          :placeholder="$t(`imsDialogEditor.nodes.${nodeDescriptor.name}.title`)"
+          @update:model-value="nodeDataController.setValue('character', $event)"
+        />
       </div>
       <div v-if="!readonly" class="DialogSpeechNode-header-settings">
         <dialog-speech-node-attach-cover
           v-if="!coverValue"
           v-model="coverValue"
         ></dialog-speech-node-attach-cover>
-        <button
-          class="is-button is-button-icon"
-          :title="$t('gddPage.settings')"
-          @click="openSpeechParametersDialog()"
-        >
-          <i class="ri-settings-3-fill" />
-        </button>
       </div>
-    </div>
+    </ContextMenuZone>
     <div class="DialogSpeechNode-body DialogEditorNode-body">
       <div v-if="coverValue" class="DialogSpeechNode-cover">
         <file-presenter
@@ -98,7 +100,7 @@
             ></SequenceBuilder>
           </div>
           <DataField
-            v-else
+            v-else-if="variable.name !== 'character'"
             :ref="'main-' + variable.name"
             class="DialogSpeechNode-prop-line"
             :class="{
@@ -143,7 +145,7 @@
                 v-for="(field, field_idx) of getActiveExtraFields(option)"
                 :key="field.key"
                 class="DialogSpeechNode-options-one-param"
-                :class="{ 'type-first': field_idx === 0 }"
+                :class="{ 'type-first': field_idx === 0, 'field-falseConditionAction': field.key === 'falseConditionAction' }"
               >
                 <div
                   v-if="
@@ -200,8 +202,27 @@
                     "
                   ></ScriptBuilder>
                 </div>
+                <div
+                  v-else-if="field.key === 'falseConditionAction'"
+                  class="DialogSpeechNode-options-one-param-input DialogSpeechNode-options-one-fca"
+                >
+                  <menu-button class="DialogSpeechNode-fca-menubtn">
+                    <template #button-icon>
+                      <i :class="(option.values['falseConditionAction'] ?? 'hide') === 'hide' ? 'ri-eye-off-line' : 'ri-forbid-line'" />
+                      {{ option.values['falseConditionAction'] ?? 'hide' }}
+                      <i class="ri-arrow-down-s-line" />
+                    </template>
+                    <menu-list :menu-list="getFcaMenuItems(option_index)" />
+                  </menu-button>
+                  <button
+                    v-if="!readonly"
+                    class="DialogSpeechNode-fca-remove is-button is-button-icon"
+                    :title="$t('imsDialogEditor.speech.deleteOptionFalseAction')"
+                    @click.stop="removeFalseConditionAction(option_index)"
+                  ><i class="ri-close-line" /></button>
+                </div>
                 <DataField
-                  v-else-if="field.key !== 'dialogue'"
+                  v-else
                   class="DialogSpeechNode-options-one-param-input"
                   :in-id="generateDataPinId(false, field.key, option_index)"
                   :placeholder="$t('imsDialogEditor.speech.enterText')"
@@ -224,22 +245,6 @@
                     )
                   "
                 ></DataField>
-                <div
-                  v-else
-                  class="DialogSpeechNode-options-one-param-input DialogSpeechNode-options-one-dialogue"
-                >
-                  <span class="DialogSpeechNode-options-one-dialogue-caption">
-                    {{ field.caption }}:
-                  </span>
-                  <AssetSelectorPropEditor
-                    class="DialogSpeechNode-options-one-dialogue-input"
-                    :model-value="option.dialogue ?? null"
-                    :where="dialogueAssetWhere"
-                    :allow-custom="true"
-                    :nullable="true"
-                    @update:model-value="onDialogueJumpSelected(option_index, $event)"
-                  ></AssetSelectorPropEditor>
-                </div>
               </div>
               <div
                 v-for="(variable, var_index) of optionSpeechList"
@@ -304,8 +309,6 @@
                 'is-conditioned':
                   typeof option.values['condition'] === 'string' &&
                   (option.values['condition'] as string).length > 0,
-                'is-jump':
-                  option.dialogue !== undefined && option.dialogue !== null,
               }"
             >
               <ExecHandle
@@ -368,19 +371,11 @@ import type { ScriptPlayNode } from '../play/ScriptPlayNode';
 import type { DialogPlayer } from '../play/DialogPlayer';
 import DialogSpeechNodeAttachCover from './DialogSpeechNodeAttachCover.vue';
 import FilePresenter from '~ims-app-base/components/File/FilePresenter.vue';
-import AssetSelectorPropEditor from '~ims-app-base/components/Props/AssetSelectorPropEditor.vue';
-import ProjectManager from '~ims-app-base/logic/managers/ProjectManager';
 import type { AssetPropValue } from '~ims-app-base/logic/types/Props';
 import ConditionBuilder from '../parts/ConditionBuilder.vue';
 import ScriptBuilder from '../parts/ScriptBuilder.vue';
 import SequenceBuilder from '../parts/SequenceBuilder.vue';
 
-// Dialogue Type asset id (design/Types/Dialogue.ima.json). Used to scope the
-// cross-conversation jump picker to dialogue assets only.
-const DIALOGUE_TYPE_ID = 'a9afe517-a79f-4753-9e34-3a39fde65766';
-// Character Type asset id (design/Types/Character.ima.json). Scopes the
-// header character picker on speech nodes.
-const CHARACTER_TYPE_ID = 'dcb5d0aa-b55a-4a63-9d85-7cdb6b53e984';
 
 // 12-step palette with well-separated hues. Mapping the hash to a discrete
 // palette is more reliable than continuous hue % 360, which has a habit of
@@ -415,7 +410,6 @@ function avatarHueFor(name: string): number {
 // Well-known optional fields the dialogue runner reads on each option.
 // `condition` is a string expression. `priority` orders options. `falseConditionAction`
 // controls hide/disable on failed condition. `script` is an inline DSL run on select.
-// `dialogue` is special: stored on option (sibling to `next`), not in option.values.
 type ExtraOptionField = {
   key: string;
   caption: string;
@@ -479,19 +473,6 @@ const EXTRA_OPTION_FIELDS: ExtraOptionField[] = [
       icon: 'ri-code-line',
     },
   },
-  {
-    key: 'dialogue',
-    caption: '[[t:Cross-Conversation Jump]]',
-    pinTypes: [],
-    defaultValue: null,
-    addMenu: { label: 'imsDialogEditor.speech.addOptionDialogueJump', icon: 'ri-share-forward-fill' },
-    removeMenu: {
-      label: 'imsDialogEditor.speech.deleteOptionDialogueJump',
-      confirmTitle: 'imsDialogEditor.speech.deleteOptionDialogueJump',
-      confirmBody: 'imsDialogEditor.speech.deleteOptionDialogueJumpConfirm',
-      icon: 'ri-share-forward-2-line',
-    },
-  },
 ];
 
 export default defineComponent({
@@ -505,7 +486,6 @@ export default defineComponent({
     MenuList,
     DialogSpeechNodeAttachCover,
     FilePresenter,
-    AssetSelectorPropEditor,
     ConditionBuilder,
     ScriptBuilder,
     SequenceBuilder,
@@ -585,24 +565,6 @@ export default defineComponent({
         },
       ];
     },
-    dialogueAssetWhere() {
-      return {
-        workspaceids:
-          this.$getAppManager()
-            .get(ProjectManager)
-            .getWorkspaceIdByName('gdd') ?? null,
-        typeids: DIALOGUE_TYPE_ID,
-      };
-    },
-    characterAssetWhere() {
-      return {
-        workspaceids:
-          this.$getAppManager()
-            .get(ProjectManager)
-            .getWorkspaceIdByName('gdd') ?? null,
-        typeids: CHARACTER_TYPE_ID,
-      };
-    },
     characterName(): string {
       // Display name pulled from the speech node's `character` value.
       // The IMS storage shape varies:
@@ -642,6 +604,36 @@ export default defineComponent({
         background: `hsl(${hue}, 65%, 45%)`,
         color: '#fff',
       };
+    },
+    headerContextMenu() {
+      if (this.readonly) return [];
+      return [
+        {
+          title: this.$t('imsDialogEditor.speech.addOption'),
+          icon: 'ri-add-line',
+          action: () => this.addOption(),
+        },
+        {
+          title: this.$t('imsDialogEditor.speech.parameters'),
+          icon: 'ri-settings-3-line',
+          action: () => this.openSpeechParametersDialog(),
+        },
+        { type: 'separator' as const },
+        {
+          title: this.$t('imsDialogEditor.speech.duplicateNode'),
+          icon: 'ri-file-copy-line',
+          action: async () => {
+            this.dialogController.copyNodesToClipboard([this.id]);
+            await this.dialogController.pasteNodesFromClipboard();
+          },
+        },
+        {
+          title: this.$t('imsDialogEditor.speech.deleteNode'),
+          icon: 'ri-delete-bin-line',
+          danger: true,
+          action: () => this.dialogController.deleteNodeById(this.id),
+        },
+      ];
     },
     dialogueVariableNames(): string[] {
       // Variable names defined on this dialogue (script.variables.own).
@@ -749,13 +741,12 @@ export default defineComponent({
       for (const variable_name of Object.keys(
         this.dialogController.state.__settings.speech.main,
       )) {
-        if (
-          !this.$refs['main-' + variable_name] ||
-          (this.$refs['main-' + variable_name] as any).length === 0
-        )
-          continue;
+        const raw = this.$refs['main-' + variable_name];
+        if (!raw) continue;
+        const component = Array.isArray(raw) ? raw[0] : raw;
+        if (!component) continue;
         if (!this.nodeDataController.values[variable_name]) {
-          (this.$refs['main-' + variable_name] as any)[0].focus();
+          (component as any).focus();
           return;
         }
       }
@@ -772,10 +763,24 @@ export default defineComponent({
     setOptionValue(option_index: number, value: ScriptBlockPlainPropValue) {
       this.nodeDataController.setOptionValue(option_index, 'text', value);
     },
+    async removeFalseConditionAction(option_index: number) {
+      const confirm = await this.$getAppManager()
+        .get(DialogManager)
+        .show(ConfirmDialog, {
+          header: this.$t('imsDialogEditor.speech.deleteOptionFalseAction'),
+          message: this.$t('imsDialogEditor.speech.deleteOptionFalseActionConfirm'),
+          danger: true,
+        });
+      if (!confirm) return;
+      this.nodeDataController.deleteOptionValue(option_index, 'falseConditionAction');
+    },
+    getFcaMenuItems(option_index: number) {
+      return [
+        { title: 'hide', icon: 'ri-eye-off-line', action: () => this.nodeDataController.setOptionValue(option_index, 'falseConditionAction', 'hide') },
+        { title: 'disable', icon: 'ri-forbid-line', action: () => this.nodeDataController.setOptionValue(option_index, 'falseConditionAction', 'disable') },
+      ];
+    },
     isExtraFieldActive(option: NodeDataOption, field: ExtraOptionField) {
-      if (field.key === 'dialogue') {
-        return option.dialogue !== undefined && option.dialogue !== null;
-      }
       return option.values[field.key] !== undefined;
     },
     getActiveExtraFields(option: NodeDataOption) {
@@ -788,34 +793,15 @@ export default defineComponent({
         ),
       }));
     },
-    onCharacterSelected(val: AssetPropValue | null) {
-      // The picker emits AssetPropValueAsset for picked characters or a plain
-      // string for custom-typed values. Store as-is; the runner reads either.
-      // _simplifyValue on save flattens {AssetId, Title} -> Title at flush.
-      this.nodeDataController.setValue('character', val);
-    },
-    onDialogueJumpSelected(
-      option_index: number,
-      val: AssetPropValue | null,
-    ) {
-      // AssetSelectorPropEditor emits either an AssetPropValueAsset
-      // ({AssetId, Title, Name}), a plain string for custom-typed values, or
-      // null when cleared. Store as-is; the web save layer's _simplifyValue
-      // flattens {AssetId, Title} -> Title at flush time so the runner reads
-      // option.dialogue as a plain string.
-      if (val === null) {
-        // Picker emits null for "clear selection". Keep the field enabled by
-        // storing an empty string rather than fully deleting it.
-        this.nodeDataController.setOptionDialogue(option_index, '');
-        return;
-      }
-      this.nodeDataController.setOptionDialogue(option_index, val);
-    },
     getOptionContextMenu(option: NodeDataOption, option_index: number) {
       if (this.readonly) return [];
       const items: any[] = [];
       for (const field of EXTRA_OPTION_FIELDS) {
         const active = this.isExtraFieldActive(option, field);
+        // falseConditionAction is only meaningful when a condition exists.
+        if (field.key === 'falseConditionAction' && !this.isExtraFieldActive(option, EXTRA_OPTION_FIELDS[0])) {
+          continue;
+        }
         if (active) {
           items.push({
             title: this.$t(field.removeMenu.label),
@@ -829,13 +815,10 @@ export default defineComponent({
                   danger: true,
                 });
               if (!confirm) return;
-              if (field.key === 'dialogue') {
-                this.nodeDataController.setOptionDialogue(option_index, null);
-              } else {
-                this.nodeDataController.deleteOptionValue(
-                  option_index,
-                  field.key,
-                );
+              this.nodeDataController.deleteOptionValue(option_index, field.key);
+              // Removing condition makes falseConditionAction meaningless.
+              if (field.key === 'condition') {
+                this.nodeDataController.deleteOptionValue(option_index, 'falseConditionAction');
               }
             },
           });
@@ -843,16 +826,12 @@ export default defineComponent({
           items.push({
             title: this.$t(field.addMenu.label),
             icon: field.addMenu.icon,
-            action: async () => {
-              if (field.key === 'dialogue') {
-                this.nodeDataController.setOptionDialogue(option_index, '');
-              } else {
-                this.nodeDataController.setOptionValue(
-                  option_index,
-                  field.key,
-                  field.defaultValue,
-                );
-              }
+            action: () => {
+              this.nodeDataController.setOptionValue(
+                option_index,
+                field.key,
+                field.defaultValue,
+              );
             },
           });
         }
@@ -940,6 +919,8 @@ export default defineComponent({
   justify-content: space-between;
   align-items: center;
   gap: 10px;
+  // Cancel ContextMenuZone's flex: 1 - this element is not a flex item.
+  flex: none;
 }
 .DialogSpeechNode-header-id {
   display: flex;
@@ -947,19 +928,24 @@ export default defineComponent({
   gap: 8px;
   min-width: 0;
 }
-.DialogSpeechNode-header-title {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 220px;
-}
 .DialogSpeechNode-header-character {
-  // The DataFieldInput is the same Quill ImcEditor used in the body row,
-  // including the @ asset picker. Strip the multi-line counter and
-  // top-margin so it fits into the header strip cleanly.
   flex: 1 1 auto;
   min-width: 0;
   max-width: 280px;
+  // Force the rich-text editor to use the header's dark-navy text color.
+  // --local-link-color overrides the yellow accent used for asset references.
+  color: var(--imsde-node-header-text-color);
+  --local-text-color: var(--imsde-node-header-text-color);
+  --input-text-color: var(--imsde-node-header-text-color);
+  --input-placeholder-color: rgba(26, 41, 71, 0.45);
+  --local-link-color: var(--imsde-node-header-text-color);
+  --local-link-bg-color: rgba(26, 41, 71, 0.08);
+  &:not(:hover):deep(.DataField-in:not(.state-connected)) {
+    opacity: 0;
+  }
+  &:deep(a.ql-imc-asset::before) {
+    display: none;
+  }
   &:deep(.DataFieldInput-counter) {
     display: none;
   }
@@ -977,11 +963,11 @@ export default defineComponent({
     padding: 0 4px;
     min-height: 22px;
     &:hover {
-      border-color: rgba(0, 0, 0, 0.15);
+      border-color: rgba(26, 41, 71, 0.2);
     }
     &:focus-within {
-      border-color: rgba(0, 0, 0, 0.3);
-      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(26, 41, 71, 0.4);
+      background: rgba(255, 255, 255, 0.12);
     }
   }
 }
@@ -1031,6 +1017,7 @@ export default defineComponent({
   padding: 10px 0;
   display: flex;
   align-items: center;
+  width: 100%;
   &.state-unavailable {
     opacity: 0.5;
   }
@@ -1042,11 +1029,6 @@ export default defineComponent({
 .DialogSpeechNode-options-one-param {
   &:not(:last-child) {
     margin-bottom: 10px;
-  }
-  &:not(.type-first) {
-    .DialogSpeechNode-options-one-param-input {
-      padding-left: 22px;
-    }
   }
 }
 
@@ -1097,47 +1079,9 @@ export default defineComponent({
   min-width: 0;
 }
 
-.DialogSpeechNode-options-one-dialogue {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  font-size: 12px;
-}
-.DialogSpeechNode-options-one-dialogue-caption {
-  color: var(--imsde-node-content-caption-color, inherit);
-  white-space: nowrap;
-}
-.DialogSpeechNode-options-one-dialogue-input {
-  flex: 1;
-  font-size: 12px;
-  background: transparent;
-  border: 1px solid var(--imsde-node-content-inner-border-color);
-  border-radius: 2px;
-  padding: 2px 4px;
-  color: inherit;
-  &:focus {
-    outline: none;
-    border-color: var(--imsde-node-playing-color, #888);
-  }
-}
-
 .DialogSpeechNode-options-one-handle {
-  position: relative;
-  // Conditioned options: pin gets a warm filter colour so the writer can
-  // tell at a glance which choices are gated.
   &.is-conditioned :deep(.ExecHandle-svg) {
     fill: #b88a3a;
-  }
-  // Cross-conversation jump: pin gets a cool colour to signal the connection
-  // leaves the current dialogue file.
-  &.is-jump :deep(.ExecHandle-svg) {
-    fill: #6a8fb8;
-  }
-  // Both at once - prioritise jump colour but mark it conditioned via stroke.
-  &.is-conditioned.is-jump :deep(.ExecHandle-svg) {
-    fill: #6a8fb8;
-    stroke: #b88a3a;
-    stroke-width: 1.5;
   }
 }
 
@@ -1184,5 +1128,36 @@ export default defineComponent({
 .DialogSpeechNode-cover:hover .DialogSpeechNode-cover-menu,
 .DialogSpeechNode-cover-menu.state-active {
   display: flex;
+}
+
+.DialogSpeechNode-options-one-fca {
+  padding-left: 22px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.DialogSpeechNode-fca-menubtn {
+  &:deep(.MenuButton-button) {
+    font-size: 11px;
+    padding: 2px 6px 2px 9px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    --button-bg-color: rgba(255, 255, 255, 0.08);
+    --button-border-color: rgba(255, 255, 255, 0.2);
+    i { font-size: 11px; opacity: 0.6; }
+  }
+}
+.DialogSpeechNode-fca-remove {
+  width: 16px;
+  height: 16px;
+  font-size: 11px;
+  padding: 0;
+  opacity: 0.4;
+  &:hover {
+    opacity: 1;
+    color: var(--color-danger, #ff5b45);
+  }
 }
 </style>

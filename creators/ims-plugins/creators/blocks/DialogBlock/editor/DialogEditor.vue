@@ -51,7 +51,10 @@
           :key="node_desc.name"
           #[`node-${node_desc.name}`]="params"
         >
-          <div class="DialogEditor-node-wrapper">
+          <ContextMenuZone
+            class="DialogEditor-node-wrapper"
+            :menu-list="readonly ? [] : getNodeContextMenu(params.id)"
+          >
             <component
               v-bind="{
                 ...params,
@@ -92,7 +95,7 @@
                 {{ lintIssuesByNode.get(params.id)!.length }}
               </span>
             </div>
-          </div>
+          </ContextMenuZone>
         </template>
         <template #edge-flow="params">
           <BezierEdge
@@ -110,6 +113,31 @@
         {{ $t('imsDialogEditor.addStartLevelHint') }}
       </div>
     </div>
+    <transition name="DialogEditor-varPanel">
+      <div v-if="varPanelOpen" class="DialogEditor-varPanel" @mousedown.stop>
+        <div class="DialogEditor-varPanel-header">
+          <span>Variables</span>
+          <button
+            class="is-button is-button-icon"
+            @click="varPanelOpen = false"
+          ><i class="ri-close-line" /></button>
+        </div>
+        <div class="DialogEditor-varPanel-body">
+          <VariableList :variable-controller="blockControllerMut" />
+        </div>
+        <div v-if="!readonly" class="DialogEditor-varPanel-footer">
+          <button class="is-button" @click="addVariable">
+            + Add variable
+          </button>
+        </div>
+      </div>
+    </transition>
+    <button
+      class="DialogEditor-varBtn is-button is-button-icon"
+      :class="{ 'state-active': varPanelOpen }"
+      title="Variables"
+      @click="varPanelOpen = !varPanelOpen"
+    ><i class="ri-braces-line" /></button>
     <CreateNodeDropdown
       v-if="createNodeContext && createNodeContext.clickedAt"
       class="DialogEditor-createNode"
@@ -158,6 +186,11 @@ import type { ResolvedAssetBlock } from '~ims-app-base/logic/utils/assets';
 import type { AssetChanger } from '~ims-app-base/logic/types/AssetChanger';
 import type { NodeData } from './NodeDataController';
 import type { DialogBlockController } from './DialogBlockController';
+import ContextMenuZone from '~ims-app-base/components/Common/ContextMenuZone.vue';
+import VariableList from '../dialogs/VariableList.vue';
+import { nodeVariableAdd } from '../logic/nodeVariables';
+import ConfirmDialog from '~ims-app-base/components/Common/ConfirmDialog.vue';
+import DialogManager from '~ims-app-base/logic/managers/DialogManager';
 import type {
   AssetPropValueAsset,
   AssetPropValueType,
@@ -196,6 +229,8 @@ type CreateNodeContext = {
 export default defineComponent({
   name: 'DialogEditor',
   components: {
+    ContextMenuZone,
+    VariableList,
     VueFlow,
     DialogSpeechNode,
     DialogStartNode,
@@ -249,6 +284,7 @@ export default defineComponent({
       dialogPlayer,
       isFocused: false,
       clickOutside: null as SetClickOutsideCancel | null,
+      varPanelOpen: false,
     };
   },
   computed: {
@@ -330,6 +366,44 @@ export default defineComponent({
     this.resetFocusedListeners(false);
   },
   methods: {
+    async addVariable() {
+      const result = await nodeVariableAdd(
+        this.$getAppManager(),
+        this.blockControllerMut.getVariables(),
+        { alreadyExist: this.$t('imsDialogEditor.var.duplicateVariable') },
+      );
+      if (result) this.blockControllerMut.addVariable(result);
+    },
+    getNodeContextMenu(nodeId: string) {
+      return [
+        {
+          title: this.$t('imsDialogEditor.speech.duplicateNode'),
+          icon: 'ri-file-copy-line',
+          action: async () => {
+            this.blockControllerMut.copyNodesToClipboard([nodeId]);
+            await this.blockControllerMut.pasteNodesFromClipboard();
+          },
+        },
+        {
+          title: this.$t('imsDialogEditor.speech.deleteNode'),
+          icon: 'ri-delete-bin-line',
+          danger: true,
+          action: () => this.confirmDeleteNode(nodeId),
+        },
+      ];
+    },
+    async confirmDeleteNode(nodeId: string) {
+      await this.$nextTick();
+      const ok = await this.$getAppManager()
+        .get(DialogManager)
+        .show(ConfirmDialog, {
+          header: this.$t('imsDialogEditor.speech.deleteNode'),
+          message: this.$t('imsDialogEditor.speech.deleteNode') + '?',
+          danger: true,
+        });
+      if (!ok) return;
+      this.blockControllerMut.deleteNodeById(nodeId);
+    },
     getFlowEdgePlayStateClass(source_id: string, target_id: string) {
       const state = this.dialogPlayer.getFlowEdgePlayState(
         source_id,
@@ -1040,5 +1114,58 @@ export default defineComponent({
   z-index: 10;
   background: var(--dropdown-bg-color);
   box-shadow: var(--dropdown-box-shadow);
+}
+.DialogEditor-varBtn {
+  position: absolute;
+  top: 10px;
+  right: 46px;
+  z-index: 10;
+  background: var(--dropdown-bg-color);
+  box-shadow: var(--dropdown-box-shadow);
+  &.state-active {
+    --button-bg-color: var(--color-accent);
+    --button-text-color: var(--root-bg-color);
+  }
+}
+.DialogEditor-varPanel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 240px;
+  z-index: 9;
+  background: var(--panel-bg-color, #2c2b29);
+  border-left: 1px solid var(--root-border-color);
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+}
+.DialogEditor-varPanel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px 8px;
+  font-weight: 600;
+  font-size: 12px;
+  border-bottom: 1px solid var(--root-border-color);
+  flex-shrink: 0;
+}
+.DialogEditor-varPanel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 12px;
+}
+.DialogEditor-varPanel-footer {
+  padding: 8px 12px;
+  border-top: 1px solid var(--root-border-color);
+  flex-shrink: 0;
+}
+.DialogEditor-varPanel-enter-active,
+.DialogEditor-varPanel-leave-active {
+  transition: transform 0.2s ease;
+}
+.DialogEditor-varPanel-enter-from,
+.DialogEditor-varPanel-leave-to {
+  transform: translateX(100%);
 }
 </style>

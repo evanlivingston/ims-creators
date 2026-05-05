@@ -94,7 +94,7 @@ import ExecHandle from '../parts/ExecHandle.vue';
 import type { NodeDataController } from '../editor/NodeDataController';
 import { AssetPropType } from '~ims-app-base/logic/types/Props';
 import ContextMenuZone from '~ims-app-base/components/Common/ContextMenuZone.vue';
-import type { DialogVariable } from '../editor/DialogBlockController';
+import type { DialogBlockController, DialogVariable } from '../editor/DialogBlockController';
 import DialogManager from '~ims-app-base/logic/managers/DialogManager';
 import DataField from '../parts/DataField.vue';
 import {
@@ -124,6 +124,10 @@ export default defineComponent({
     },
     nodeDescriptor: {
       type: Object as PropType<NodeDescriptor>,
+      required: true,
+    },
+    dialogController: {
+      type: Object as PropType<DialogBlockController>,
       required: true,
     },
     nodeDataController: {
@@ -213,6 +217,21 @@ export default defineComponent({
           action: () => this.addParameter(true),
           icon: 'ri-arrow-left-circle-line',
         },
+        { type: 'separator' as const },
+        {
+          title: this.$t('imsDialogEditor.speech.duplicateNode'),
+          icon: 'ri-file-copy-line',
+          action: async () => {
+            this.dialogController.copyNodesToClipboard([this.id]);
+            await this.dialogController.pasteNodesFromClipboard();
+          },
+        },
+        {
+          title: this.$t('imsDialogEditor.speech.deleteNode'),
+          icon: 'ri-delete-bin-line',
+          danger: true,
+          action: () => this.confirmDeleteNode(),
+        },
       ];
     },
     inputParameters(): DialogVariable[] {
@@ -226,6 +245,18 @@ export default defineComponent({
     this.updatePins();
   },
   methods: {
+    async confirmDeleteNode() {
+      await this.$nextTick();
+      const ok = await this.$getAppManager()
+        .get(DialogManager)
+        .show(ConfirmDialog, {
+          header: this.$t('imsDialogEditor.speech.deleteNode'),
+          message: this.$t('imsDialogEditor.speech.deleteNode') + '?',
+          danger: true,
+        });
+      if (!ok) return;
+      this.dialogController.deleteNodeById(this.id);
+    },
     generateDataPinId,
     activate() {
       if (!this.$refs['content']) return;

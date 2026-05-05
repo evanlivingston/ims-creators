@@ -1,5 +1,5 @@
 <template>
-  <div class="SequenceBuilder">
+  <div class="SequenceBuilder" @mousedown.stop>
     <div v-if="mode === 'form'" class="SequenceBuilder-form">
       <div
         v-for="(step, step_idx) in steps"
@@ -244,19 +244,25 @@ export default defineComponent({
 .SequenceBuilder {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 3px;
   font-size: 11px;
 }
+.SequenceBuilder-footer {
+  align-self: stretch;
+}
 .SequenceBuilder-row {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 3px;
-  flex-wrap: wrap;
-  min-height: 22px;
+  gap: 2px;
+  border: 1px solid rgba(255, 213, 106, 0.3);
+  border-radius: 10px;
+  background: rgba(255, 213, 106, 0.06);
+  padding: 1px 4px 1px 6px;
 }
 .SequenceBuilder-row-at {
   font-family: monospace;
-  opacity: 0.6;
+  opacity: 0.5;
   font-size: 10px;
 }
 .SequenceBuilder-row-time,
@@ -264,37 +270,45 @@ export default defineComponent({
 .SequenceBuilder-row-arg {
   font-size: 11px;
   background: transparent;
-  border: 1px solid var(--imsde-node-content-inner-border-color);
-  border-radius: 2px;
-  padding: 1px 3px;
+  border: none;
+  padding: 0 2px;
   color: inherit;
   height: 20px;
   box-sizing: border-box;
   &:focus {
     outline: none;
-    border-color: var(--imsde-node-playing-color, #888);
+    background: rgba(255, 213, 106, 0.1);
+    border-radius: 4px;
   }
 }
+select.SequenceBuilder-row-cmd {
+  appearance: none;
+  padding-right: 14px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='rgba(255,213,106,0.5)'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 2px center;
+  cursor: pointer;
+}
 .SequenceBuilder-row-time {
-  width: 46px;
+  width: 36px;
   flex: 0 0 auto;
 }
 .SequenceBuilder-row-cmd {
-  min-width: 110px;
-  flex: 0 0 auto;
+  min-width: 90px;
 }
 .SequenceBuilder-row-arg {
-  min-width: 60px;
-  flex: 1 1 60px;
+  min-width: 50px;
 }
 .SequenceBuilder-row-remove {
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   font-size: 10px;
   padding: 0;
-  opacity: 0.5;
+  opacity: 0.4;
+  flex-shrink: 0;
   &:hover {
     opacity: 1;
+    color: var(--color-danger, #ff5b45);
   }
 }
 .SequenceBuilder-footer {

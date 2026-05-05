@@ -1,5 +1,5 @@
 <template>
-  <div class="ScriptBuilder">
+  <div class="ScriptBuilder" @mousedown.stop>
     <div v-if="mode === 'form'" class="ScriptBuilder-form">
       <div
         v-for="(cmd, cmd_idx) in commands"
@@ -7,7 +7,7 @@
         class="ScriptBuilder-row"
       >
         <select
-          class="ScriptBuilder-row-cmd"
+          class="ScriptBuilder-row-cmd nodrag nopan"
           :value="cmd.name"
           :disabled="readonly"
           @change="onCommandChange(cmd_idx, $event)"
@@ -25,7 +25,7 @@
         <input
           v-for="(arg, arg_idx) in cmd.args"
           :key="arg_idx"
-          class="ScriptBuilder-row-arg is-input"
+          class="ScriptBuilder-row-arg is-input nodrag nopan"
           :type="argInputType(cmd, arg_idx)"
           :step="arg.kind === 'number' ? 'any' : undefined"
           :placeholder="argLabel(cmd, arg_idx)"
@@ -36,7 +36,7 @@
         <button
           v-if="!readonly"
           type="button"
-          class="ScriptBuilder-row-remove is-button is-button-icon"
+          class="ScriptBuilder-row-remove is-button is-button-icon nodrag nopan"
           title="Remove command"
           @click="removeCommand(cmd_idx)"
         >
@@ -46,14 +46,14 @@
       <div v-if="!readonly" class="ScriptBuilder-footer">
         <button
           type="button"
-          class="ScriptBuilder-add is-button-link"
+          class="ScriptBuilder-add is-button-link nodrag nopan"
           @click="addCommand"
         >
           + Add command
         </button>
         <button
           type="button"
-          class="ScriptBuilder-toggle is-button-link"
+          class="ScriptBuilder-toggle is-button-link nodrag nopan"
           @click="toggleMode"
         >
           text
@@ -62,7 +62,7 @@
     </div>
     <div v-else class="ScriptBuilder-text">
       <textarea
-        class="ScriptBuilder-text-input is-input"
+        class="ScriptBuilder-text-input is-input nodrag nopan"
         :value="modelValue"
         :readonly="readonly"
         rows="3"
@@ -77,7 +77,7 @@
       <div v-if="!readonly && !parseFailed" class="ScriptBuilder-footer">
         <button
           type="button"
-          class="ScriptBuilder-toggle is-button-link"
+          class="ScriptBuilder-toggle is-button-link nodrag nopan"
           @click="toggleMode"
         >
           form
@@ -227,47 +227,59 @@ export default defineComponent({
 .ScriptBuilder {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 3px;
   font-size: 11px;
 }
+.ScriptBuilder-footer {
+  align-self: stretch;
+}
 .ScriptBuilder-row {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 3px;
-  flex-wrap: wrap;
-  min-height: 22px;
+  gap: 2px;
+  border: 1px solid rgba(175, 178, 255, 0.3);
+  border-radius: 10px;
+  background: rgba(175, 178, 255, 0.06);
+  padding: 1px 4px 1px 8px;
 }
 .ScriptBuilder-row-cmd,
 .ScriptBuilder-row-arg {
   font-size: 11px;
   background: transparent;
-  border: 1px solid var(--imsde-node-content-inner-border-color);
-  border-radius: 2px;
-  padding: 1px 3px;
+  border: none;
+  padding: 0 2px;
   color: inherit;
   height: 20px;
   box-sizing: border-box;
   &:focus {
     outline: none;
-    border-color: var(--imsde-node-playing-color, #888);
+    background: rgba(175, 178, 255, 0.1);
+    border-radius: 4px;
   }
 }
-.ScriptBuilder-row-cmd {
-  min-width: 110px;
-  flex: 0 0 auto;
+select.ScriptBuilder-row-cmd {
+  appearance: none;
+  padding-right: 14px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='rgba(175,178,255,0.5)'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 2px center;
+  cursor: pointer;
+  min-width: 90px;
 }
 .ScriptBuilder-row-arg {
-  min-width: 60px;
-  flex: 1 1 60px;
+  min-width: 50px;
 }
 .ScriptBuilder-row-remove {
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   font-size: 10px;
   padding: 0;
-  opacity: 0.5;
+  opacity: 0.4;
+  flex-shrink: 0;
   &:hover {
     opacity: 1;
+    color: var(--color-danger, #ff5b45);
   }
 }
 .ScriptBuilder-footer {

@@ -1,5 +1,5 @@
 <template>
-  <div class="ConditionBuilder">
+  <div class="ConditionBuilder" @mousedown.stop>
     <div v-if="mode === 'form'" class="ConditionBuilder-form">
       <div
         v-for="(clause, clause_idx) in formClauses"
@@ -11,7 +11,7 @@
         </span>
         <button
           type="button"
-          class="ConditionBuilder-clause-negate is-button is-button-icon"
+          class="ConditionBuilder-clause-negate is-button is-button-icon nodrag nopan"
           :class="{ 'state-active': clause.negated }"
           :title="clause.negated ? 'Remove negation' : 'Negate (not)'"
           :disabled="readonly"
@@ -20,7 +20,7 @@
           <i class="ri-prohibited-line"></i>
         </button>
         <select
-          class="ConditionBuilder-clause-term"
+          class="ConditionBuilder-clause-term nodrag nopan"
           :value="clauseTermKey(clause)"
           :disabled="readonly"
           @change="onTermChange(clause_idx, $event)"
@@ -50,7 +50,7 @@
           <input
             v-for="(arg, arg_idx) in functionArgsFor(clause)"
             :key="arg_idx"
-            class="ConditionBuilder-clause-arg is-input"
+            class="ConditionBuilder-clause-arg is-input nodrag nopan"
             :type="arg.kind === 'number' ? 'number' : 'text'"
             :placeholder="arg.label"
             :value="argDisplayValue(clause, arg_idx)"
@@ -59,7 +59,7 @@
           />
         </template>
         <select
-          class="ConditionBuilder-clause-op"
+          class="ConditionBuilder-clause-op nodrag nopan"
           :value="clause.op ?? ''"
           :disabled="readonly"
           @change="onOpChange(clause_idx, $event)"
@@ -75,7 +75,7 @@
         <template v-if="clause.op">
           <input
             v-if="rightInputType(clause) === 'number'"
-            class="ConditionBuilder-clause-right is-input"
+            class="ConditionBuilder-clause-right is-input nodrag nopan"
             type="number"
             step="any"
             :value="rightDisplayValue(clause)"
@@ -84,7 +84,7 @@
           />
           <select
             v-else-if="rightInputType(clause) === 'bool'"
-            class="ConditionBuilder-clause-right"
+            class="ConditionBuilder-clause-right nodrag nopan"
             :value="rightDisplayValue(clause)"
             :disabled="readonly"
             @change="onRightChange(clause_idx, 'bool', $event)"
@@ -94,7 +94,7 @@
           </select>
           <input
             v-else
-            class="ConditionBuilder-clause-right is-input"
+            class="ConditionBuilder-clause-right is-input nodrag nopan"
             type="text"
             placeholder="value"
             :value="rightDisplayValue(clause)"
@@ -105,7 +105,7 @@
         <button
           v-if="!readonly"
           type="button"
-          class="ConditionBuilder-clause-remove is-button is-button-icon"
+          class="ConditionBuilder-clause-remove is-button is-button-icon nodrag nopan"
           title="Remove clause"
           @click="removeClause(clause_idx)"
         >
@@ -115,14 +115,14 @@
       <div v-if="!readonly" class="ConditionBuilder-footer">
         <button
           type="button"
-          class="ConditionBuilder-add is-button-link"
+          class="ConditionBuilder-add is-button-link nodrag nopan"
           @click="addClause"
         >
           + Add clause
         </button>
         <button
           type="button"
-          class="ConditionBuilder-toggle is-button-link"
+          class="ConditionBuilder-toggle is-button-link nodrag nopan"
           @click="toggleMode"
         >
           text
@@ -131,7 +131,7 @@
     </div>
     <div v-else class="ConditionBuilder-text">
       <textarea
-        class="ConditionBuilder-text-input is-input"
+        class="ConditionBuilder-text-input is-input nodrag nopan"
         :value="textValue"
         :readonly="readonly"
         rows="2"
@@ -146,7 +146,7 @@
       <div v-if="!readonly && !parseFailed" class="ConditionBuilder-footer">
         <button
           type="button"
-          class="ConditionBuilder-toggle is-button-link"
+          class="ConditionBuilder-toggle is-button-link nodrag nopan"
           @click="toggleMode"
         >
           form
@@ -365,9 +365,10 @@ export default defineComponent({
     },
     addClause() {
       const clauses = this.cloneClauses();
-      // New clause defaults to a bare identifier - the user picks a variable
-      // or function from the dropdown.
-      clauses.push({ negated: false, left: { kind: 'identifier', name: '' } });
+      // Use the first available variable name, or '_' as a placeholder so the
+      // clause survives the serialize → parse roundtrip (empty name → empty string).
+      const defaultName = this.variableOptions[0] ?? '_';
+      clauses.push({ negated: false, left: { kind: 'identifier', name: defaultName } });
       this.emitFromClauses(clauses);
     },
     removeClause(clauseIdx: number) {
@@ -396,29 +397,35 @@ function defaultLiteralFor(kind: 'number' | 'bool' | 'string'): ConditionLiteral
 .ConditionBuilder {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 3px;
   font-size: 11px;
 }
+.ConditionBuilder-footer {
+  align-self: stretch;
+}
 .ConditionBuilder-clause {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 3px;
-  flex-wrap: wrap;
-  min-height: 22px;
+  gap: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 1px 4px 1px 6px;
 }
 .ConditionBuilder-clause-conjunction {
   font-style: italic;
   font-size: 10px;
-  color: var(--imsde-node-content-caption-color, inherit);
-  opacity: 0.7;
-  margin-right: 2px;
+  opacity: 0.5;
+  padding: 0 2px;
 }
 .ConditionBuilder-clause-negate {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   font-size: 10px;
   padding: 0;
-  opacity: 0.4;
+  opacity: 0.3;
+  flex-shrink: 0;
   &.state-active {
     opacity: 1;
     color: var(--color-main-error, #d33);
@@ -430,38 +437,47 @@ function defaultLiteralFor(kind: 'number' | 'bool' | 'string'): ConditionLiteral
 .ConditionBuilder-clause-arg {
   font-size: 11px;
   background: transparent;
-  border: 1px solid var(--imsde-node-content-inner-border-color);
-  border-radius: 2px;
-  padding: 1px 3px;
+  border: none;
+  padding: 0 2px;
   color: inherit;
   height: 20px;
   box-sizing: border-box;
   &:focus {
     outline: none;
-    border-color: var(--imsde-node-playing-color, #888);
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
   }
 }
+select.ConditionBuilder-clause-term,
+select.ConditionBuilder-clause-op,
+select.ConditionBuilder-clause-right {
+  appearance: none;
+  padding-right: 14px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='rgba(255,255,255,0.35)'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 2px center;
+  cursor: pointer;
+}
 .ConditionBuilder-clause-term {
-  min-width: 100px;
-  flex: 2 1 100px;
+  min-width: 70px;
 }
 .ConditionBuilder-clause-op {
-  width: 46px;
-  flex: 0 0 auto;
+  min-width: 40px;
 }
 .ConditionBuilder-clause-right,
 .ConditionBuilder-clause-arg {
-  min-width: 60px;
-  flex: 1 1 60px;
+  min-width: 45px;
 }
 .ConditionBuilder-clause-remove {
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   font-size: 10px;
   padding: 0;
-  opacity: 0.5;
+  opacity: 0.4;
+  flex-shrink: 0;
   &:hover {
     opacity: 1;
+    color: var(--color-danger, #ff5b45);
   }
 }
 .ConditionBuilder-footer {
