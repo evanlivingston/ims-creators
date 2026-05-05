@@ -168,10 +168,7 @@ export default defineComponent({
       for (let i = 0; i < this.options.length; i++) {
         this.nodeDataController.setPinDataType(
           generateDataPinId(false, 'condition', i),
-          [
-            { Type: AssetPropType.STRING },
-            { Type: AssetPropType.BOOLEAN },
-          ],
+          { Type: AssetPropType.STRING },
         );
         this.nodeDataController.setPinDataType(
           generateDataPinId(false, 'priority', i),

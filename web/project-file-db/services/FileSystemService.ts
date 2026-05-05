@@ -7,6 +7,21 @@ import { absolutePathToUuid } from "../utils/files";
 import { MARKDOWN_ASSET_ID, BLOCK_NAME_META } from "~ims-app-base/logic/constants";
 
 /**
+ * Map of workspace directory name (lowercase) -> Type asset id.
+ * Flat-loaded data files inherit the matching Type so asset pickers
+ * filtered by `typeids` (e.g. cross-conversation jump dropdown) include
+ * them. Without this, flat assets show typeIds: [] and are filtered out
+ * everywhere except recently-used.
+ *
+ * IDs match the corresponding `design/Types/<name>.ima.json` files.
+ */
+const FLAT_DIR_TO_TYPE_ID: Record<string, string> = {
+    'dialogues':       'a9afe517-a79f-4753-9e34-3a39fde65766',
+    // Other flat-loaded directories can be added here as needed; absence
+    // just means assets in that directory keep typeIds: [] (current behaviour).
+};
+
+/**
  * Load JSON Schema files from design/schemas/ and build a map of
  * workspace directory name (lowercase) -> __props metadata.
  * This replaces the need for Types/*.ima.json for property editor rendering.
@@ -319,6 +334,9 @@ export class FileSystemService{
             });
         }
 
+        const inferredTypeId = FLAT_DIR_TO_TYPE_ID[wsDir] ?? null;
+        const typeIds = inferredTypeId ? [inferredTypeId] : [];
+
         return {
             id: asset_id,
             projectId: this.db.project.db.info.id ?? '',
@@ -327,7 +345,7 @@ export class FileSystemService{
             title: flat.title || node_path.basename(local_name, '.json'),
             icon: null,
             isAbstract: false,
-            typeIds: [],
+            typeIds,
             createdAt: created_at,
             updatedAt: updated_at,
             deletedAt: null,
@@ -336,7 +354,7 @@ export class FileSystemService{
             creatorUserId: null,
             unread: 0,
             hasImage: false,
-            parentIds: [],
+            parentIds: typeIds,
             ownTitle: flat.title || node_path.basename(local_name, '.json'),
             ownIcon: null,
             blocks,

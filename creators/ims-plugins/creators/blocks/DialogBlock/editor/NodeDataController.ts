@@ -10,7 +10,10 @@ import type { DialogVariable } from './DialogBlockController';
 export type NodeDataOption = {
   values: ScriptBlockPlainProps;
   next: string | null;
-  dialogue?: string | null;
+  // Stored as either a plain string (the target dialogue title) or an
+  // AssetPropValueAsset reference ({AssetId, Title, Name}); the web save
+  // layer's _simplifyValue flattens references to their Title at flush time.
+  dialogue?: ScriptBlockPlainPropValue | null;
 };
 
 export type NodeData = {
@@ -47,7 +50,10 @@ export type NodeDataController = {
   ): void;
   setOptionValues(index: number, value: ScriptBlockPlainProps): void;
   deleteOptionValue(index: number, prop: string): void;
-  setOptionDialogue(index: number, value: string | null): void;
+  setOptionDialogue(
+    index: number,
+    value: ScriptBlockPlainPropValue | null,
+  ): void;
   isPinConnected(pin_id: string): boolean;
   getPinBind(pin_id: string): ScriptBlockPlainPropValueBind | null;
   getPinDataType(pin_id: string): AssetPropValueType[] | null;

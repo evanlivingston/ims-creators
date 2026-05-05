@@ -119,14 +119,14 @@
                   <span class="DialogSpeechNode-options-one-dialogue-caption">
                     {{ field.caption }}:
                   </span>
-                  <input
-                    type="text"
+                  <AssetSelectorPropEditor
                     class="DialogSpeechNode-options-one-dialogue-input"
-                    :placeholder="$t('imsDialogEditor.speech.dialogueJumpPlaceholder')"
-                    :value="option.dialogue ?? ''"
-                    :readonly="readonly"
-                    @input="onDialogueJumpInput(option_index, $event)"
-                  />
+                    :model-value="option.dialogue ?? null"
+                    :where="dialogueAssetWhere"
+                    :allow-custom="true"
+                    :nullable="true"
+                    @update:model-value="onDialogueJumpSelected(option_index, $event)"
+                  ></AssetSelectorPropEditor>
                 </div>
               </div>
               <div
@@ -135,7 +135,7 @@
                 class="DialogSpeechNode-options-one-param"
                 :class="{
                   ' type-first':
-                    var_index === 0 && !isOptionConditionDisplaying(option),
+                    var_index === 0 && getActiveExtraFields(option).length === 0,
                 }"
               >
                 <DataField
@@ -246,6 +246,13 @@ import type { ScriptPlayNode } from '../play/ScriptPlayNode';
 import type { DialogPlayer } from '../play/DialogPlayer';
 import DialogSpeechNodeAttachCover from './DialogSpeechNodeAttachCover.vue';
 import FilePresenter from '~ims-app-base/components/File/FilePresenter.vue';
+import AssetSelectorPropEditor from '~ims-app-base/components/Props/AssetSelectorPropEditor.vue';
+import ProjectManager from '~ims-app-base/logic/managers/ProjectManager';
+import type { AssetPropValue } from '~ims-app-base/logic/types/Props';
+
+// Dialogue Type asset id (design/Types/Dialogue.ima.json). Used to scope the
+// cross-conversation jump picker to dialogue assets only.
+const DIALOGUE_TYPE_ID = 'a9afe517-a79f-4753-9e34-3a39fde65766';
 
 // Well-known optional fields the dialogue runner reads on each option.
 // `condition` is a string expression. `priority` orders options. `falseConditionAction`
@@ -265,7 +272,7 @@ const EXTRA_OPTION_FIELDS: ExtraOptionField[] = [
   {
     key: 'condition',
     caption: '[[t:Condition]]',
-    pinTypes: [{ Type: AssetPropType.STRING }, { Type: AssetPropType.BOOLEAN }],
+    pinTypes: [{ Type: AssetPropType.STRING }],
     defaultValue: '',
     addMenu: { label: 'imsDialogEditor.speech.addOptionCondition', icon: 'ri-filter-fill' },
     removeMenu: {
@@ -339,6 +346,7 @@ export default defineComponent({
     MenuList,
     DialogSpeechNodeAttachCover,
     FilePresenter,
+    AssetSelectorPropEditor,
   },
   props: {
     id: {
@@ -414,6 +422,15 @@ export default defineComponent({
           danger: true,
         },
       ];
+    },
+    dialogueAssetWhere() {
+      return {
+        workspaceids:
+          this.$getAppManager()
+            .get(ProjectManager)
+            .getWorkspaceIdByName('gdd') ?? null,
+        typeids: DIALOGUE_TYPE_ID,
+      };
     },
   },
   watch: {
@@ -551,13 +568,22 @@ export default defineComponent({
         ),
       }));
     },
-    onDialogueJumpInput(option_index: number, evt: Event) {
-      const target = evt.target as HTMLInputElement | null;
-      if (!target) return;
-      this.nodeDataController.setOptionDialogue(
-        option_index,
-        target.value || null,
-      );
+    onDialogueJumpSelected(
+      option_index: number,
+      val: AssetPropValue | null,
+    ) {
+      // AssetSelectorPropEditor emits either an AssetPropValueAsset
+      // ({AssetId, Title, Name}), a plain string for custom-typed values, or
+      // null when cleared. Store as-is; the web save layer's _simplifyValue
+      // flattens {AssetId, Title} -> Title at flush time so the runner reads
+      // option.dialogue as a plain string.
+      if (val === null) {
+        // Picker emits null for "clear selection". Keep the field enabled by
+        // storing an empty string rather than fully deleting it.
+        this.nodeDataController.setOptionDialogue(option_index, '');
+        return;
+      }
+      this.nodeDataController.setOptionDialogue(option_index, val);
     },
     getOptionContextMenu(option: NodeDataOption, option_index: number) {
       if (this.readonly) return [];

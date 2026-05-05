@@ -32,7 +32,9 @@ export type ScriptBlockPlainNode = {
   options?: {
     values?: ScriptBlockPlainProps;
     next: string | null;
-    dialogue?: string | null;
+    // Cross-conversation jump target. May be a plain title string or an
+    // AssetPropValueAsset reference; the web save layer flattens to Title.
+    dialogue?: ScriptBlockPlainPropValue | null;
   }[];
   params?: {
     in: ScriptBlockPlainVariable[];
