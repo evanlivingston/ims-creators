@@ -1,11 +1,20 @@
 <template>
   <div class="WebLayout">
-    <div class="WebLayout-sidebar">
-      <GameDesignMenu
-        v-if="gddVM"
-        :gdd-v-m="gddVM"
-      />
-      <div v-else class="WebLayout-sidebar-loading">Loading tree...</div>
+    <div class="WebLayout-sidebar" :class="{ 'is-collapsed': sidebarCollapsed }">
+      <template v-if="!sidebarCollapsed">
+        <GameDesignMenu
+          v-if="gddVM"
+          :gdd-v-m="gddVM"
+        />
+        <div v-else class="WebLayout-sidebar-loading">Loading tree...</div>
+      </template>
+      <button
+        class="WebLayout-sidebar-toggle"
+        :title="sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+        @click="toggleSidebar"
+      >
+        <i :class="sidebarCollapsed ? 'ri-layout-right-2-line' : 'ri-layout-left-2-line'" />
+      </button>
     </div>
     <div class="WebLayout-content">
       <slot />
@@ -27,17 +36,26 @@ export default defineComponent({
   },
   provide() {
     return {
-      providedMenuWidth: computed(() => 280),
+      providedMenuWidth: computed(() => this.sidebarCollapsed ? 0 : 280),
     };
   },
   data() {
     return {
       gddVM: null as GameDesignMenuVM | null,
+      sidebarCollapsed: typeof localStorage !== 'undefined'
+        ? localStorage.getItem('sidebar-collapsed') === 'true'
+        : false,
     };
   },
   computed: {
     projectId() {
       return this.$getAppManager().get(ProjectManager).getProjectInfo()?.id;
+    },
+  },
+  methods: {
+    toggleSidebar() {
+      this.sidebarCollapsed = !this.sidebarCollapsed;
+      localStorage.setItem('sidebar-collapsed', String(this.sidebarCollapsed));
     },
   },
   async mounted() {
@@ -72,6 +90,13 @@ export default defineComponent({
   flex-direction: column;
   overflow: hidden;
   background-color: var(--app-menu-bg-color, #1a1a2e);
+  transition: width 0.2s ease, min-width 0.2s ease;
+  position: relative;
+
+  &.is-collapsed {
+    width: 32px;
+    min-width: 32px;
+  }
 
   .GameDesignMenu {
     min-width: unset !important;
@@ -84,10 +109,34 @@ export default defineComponent({
   }
 }
 
+.WebLayout-sidebar-toggle {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.8);
+  }
+}
+
 .WebLayout-sidebar-loading {
   padding: 16px;
   color: #888;
   font-size: 13px;
+  flex: 1;
 }
 
 .WebLayout-content {
