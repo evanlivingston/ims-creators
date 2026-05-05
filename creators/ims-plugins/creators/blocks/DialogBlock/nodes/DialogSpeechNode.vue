@@ -886,14 +886,35 @@ export default defineComponent({
 
 .DialogSpeechNode-prop-builder {
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
+  align-items: flex-start;
   padding: 0 10px;
-  gap: 4px;
+  gap: 6px;
 }
 .DialogSpeechNode-prop-builder-caption {
   color: var(--imsde-node-content-caption-color, inherit);
-  font-size: 12px;
+  font-size: 11px;
+  flex: 0 0 auto;
+  padding-top: 2px;
+}
+.DialogSpeechNode-prop-builder-input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.DialogSpeechNode-options-one-condition {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.DialogSpeechNode-options-one-condition-caption {
+  color: var(--imsde-node-content-caption-color, inherit);
+  font-size: 11px;
+  flex: 0 0 auto;
+  padding-top: 2px;
+}
+.DialogSpeechNode-options-one-condition-input {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .DialogSpeechNode-options-one-dialogue {

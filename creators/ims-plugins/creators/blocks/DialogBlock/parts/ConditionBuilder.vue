@@ -112,14 +112,22 @@
           <i class="ri-close-line"></i>
         </button>
       </div>
-      <button
-        v-if="!readonly"
-        type="button"
-        class="ConditionBuilder-add is-button"
-        @click="addClause"
-      >
-        + Add clause
-      </button>
+      <div v-if="!readonly" class="ConditionBuilder-footer">
+        <button
+          type="button"
+          class="ConditionBuilder-add is-button-link"
+          @click="addClause"
+        >
+          + Add clause
+        </button>
+        <button
+          type="button"
+          class="ConditionBuilder-toggle is-button-link"
+          @click="toggleMode"
+        >
+          text
+        </button>
+      </div>
     </div>
     <div v-else class="ConditionBuilder-text">
       <textarea
@@ -135,15 +143,15 @@
         nested logic) that the simple builder doesn't support. Edit as text or
         rewrite as AND clauses.
       </p>
-    </div>
-    <div v-if="!readonly" class="ConditionBuilder-mode">
-      <button
-        type="button"
-        class="is-button is-button-link"
-        @click="toggleMode"
-      >
-        {{ mode === 'form' ? 'Switch to text' : 'Try form view' }}
-      </button>
+      <div v-if="!readonly && !parseFailed" class="ConditionBuilder-footer">
+        <button
+          type="button"
+          class="ConditionBuilder-toggle is-button-link"
+          @click="toggleMode"
+        >
+          form
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -388,25 +396,29 @@ function defaultLiteralFor(kind: 'number' | 'bool' | 'string'): ConditionLiteral
 .ConditionBuilder {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  font-size: 12px;
+  gap: 3px;
+  font-size: 11px;
 }
 .ConditionBuilder-clause {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   flex-wrap: wrap;
+  min-height: 22px;
 }
 .ConditionBuilder-clause-conjunction {
   font-style: italic;
+  font-size: 10px;
   color: var(--imsde-node-content-caption-color, inherit);
-  margin-right: 4px;
+  opacity: 0.7;
+  margin-right: 2px;
 }
 .ConditionBuilder-clause-negate {
-  width: 22px;
-  height: 22px;
-  font-size: 12px;
-  opacity: 0.5;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  padding: 0;
+  opacity: 0.4;
   &.state-active {
     opacity: 1;
     color: var(--color-main-error, #d33);
@@ -416,68 +428,76 @@ function defaultLiteralFor(kind: 'number' | 'bool' | 'string'): ConditionLiteral
 .ConditionBuilder-clause-op,
 .ConditionBuilder-clause-right,
 .ConditionBuilder-clause-arg {
-  font-size: 12px;
+  font-size: 11px;
   background: transparent;
   border: 1px solid var(--imsde-node-content-inner-border-color);
   border-radius: 2px;
-  padding: 2px 4px;
+  padding: 1px 3px;
   color: inherit;
+  height: 20px;
+  box-sizing: border-box;
   &:focus {
     outline: none;
     border-color: var(--imsde-node-playing-color, #888);
   }
 }
 .ConditionBuilder-clause-term {
-  min-width: 160px;
+  min-width: 100px;
+  flex: 2 1 100px;
 }
 .ConditionBuilder-clause-op {
-  width: 60px;
+  width: 46px;
+  flex: 0 0 auto;
 }
 .ConditionBuilder-clause-right,
 .ConditionBuilder-clause-arg {
-  min-width: 80px;
-  flex: 1;
+  min-width: 60px;
+  flex: 1 1 60px;
 }
 .ConditionBuilder-clause-remove {
-  width: 22px;
-  height: 22px;
-  font-size: 12px;
-  opacity: 0.6;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  padding: 0;
+  opacity: 0.5;
   &:hover {
     opacity: 1;
   }
 }
-.ConditionBuilder-add {
-  align-self: flex-start;
-  font-size: 11px;
-  padding: 2px 8px;
+.ConditionBuilder-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 10px;
+  opacity: 0.7;
+  &:hover {
+    opacity: 1;
+  }
+}
+.ConditionBuilder-add,
+.ConditionBuilder-toggle,
+:deep(.is-button-link) {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 10px;
+  text-decoration: underline;
+  padding: 0;
+  &:hover {
+    color: var(--imsde-node-playing-color, inherit);
+  }
 }
 .ConditionBuilder-text-input {
   width: 100%;
   font-family: monospace;
-  font-size: 12px;
+  font-size: 11px;
   resize: vertical;
+  min-height: 28px;
 }
 .ConditionBuilder-text-warn {
   color: var(--color-main-error, #d33);
-  font-size: 11px;
-  margin: 4px 0 0;
-}
-.ConditionBuilder-mode {
-  display: flex;
-  justify-content: flex-end;
-  font-size: 11px;
-}
-.ConditionBuilder-mode .is-button-link {
-  background: none;
-  border: none;
-  color: var(--imsde-node-playing-color, #888);
-  cursor: pointer;
-  font-size: 11px;
-  text-decoration: underline;
-  padding: 0;
-  &:hover {
-    color: inherit;
-  }
+  font-size: 10px;
+  margin: 2px 0 0;
 }
 </style>

@@ -43,14 +43,22 @@
           <i class="ri-close-line"></i>
         </button>
       </div>
-      <button
-        v-if="!readonly"
-        type="button"
-        class="ScriptBuilder-add is-button"
-        @click="addCommand"
-      >
-        + Add command
-      </button>
+      <div v-if="!readonly" class="ScriptBuilder-footer">
+        <button
+          type="button"
+          class="ScriptBuilder-add is-button-link"
+          @click="addCommand"
+        >
+          + Add command
+        </button>
+        <button
+          type="button"
+          class="ScriptBuilder-toggle is-button-link"
+          @click="toggleMode"
+        >
+          text
+        </button>
+      </div>
     </div>
     <div v-else class="ScriptBuilder-text">
       <textarea
@@ -66,15 +74,15 @@
         doesn't recognise. Edit as text or rewrite using the standard
         commands.
       </p>
-    </div>
-    <div v-if="!readonly" class="ScriptBuilder-mode">
-      <button
-        type="button"
-        class="is-button is-button-link"
-        @click="toggleMode"
-      >
-        {{ mode === 'form' ? 'Switch to text' : 'Try form view' }}
-      </button>
+      <div v-if="!readonly && !parseFailed" class="ScriptBuilder-footer">
+        <button
+          type="button"
+          class="ScriptBuilder-toggle is-button-link"
+          @click="toggleMode"
+        >
+          form
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -219,75 +227,83 @@ export default defineComponent({
 .ScriptBuilder {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  font-size: 12px;
+  gap: 3px;
+  font-size: 11px;
 }
 .ScriptBuilder-row {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   flex-wrap: wrap;
+  min-height: 22px;
 }
 .ScriptBuilder-row-cmd,
 .ScriptBuilder-row-arg {
-  font-size: 12px;
+  font-size: 11px;
   background: transparent;
   border: 1px solid var(--imsde-node-content-inner-border-color);
   border-radius: 2px;
-  padding: 2px 4px;
+  padding: 1px 3px;
   color: inherit;
+  height: 20px;
+  box-sizing: border-box;
   &:focus {
     outline: none;
     border-color: var(--imsde-node-playing-color, #888);
   }
 }
 .ScriptBuilder-row-cmd {
-  min-width: 140px;
+  min-width: 110px;
+  flex: 0 0 auto;
 }
 .ScriptBuilder-row-arg {
-  min-width: 80px;
-  flex: 1;
+  min-width: 60px;
+  flex: 1 1 60px;
 }
 .ScriptBuilder-row-remove {
-  width: 22px;
-  height: 22px;
-  font-size: 12px;
-  opacity: 0.6;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  padding: 0;
+  opacity: 0.5;
   &:hover {
     opacity: 1;
   }
 }
-.ScriptBuilder-add {
-  align-self: flex-start;
-  font-size: 11px;
-  padding: 2px 8px;
+.ScriptBuilder-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 10px;
+  opacity: 0.7;
+  &:hover {
+    opacity: 1;
+  }
+}
+.ScriptBuilder-add,
+.ScriptBuilder-toggle,
+:deep(.is-button-link) {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 10px;
+  text-decoration: underline;
+  padding: 0;
+  &:hover {
+    color: var(--imsde-node-playing-color, inherit);
+  }
 }
 .ScriptBuilder-text-input {
   width: 100%;
   font-family: monospace;
-  font-size: 12px;
+  font-size: 11px;
   resize: vertical;
+  min-height: 28px;
 }
 .ScriptBuilder-text-warn {
   color: var(--color-main-error, #d33);
-  font-size: 11px;
-  margin: 4px 0 0;
-}
-.ScriptBuilder-mode {
-  display: flex;
-  justify-content: flex-end;
-  font-size: 11px;
-}
-.ScriptBuilder-mode .is-button-link {
-  background: none;
-  border: none;
-  color: var(--imsde-node-playing-color, #888);
-  cursor: pointer;
-  font-size: 11px;
-  text-decoration: underline;
-  padding: 0;
-  &:hover {
-    color: inherit;
-  }
+  font-size: 10px;
+  margin: 2px 0 0;
 }
 </style>
