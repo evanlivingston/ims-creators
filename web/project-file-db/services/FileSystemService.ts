@@ -52,6 +52,9 @@ function loadSchemaPropsMap(rootPath: string): Map<string, Record<string, any>> 
                     if (p.type === 'array') entry.multiple = true;
                 } else if (p.enum) {
                     entry.type = 'enum';
+                } else if (p.type === 'boolean') {
+                    // IMS uses 'checkbox' for booleans; JSON Schema uses 'boolean'.
+                    entry.type = 'checkbox';
                 } else {
                     entry.type = p.type || 'string';
                 }

@@ -44,31 +44,74 @@
         </menu-button>
       </div>
       <div class="DialogSpeechNode-content">
-        <DataField
-          v-for="(variable, var_index) of mainSpeechList"
-          :key="variable.name"
-          :ref="'main-' + variable.name"
-          class="DialogSpeechNode-prop-line"
-          :model-value="nodeDataController.values[variable.name] ?? null"
-          :play-value="
-            playingNodeData?.values
-              ? playingNodeData.values[variable.name]
-              : null
-          "
-          :in-id="generateDataPinId(false, variable.name)"
-          :node-data-controller="nodeDataController"
-          :readonly="readonly"
-          :title="variable.description ?? ''"
-          :placeholder="
-            variable.name === 'text'
-              ? $t('imsDialogEditor.speech.enterSpeech')
-              : ''
-          "
-          :caption="getMainVariableCaption(var_index)"
-          @update:model-value="
-            nodeDataController.setValue(variable.name, $event)
-          "
-        ></DataField>
+        <template v-for="(variable, var_index) of mainSpeechList" :key="variable.name">
+          <div
+            v-if="
+              variable.name === 'script' &&
+              !isInputPinConnected(variable.name)
+            "
+            class="DialogSpeechNode-prop-line DialogSpeechNode-prop-builder"
+          >
+            <span class="DialogSpeechNode-prop-builder-caption">
+              {{ getMainVariableCaption(var_index) }}:
+            </span>
+            <ScriptBuilder
+              class="DialogSpeechNode-prop-builder-input"
+              :model-value="
+                typeof nodeDataController.values[variable.name] === 'string'
+                  ? (nodeDataController.values[variable.name] as string)
+                  : ''
+              "
+              :readonly="readonly"
+              @update:model-value="nodeDataController.setValue(variable.name, $event)"
+            ></ScriptBuilder>
+          </div>
+          <div
+            v-else-if="
+              variable.name === 'sequence' &&
+              !isInputPinConnected(variable.name)
+            "
+            class="DialogSpeechNode-prop-line DialogSpeechNode-prop-builder"
+          >
+            <span class="DialogSpeechNode-prop-builder-caption">
+              {{ getMainVariableCaption(var_index) }}:
+            </span>
+            <SequenceBuilder
+              class="DialogSpeechNode-prop-builder-input"
+              :model-value="
+                typeof nodeDataController.values[variable.name] === 'string'
+                  ? (nodeDataController.values[variable.name] as string)
+                  : ''
+              "
+              :readonly="readonly"
+              @update:model-value="nodeDataController.setValue(variable.name, $event)"
+            ></SequenceBuilder>
+          </div>
+          <DataField
+            v-else
+            :ref="'main-' + variable.name"
+            class="DialogSpeechNode-prop-line"
+            :model-value="nodeDataController.values[variable.name] ?? null"
+            :play-value="
+              playingNodeData?.values
+                ? playingNodeData.values[variable.name]
+                : null
+            "
+            :in-id="generateDataPinId(false, variable.name)"
+            :node-data-controller="nodeDataController"
+            :readonly="readonly"
+            :title="variable.description ?? ''"
+            :placeholder="
+              variable.name === 'text'
+                ? $t('imsDialogEditor.speech.enterSpeech')
+                : ''
+            "
+            :caption="getMainVariableCaption(var_index)"
+            @update:model-value="
+              nodeDataController.setValue(variable.name, $event)
+            "
+          ></DataField>
+        </template>
         <div v-if="options.length > 0" class="DialogSpeechNode-options">
           <ContextMenuZone
             v-for="(option, option_index) of options"
@@ -88,8 +131,63 @@
                 class="DialogSpeechNode-options-one-param"
                 :class="{ 'type-first': field_idx === 0 }"
               >
+                <div
+                  v-if="
+                    field.key === 'condition' &&
+                    !isInputPinConnected(field.key, option_index)
+                  "
+                  class="DialogSpeechNode-options-one-param-input DialogSpeechNode-options-one-condition"
+                >
+                  <span class="DialogSpeechNode-options-one-condition-caption">
+                    {{ field.caption }}:
+                  </span>
+                  <ConditionBuilder
+                    class="DialogSpeechNode-options-one-condition-input"
+                    :model-value="
+                      typeof option.values[field.key] === 'string'
+                        ? (option.values[field.key] as string)
+                        : ''
+                    "
+                    :variable-names="dialogueVariableNames"
+                    :readonly="readonly"
+                    @update:model-value="
+                      nodeDataController.setOptionValue(
+                        option_index,
+                        field.key,
+                        $event,
+                      )
+                    "
+                  ></ConditionBuilder>
+                </div>
+                <div
+                  v-else-if="
+                    field.key === 'script' &&
+                    !isInputPinConnected(field.key, option_index)
+                  "
+                  class="DialogSpeechNode-options-one-param-input DialogSpeechNode-options-one-condition"
+                >
+                  <span class="DialogSpeechNode-options-one-condition-caption">
+                    {{ field.caption }}:
+                  </span>
+                  <ScriptBuilder
+                    class="DialogSpeechNode-options-one-condition-input"
+                    :model-value="
+                      typeof option.values[field.key] === 'string'
+                        ? (option.values[field.key] as string)
+                        : ''
+                    "
+                    :readonly="readonly"
+                    @update:model-value="
+                      nodeDataController.setOptionValue(
+                        option_index,
+                        field.key,
+                        $event,
+                      )
+                    "
+                  ></ScriptBuilder>
+                </div>
                 <DataField
-                  v-if="field.key !== 'dialogue'"
+                  v-else-if="field.key !== 'dialogue'"
                   class="DialogSpeechNode-options-one-param-input"
                   :in-id="generateDataPinId(false, field.key, option_index)"
                   :placeholder="$t('imsDialogEditor.speech.enterText')"
@@ -249,6 +347,9 @@ import FilePresenter from '~ims-app-base/components/File/FilePresenter.vue';
 import AssetSelectorPropEditor from '~ims-app-base/components/Props/AssetSelectorPropEditor.vue';
 import ProjectManager from '~ims-app-base/logic/managers/ProjectManager';
 import type { AssetPropValue } from '~ims-app-base/logic/types/Props';
+import ConditionBuilder from '../parts/ConditionBuilder.vue';
+import ScriptBuilder from '../parts/ScriptBuilder.vue';
+import SequenceBuilder from '../parts/SequenceBuilder.vue';
 
 // Dialogue Type asset id (design/Types/Dialogue.ima.json). Used to scope the
 // cross-conversation jump picker to dialogue assets only.
@@ -347,6 +448,9 @@ export default defineComponent({
     DialogSpeechNodeAttachCover,
     FilePresenter,
     AssetSelectorPropEditor,
+    ConditionBuilder,
+    ScriptBuilder,
+    SequenceBuilder,
   },
   props: {
     id: {
@@ -431,6 +535,15 @@ export default defineComponent({
             .getWorkspaceIdByName('gdd') ?? null,
         typeids: DIALOGUE_TYPE_ID,
       };
+    },
+    dialogueVariableNames(): string[] {
+      // Variable names defined on this dialogue (script.variables.own).
+      // Fed to the ConditionBuilder so writers can pick from a dropdown
+      // instead of typing raw identifiers.
+      return this.dialogController
+        .getVariables()
+        .map((v) => v.name)
+        .filter(Boolean);
     },
   },
   watch: {
@@ -769,6 +882,18 @@ export default defineComponent({
 
 .DialogSpeechNode-prop-content {
   min-width: 100px;
+}
+
+.DialogSpeechNode-prop-builder {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0 10px;
+  gap: 4px;
+}
+.DialogSpeechNode-prop-builder-caption {
+  color: var(--imsde-node-content-caption-color, inherit);
+  font-size: 12px;
 }
 
 .DialogSpeechNode-options-one-dialogue {

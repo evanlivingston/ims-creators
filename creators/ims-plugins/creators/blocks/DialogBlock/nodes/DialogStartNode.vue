@@ -26,7 +26,26 @@
         >
           <div class="DialogStartNode-options-one-common">
             <div class="DialogStartNode-options-one-param type-first">
+              <ConditionBuilder
+                v-if="!isConditionPinConnected(option_index)"
+                class="DialogStartNode-options-one-param-input"
+                :model-value="
+                  typeof option.values['condition'] === 'string'
+                    ? (option.values['condition'] as string)
+                    : ''
+                "
+                :variable-names="dialogueVariableNames"
+                :readonly="readonly"
+                @update:model-value="
+                  nodeDataController.setOptionValue(
+                    option_index,
+                    'condition',
+                    $event,
+                  )
+                "
+              ></ConditionBuilder>
               <DataField
+                v-else
                 class="DialogStartNode-options-one-param-input"
                 :in-id="generateDataPinId(false, 'condition', option_index)"
                 :placeholder="$t('imsDialogEditor.speech.enterText')"
@@ -109,6 +128,7 @@ import {
 import { generateDataPinId } from '../editor/DialogEditor';
 import type { NodeDataController } from '../editor/NodeDataController';
 import type { DialogBlockController } from '../editor/DialogBlockController';
+import ConditionBuilder from '../parts/ConditionBuilder.vue';
 
 export default defineComponent({
   name: 'DialogStartNode',
@@ -118,6 +138,7 @@ export default defineComponent({
     ContextMenuZone,
     MenuButton,
     MenuList,
+    ConditionBuilder,
   },
   props: {
     id: {
@@ -152,6 +173,13 @@ export default defineComponent({
     options() {
       return this.nodeDataController?.options ?? [];
     },
+    dialogueVariableNames(): string[] {
+      if (!this.dialogController) return [];
+      return this.dialogController
+        .getVariables()
+        .map((v) => v.name)
+        .filter(Boolean);
+    },
   },
   watch: {
     options() {
@@ -163,6 +191,12 @@ export default defineComponent({
   },
   methods: {
     generateDataPinId,
+    isConditionPinConnected(optionIndex: number) {
+      if (!this.nodeDataController) return false;
+      return this.nodeDataController.isPinConnected(
+        generateDataPinId(false, 'condition', optionIndex),
+      );
+    },
     updatePins() {
       if (!this.nodeDataController) return;
       for (let i = 0; i < this.options.length; i++) {
