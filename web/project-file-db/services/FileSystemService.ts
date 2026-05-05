@@ -314,7 +314,7 @@ export class FileSystemService{
                 id: uuidv4(),
                 type: 'bark',
                 name: 'barks',
-                title: '[[t:Barks]]',
+                title: 'Barks',
                 index: block_index++,
                 createdAt: created_at,
                 updatedAt: updated_at,

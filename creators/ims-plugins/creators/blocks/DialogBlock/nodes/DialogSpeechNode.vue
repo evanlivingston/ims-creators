@@ -4,14 +4,24 @@
       class="DialogSpeechNode-header DialogNode-header DialogEditorNode-header"
       :title="$t(`imsDialogEditor.nodes.${nodeDescriptor.name}.description`)"
     >
-      <div>
+      <div class="DialogSpeechNode-header-id">
         <ExecHandle
           id="in"
           type="target"
           :position="Position.Left"
         ></ExecHandle>
-        <i :class="nodeDescriptor.icon"></i>
-        {{ $t(`imsDialogEditor.nodes.${nodeDescriptor.name}.title`) }}
+        <div
+          v-if="characterName"
+          class="DialogSpeechNode-avatar"
+          :style="avatarStyle"
+          :title="characterName"
+        >
+          {{ avatarInitials }}
+        </div>
+        <i v-else :class="nodeDescriptor.icon"></i>
+        <span class="DialogSpeechNode-header-title">
+          {{ $t(`imsDialogEditor.nodes.${nodeDescriptor.name}.title`) }}
+        </span>
       </div>
       <div v-if="!readonly" class="DialogSpeechNode-header-settings">
         <dialog-speech-node-attach-cover
@@ -91,6 +101,10 @@
             v-else
             :ref="'main-' + variable.name"
             class="DialogSpeechNode-prop-line"
+            :class="{
+              'DialogSpeechNode-prop-description':
+                variable.name === 'description',
+            }"
             :model-value="nodeDataController.values[variable.name] ?? null"
             :play-value="
               playingNodeData?.values
@@ -284,7 +298,16 @@
                 {{ $t('imsDialogEditor.play.select') }}
               </button>
             </div>
-            <div class="DialogSpeechNode-options-one-handle">
+            <div
+              class="DialogSpeechNode-options-one-handle"
+              :class="{
+                'is-conditioned':
+                  typeof option.values['condition'] === 'string' &&
+                  (option.values['condition'] as string).length > 0,
+                'is-jump':
+                  option.dialogue !== undefined && option.dialogue !== null,
+              }"
+            >
               <ExecHandle
                 :id="`out-${option_index + 1}`"
                 type="source"
@@ -327,6 +350,7 @@ import type {
 } from '../editor/NodeDataController';
 import ContextMenuZone from '~ims-app-base/components/Common/ContextMenuZone.vue';
 import DataField from '../parts/DataField.vue';
+import DataFieldInput from '../parts/DataFieldInput.vue';
 import {
   AssetPropType,
   type AssetPropValueFile,
@@ -354,6 +378,39 @@ import SequenceBuilder from '../parts/SequenceBuilder.vue';
 // Dialogue Type asset id (design/Types/Dialogue.ima.json). Used to scope the
 // cross-conversation jump picker to dialogue assets only.
 const DIALOGUE_TYPE_ID = 'a9afe517-a79f-4753-9e34-3a39fde65766';
+// Character Type asset id (design/Types/Character.ima.json). Scopes the
+// header character picker on speech nodes.
+const CHARACTER_TYPE_ID = 'dcb5d0aa-b55a-4a63-9d85-7cdb6b53e984';
+
+// 12-step palette with well-separated hues. Mapping the hash to a discrete
+// palette is more reliable than continuous hue % 360, which has a habit of
+// putting short distinct names in adjacent slots (Lena vs Railway Guard
+// both landed near 200 with a polynomial-31 hash).
+const AVATAR_HUES = [
+  350, // pink-red
+  20, // orange
+  45, // amber
+  85, // yellow-green
+  130, // green
+  170, // teal
+  200, // cyan
+  225, // blue
+  255, // indigo
+  280, // violet
+  310, // magenta
+  335, // rose
+];
+
+function avatarHueFor(name: string): number {
+  // FNV-1a 32-bit. Math.imul keeps the 32-bit multiply correct.
+  let h = 0x811c9dc5;
+  for (let i = 0; i < name.length; i++) {
+    h ^= name.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  // Spread across the palette. >>> 0 forces unsigned for stable modulo.
+  return AVATAR_HUES[(h >>> 0) % AVATAR_HUES.length];
+}
 
 // Well-known optional fields the dialogue runner reads on each option.
 // `condition` is a string expression. `priority` orders options. `falseConditionAction`
@@ -443,6 +500,7 @@ export default defineComponent({
     ExecHandle,
     ContextMenuZone,
     DataField,
+    DataFieldInput,
     MenuButton,
     MenuList,
     DialogSpeechNodeAttachCover,
@@ -534,6 +592,55 @@ export default defineComponent({
             .get(ProjectManager)
             .getWorkspaceIdByName('gdd') ?? null,
         typeids: DIALOGUE_TYPE_ID,
+      };
+    },
+    characterAssetWhere() {
+      return {
+        workspaceids:
+          this.$getAppManager()
+            .get(ProjectManager)
+            .getWorkspaceIdByName('gdd') ?? null,
+        typeids: CHARACTER_TYPE_ID,
+      };
+    },
+    characterName(): string {
+      // Display name pulled from the speech node's `character` value.
+      // The IMS storage shape varies:
+      //  - plain string: "Lena"
+      //  - TEXT type Quill wrapper: { Str: "Lena", Ops: [...] }
+      //  - ASSET reference: { Title: "Lena", AssetId: "...", Name: ... }
+      //  - bind reference: { get: "node-uuid", param: "..." }
+      // castAssetPropValueToString formats ASSETs as markdown which is wrong
+      // for display, so handle each shape explicitly.
+      const raw = this.nodeDataController.values['character'];
+      if (raw == null) return '';
+      if (typeof raw === 'string') return raw;
+      if (typeof raw === 'object') {
+        const obj = raw as {
+          get?: string;
+          Title?: string;
+          Str?: string;
+          Name?: string;
+        };
+        if (obj.get) return ''; // bind reference - no name to show
+        return obj.Title ?? obj.Str ?? obj.Name ?? '';
+      }
+      return String(raw);
+    },
+    avatarInitials(): string {
+      const name = this.characterName.trim();
+      if (!name) return '?';
+      const words = name.split(/\s+/).filter(Boolean);
+      if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+      return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+    },
+    avatarStyle(): Record<string, string> {
+      // Deterministic colour from the character name so each writer gets a
+      // consistent visual identity in the editor without uploading anything.
+      const hue = avatarHueFor(this.characterName);
+      return {
+        background: `hsl(${hue}, 65%, 45%)`,
+        color: '#fff',
       };
     },
     dialogueVariableNames(): string[] {
@@ -680,6 +787,12 @@ export default defineComponent({
           this.$t(key),
         ),
       }));
+    },
+    onCharacterSelected(val: AssetPropValue | null) {
+      // The picker emits AssetPropValueAsset for picked characters or a plain
+      // string for custom-typed values. Store as-is; the runner reads either.
+      // _simplifyValue on save flattens {AssetId, Title} -> Title at flush.
+      this.nodeDataController.setValue('character', val);
     },
     onDialogueJumpSelected(
       option_index: number,
@@ -828,6 +941,63 @@ export default defineComponent({
   align-items: center;
   gap: 10px;
 }
+.DialogSpeechNode-header-id {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.DialogSpeechNode-header-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+.DialogSpeechNode-header-character {
+  // The DataFieldInput is the same Quill ImcEditor used in the body row,
+  // including the @ asset picker. Strip the multi-line counter and
+  // top-margin so it fits into the header strip cleanly.
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 280px;
+  &:deep(.DataFieldInput-counter) {
+    display: none;
+  }
+  &.DataFieldInput-active-with-counter,
+  :deep(.DataFieldInput-active-with-counter) {
+    margin-top: 0;
+  }
+  &:deep(.DataFieldInput-text) {
+    padding: 0;
+  }
+  &:deep(.imc-editor) {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    padding: 0 4px;
+    min-height: 22px;
+    &:hover {
+      border-color: rgba(0, 0, 0, 0.15);
+    }
+    &:focus-within {
+      border-color: rgba(0, 0, 0, 0.3);
+      background: rgba(255, 255, 255, 0.08);
+    }
+  }
+}
+.DialogSpeechNode-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  flex: 0 0 auto;
+  user-select: none;
+}
 .DialogSpeechNode-header-settings {
   &:deep(.is-button) {
     color: var(--imsde-node-header-text-color);
@@ -884,6 +1054,16 @@ export default defineComponent({
   min-width: 100px;
 }
 
+.DialogSpeechNode-prop-description {
+  font-style: italic;
+  opacity: 0.7;
+  font-size: 12px;
+  &:deep(.DataFieldInput-text),
+  &:deep(.DataFieldInput-string) {
+    font-style: italic;
+  }
+}
+
 .DialogSpeechNode-prop-builder {
   display: flex;
   align-items: flex-start;
@@ -938,6 +1118,26 @@ export default defineComponent({
   &:focus {
     outline: none;
     border-color: var(--imsde-node-playing-color, #888);
+  }
+}
+
+.DialogSpeechNode-options-one-handle {
+  position: relative;
+  // Conditioned options: pin gets a warm filter colour so the writer can
+  // tell at a glance which choices are gated.
+  &.is-conditioned :deep(.ExecHandle-svg) {
+    fill: #b88a3a;
+  }
+  // Cross-conversation jump: pin gets a cool colour to signal the connection
+  // leaves the current dialogue file.
+  &.is-jump :deep(.ExecHandle-svg) {
+    fill: #6a8fb8;
+  }
+  // Both at once - prioritise jump colour but mark it conditioned via stroke.
+  &.is-conditioned.is-jump :deep(.ExecHandle-svg) {
+    fill: #6a8fb8;
+    stroke: #b88a3a;
+    stroke-width: 1.5;
   }
 }
 

@@ -51,30 +51,48 @@
           :key="node_desc.name"
           #[`node-${node_desc.name}`]="params"
         >
-          <component
-            v-bind="{
-              ...params,
-              ...(node_desc.params ? node_desc.params : {}),
-            }"
-            :is="node_desc.node"
-            :ref="'node-' + params.id"
-            :style="{
-              '--imsde-node-color': node_desc.color,
-            }"
-            :class="{
-              'state-selected': params.selected,
-              'state-playing':
-                params.id === dialogPlayer.currentPlayingNode?.id,
-            }"
-            :dialog-controller="blockControllerMut"
-            :node-data-controller="
-              blockControllerMut.getNodeDataController(params.id)
-            "
-            :node-descriptor="node_desc"
-            :readonly="readonly"
-            :playing-node-data="dialogPlayer.getLastPlayNode(params.id)"
-            :dialog-player="dialogPlayer"
-          ></component>
+          <div class="DialogEditor-node-wrapper">
+            <component
+              v-bind="{
+                ...params,
+                ...(node_desc.params ? node_desc.params : {}),
+              }"
+              :is="node_desc.node"
+              :ref="'node-' + params.id"
+              :style="{
+                '--imsde-node-color': node_desc.color,
+              }"
+              :class="{
+                'state-selected': params.selected,
+                'state-playing':
+                  params.id === dialogPlayer.currentPlayingNode?.id,
+                'state-lint-error': lintIssuesByNode.has(params.id),
+              }"
+              :dialog-controller="blockControllerMut"
+              :node-data-controller="
+                blockControllerMut.getNodeDataController(params.id)
+              "
+              :node-descriptor="node_desc"
+              :readonly="readonly"
+              :playing-node-data="dialogPlayer.getLastPlayNode(params.id)"
+              :dialog-player="dialogPlayer"
+            ></component>
+            <div
+              v-if="lintIssuesByNode.has(params.id)"
+              class="DialogEditor-lint-badge"
+              :title="
+                lintIssuesByNode
+                  .get(params.id)!
+                  .map((i) => '• ' + i.message)
+                  .join('\n')
+              "
+            >
+              <i class="ri-error-warning-fill"></i>
+              <span class="DialogEditor-lint-badge-count">
+                {{ lintIssuesByNode.get(params.id)!.length }}
+              </span>
+            </div>
+          </div>
         </template>
         <template #edge-flow="params">
           <BezierEdge
@@ -156,6 +174,11 @@ import {
   type SetClickOutsideCancel,
 } from '~ims-app-base/components/utils/ui';
 import { getNextIndexWithTimestamp } from '~ims-app-base/components/Asset/Editor/blockUtils';
+import {
+  lintDialogue,
+  groupIssuesByNode,
+  type LintIssue,
+} from '../logic/dialogueLinter';
 
 type CreateNodeContext = {
   clickedAt: { x: number; y: number } | null;
@@ -240,6 +263,46 @@ export default defineComponent({
     },
     hasStart() {
       return this.blockControllerMut.hasStart;
+    },
+    lintIssuesByNode(): Map<string, LintIssue[]> {
+      // Walk the live state (nodes + edges) into the dialogue runner's
+      // file shape, then run the linter. Recomputed on any state change so
+      // the red border on a node updates as the writer fixes things.
+      const state = this.blockControllerMut.state;
+      if (!state) return new Map();
+      const nodes: Record<string, any> = {};
+      let start: string | null = null;
+      for (const node of state.nodes) {
+        const data = (node as any).data;
+        nodes[node.id] = {
+          type: node.type ?? 'unknown',
+          next: null,
+          values: data?.values ?? {},
+          options: (data?.options ?? []).map((o: any) => ({
+            next: null,
+            values: o.values ?? {},
+            dialogue: o.dialogue,
+          })),
+        };
+        if (node.type === 'start' && !start) start = node.id;
+      }
+      for (const edge of state.edges) {
+        if (!edge.sourceHandle) continue;
+        const handle = edge.sourceHandle as string;
+        if (handle === 'out') {
+          if (nodes[edge.source]) nodes[edge.source].next = edge.target;
+        } else {
+          const m = handle.match(/^out-(\d+)$/);
+          if (m) {
+            const idx = parseInt(m[1]) - 1;
+            const source = nodes[edge.source];
+            if (source && source.options && idx < source.options.length) {
+              source.options[idx].next = edge.target;
+            }
+          }
+        }
+      }
+      return groupIssuesByNode(lintDialogue({ start, nodes }));
     },
     selectedOutlineWidth() {
       return Math.max(
@@ -856,6 +919,47 @@ export default defineComponent({
     outline: calc(2px + var(--imsde-node-selected-outline-width)) solid
       var(--imsde-node-playing-color);
   }
+  &.state-lint-error {
+    // 2px red border (outline so it doesn't shift the layout). The
+    // DialogEditor-lint-badge sibling shows the error count and tooltip.
+    outline: 2px solid #d33;
+    border-radius: 4px;
+  }
+  &.state-lint-error.state-selected {
+    // Selected wins on color so the writer can still see what they're
+    // editing, but bump the outline to triple-thickness to keep the lint
+    // signal visible.
+    outline-color: var(--imsde-node-selected-color);
+    box-shadow: 0 0 0 2px #d33;
+  }
+}
+.DialogEditor-node-wrapper {
+  position: relative;
+  // Inherit the wrapper's size from the inner node. VueFlow positions the
+  // wrapper, our content sits inside.
+}
+.DialogEditor-lint-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #d33;
+  color: #fff;
+  border-radius: 999px;
+  padding: 2px 8px 2px 6px;
+  font-size: 11px;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  pointer-events: auto;
+  cursor: help;
+  z-index: 1;
+  white-space: pre-line;
+  user-select: none;
+}
+.DialogEditor-lint-badge-count {
+  font-variant-numeric: tabular-nums;
 }
 .DialogEditorNode-header {
   background: var(--imsde-node-color);

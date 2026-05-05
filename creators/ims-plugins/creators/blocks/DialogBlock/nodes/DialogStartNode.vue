@@ -15,7 +15,7 @@
         :position="Position.Right"
       />
     </div>
-    <div v-if="nodeDataController" class="DialogStartNode-body">
+    <div v-if="nodeDataController" class="DialogStartNode-body DialogEditorNode-body">
       <div v-if="options.length > 0" class="DialogStartNode-options">
         <ContextMenuZone
           v-for="(option, option_index) of options"
@@ -263,7 +263,8 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .DialogStartNode {
-  min-width: 220px;
+  min-width: 280px;
+  max-width: 480px;
 }
 .DialogStartNode-header {
   padding: 7px 10px;
@@ -284,17 +285,22 @@ export default defineComponent({
 .DialogStartNode-options-one {
   position: relative;
   border-top: 1px solid var(--imsde-node-content-inner-border-color);
-  padding: 8px 0;
+  padding: 8px 10px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  gap: 6px;
 }
 .DialogStartNode-options-one-common {
   flex: 1;
+  min-width: 0;
 }
 .DialogStartNode-options-one-param {
   &:not(:last-child) {
     margin-bottom: 8px;
   }
+}
+.DialogStartNode-options-one-param-input {
+  width: 100%;
 }
 .DialogStartNode-options-one-handle {
   position: relative;
@@ -313,9 +319,9 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 11px;
+  font-size: 10px;
   font-style: italic;
-  opacity: 0.7;
+  opacity: 0.6;
 }
 .DialogStartNode-addOption {
   font-weight: bold;

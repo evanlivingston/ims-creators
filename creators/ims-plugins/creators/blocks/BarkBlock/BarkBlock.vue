@@ -9,8 +9,8 @@
         :key="idx"
         class="BarkBlock-row"
       >
-        <div class="BarkBlock-row-grid">
-          <label class="BarkBlock-row-label">Text</label>
+        <div class="BarkBlock-row-head">
+          <span class="BarkBlock-row-num">{{ idx + 1 }}.</span>
           <textarea
             class="BarkBlock-row-text is-input"
             rows="1"
@@ -19,35 +19,37 @@
             placeholder="What the NPC says"
             @input="updateBark(idx, 'text', $event)"
           ></textarea>
-
-          <label class="BarkBlock-row-label">Weight</label>
-          <input
-            class="BarkBlock-row-weight is-input"
-            type="number"
-            step="any"
-            min="0"
-            :value="bark.weight ?? 1"
-            :readonly="readonly"
-            @input="updateBark(idx, 'weight', $event)"
-          />
-
-          <label class="BarkBlock-row-label">Condition</label>
+          <label class="BarkBlock-row-weight-wrap">
+            <span class="BarkBlock-row-weight-label">w</span>
+            <input
+              class="BarkBlock-row-weight is-input"
+              type="number"
+              step="any"
+              min="0"
+              :value="bark.weight ?? 1"
+              :readonly="readonly"
+              @input="updateBark(idx, 'weight', $event)"
+            />
+          </label>
+          <button
+            v-if="!readonly"
+            type="button"
+            class="BarkBlock-row-remove is-button is-button-icon"
+            title="Remove bark"
+            @click="removeBark(idx)"
+          >
+            <i class="ri-delete-bin-line"></i>
+          </button>
+        </div>
+        <div class="BarkBlock-row-cond">
+          <span class="BarkBlock-row-cond-label">Condition</span>
           <ConditionBuilder
-            class="BarkBlock-row-condition"
+            class="BarkBlock-row-cond-input"
             :model-value="typeof bark.condition === 'string' ? bark.condition : ''"
             :readonly="readonly"
             @update:model-value="updateCondition(idx, $event)"
           ></ConditionBuilder>
         </div>
-        <button
-          v-if="!readonly"
-          type="button"
-          class="BarkBlock-row-remove is-button is-button-icon"
-          title="Remove bark"
-          @click="removeBark(idx)"
-        >
-          <i class="ri-delete-bin-line"></i>
-        </button>
       </li>
     </ol>
     <button
@@ -65,7 +67,10 @@
 import { defineComponent, type PropType } from 'vue';
 import type { AssetChanger } from '~ims-app-base/logic/types/AssetChanger';
 import type { ResolvedAssetBlock } from '~ims-app-base/logic/utils/assets';
-import { makeBlockRef } from '~ims-app-base/logic/types/Props';
+import {
+  convertAssetPropsToPlainObject,
+  makeBlockRef,
+} from '~ims-app-base/logic/types/Props';
 import ConditionBuilder from '../DialogBlock/parts/ConditionBuilder.vue';
 
 type Bark = {
@@ -95,7 +100,13 @@ export default defineComponent({
   },
   computed: {
     barks(): Bark[] {
-      const raw = this.resolvedBlock.computed['barks'];
+      // resolvedBlock.computed is in path-encoded AssetProps form
+      // (keys like `barks\0\text`). Convert it back to a plain JS shape so
+      // we can read the array as { text, weight, condition }[] objects.
+      const plain = convertAssetPropsToPlainObject<{ barks?: Bark[] }>(
+        this.resolvedBlock.computed,
+      );
+      const raw = plain.barks;
       return Array.isArray(raw) ? (raw as Bark[]) : [];
     },
   },
@@ -157,7 +168,7 @@ export default defineComponent({
   padding: 8px 12px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   font-size: 12px;
 }
 .BarkBlock-empty {
@@ -171,60 +182,99 @@ export default defineComponent({
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 .BarkBlock-row {
   display: flex;
-  align-items: flex-start;
-  gap: 6px;
+  flex-direction: column;
+  gap: 4px;
   padding: 6px 8px;
   border: 1px solid var(--imsde-node-content-inner-border-color);
-  border-radius: 4px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.02);
 }
-.BarkBlock-row-grid {
-  display: grid;
-  grid-template-columns: minmax(70px, auto) 1fr;
-  gap: 4px 8px;
-  flex: 1 1 auto;
-  min-width: 0;
-  align-items: start;
+.BarkBlock-row-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-.BarkBlock-row-label {
+.BarkBlock-row-num {
+  flex: 0 0 auto;
   font-size: 11px;
-  opacity: 0.7;
-  padding-top: 4px;
+  opacity: 0.5;
+  font-variant-numeric: tabular-nums;
+  min-width: 18px;
+  text-align: right;
 }
 .BarkBlock-row-text {
-  width: 100%;
-  resize: vertical;
+  flex: 1 1 auto;
+  min-width: 0;
+  resize: none;
   font-size: 12px;
-  padding: 4px 6px;
+  padding: 3px 6px;
   border: 1px solid var(--imsde-node-content-inner-border-color);
   border-radius: 2px;
   background: transparent;
   color: inherit;
+  font-family: inherit;
+  line-height: 1.3;
+  &:focus {
+    outline: none;
+    border-color: var(--imsde-node-playing-color, #888);
+  }
+}
+.BarkBlock-row-weight-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+}
+.BarkBlock-row-weight-label {
+  font-size: 11px;
+  opacity: 0.6;
 }
 .BarkBlock-row-weight {
-  width: 80px;
-  font-size: 12px;
-  padding: 2px 6px;
+  width: 50px;
+  font-size: 11px;
+  padding: 2px 4px;
   border: 1px solid var(--imsde-node-content-inner-border-color);
   border-radius: 2px;
   background: transparent;
   color: inherit;
-}
-.BarkBlock-row-condition {
-  min-width: 0;
+  &:focus {
+    outline: none;
+    border-color: var(--imsde-node-playing-color, #888);
+  }
 }
 .BarkBlock-row-remove {
   width: 22px;
   height: 22px;
   font-size: 12px;
   flex: 0 0 auto;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+.BarkBlock-row:hover .BarkBlock-row-remove {
   opacity: 0.6;
   &:hover {
     opacity: 1;
   }
+}
+.BarkBlock-row-cond {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding-left: 24px;
+}
+.BarkBlock-row-cond-label {
+  font-size: 11px;
+  opacity: 0.6;
+  padding-top: 2px;
+  flex: 0 0 auto;
+}
+.BarkBlock-row-cond-input {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 .BarkBlock-add {
   align-self: flex-start;
