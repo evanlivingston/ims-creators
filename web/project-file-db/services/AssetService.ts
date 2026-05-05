@@ -846,6 +846,12 @@ export class AssetService implements IProjectDatabaseAsset{
                         if (key.startsWith('__') || key.startsWith('~') || value == null) continue;
                         flat[key] = this._simplifyValue(value);
                     }
+                } else if (block.type === 'bark') {
+                    // Bark list block - lift the `barks` array back to flat root.
+                    const barks = (props as any).barks;
+                    if (Array.isArray(barks)) {
+                        flat.barks = this._simplifyValue(barks);
+                    }
                 }
             }
             target.write(JSON.stringify(flat, null, 2));

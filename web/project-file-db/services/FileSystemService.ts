@@ -304,10 +304,34 @@ export class FileSystemService{
             });
         }
 
+        // Bark list block. Bark files in design/Barks/ are flat JSON with a
+        // top-level `barks: [{text, condition, weight}, ...]` array. The
+        // generic Properties panel can't render arrays of objects nicely, so
+        // we lift the array into a dedicated block that the BarkBlock plugin
+        // (on the creators side) provides a custom editor for.
+        if (Array.isArray(flat.barks)) {
+            blocks.push({
+                id: uuidv4(),
+                type: 'bark',
+                name: 'barks',
+                title: '[[t:Barks]]',
+                index: block_index++,
+                createdAt: created_at,
+                updatedAt: updated_at,
+                ownTitle: null,
+                own: true,
+                props: { barks: flat.barks },
+                computed: { barks: flat.barks },
+                inherited: null,
+            });
+        }
+
         // Props block with all remaining fields
         const props: Record<string, any> = {};
         for (const [key, value] of Object.entries(flat)) {
             if (key === 'title' || key === 'description' || key === 'script' || key === 'id') continue;
+            // Lifted into the dedicated bark block above
+            if (key === 'barks') continue;
             if (value == null) continue;
             props[key] = value;
         }
