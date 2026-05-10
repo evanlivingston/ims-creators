@@ -103,7 +103,10 @@ export default defineComponent({
     },
     autoIconUrl() {
       if (this.galleryBlock) return null;
-      const name: string = (this.assetBlockEditor.assetEdited as any)?.title ?? '';
+      const edited = this.assetBlockEditor.assetEdited as any;
+      const full = this.assetBlockEditor.assetFull as any;
+      console.log('[autoIconUrl] assetEdited:', edited, 'assetFull:', full);
+      const name: string = edited?.title ?? full?.title ?? '';
       if (!name) return null;
       const snake = name.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
       return `/api/design-files/Items/icons/${snake}.png`;
