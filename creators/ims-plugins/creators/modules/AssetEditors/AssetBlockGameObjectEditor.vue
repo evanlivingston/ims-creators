@@ -2,7 +2,7 @@
   <div class="AssetBlockGameObjectEditor">
     <div v-if="galleryBlockTagId" :id="galleryBlockTagId"></div>
     <div class="AssetBlockGameObjectEditor-header">
-      <div v-if="galleryBlock" class="AssetBlockGameObjectEditor-gallery">
+      <div v-if="hasGalleryImage" class="AssetBlockGameObjectEditor-gallery">
         <game-object-gallery-block
           class="AssetBlockGameObjectEditor-gallery-block"
           :asset-block-editor="assetBlockEditor"
@@ -101,12 +101,14 @@ export default defineComponent({
         !this.galleryBlock || this.galleryBlock.rights <= AssetRights.READ_ONLY
       );
     },
+    hasGalleryImage() {
+      if (!this.galleryBlock) return false;
+      const props = this.galleryBlock.props ?? {};
+      return props['main\\value'] != null || props['main\\type'] != null;
+    },
     autoIconUrl() {
-      if (this.galleryBlock) return null;
-      const edited = this.assetBlockEditor.assetEdited as any;
-      const full = this.assetBlockEditor.assetFull as any;
-      console.log('[autoIconUrl] assetEdited:', edited, 'assetFull:', full);
-      const name: string = edited?.title ?? full?.title ?? '';
+      if (this.hasGalleryImage) return null;
+      const name: string = (this.assetBlockEditor.assetEdited as any)?.title ?? (this.assetBlockEditor.assetFull as any)?.title ?? '';
       if (!name) return null;
       const snake = name.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
       return `/api/design-files/Items/icons/${snake}.png`;
