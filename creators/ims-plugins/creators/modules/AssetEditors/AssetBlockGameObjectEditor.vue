@@ -2,7 +2,7 @@
   <div class="AssetBlockGameObjectEditor">
     <div v-if="galleryBlockTagId" :id="galleryBlockTagId"></div>
     <div class="AssetBlockGameObjectEditor-header">
-      <div v-if="hasGalleryImage" class="AssetBlockGameObjectEditor-gallery">
+      <div v-if="galleryBlock" class="AssetBlockGameObjectEditor-gallery">
         <game-object-gallery-block
           class="AssetBlockGameObjectEditor-gallery-block"
           :asset-block-editor="assetBlockEditor"
@@ -10,9 +10,6 @@
           :resolved-block="galleryBlock"
           :readonly="galleryBlockReadonly"
         ></game-object-gallery-block>
-      </div>
-      <div v-else-if="autoIconUrl" class="AssetBlockGameObjectEditor-gallery AssetBlockGameObjectEditor-auto-icon">
-        <img :src="autoIconUrl" class="AssetBlockGameObjectEditor-auto-icon-img" />
       </div>
       <asset-block-editor
         ref="descriptionEditor"
@@ -101,18 +98,6 @@ export default defineComponent({
         !this.galleryBlock || this.galleryBlock.rights <= AssetRights.READ_ONLY
       );
     },
-    hasGalleryImage() {
-      if (!this.galleryBlock) return false;
-      const props = this.galleryBlock.props ?? {};
-      return props['main\\value'] != null || props['main\\type'] != null;
-    },
-    autoIconUrl() {
-      if (this.hasGalleryImage) return null;
-      const name: string = (this.assetBlockEditor.assetEdited as any)?.title ?? (this.assetBlockEditor.assetFull as any)?.title ?? '';
-      if (!name) return null;
-      const snake = name.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
-      return `/api/design-files/Items/icons/${snake}.png`;
-    },
   },
   mounted() {
     this.$emit('update:is-dirty', this.isDirty);
@@ -168,17 +153,6 @@ export default defineComponent({
   padding-top: 15px;
   padding-left: var(--editor-block-padding-left);
   margin-right: 0px;
-}
-.AssetBlockGameObjectEditor-auto-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.AssetBlockGameObjectEditor-auto-icon-img {
-  width: 160px;
-  height: 160px;
-  object-fit: contain;
-  image-rendering: pixelated;
 }
 .AssetBlockGameObjectEditor-main {
   border-top-left-radius: 0;
