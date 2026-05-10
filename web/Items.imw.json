@@ -1,0 +1,52 @@
+{
+ "id": "5e92daa6-4653-46fe-b5c2-e315759c2db0",
+ "index": 2.7578263489032553,
+ "title": "Items",
+ "name": null,
+ "parentId": "00000000-0000-0000-0000-200000000002",
+ "projectId": "",
+ "props": {
+  "type": "collection",
+  "asset": {
+   "Title": "Artifact",
+   "AssetId": "2615e9a4-7799-4343-9e64-9516b75c8b9a"
+  },
+  "views\\table\\key": "table",
+  "views\\table\\sort": [],
+  "views\\table\\type": "table",
+  "views\\table\\index": 1,
+  "views\\table\\props": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  "views\\table\\props\\0\\prop": "title",
+  "views\\table\\props\\0\\width": 200,
+  "views\\table\\props\\1\\prop": "description|value",
+  "views\\table\\props\\1\\width": null,
+  "views\\table\\props\\2\\prop": "props|type",
+  "views\\table\\props\\2\\width": null,
+  "views\\table\\props\\3\\prop": "props|price",
+  "views\\table\\props\\3\\width": null,
+  "views\\table\\props\\4\\prop": "props|effect",
+  "views\\table\\props\\4\\width": null,
+  "views\\table\\props\\5\\prop": "props|effect_duration",
+  "views\\table\\props\\5\\width": null,
+  "views\\table\\props\\6\\prop": "props|effect_value",
+  "views\\table\\props\\6\\width": null,
+  "views\\table\\props\\7\\prop": "craft|recipe",
+  "views\\table\\props\\7\\width": null,
+  "views\\table\\title": "Table",
+  "views\\table\\filter": []
+ },
+ "localName": "Items.imw.json",
+ "createdAt": "2026-04-29T22:55:03.006Z",
+ "updatedAt": "2026-04-29T22:55:03.006Z",
+ "rights": 5,
+ "unread": 0
+}

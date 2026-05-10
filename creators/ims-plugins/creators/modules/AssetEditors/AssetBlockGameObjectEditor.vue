@@ -11,6 +11,9 @@
           :readonly="galleryBlockReadonly"
         ></game-object-gallery-block>
       </div>
+      <div v-else-if="autoIconUrl" class="AssetBlockGameObjectEditor-gallery AssetBlockGameObjectEditor-auto-icon">
+        <img :src="autoIconUrl" class="AssetBlockGameObjectEditor-auto-icon-img" />
+      </div>
       <asset-block-editor
         ref="descriptionEditor"
         class="AssetBlockGameObjectEditor-description"
@@ -98,6 +101,13 @@ export default defineComponent({
         !this.galleryBlock || this.galleryBlock.rights <= AssetRights.READ_ONLY
       );
     },
+    autoIconUrl() {
+      if (this.galleryBlock) return null;
+      const name: string = (this.assetBlockEditor.assetFull as any)?.name ?? '';
+      if (!name) return null;
+      const snake = name.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+      return `/api/design-files/Items/icons/${snake}.png`;
+    },
   },
   mounted() {
     this.$emit('update:is-dirty', this.isDirty);
@@ -153,6 +163,17 @@ export default defineComponent({
   padding-top: 15px;
   padding-left: var(--editor-block-padding-left);
   margin-right: 0px;
+}
+.AssetBlockGameObjectEditor-auto-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.AssetBlockGameObjectEditor-auto-icon-img {
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+  image-rendering: pixelated;
 }
 .AssetBlockGameObjectEditor-main {
   border-top-left-radius: 0;
